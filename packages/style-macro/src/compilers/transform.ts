@@ -2,16 +2,18 @@ import MagicString from 'magic-string';
 import { parseSync } from 'oxc-parser';
 
 import { axisAliasName } from '~/models/axis-alias';
-import { type ClassNameMode, buildBlockClassName } from '~/models/class-name';
-import type { AnyProp, BuildError, IRRule } from '~/models/types';
+import { type ClassNameMode, buildBlockClassName, dynamicVarName } from '~/models/class-name';
+import type { AnyProp, BuildError, DynamicRule, IRRule } from '~/models/types';
 import { propertyToTokenAxis } from '~/tokens';
+import { isUnitless } from '~/tokens/css-reference';
 
 import { directivePrologueEnd } from './directives';
 import { type Block, DEFAULT_LAYER, emitBlocks, normalizeRules, signatureOf } from './emit-css';
 import {
-    type DynamicCallSite,
     type InjectContext,
+    type SlotTree,
     flushInjects,
+    hasSlots,
     injectJsxStyleForCall,
 } from './jsx-inject';
 import { walk } from './oxc-walk';
@@ -76,14 +78,30 @@ function countCombinations(pieces: Piece[]): number {
     return n;
 }
 
-function forEachRule(pieces: Piece[], fn: (r: IRRule) => void) {
-    for (const p of pieces) {
-        if (p.kind === 'fixed') p.rules.forEach(fn);
-        else {
-            forEachRule(p.whenTrue, fn);
-            forEachRule(p.whenFalse, fn);
-        }
+/**
+ * 조각 목록을 분기 조합마다 하나의 규칙 목록으로 펼쳐 `leaf` 에 넘기고, 분기는 `fork` 로
+ * 다시 묶는다. className 과 style slot 이 모두 이 트리 하나에서 나오므로, 어떤 분기에서
+ * 어떤 class 가 붙는지와 어떤 slot 이 평가되는지가 항상 일치한다.
+ */
+function project<T>(
+    pieces: Piece[],
+    acc: IRRule[],
+    leaf: (rules: IRRule[]) => T,
+    fork: (test: string, whenTrue: T, whenFalse: T) => T,
+): T {
+    const i = pieces.findIndex((p) => p.kind === 'cond');
+    if (i === -1) {
+        const rules = [...acc];
+        for (const p of pieces) if (p.kind === 'fixed') rules.push(...p.rules);
+        return leaf(rules);
     }
+    const head: IRRule[] = [...acc];
+    for (const p of pieces.slice(0, i)) if (p.kind === 'fixed') head.push(...p.rules);
+    const c = pieces[i] as Extract<Piece, { kind: 'cond' }>;
+    const rest = pieces.slice(i + 1);
+    const t = project([...c.whenTrue, ...rest], head, leaf, fork);
+    const f = project([...c.whenFalse, ...rest], head, leaf, fork);
+    return fork(c.test, t, f);
 }
 
 /** 호출 인자 하나. 로컬로 풀리면 `pieces`, 아니면 런타임 class 문자열(`external`). */
@@ -184,11 +202,7 @@ class Transformer {
 
         if (this.#errors.length) return errorResult(source, this.#errors);
 
-        const injectCtx: InjectContext = {
-            ms: this.#ms,
-            mode: this.#mode === 'hashed' ? 'prod' : 'dev',
-            pending: new Map(),
-        };
+        const injectCtx: InjectContext = { ms: this.#ms, pending: new Map() };
 
         for (const call of calls) {
             const pieces = call.args.flatMap((a) => (a.kind === 'local' ? a.pieces : []));
@@ -198,20 +212,16 @@ class Transformer {
                 continue;
             }
 
-            const dynamicSlots = this.#collectDynamicSlots(pieces);
-            if (dynamicSlots.length > 0) {
-                const site: DynamicCallSite = {
-                    call: call.node,
-                    parents: call.parents,
-                    slots: dynamicSlots,
-                };
-                const outcome = injectJsxStyleForCall(site, injectCtx);
+            const slots = this.#slotTree(pieces);
+            if (hasSlots(slots)) {
+                const outcome = injectJsxStyleForCall(
+                    { call: call.node, parents: call.parents, slots },
+                    injectCtx,
+                );
                 if (!outcome.success) {
                     if (outcome.error) this.#errors.push(outcome.error);
                     continue;
                 }
-                if (injectCtx.needResolveToken) this.#needResolveToken = true;
-                if (injectCtx.needIx) this.#needIx = true;
             }
 
             this.#ms.overwrite(call.node.start, call.node.end, this.#buildCallReplacement(call));
@@ -492,20 +502,60 @@ class Transformer {
 
     // ── 출력 ───────────────────────────────────────────────────
 
-    #collectDynamicSlots(pieces: Piece[]): DynamicCallSite['slots'] {
-        const bySlot = new Map<string, DynamicCallSite['slots'][number]>();
-        forEachRule(pieces, (r) => {
-            if (r.kind !== 'dynamic' || bySlot.has(r.slotId)) return;
-            const axis = axisForProperty(r.property);
-            if (axis) this.#axesUsed.add(axis);
-            bySlot.set(r.slotId, {
-                slotId: r.slotId,
-                axis,
-                property: r.property,
-                sourceExpr: r.sourceExpr,
-            });
-        });
-        return Array.from(bySlot.values());
+    /**
+     * className 과 같은 분기 트리를 따라 slot 트리를 만든다. leaf 의 slot 은 그 분기 블록의
+     * 정규화된 규칙에서 뽑으므로, 뒤 선언에 덮인 dynamic 값은 평가조차 하지 않는다.
+     */
+    #slotTree(pieces: Piece[]): SlotTree {
+        return project<SlotTree>(
+            pieces,
+            [],
+            (rules) => {
+                const seen = new Set<string>();
+                const entries: string[] = [];
+                for (const r of normalizeRules(rules)) {
+                    if (r.kind !== 'dynamic' || seen.has(r.slotId)) continue;
+                    seen.add(r.slotId);
+                    entries.push(this.#slotEntry(r));
+                }
+                return { kind: 'obj', entries };
+            },
+            (test, whenTrue, whenFalse) =>
+                sameSlots(whenTrue, whenFalse)
+                    ? whenTrue
+                    : { kind: 'cond', test: () => test, whenTrue, whenFalse },
+        );
+    }
+
+    /**
+     * slot 하나의 style property 리터럴.
+     *
+     * NOTE(unit-strategy): 리터럴 숫자는 `parse-call.ts` 의 extractStaticValue 가 static 으로
+     *   판정해 dynamic slot 자체가 생성되지 않는다 — 여기 오는 slot 은 전부 변수 참조.
+     *   axis 가 없으면 token lookup 이 의미 없으므로 숫자-unit 전용 helper `_ix` 로 분기 —
+     *   axis 없는 slot 만 쓰는 번들은 `_resolveToken` 과 토큰 테이블을 tree-shake 할 수 있다.
+     *
+     *   `?? 'var(<varName>,)'` sentinel fallback: 사용자가 undefined 를 넘겨도 slot 변수가
+     *   "선언만 유지, 값은 비어있음" 상태로 남아 CSS 가 invalid-at-computed-value-time →
+     *   `unset` 으로 떨어져 부모 상속 체인이 끊기지 않는다 (리뷰 #6c sentinel 후속).
+     */
+    #slotEntry(r: DynamicRule): string {
+        const varName = dynamicVarName(r.slotId, this.#mode === 'hashed' ? 'prod' : 'dev');
+        // property 가 unitless 면 unit 인자 생략 → 숫자 값은 string 변환만.
+        const unitArg = isUnitless(r.property) ? '' : `, 'px'`;
+        const axis = axisForProperty(r.property);
+
+        let call: string;
+        if (axis === null) {
+            call = `_ix(${r.sourceExpr}${unitArg})`;
+            this.#needIx = true;
+        } else {
+            // 사용자 스코프 충돌을 피하기 위해 `__vaporAxis_<name>` alias 로 참조한다.
+            this.#axesUsed.add(axis);
+            call = `_resolveToken(${axisAliasName(axis)}, ${r.sourceExpr}${unitArg})`;
+            this.#needResolveToken = true;
+        }
+        return `'${varName}': ${call} ?? 'var(${varName},)'`;
     }
 
     /** 규칙 목록 → 블록 등록 → class 이름. 규칙이 없으면 빈 문자열. */
@@ -523,20 +573,13 @@ class Transformer {
     }
 
     /** 조각 목록 → 분기마다 병합 블록을 만들고, 고르는 표현식(문자열 리터럴 또는 삼항)을 반환. */
-    #combine(pieces: Piece[], acc: IRRule[], debugId: string | undefined): string {
-        const i = pieces.findIndex((p) => p.kind === 'cond');
-        if (i === -1) {
-            const rules = [...acc];
-            for (const p of pieces) if (p.kind === 'fixed') rules.push(...p.rules);
-            return jsSingleQuoted(this.#blockClass(rules, debugId));
-        }
-        const head: IRRule[] = [...acc];
-        for (const p of pieces.slice(0, i)) if (p.kind === 'fixed') head.push(...p.rules);
-        const c = pieces[i] as Extract<Piece, { kind: 'cond' }>;
-        const rest = pieces.slice(i + 1);
-        const t = this.#combine([...c.whenTrue, ...rest], head, debugId);
-        const f = this.#combine([...c.whenFalse, ...rest], head, debugId);
-        return t === f ? t : `(${c.test} ? ${t} : ${f})`;
+    #combine(pieces: Piece[], debugId: string | undefined): string {
+        return project<string>(
+            pieces,
+            [],
+            (rules) => jsSingleQuoted(this.#blockClass(rules, debugId)),
+            (test, t, f) => (t === f ? t : `(${test} ? ${t} : ${f})`),
+        );
     }
 
     /**
@@ -548,7 +591,7 @@ class Transformer {
     #buildCallReplacement(call: CallRecord): string {
         const locals = call.args.flatMap((a) => (a.kind === 'local' ? a.pieces : []));
         const firstLocal = call.args.findIndex((a) => a.kind === 'local');
-        const localExpr = firstLocal === -1 ? null : this.#combine(locals, [], call.debugId);
+        const localExpr = firstLocal === -1 ? null : this.#combine(locals, call.debugId);
 
         const externals = call.args.filter((a) => a.kind === 'external');
         if (externals.length === 0) return localExpr ?? "''";
@@ -591,6 +634,15 @@ class Transformer {
 // ────────────────────────────────────────────────────────────────
 // helpers
 // ────────────────────────────────────────────────────────────────
+
+/** 두 slot 트리가 같은 값을 만드는지. 분기가 같으면 조건을 생략한다. */
+function sameSlots(a: SlotTree, b: SlotTree): boolean {
+    if (a.kind === 'obj' && b.kind === 'obj') return a.entries.join('\0') === b.entries.join('\0');
+    if (a.kind === 'cond' && b.kind === 'cond') {
+        return a.test() === b.test() && sameSlots(a.whenTrue, b.whenTrue) && sameSlots(a.whenFalse, b.whenFalse);
+    }
+    return false;
+}
 
 function contains(outer: AnyProp, inner: AnyProp): boolean {
     return outer.start <= inner.start && inner.end <= outer.end;

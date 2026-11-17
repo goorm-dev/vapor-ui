@@ -863,3 +863,78 @@ describe('transform — cssImport (per-module CSS import)', () => {
         expect(out.code).not.toContain('vapor.css');
     });
 });
+
+describe('transform — dynamic slots follow the className branch tree (PR #752 review)', () => {
+    const run = (expr: string) =>
+        transform({
+            source: src(`export const A = ({ item, on, a, b }) => <div className={${expr}} />;`),
+            filename: '/G.tsx',
+        });
+    const styleOf = (code: string) => /style=\{\{ (.+) \}\} \/>/.exec(code)![1];
+    const SLOT = String.raw`'--vapor-_\w+': _resolveToken\(__vaporAxis_\w+, `;
+
+    describe('call-site guards (outside css())', () => {
+        it('`a && css({ x: a.v })` evaluates the slot only when `a` is truthy', () => {
+            const out = run(`item && css({ backgroundColor: item.color })`);
+            expect(out.errors).toEqual([]);
+            expect(styleOf(out.code)).toMatch(
+                new RegExp(String.raw`^\.\.\.\(\(item\) \? \{ ${SLOT}item\.color, 'px'\) \?\? 'var\(--vapor-_\w+,\)' \} : \{\}\)$`),
+            );
+        });
+
+        it('ternary guards each branch with its own condition', () => {
+            const style = styleOf(run(`on ? css({ color: a.c }) : css({ color: b.c })`).code);
+            expect(style).toMatch(new RegExp(String.raw`\.\.\.\(\(on\) \? \{ ${SLOT}a\.c`));
+            expect(style).toMatch(new RegExp(String.raw`\.\.\.\(!\(on\) \? \{ ${SLOT}b\.c`));
+        });
+
+        it('`||` and `??` guard the right operand with the negated left', () => {
+            expect(styleOf(run(`a || css({ color: b.c })`).code)).toContain(`...(!(a) ? {`);
+            expect(styleOf(run(`a ?? css({ color: b.c })`).code)).toContain(`...((a) == null ? {`);
+        });
+
+        it('nested guards evaluate outermost first', () => {
+            const style = styleOf(run(`a && (b ? css({ color: item.c }) : 'x')`).code);
+            expect(style).toMatch(/^\.\.\.\(\(a\) \? \(\(b\) \? \{ .+ \} : \{\}\) : \{\}\)$/);
+        });
+
+        it('left operand of `&&` is evaluated unconditionally → no guard', () => {
+            expect(styleOf(run(`css({ color: item.c }) && a`).code)).toMatch(new RegExp(`^${SLOT}`));
+        });
+    });
+
+    describe('argument branches (inside css())', () => {
+        it('`cond ? { x: item.v } : undefined` evaluates the slot only on the true branch', () => {
+            const out = run(`css({ width: 100 }, item ? { backgroundColor: item.color } : undefined)`);
+            expect(out.errors).toEqual([]);
+            expect(out.code).toMatch(/className=\{\(item \? '\w+' : '\w+'\)\}/);
+            expect(styleOf(out.code)).toMatch(
+                new RegExp(String.raw`^\.\.\.\(item \? \{ ${SLOT}item\.color, 'px'\) .+ \} : \{\}\)$`),
+            );
+        });
+
+        it('`cond && { x: item.v }` evaluates the slot only when cond is truthy', () => {
+            const style = styleOf(run(`css({ width: 100 }, item && { backgroundColor: item.color })`).code);
+            expect(style).toMatch(/^\.\.\.\(item \? \{ .+ \} : \{\}\)$/);
+        });
+
+        it('slot present in both branches is not guarded', () => {
+            const style = styleOf(
+                run(`css({ color: item.c }, on ? { width: 1 } : { width: 2 })`).code,
+            );
+            expect(style).toMatch(new RegExp(`^${SLOT}item\\.c`));
+        });
+
+        it('call-site guard wraps argument branches', () => {
+            const style = styleOf(run(`a && css(item ? { color: item.c } : undefined)`).code);
+            expect(style).toMatch(/^\.\.\.\(\(a\) \? \(item \? \{ .+ \} : \{\}\) : \{\}\)$/);
+        });
+
+        it('dynamic value overridden by a later static declaration is never evaluated', () => {
+            const out = run(`css({ color: item.c }, { color: 'red' })`);
+            expect(out.errors).toEqual([]);
+            expect(out.code).not.toContain('style=');
+            expect(out.code).not.toContain('item.c');
+        });
+    });
+});

@@ -1,42 +1,43 @@
 import type MagicString from 'magic-string';
 
-import { axisAliasName } from '~/models/axis-alias';
-import { dynamicVarName } from '~/models/class-name';
 import type { AnyProp, BuildError } from '~/models/types';
-import { isUnitless } from '~/tokens/css-reference';
+
+/**
+ * 한 css() 호출이 element `style` 에 넣을 slot 값. className 이 고르는 분기 트리와
+ * 같은 모양이다 — 분기 leaf 마다 그 leaf 의 블록이 실제로 참조하는 slot 만 담는다.
+ * 그래서 slot 식은 className 이 그 분기를 고를 때만 평가된다.
+ */
+export type SlotTree =
+    | { kind: 'obj'; entries: string[] }
+    | { kind: 'cond'; test: () => string; whenTrue: SlotTree; whenFalse: SlotTree };
+
+export const EMPTY_SLOTS: SlotTree = { kind: 'obj', entries: [] };
+
+export function hasSlots(tree: SlotTree): boolean {
+    return tree.kind === 'obj'
+        ? tree.entries.length > 0
+        : hasSlots(tree.whenTrue) || hasSlots(tree.whenFalse);
+}
 
 export interface DynamicCallSite {
     /** call node (CallExpression). */
     call: AnyProp;
     /** parent chain at walk time (자기 자신 제외, top-down). */
     parents: AnyProp[];
-    /** call 이 CSS var 참조로 사용한 slot 들. */
-    slots: Array<{
-        slotId: string;
-        /** 컴파일 타임에 결정된 토큰 axis 식별자. 없으면 `null` → emit 시 `{}` 리터럴 pass-through. */
-        axis: string | null;
-        /** CSS property (kebab 또는 camelCase). runtime 에서 숫자 값에 `px` 를
-         *  붙일지 결정하는 데 사용 — unitless property 는 숫자 그대로 통과. */
-        property: string;
-        sourceExpr: string;
-    }>;
+    /** 호출 인자의 분기 트리를 따라 만든 slot 트리. */
+    slots: SlotTree;
 }
 
 interface PendingInject {
     openingEl: AnyProp;
     attribute: AnyProp | null;
-    slotLits: string[];
+    trees: SlotTree[];
 }
 
 export interface InjectContext {
     ms: MagicString;
-    mode: 'dev' | 'prod';
-    /** openingEl.start → 해당 element 로 모인 slot 리터럴. flushInjects 가 소비. */
+    /** openingEl.start → 해당 element 로 모인 slot 트리. flushInjects 가 소비. */
     pending: Map<number, PendingInject>;
-    /** slot emit 중 하나라도 `_ix` 를 썼는지 — transform 이 runtime import 삽입 시 사용. */
-    needIx?: boolean;
-    /** slot emit 중 하나라도 `_resolveToken` 을 썼는지 — transform 이 runtime import 삽입 시 사용. */
-    needResolveToken?: boolean;
 }
 
 export interface InjectOutcome {
@@ -60,15 +61,16 @@ const WRAPPER_TYPES = new Set([
 ]);
 
 /**
- * call 의 조상 체인을 훑어 `<Foo className={...}>` 위치를 찾고
- * 해당 opening element 의 slot 을 pending 버킷에 누적. 실제 삽입은
- * `flushInjects` 가 모든 call 수집 후 element 단위로 한 번에 처리.
+ * call 의 조상 체인을 훑어 `<Foo className={...}>` 위치를 찾고 slot 트리를 pending 버킷에
+ * 누적. call 을 감싼 조건(`a && css()`, `t ? css() : …`)은 트리 바깥 분기로 덧씌운다 —
+ * 호출 인자 안의 분기와 같은 방식이라, slot 은 call 이 평가될 때만 평가된다.
+ * 실제 삽입은 `flushInjects` 가 모든 call 수집 후 element 단위로 한 번에 처리.
  */
 export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext): InjectOutcome {
     const found = findJsxAttribute(site.call, site.parents);
     if ('error' in found) return { success: false, error: found.error };
 
-    const { openingEl, attribute } = found;
+    const { openingEl, attribute, guards } = found;
 
     // 기존 style attribute 가 머지 가능한 형태인지 확인.
     if (attribute) {
@@ -78,50 +80,38 @@ export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext)
         }
     }
 
-    // NOTE(unit-strategy): 리터럴 숫자는 `parse-call.ts` 의 extractStaticValue
-    //   가 static 으로 판정해 dynamic slot 자체가 생성되지 않는다 — 여기 루프에
-    //   들어오는 slot 은 전부 변수 참조(Identifier/CallExpression/BinaryExpression
-    //   등). 즉 Vapor 는 이미 Compiled(Atlassian) 의 hybrid 패턴과 동일.
-    //
-    //   slot 의 axis 가 null 이면 token lookup 자체가 의미 없으므로 숫자-unit
-    //   전용 helper `_ix` 로 분기 — axis null 만 쓰는 번들은 `_resolveToken` 과
-    //   토큰 테이블 코드를 tree-shake 할 수 있다.
-    //
-    //   모든 slot emit 뒤에 `?? 'var(<varName>, )'` sentinel fallback 을 붙인다.
-    //   사용자가 undefined 를 넘겨도 slot 변수가 "선언만 유지, 값은 비어있음"
-    //   상태로 남아 CSS 가 invalid-at-computed-value-time → `unset` 으로 떨어져
-    //   부모 색상·크기 상속 체인이 끊기지 않는다 (리뷰 #6c sentinel 후속).
-    const slotLits: string[] = [];
-    for (const s of site.slots) {
-        const varName = dynamicVarName(s.slotId, ctx.mode);
-        // property 가 unitless 면 unit 인자 생략 → 숫자 값은 string 변환만.
-        // 그 외 property 는 'px' 를 꽂아 숫자 → '<n>px' 변환하도록 지시.
-        const unitArg = isUnitless(s.property) ? '' : `, 'px'`;
-
-        let call: string;
-        if (s.axis === null) {
-            // 토큰 lookup 불필요 → _ix 로 직행.
-            call = `_ix(${s.sourceExpr}${unitArg})`;
-            ctx.needIx = true;
-        } else {
-            // axis 는 `@vapor-ui/style-macro/__runtime__` 에서 import 된 식별자 이름.
-            // 사용자 스코프 충돌을 피하기 위해 `__vaporAxis_<name>` alias 로 참조한다.
-            const axisRef = axisAliasName(s.axis);
-            call = `_resolveToken(${axisRef}, ${s.sourceExpr}${unitArg})`;
-            ctx.needResolveToken = true;
-        }
-
-        slotLits.push(`'${varName}': ${call} ?? 'var(${varName},)'`);
-    }
+    // guards 는 바깥 → 안쪽. 안쪽부터 감싸야 바깥 조건이 가장 먼저 평가된다.
+    const tree = guards.reduceRight<SlotTree>(
+        (inner, g) => ({
+            kind: 'cond',
+            test: () => guardTest(g, ctx.ms),
+            whenTrue: inner,
+            whenFalse: EMPTY_SLOTS,
+        }),
+        site.slots,
+    );
 
     const key = openingEl.start;
     const existing = ctx.pending.get(key);
     if (existing) {
-        existing.slotLits.push(...slotLits);
+        existing.trees.push(tree);
     } else {
-        ctx.pending.set(key, { openingEl, attribute, slotLits });
+        ctx.pending.set(key, { openingEl, attribute, trees: [tree] });
     }
     return { success: true };
+}
+
+/** 트리 하나를 object 식으로. 조건 원문은 이 시점에 읽어 다른 css() 치환이 반영된다. */
+function renderTree(tree: SlotTree): string {
+    if (tree.kind === 'obj') {
+        return tree.entries.length ? `{ ${tree.entries.join(', ')} }` : '{}';
+    }
+    return `(${tree.test()} ? ${renderTree(tree.whenTrue)} : ${renderTree(tree.whenFalse)})`;
+}
+
+/** element 의 style object 본문. 분기 없는 트리는 펼치고, 분기 트리는 spread 한다. */
+function renderEntries(trees: SlotTree[]): string[] {
+    return trees.flatMap((t) => (t.kind === 'obj' ? t.entries : [`...${renderTree(t)}`]));
 }
 
 /**
@@ -129,8 +119,9 @@ export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext)
  */
 export function flushInjects(ctx: InjectContext): void {
     for (const p of ctx.pending.values()) {
-        if (p.slotLits.length === 0) continue;
-        const slotObj = `{ ${p.slotLits.join(', ')} }`;
+        const entries = renderEntries(p.trees);
+        if (entries.length === 0) continue;
+        const slotObj = `{ ${entries.join(', ')} }`;
         const attr = p.attribute;
 
         if (!attr) {
@@ -160,15 +151,53 @@ export function flushInjects(ctx: InjectContext): void {
     }
 }
 
+/**
+ * call 을 감싼 조건 중 call 의 평가 여부를 결정하는 조건 하나.
+ * - `truthy`: `test && call`, `test ? call : …`
+ * - `falsy`: `test || call`, `test ? … : call`
+ * - `nullish`: `test ?? call`
+ */
+interface Guard {
+    test: AnyProp;
+    when: 'truthy' | 'falsy' | 'nullish';
+}
+
+function guardTest({ test, when }: Guard, ms: MagicString): string {
+    const t = `(${ms.slice(test.start, test.end)})`;
+    if (when === 'truthy') return t;
+    if (when === 'falsy') return `!${t}`;
+    return `${t} == null`;
+}
+
+/** `parent` 안에서 `child` 위치가 평가 조건을 거는지. 조건 없으면 `null`. */
+function guardOf(parent: AnyProp, child: AnyProp): Guard | null {
+    if (parent.type === 'ConditionalExpression') {
+        if (parent.consequent === child) return { test: parent.test, when: 'truthy' };
+        if (parent.alternate === child) return { test: parent.test, when: 'falsy' };
+        return null;
+    }
+    if (parent.type === 'LogicalExpression' && parent.right === child) {
+        if (parent.operator === '&&') return { test: parent.left, when: 'truthy' };
+        if (parent.operator === '||') return { test: parent.left, when: 'falsy' };
+        if (parent.operator === '??') return { test: parent.left, when: 'nullish' };
+    }
+    return null;
+}
+
 interface FoundJsx {
     openingEl: AnyProp;
     attribute: AnyProp | null;
+    /** 바깥 → 안쪽. */
+    guards: Guard[];
 }
 
 function findJsxAttribute(_call: AnyProp, parents: AnyProp[]): FoundJsx | { error: BuildError } {
     // parents 는 walker 가 자식→부모 순으로 push 하고 pop 하는 스택 뒤로 push된 상태.
     // parents[len-1] 이 call 의 직계 부모. 위로 올라가며 JSXExpressionContainer 를 찾음.
     let i = parents.length - 1;
+    let child = _call;
+    // 안쪽 → 바깥 순으로 쌓인다. 반환 시 뒤집는다.
+    const guards: Guard[] = [];
     // 중간 wrapper 는 통과.
     while (i >= 0) {
         const n = parents[i];
@@ -193,11 +222,14 @@ function findJsxAttribute(_call: AnyProp, parents: AnyProp[]): FoundJsx | { erro
                         a.name?.type === 'JSXIdentifier' &&
                         a.name.name === 'style',
                 ) ?? null;
-            return { openingEl, attribute: styleAttr };
+            return { openingEl, attribute: styleAttr, guards: guards.reverse() };
         }
         if (!WRAPPER_TYPES.has(n.type)) {
             return { error: mkErr(_call, `unwrap:${n.type}`) };
         }
+        const guard = guardOf(n, child);
+        if (guard) guards.push(guard);
+        child = n;
         i--;
     }
     return { error: mkErr(_call, 'no-jsx') };
