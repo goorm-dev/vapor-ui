@@ -70,7 +70,6 @@ function render() {
     }
 
     if (part === 'item') {
-        // `item` is lowercase in this layer name in Figma.
         const slot = instance.findInstance('🟨MultiSelect.item/SlotLayer');
         const leading = slot.type === 'INSTANCE' ? icon(slot, 'hasLeadingIcon', 'LeadingIcon') : '';
 

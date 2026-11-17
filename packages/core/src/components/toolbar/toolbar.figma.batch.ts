@@ -11,6 +11,7 @@ import {
     placeholder,
     swap,
 } from '../../utils/figma';
+import type { Snippet } from '../../utils/figma';
 
 const TOOLBAR_PART_ID = {
     root: 'toolbar-root',
@@ -25,14 +26,11 @@ type ToolbarPart = keyof typeof TOOLBAR_PART_ID;
 const instance = figma.selectedInstance;
 const part: ToolbarPart = figma.batch.part;
 
-// Items take their size from Toolbar.Root, so the `size` of every nested layer is dropped.
-
 function slotIcon(layer: InstanceHandle, slotName: string, swapName: string) {
     const slot = layer.findInstance(slotName);
     return slot.type === 'INSTANCE' ? swap(slot, swapName) : '';
 }
 
-// Matches the docs: the Toggle is the render element and the icon is the button's child.
 function toggleButton(toggle: InstanceHandle) {
     const variant = pick(toggle, 'variant', { default: 'default', accent: 'accent' });
     const disabled = flags({ disabled: bool(toggle, 'disabled') });
@@ -82,8 +80,7 @@ function layer(parent: InstanceHandle, name: string) {
     return found;
 }
 
-// Toolbar.toggleGroup has no code part; the docs build it as Toolbar.Group rendering a ToggleGroup.
-function toggleGroup(node: InstanceHandle) {
+function toggleGroup(node: InstanceHandle): Snippet {
     const buttons = node.findConnectedInstances(
         (item) => item.codeConnectId() === TOOLBAR_PART_ID.toggleButton,
         { traverseInstances: true },
@@ -132,13 +129,12 @@ function render() {
             disabled: bool(textInput, 'disabled'),
             readOnly: bool(textInput, 'readOnly'),
         });
-        // Toolbar.Input has no `invalid` prop; TextInput, its default render, does.
+
         const invalid = bool(textInput, 'invalid') ? ' render={<TextInput invalid />}' : '';
 
         return figma.code`<Toolbar.Input${hint}${props}${invalid} />`;
     }
 
-    // 💙Toolbar.Separator `size` is dropped: the code separator stretches to the row height.
     return figma.code`<Toolbar.Separator />`;
 }
 

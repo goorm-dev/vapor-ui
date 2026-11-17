@@ -19,8 +19,6 @@ const part: NavigationMenuPart = figma.batch.part;
 function connected(layer: InstanceHandle, name: NavigationMenuPart) {
     return example(layer.findConnectedInstance(NAVIGATION_MENU_PART_ID[name]));
 }
-
-// 🟨NavigationMenuItem/SlotLayer stands in for NavigationMenu.Item, which code requires.
 function item(slot: InstanceHandle) {
     const type = pick(slot, 'type', { Link: 'link', 'Collapsible.Trigger': 'trigger' });
     if (type === 'link') {
@@ -36,7 +34,6 @@ function item(slot: InstanceHandle) {
 
 function render() {
     if (part === 'root') {
-        // Figma puts size and orientation on the list; code takes them on Root.
         const list = instance.findConnectedInstance(NAVIGATION_MENU_PART_ID.list);
         if (list?.type !== 'INSTANCE')
             return figma.code`<NavigationMenu.Root aria-label="...">{/* contents */}</NavigationMenu.Root>`;
@@ -47,7 +44,6 @@ function render() {
             vertical: 'vertical',
         });
 
-        // Panels render inside Viewport, which Figma doesn't draw.
         const trigger = instance.findConnectedInstance(NAVIGATION_MENU_PART_ID.trigger, {
             traverseInstances: true,
         });
@@ -57,7 +53,6 @@ function render() {
     }
 
     if (part === 'list') {
-        // `list` is lowercase in Figma.
         const items = instance.children.filter(
             (node): node is InstanceHandle =>
                 node.type === 'INSTANCE' && node.name === '🟨NavigationMenuItem/SlotLayer',
@@ -67,12 +62,11 @@ function render() {
     }
 
     if (part === 'link') {
-        // `align` is dropped: code links always center their content.
         const props = flags({
             current: bool(instance, 'current'),
             disabled: bool(instance, 'disabled'),
         });
-        // The slot layer is named "Content" here, without the 🟨 prefix.
+
         const slot = instance.findInstance('Content');
         const children =
             slot.type === 'INSTANCE'
@@ -83,15 +77,12 @@ function render() {
     }
 
     if (part === 'trigger') {
-        // The slot `size` is dropped (Root sets it), and so is the chevron, which code renders itself.
         const slot = instance.findInstance('🟨NavigationMenu/SlotLayer');
         const leading = slot.type === 'INSTANCE' ? icon(slot, 'hasLeadingIcon', 'LeadingIcon') : '';
 
         return figma.code`<NavigationMenu.Trigger${flags({ disabled: bool(instance, 'disabled') })}>${leading}{/* contents */}</NavigationMenu.Trigger>`;
     }
 
-    // 💙Popover `side`/`align` are dropped: templates can't read inside a connected Content from Root,
-    // where Viewport would take them. The panel holds only plain layers.
     return figma.code`<NavigationMenu.Content>{/* contents */}</NavigationMenu.Content>`;
 }
 

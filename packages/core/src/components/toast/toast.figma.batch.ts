@@ -13,7 +13,6 @@ type ToastPart = keyof typeof TOAST_PART_ID;
 const instance = figma.selectedInstance;
 const part: ToastPart = figma.batch.part;
 
-// Strings land inside a JS object, so they are quoted and escaped.
 const quote = (value: string) => JSON.stringify(value);
 
 function actionProps() {
@@ -40,12 +39,9 @@ function actionProps() {
 
 function render() {
     if (part === 'close') {
-        // Toast.ClosePrimitive renders its own icon button inside a toast, and Toast.Provider's list
-        // shows it unless the toast is added with `close: false`.
         return figma.code`<Toast.ClosePrimitive />`;
     }
 
-    // Toasts are shown with a call, not JSX: each Figma value becomes an option of `add`.
     const colorPalette = pick(instance, 'colorPalette', {
         info: 'info',
         success: 'success',
@@ -56,8 +52,7 @@ function render() {
     description: ${quote(text(instance, 'Description'))},`
         : '';
     const action = toggle(instance, 'hasButton') ? actionProps() : '';
-    // danger and success draw the same icon the code renders by default. Only info swaps one in,
-    // read from the layer because `LeadingIcon` is unbound in the other variants.
+
     const layer = instance.findLayers(
         (node) => node.type === 'INSTANCE' && node.name.startsWith('❤️'),
     )[0] as InstanceHandle | undefined;

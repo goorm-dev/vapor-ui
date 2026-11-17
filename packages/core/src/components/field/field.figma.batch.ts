@@ -20,8 +20,6 @@ function child(name: FieldPart) {
     return example(instance.findConnectedInstance(FIELD_PART_ID[name]));
 }
 
-// 💙Field.Label has no batch entry: its main component was deleted from the file, so it
-// can't be connected. Root renders it from the layer instead.
 function label() {
     const layer = instance.findInstance('💙Field.Label', { traverseInstances: true });
     if (layer.type !== 'INSTANCE') return '';
@@ -33,7 +31,6 @@ function label() {
     return figma.code`<Field.Label>{/* contents */}${required}</Field.Label>`;
 }
 
-// The control sits in 🟨Field/SlotLayer; its `type=default` option holds a plain "Slot" text.
 function control() {
     const slot = instance.findInstance('🟨Field/SlotLayer', { traverseInstances: true });
     const controls = slot.type === 'INSTANCE' ? connectedChildren(slot).map(example) : [];
@@ -43,7 +40,6 @@ function control() {
 
 function render() {
     if (part === 'root') {
-        // 🟨Field.Label/SlotLayer `side` is dropped: Field.Label has no side prop.
         const parts = [
             label(),
             ...control(),

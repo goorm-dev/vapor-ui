@@ -26,8 +26,6 @@ function isRadioItem(node: InstanceHandle) {
     return node.codeConnectId() === MENU_PART_ID.radioItem;
 }
 
-// Menu.RadioItem throws outside a Menu.RadioGroup, which Figma has no part for,
-// so each run of adjacent radio items gets one.
 function menuContents(layer: InstanceHandle, indent = '') {
     const runs: InstanceHandle[][] = [];
     for (const node of connectedChildren(layer)) {
@@ -45,7 +43,6 @@ function menuContents(layer: InstanceHandle, indent = '') {
     return body(snippets, indent);
 }
 
-// SLOT contents come through as children of the slot layer, tagged with the slot they sit in.
 function slotted(layer: InstanceHandle, slot: string) {
     return layer.children
         .filter(
@@ -101,7 +98,6 @@ function render() {
     }
 
     if (part === 'submenuTriggerItem') {
-        // Figma calls this part Menu.SubTriggerItem; code exports Menu.SubmenuTriggerItem.
         return figma.code`<Menu.SubmenuRoot>
     <Menu.SubmenuTriggerItem${disabled}>${itemContents()}</Menu.SubmenuTriggerItem>
     <Menu.SubmenuPopup>{/* contents */}</Menu.SubmenuPopup>

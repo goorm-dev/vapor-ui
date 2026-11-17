@@ -1,7 +1,7 @@
-// Helpers for Code Connect templates (`*.figma.ts`). Templates bundle relative imports only,
-// so import this file with a relative path, not the `~/` alias.
 import figma from 'figma';
-import type { ErrorHandle, InstanceHandle, TemplateStringResult } from 'figma';
+import type { ErrorHandle, InstanceHandle, ResultSection, TemplateStringResult } from 'figma';
+
+export type Snippet = string | ResultSection[] | TemplateStringResult;
 
 function drift(name: string): never {
     throw new Error(`Figma property "${name}" is missing or has an unmapped option (Drift).`);
@@ -36,7 +36,7 @@ export function text(layer: InstanceHandle, name: string) {
     return value;
 }
 
-export function swap(layer: InstanceHandle, name: string) {
+export function swap(layer: InstanceHandle, name: string): Snippet {
     const handle = layer.getInstanceSwap(name);
     if (handle?.type !== 'INSTANCE') drift(name);
 
@@ -50,11 +50,11 @@ export function flags(props: Record<string, boolean>) {
         .join('');
 }
 
-export function example(handle: InstanceHandle | ErrorHandle | null | undefined) {
+export function example(handle: InstanceHandle | ErrorHandle | null | undefined): Snippet {
     return handle?.type === 'INSTANCE' ? handle.executeTemplate().example : '';
 }
 
-export function icon(layer: InstanceHandle, visible: string, swapName: string) {
+export function icon(layer: InstanceHandle, visible: string, swapName: string): Snippet {
     return toggle(layer, visible) ? swap(layer, swapName) : '';
 }
 
@@ -62,11 +62,8 @@ export function placeholder(slot: InstanceHandle) {
     return bool(slot, 'value') ? '' : ` placeholder="${text(slot, 'Text')}"`;
 }
 
-export function lines(snippets: unknown[], indent = '    ') {
-    return snippets.reduce<TemplateStringResult | string>(
-        (acc, snippet) => figma.code`${acc}\n${indent}${snippet}`,
-        '',
-    );
+export function lines(snippets: unknown[], indent = '    '): Snippet {
+    return snippets.reduce<Snippet>((acc, snippet) => figma.code`${acc}\n${indent}${snippet}`, '');
 }
 
 export function connectedChildren(layer: InstanceHandle) {
@@ -80,12 +77,12 @@ export function connectedChildren(layer: InstanceHandle) {
     });
 }
 
-export function body(snippets: unknown[], indent = '') {
+export function body(snippets: unknown[], indent = ''): Snippet {
     if (snippets.length === 0) return '{/* contents */}';
 
     return figma.code`${lines(snippets, `${indent}    `)}\n${indent}`;
 }
 
-export function contents(layer: InstanceHandle, indent = '') {
+export function contents(layer: InstanceHandle, indent = ''): Snippet {
     return body(connectedChildren(layer).map(example), indent);
 }
