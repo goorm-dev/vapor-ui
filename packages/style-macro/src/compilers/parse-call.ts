@@ -6,6 +6,8 @@ import type { AnyProp, BuildError, IRRule } from '~/models/types';
 import { normalizeValue } from '~/models/value';
 import { hyphenate } from '~/tokens/css-reference';
 
+import { type Loc, locOfNode } from './loc';
+
 export interface TernarySite {
     consequentRuleIndexes: number[];
     alternateRuleIndexes: number[];
@@ -39,11 +41,6 @@ const TOKEN_SUBSTITUTE_REGEX = /\$([a-zA-Z][a-zA-Z0-9_-]*)/g;
 /* ----- utils ----- */
 
 const kebabToCamel = (prop: string) => prop.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
-
-const locOf = (node: AnyProp): Loc => {
-    const start = node?.loc?.start;
-    return { line: start?.line ?? 1, column: start?.column ?? 0 };
-};
 
 const keyName = (prop: AnyProp): string | null => {
     if (prop.computed) return null;
@@ -137,6 +134,7 @@ export function createParser(source: string) {
     const ternaries: TernarySite[] = [];
 
     const pushError = (err: BuildError) => buildErrors.push(err);
+    const locOf = (node: AnyProp): Loc => locOfNode(source, node);
 
     const recordRuleRange = (fn: () => void): number[] => {
         const start = rules.length;
@@ -319,7 +317,7 @@ export function createParser(source: string) {
     return {
         parse(arg: AnyProp): ParseCallResult {
             if (!arg || arg.type !== 'ObjectExpression') {
-                pushError(invalidInputShape(locOf(arg ?? { loc: undefined })));
+                pushError(invalidInputShape(locOf(arg)));
             } else {
                 walkObject(arg, 'base', true);
             }
@@ -333,8 +331,6 @@ export function parseCallArg(arg: AnyProp, source: string): ParseCallResult {
 }
 
 /* ----- errors ----- */
-
-type Loc = { line: number; column: number };
 
 const spread = (loc: Loc): BuildError => ({
     code: 'spread',

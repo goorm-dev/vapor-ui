@@ -2,6 +2,8 @@ import type MagicString from 'magic-string';
 
 import type { AnyProp, BuildError } from '~/models/types';
 
+import { locOfNode } from './loc';
+
 /**
  * 한 css() 호출이 element `style` 에 넣을 slot 값. className 이 고르는 분기 트리와
  * 같은 모양이다 — 분기 leaf 마다 그 leaf 의 블록이 실제로 참조하는 slot 만 담는다.
@@ -70,7 +72,7 @@ const WRAPPER_TYPES = new Set([
  * 실제 삽입은 `flushInjects` 가 모든 call 수집 후 element 단위로 한 번에 처리.
  */
 export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext): InjectOutcome {
-    const found = findJsxAttribute(site.call, site.parents);
+    const found = findJsxAttribute(ctx.ms.original, site.call, site.parents);
     if ('error' in found) return { success: false, error: found.error };
 
     const { openingEl, guards } = found;
@@ -80,7 +82,10 @@ export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext)
         if (!isStyleAttr(a)) continue;
         const v = a.value;
         if (v && !(v.type === 'JSXExpressionContainer' && v.expression)) {
-            return { success: false, error: mkErr(site.call, 'style-unmergeable') };
+            return {
+                success: false,
+                error: mkErr(ctx.ms.original, site.call, 'style-unmergeable'),
+            };
         }
     }
 
@@ -169,7 +174,8 @@ export function flushInjects(ctx: InjectContext): void {
         for (const a of region) {
             if (a === keyAttr) continue;
             const entry = propEntry(a, ctx.ms);
-            if (entry === null) return void ctx.errors.push(mkErr(a, 'entity-in-spread-region'));
+            if (entry === null)
+                return void ctx.errors.push(mkErr(ctx.ms.original, a, 'entity-in-spread-region'));
             props.push(entry);
         }
         const key = keyAttr ? `${ctx.ms.slice(keyAttr.start, keyAttr.end)} ` : '';
@@ -252,7 +258,11 @@ interface FoundJsx {
     guards: Guard[];
 }
 
-function findJsxAttribute(_call: AnyProp, parents: AnyProp[]): FoundJsx | { error: BuildError } {
+function findJsxAttribute(
+    source: string,
+    _call: AnyProp,
+    parents: AnyProp[],
+): FoundJsx | { error: BuildError } {
     // parents 는 walker 가 자식→부모 순으로 push 하고 pop 하는 스택 뒤로 push된 상태.
     // parents[len-1] 이 call 의 직계 부모. 위로 올라가며 JSXExpressionContainer 를 찾음.
     let i = parents.length - 1;
@@ -266,26 +276,27 @@ function findJsxAttribute(_call: AnyProp, parents: AnyProp[]): FoundJsx | { erro
         if (n.type === 'JSXExpressionContainer') {
             // JSXExpressionContainer 의 부모는 JSXAttribute.
             const attr = parents[i - 1];
-            if (!attr || attr.type !== 'JSXAttribute') return { error: mkErr(_call, 'no-attr') };
+            if (!attr || attr.type !== 'JSXAttribute')
+                return { error: mkErr(source, _call, 'no-attr') };
             const nameNode = attr.name;
             if (!nameNode || nameNode.type !== 'JSXIdentifier' || nameNode.name !== 'className') {
-                return { error: mkErr(_call, 'not-className') };
+                return { error: mkErr(source, _call, 'not-className') };
             }
             const openingEl = parents[i - 2];
             if (!openingEl || openingEl.type !== 'JSXOpeningElement') {
-                return { error: mkErr(_call, 'no-opening') };
+                return { error: mkErr(source, _call, 'no-opening') };
             }
             return { openingEl, guards: guards.reverse() };
         }
         if (!WRAPPER_TYPES.has(n.type)) {
-            return { error: mkErr(_call, `unwrap:${n.type}`) };
+            return { error: mkErr(source, _call, `unwrap:${n.type}`) };
         }
         const guard = guardOf(n, child);
         if (guard) guards.push(guard);
         child = n;
         i--;
     }
-    return { error: mkErr(_call, 'no-jsx') };
+    return { error: mkErr(source, _call, 'no-jsx') };
 }
 
 function findAttributeInsertPos(openingEl: AnyProp): number {
@@ -300,7 +311,7 @@ function findAttributeInsertPos(openingEl: AnyProp): number {
     return name?.end ?? openingEl.start + 1;
 }
 
-function mkErr(call: AnyProp, tag: string): BuildError {
+function mkErr(source: string, call: AnyProp, tag: string): BuildError {
     if (tag === 'entity-in-spread-region') {
         return {
             code: 'dynamic-value',
@@ -308,15 +319,12 @@ function mkErr(call: AnyProp, tag: string): BuildError {
                 'This element has dynamic css() values and spread props, so its attributes between the ' +
                 'spreads are rewritten as JavaScript, where HTML entities in a JSX string are not decoded. ' +
                 "Write the value as an expression instead, e.g. title={'a & b'}.",
-            loc: { line: call.loc?.start.line ?? 1, column: call.loc?.start.column ?? 0 },
+            loc: locOfNode(source, call),
         };
     }
     return {
         code: 'dynamic-value',
         message: `Dynamic css() call must sit in a JSX className={...} position (detail: ${tag}).`,
-        loc: {
-            line: call.loc?.start.line ?? 1,
-            column: call.loc?.start.column ?? 0,
-        },
+        loc: locOfNode(source, call),
     };
 }

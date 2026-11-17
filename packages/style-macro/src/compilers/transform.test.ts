@@ -1419,3 +1419,46 @@ describe('transform — literal values that can never be CSS', () => {
         expect(out.code).toContain('style=');
     });
 });
+
+describe('transform — every build error points at its node', () => {
+    // 2행에 한글·이모지 주석 — offset 은 UTF-16 기준이어야 column 이 맞는다.
+    const at = (line3: string) =>
+        transform({
+            source: [`import { css } from '@vapor-ui/style-macro';`, `// 한글 주석 😀`, line3].join(
+                '\n',
+            ),
+            filename: '/L.tsx',
+        }).errors[0]!;
+    const col = (line3: string, needle: string) => line3.indexOf(needle);
+
+    it.each([
+        ['invalid-value', `export const a = css({ color: true });`, 'true'],
+        ['unknown-token', `export const a = css({ color: '$nope-1' });`, `'$nope-1'`],
+        ['spread', `export const a = css({ ...x });`, '...x'],
+        ['computed-key', `export const a = css({ [k]: 1 });`, 'k]'],
+        ['invalid-selector', `export const a = css({ hover: { color: 'red' } });`, 'hover'],
+        ['dynamic-value (ternary)', `export const a = css({ color: c ? d : 'red' });`, 'c ?'],
+        ['invalid-input-shape (no arg)', `export const a = css();`, 'css()'],
+        ['invalid-input-shape (nested)', `export const a = css(x, css(y));`, 'css(y)'],
+        [
+            'dynamic-value (not className)',
+            `export const A = ({ c }) => <div title={css({ color: c })} />;`,
+            'css({',
+        ],
+    ])('%s', (_label, line3, needle) => {
+        const err = at(line3);
+        expect(err.loc).toEqual({ line: 3, column: col(line3, needle) });
+    });
+
+    it('code frame marks the offending line', () => {
+        const out = transform({
+            source: [
+                `import { css } from '@vapor-ui/style-macro';`,
+                ``,
+                `export const a = css({ color: true });`,
+            ].join('\n'),
+            filename: '/L2.tsx',
+        });
+        expect(out.errors[0]!.loc.line).toBe(3);
+    });
+});

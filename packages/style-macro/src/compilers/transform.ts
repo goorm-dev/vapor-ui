@@ -16,6 +16,7 @@ import {
     hasSlots,
     injectJsxStyleForCall,
 } from './jsx-inject';
+import { locAt, locOfNode } from './loc';
 import { walk } from './oxc-walk';
 import { type ParseCallResult, parseCallArg } from './parse-call';
 import { isShadowed } from './scope';
@@ -241,7 +242,7 @@ class Transformer {
             const pieces = call.args.flatMap((a) => (a.kind === 'local' ? a.pieces : []));
             const combos = countCombinations(pieces);
             if (combos > MAX_COMBINATIONS) {
-                this.#errors.push(tooManyBranchesError(call.node, combos));
+                this.#errors.push(tooManyBranchesError(this.opts.source, call.node, combos));
                 continue;
             }
 
@@ -383,7 +384,7 @@ class Transformer {
     #onCallExpression = (node: AnyProp, parents: AnyProp[]) => {
         if (!this.#isCssCall(node)) return;
         if ((node.arguments ?? []).length === 0) {
-            this.#errors.push(noArgError(node));
+            this.#errors.push(noArgError(this.opts.source, node));
             return;
         }
         this.#callNodes.push({ node, parents: parents.slice() });
@@ -409,7 +410,7 @@ class Transformer {
             const pieces = this.#resolve(a, scope, new Set());
             if (pieces) args.push({ kind: 'local', pieces });
             else if (this.#isCssCall(a) || containsCssCall(a, this.#bindingName!)) {
-                this.#errors.push(nestedCallError(a));
+                this.#errors.push(nestedCallError(this.opts.source, a));
             } else args.push({ kind: 'external', node: a });
         }
         return this.#errors.length > before ? null : args;
@@ -810,12 +811,6 @@ function parseError(
     };
 }
 
-/** 소스 offset → 1-based line / 0-based column. */
-function locAt(source: string, offset: number) {
-    const before = source.slice(0, offset);
-    return { line: before.split('\n').length, column: offset - (before.lastIndexOf('\n') + 1) };
-}
-
 /** 첫 인자를 제자리에서 바꾸는 내장 함수. */
 const MUTATING_BUILTINS: Record<string, Set<string>> = {
     Object: new Set(['assign', 'defineProperty', 'defineProperties', 'setPrototypeOf']),
@@ -849,34 +844,30 @@ function errorResult(source: string, errors: BuildError[]): TransformResult {
     return { code: source, css: null, errors };
 }
 
-function locOf(node: AnyProp) {
-    return { line: node?.loc?.start?.line ?? 1, column: node?.loc?.start?.column ?? 0 };
-}
-
-function noArgError(node: AnyProp): BuildError {
+function noArgError(source: string, node: AnyProp): BuildError {
     return {
         code: 'invalid-input-shape',
         message: 'css() requires at least one argument.',
-        loc: locOf(node),
+        loc: locOfNode(source, node),
     };
 }
 
-function nestedCallError(node: AnyProp): BuildError {
+function nestedCallError(source: string, node: AnyProp): BuildError {
     return {
         code: 'invalid-input-shape',
         message:
             'A css() call nested inside another css() call must be fully static ' +
             '(object literals, same-file css() constants, and && / ?: between them).',
-        loc: locOf(node),
+        loc: locOfNode(source, node),
     };
 }
 
-function tooManyBranchesError(node: AnyProp, combos: number): BuildError {
+function tooManyBranchesError(source: string, node: AnyProp, combos: number): BuildError {
     return {
         code: 'invalid-input-shape',
         message:
             `css() call has ${combos} conditional style combinations (limit ${MAX_COMBINATIONS}). ` +
             'Split it into several css() calls.',
-        loc: locOf(node),
+        loc: locOfNode(source, node),
     };
 }
