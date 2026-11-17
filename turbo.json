@@ -49,6 +49,18 @@
             "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/packages/composites/figma-entries.json"],
             "outputs": ["dist/**"]
         },
+        "@vapor-ui/figma-blueprint#test": {
+            "dependsOn": ["^build"],
+            "inputs": [
+                "$TURBO_DEFAULT$",
+                "$TURBO_ROOT$/packages/*/figma-entries.json",
+                "$TURBO_ROOT$/packages/*/figma.config.json",
+                "$TURBO_ROOT$/packages/core/src/**",
+                "$TURBO_ROOT$/packages/composites/src/**",
+                "$TURBO_ROOT$/packages/icons/src/**"
+            ],
+            "outputs": []
+        },
         "build": {
             "dependsOn": ["^build"],
             "inputs": ["$TURBO_DEFAULT$", ".env*"],
