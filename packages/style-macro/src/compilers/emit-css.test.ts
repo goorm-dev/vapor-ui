@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { ROOT_CONTEXT, type RuleContext, nestContext } from '~/models/selector';
 import type { IRRule } from '~/models/types';
 
 import { type Block, emitBlocks, normalizeRules, signatureOf } from './emit-css';
@@ -10,9 +11,12 @@ const rule = (o: Partial<IRRule> = {}): IRRule =>
         property: 'padding-top',
         value: 'var(--vapor-size-space-400)',
         rawValue: '$space-400',
-        selectorContext: 'base',
+        context: ROOT_CONTEXT,
         ...o,
     }) as IRRule;
+
+/** 중첩 key 들을 차례로 연 context. */
+const at = (...keys: string[]): RuleContext => keys.reduce(nestContext, ROOT_CONTEXT);
 
 const block = (rules: IRRule[], className = 'X'): Block => ({ className, rules });
 const emit = (rules: IRRule[], layer?: string) =>
@@ -37,7 +41,7 @@ describe('normalizeRules — last wins per selector + property', () => {
     });
 
     it('treats different selector contexts as different slots', () => {
-        const out = normalizeRules([rule(), rule({ selectorContext: ':hover' })]);
+        const out = normalizeRules([rule(), rule({ context: at(':hover') })]);
         expect(out).toHaveLength(2);
     });
 
@@ -85,9 +89,9 @@ describe('emitBlocks', () => {
 
     it('nested selector groups follow the base group in declaration order', () => {
         const css = emit([
-            rule({ property: 'color', value: 'a', selectorContext: '[data-x]' }),
+            rule({ property: 'color', value: 'a', context: at('[data-x]') }),
             rule({ property: 'color', value: 'b' }),
-            rule({ property: 'color', value: 'c', selectorContext: ':hover' }),
+            rule({ property: 'color', value: 'c', context: at(':hover') }),
         ]);
         expect(pos(css, '.X {')).toBeLessThan(pos(css, '.X[data-x]'));
         expect(pos(css, '.X[data-x]')).toBeLessThan(pos(css, '.X:hover'));
@@ -95,9 +99,9 @@ describe('emitBlocks', () => {
 
     it('composes pseudo-element, self-ref and comma selectors', () => {
         const css = emit([
-            rule({ property: 'content', value: '""', selectorContext: '::before' }),
-            rule({ property: 'color', value: 'a', selectorContext: '&.selected' }),
-            rule({ property: 'color', value: 'b', selectorContext: ':hover, :focus-visible' }),
+            rule({ property: 'content', value: '""', context: at('::before') }),
+            rule({ property: 'color', value: 'a', context: at('&.selected') }),
+            rule({ property: 'color', value: 'b', context: at(':hover, :focus-visible') }),
         ]);
         expect(css).toContain('.X::before {');
         expect(css).toContain('.X.selected {');
@@ -106,8 +110,8 @@ describe('emitBlocks', () => {
 
     it('at-rule groups come after selector groups', () => {
         const css = emit([
-            rule({ value: 'var(--m)', selectorContext: '@media(min-width:768px)' }),
-            rule({ value: 'var(--h)', selectorContext: ':hover' }),
+            rule({ value: 'var(--m)', context: at('@media(min-width:768px)') }),
+            rule({ value: 'var(--h)', context: at(':hover') }),
             rule({ value: 'var(--b)' }),
         ]);
         expect(pos(css, 'var(--b)')).toBeLessThan(pos(css, 'var(--h)'));
@@ -115,27 +119,27 @@ describe('emitBlocks', () => {
     });
 
     it('nests a pseudo inside its media block', () => {
-        const css = emit([rule({ selectorContext: '@media(min-width:768px):hover' })]);
+        const css = emit([rule({ context: at('@media(min-width:768px)', ':hover') })]);
         expect(css).toMatch(/@media \(min-width: 768px\) \{\s*\.X:hover \{/);
     });
 
     it('orders min-width ascending and max-width descending', () => {
         const min = emit([
-            rule({ value: 'var(--w)', selectorContext: '@media (min-width: 1024px)' }),
-            rule({ value: 'var(--n)', selectorContext: '@media (min-width: 768px)' }),
+            rule({ value: 'var(--w)', context: at('@media (min-width: 1024px)') }),
+            rule({ value: 'var(--n)', context: at('@media (min-width: 768px)') }),
         ]);
         expect(pos(min, '768px')).toBeLessThan(pos(min, '1024px'));
         const max = emit([
-            rule({ value: 'var(--n)', selectorContext: '@media (max-width: 768px)' }),
-            rule({ value: 'var(--w)', selectorContext: '@media (max-width: 1024px)' }),
+            rule({ value: 'var(--n)', context: at('@media (max-width: 768px)') }),
+            rule({ value: 'var(--w)', context: at('@media (max-width: 1024px)') }),
         ]);
         expect(pos(max, '1024px')).toBeLessThan(pos(max, '768px'));
     });
 
     it('keeps compound and container at-rules intact', () => {
         const css = emit([
-            rule({ selectorContext: '@media (min-width: 768px) and (max-width: 1024px)' }),
-            rule({ property: 'gap', selectorContext: '@container sidebar (min-width: 400px)' }),
+            rule({ context: at('@media (min-width: 768px) and (max-width: 1024px)') }),
+            rule({ property: 'gap', context: at('@container sidebar (min-width: 400px)') }),
         ]);
         expect(css).toMatch(/@media \(min-width: 768px\) and \(max-width: 1024px\) \{/);
         expect(css).toMatch(/@container sidebar \(min-width: 400px\) \{/);
@@ -168,7 +172,7 @@ describe('emitBlocks', () => {
     });
 
     it('is deterministic', () => {
-        const rules = [rule(), rule({ selectorContext: ':hover' })];
+        const rules = [rule(), rule({ context: at(':hover') })];
         expect(emit(rules)).toBe(emit(rules));
     });
 });

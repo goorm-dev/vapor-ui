@@ -1,5 +1,5 @@
 import { type ClassNameMode, dynamicVarName } from '~/models/class-name';
-import { composeSelector } from '~/models/selector';
+import { contextKey, resolveSelector } from '~/models/selector';
 import { compareAtRulePath } from '~/models/sort';
 import type { IRRule } from '~/models/types';
 
@@ -22,62 +22,13 @@ export interface EmitOutput {
     cssText: string;
 }
 
-/**
- * selectorContext 에서 앞쪽 at-rule 접두어와 leaf selector 분리.
- * 괄호 depth 0 에서 `:`, `[`, `&` 가 나오면 거기부터 leaf. 그 전까지는 at-rule 영역.
- * 복합 미디어 쿼리(`@media (min-width: 768px) and (max-width: 1024px)`) 와
- * 컨테이너 쿼리(`@container sidebar (min-width: 400px)`) 가 하나의 at-rule 로 유지됨.
- */
-function extractAtRulePrefix(selectorContext: string) {
-    if (!selectorContext.startsWith('@')) {
-        return { atRule: null, leaf: selectorContext || 'base' };
-    }
-
-    let depth = 0;
-    let prefixEnd = selectorContext.length;
-
-    for (let i = 0; i < selectorContext.length; i++) {
-        const c = selectorContext[i];
-        if (c === '(') depth++;
-        else if (c === ')') depth--;
-        else if (depth === 0 && (c === ':' || c === '[' || c === '&')) {
-            prefixEnd = i;
-            break;
-        }
-    }
-
-    const atRule = selectorContext.slice(0, prefixEnd).trim();
-    const leaf = selectorContext.slice(prefixEnd) || 'base';
-    return { atRule: atRule || null, leaf };
-}
-
-/** `@` 문자(괄호 밖) 기준으로 at-rule 유닛 분리. 괄호 안의 feature 는 유닛 경계로 사용하지 않음. */
-function splitAtRules(prefix: string): string[] {
-    const units: string[] = [];
-    let depth = 0;
-    let start = -1;
-
-    for (let i = 0; i < prefix.length; i++) {
-        const c = prefix[i];
-        if (c === '(') depth++;
-        else if (c === ')') depth--;
-        else if (c === '@' && depth === 0) {
-            if (start !== -1) units.push(prefix.slice(start, i).trim());
-            start = i;
-        }
-    }
-
-    if (start !== -1) units.push(prefix.slice(start).trim());
-    return units.filter(Boolean);
-}
-
 /** 공백 생략형(`@media(min-width:768px)`) 을 정식 표기로 보정. 이미 공백이 있으면 멱등. */
 function formatAtRule(s: string): string {
     return s.replace(/@([a-zA-Z-]+)(?=\()/g, '@$1 ').replace(/([a-zA-Z-]+):(?=\S)/g, '$1: ');
 }
 
 function slotKey(r: IRRule): string {
-    return `${r.selectorContext}|${r.property}`;
+    return `${contextKey(r.context)}|${r.property}`;
 }
 
 /**
@@ -115,10 +66,8 @@ interface Group {
 function groupsOf(block: Block, hashMode: 'dev' | 'prod'): Group[] {
     const byKey = new Map<string, Group>();
     for (const rule of block.rules) {
-        const { atRule, leaf } = extractAtRulePrefix(rule.selectorContext);
-        const atRulePath = atRule ? splitAtRules(atRule).map(formatAtRule) : [];
-        const cls = `.${block.className}`;
-        const selector = leaf === 'base' ? cls : composeSelector(cls, leaf);
+        const atRulePath = rule.context.atRules.map(formatAtRule);
+        const selector = resolveSelector(rule.context.selector, block.className);
         const key = `${atRulePath.join('\u0000')}\u0001${selector}`;
         let g = byKey.get(key);
         if (!g) {

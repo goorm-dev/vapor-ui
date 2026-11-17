@@ -1,113 +1,134 @@
-export type SelectorKind = 'pseudo' | 'pseudo-element' | 'at-rule' | 'attr' | 'self-ref';
-
-export interface ParsedSelector {
-    kind: SelectorKind;
-    raw: string;
-}
-
 /**
- * Nested key 검증. `:`, `::`, `@`, `[`, `&` 로 시작해야 함.
- * bare selector (예: `div span`) 는 scope 오염 방지 위해 금지.
- */
-export function parseSelector(key: string): ParsedSelector {
-    // `::` 는 `:` 보다 먼저 체크.
-    if (key.startsWith('::')) return { kind: 'pseudo-element', raw: key };
-    if (key.startsWith(':')) return { kind: 'pseudo', raw: key };
-    if (key.startsWith('@')) return { kind: 'at-rule', raw: key };
-    if (key.startsWith('[')) return { kind: 'attr', raw: key };
-    if (key.startsWith('&')) return { kind: 'self-ref', raw: key };
-
-    throw new Error(
-        `invalid selector: ${JSON.stringify(key)}. ` +
-            `Nested keys must start with ':', '::', '@', '[', or '&'.`,
-    );
-}
-
-/**
- * CSS selector 에서 top-level 콤마로 분기 selector 분리.
- * 괄호 `()` / 대괄호 `[]` 안의 콤마는 무시한다 — `[data-a="x,y"]`, `:is(a, b)`
- * 같은 selector 안의 콤마를 split 경계로 쓰면 안 되기 때문.
+ * 중첩 selector 모델.
  *
- * 리뷰 #4 결함:
- *   `':hover, :focus-visible'` → `.x:hover, :focus-visible`
- *   (뒷 branch 에 class prefix 가 빠져 전역 selector 로 유출)
- * 를 막기 위해 emit 단계에서 각 branch 에 class prefix 를 붙인다.
+ * 각 중첩 단계에서 부모 context 에 대해 바로 푼다 (Sass · postcss-nested · Compiled 와 같다).
+ * - selector key: 부모 selector 목록 × 자식 selector 목록의 곱. 자식에 `&` 가 있으면 그 자리에
+ *   부모를, 없으면 부모 뒤에 붙인다 (`:hover` = `&:hover`).
+ * - at-rule key: selector 에 섞지 않고 at-rule 스택에 쌓는다. CSS 로는 바깥부터 감싼다
+ *   (CSS Nesting 의 nested group rule 과 같은 결과).
+ *
+ * `&` 는 이 블록의 class 를 뜻한다. class 이름은 블록 선언이 모두 모인 뒤 정해지므로
+ * emit 단계에서 `resolveSelector` 로 바꾼다.
  */
-function splitTopLevelCommas(s: string): string[] {
-    const parts: string[] = [];
-    let paren = 0;
-    let bracket = 0;
-    let last = 0;
 
+export interface RuleContext {
+    /** 바깥 → 안쪽 at-rule prelude. 공백은 하나로 축약. */
+    atRules: readonly string[];
+    /** 풀린 selector 목록 (`, ` 로 연결). `&` = 블록 class. */
+    selector: string;
+}
+
+export const ROOT_CONTEXT: RuleContext = { atRules: [], selector: '&' };
+
+const NESTED_PREFIXES = ['::', ':', '[', '&'];
+
+/** `@` 로 시작하면 at-rule, 아니면 selector key. */
+export const isAtRuleKey = (key: string): boolean => key.startsWith('@');
+
+/**
+ * 부모 context 에 중첩 key 하나를 더한 context.
+ * selector 목록의 각 항목은 `:`, `::`, `[`, `&` 로 시작해야 한다 — bare selector(`div span`)는
+ * 다른 element 로 새어 나가므로 금지. 위반 시 throw (메시지에 그 항목을 담는다).
+ */
+export function nestContext(parent: RuleContext, key: string): RuleContext {
+    if (isAtRuleKey(key)) {
+        return {
+            atRules: [...parent.atRules, normalizeWhitespace(key)],
+            selector: parent.selector,
+        };
+    }
+
+    const children = splitList(key);
+    if (children.length === 0) throw new Error(`invalid selector: ${JSON.stringify(key)}.`);
+    for (const child of children) {
+        if (!NESTED_PREFIXES.some((p) => child.startsWith(p))) {
+            throw new Error(
+                `invalid selector: ${JSON.stringify(child)}. ` +
+                    `Nested keys must start with ':', '::', '@', '[', or '&'.`,
+            );
+        }
+    }
+
+    const selector = splitList(parent.selector)
+        .flatMap((p) => children.map((c) => (hasNesting(c) ? replaceNesting(c, p) : `${p}${c}`)))
+        .join(', ');
+    return { atRules: parent.atRules, selector };
+}
+
+/** 같은 context 끼리 같은 문자열. slot·signature key 용. */
+export function contextKey(ctx: RuleContext): string {
+    return [...ctx.atRules, ctx.selector].join('\u0000');
+}
+
+/** `&` 를 `.className` 으로 바꾼 최종 selector. */
+export function resolveSelector(selector: string, className: string): string {
+    return replaceNesting(selector, `.${className}`);
+}
+
+/* ----- selector 텍스트 스캔 ----- */
+
+/**
+ * selector 텍스트를 한 글자씩 훑으며 "구조적" 위치(문자열·escape 밖)인 글자만 `onChar` 에 넘긴다.
+ * depth 는 괄호 `()` / 대괄호 `[]` 중첩 깊이.
+ */
+function scan(s: string, onChar: (c: string, i: number, depth: number) => void) {
+    let depth = 0;
+    let quote: string | null = null;
     for (let i = 0; i < s.length; i++) {
-        const c = s[i];
-        if (c === '(') paren++;
-        else if (c === ')') paren--;
-        else if (c === '[') bracket++;
-        else if (c === ']') bracket--;
-        else if (c === ',' && paren === 0 && bracket === 0) {
+        const c = s[i]!;
+        if (c === '\\') {
+            i++;
+            continue;
+        }
+        if (quote) {
+            if (c === quote) quote = null;
+            continue;
+        }
+        if (c === '"' || c === "'") {
+            quote = c;
+            continue;
+        }
+        if (c === '(' || c === '[') depth++;
+        else if (c === ')' || c === ']') depth--;
+        onChar(c, i, depth);
+    }
+}
+
+/** 최상위 콤마로 selector 목록 분리. */
+function splitList(s: string): string[] {
+    const parts: string[] = [];
+    let last = 0;
+    scan(s, (c, i, depth) => {
+        if (c === ',' && depth === 0) {
             parts.push(s.slice(last, i));
             last = i + 1;
         }
-    }
+    });
     parts.push(s.slice(last));
     return parts.map((p) => p.trim()).filter(Boolean);
 }
 
-export function composeSelector(className: string, key: string): string {
-    // top-level comma 가 있으면 branch 마다 class prefix 를 붙여 재조립.
-    const branches = splitTopLevelCommas(key);
-    if (branches.length > 1) {
-        return branches.map((b) => composeSelector(className, b)).join(', ');
+function nestingPositions(s: string): number[] {
+    const at: number[] = [];
+    scan(s, (c, i) => {
+        if (c === '&') at.push(i);
+    });
+    return at;
+}
+
+const hasNesting = (s: string): boolean => nestingPositions(s).length > 0;
+
+function replaceNesting(s: string, with_: string): string {
+    let out = '';
+    let last = 0;
+    for (const i of nestingPositions(s)) {
+        out += s.slice(last, i) + with_;
+        last = i + 1;
     }
-
-    const parsed = parseSelector(key);
-
-    // self-ref 는 "현재 selector 를 이 위치에 삽입" 의미. key 안의 `&` 를
-    // className 으로 모두 치환한다. 중첩 pseudo 안의 `&.active` 처럼 kind 가
-    // pseudo 로 판정되어도 key 중간의 `&` 를 놓치지 않기 위해, 치환은 kind 판정과
-    // 독립적으로 먼저 수행한다.
-    const replaced = key.includes('&') ? key.replace(/&/g, className) : key;
-
-    switch (parsed.kind) {
-        case 'self-ref':
-            return replaced;
-        case 'pseudo':
-        case 'pseudo-element':
-        case 'attr':
-            // `&` 가 중간에 있으면 그 부분이 className 으로 치환된 replaced 사용.
-            return key.includes('&') ? replaced : `${className}${key}`;
-        case 'at-rule':
-            return className;
-    }
+    return out + s.slice(last);
 }
 
 /** CSS 공백 문자(space/tab/LF/CR/FF)만 하나로 축약 후 양끝 공백 제거. */
 function normalizeWhitespace(s: string): string {
     return s.replace(/[ \t\n\r\f]+/g, ' ').trim();
-}
-
-/**
- * selectorContext 합성. canonical 규약:
- *
- *   `@at-rule 1@at-rule 2...<pseudo/attr/self-ref 체인>`
- *
- * 즉, at-rule 접두가 항상 selector 체인 **앞**에 나타난다. 사용자가
- * `:hover` 아래에 `@media` 를 중첩해도 합성 결과는 `@media:hover` 로 뒤바꿔
- * 저장한다. 이렇게 하면 emit 단계의 `extractAtRulePrefix` 가 복잡한 역검색
- * 없이 접두어만 떼어내도 되고, 결과 CSS 는 `@media (...) { .x:hover {...} }`
- * 로 올바르게 wrap 된다 — 리뷰 #3 결함(`\.x:hover@media (...)` 유출) 방지.
- */
-export function composeContext(parent: string, key: string): string {
-    const parsed = parseSelector(key);
-    const norm = parsed.kind === 'at-rule' ? normalizeWhitespace(key) : key;
-    if (parent === 'base') return norm;
-
-    if (parsed.kind === 'at-rule') {
-        // at-rule 은 항상 selector 체인 앞. parent 가 at-rule 로 시작하면 그 뒤에
-        // 이어 쌓고, 아니면 selector 체인 앞으로 당긴다.
-        return parent.startsWith('@') ? `${parent}${norm}` : `${norm}${parent}`;
-    }
-
-    return `${parent}${norm}`;
 }

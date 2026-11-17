@@ -84,6 +84,43 @@ describe('transform — static syntax', () => {
         expect(out.errors.length).toBeGreaterThan(0);
         expect(out.errors[0].code).toBe('invalid-selector');
     });
+
+    it('rejects a bare branch inside a comma list instead of leaking it', () => {
+        const out = transform({
+            source: src(`const cls = css({ ':hover, div': { color: 'red' } });`),
+            filename: '/H.tsx',
+        });
+        expect(out.errors.map((e) => e.code)).toEqual(['invalid-selector']);
+    });
+
+    describe('nested selectors resolve per level', () => {
+        const cssOf = (style: string) => {
+            const out = transform({ source: src(`const c = css(${style});`), filename: '/N.tsx' });
+            expect(out.errors).toEqual([]);
+            return out.css!.replace(/\.c_[A-Za-z0-9]+/g, '.c');
+        };
+
+        it('distributes a comma parent over a nested `&`', () => {
+            expect(
+                cssOf(`{ '&[data-a], &[data-b]': { '&[data-c]': { color: 'red' } } }`),
+            ).toContain('.c[data-a][data-c], .c[data-b][data-c] {');
+        });
+
+        it('places `&` under a pseudo parent at the parent selector', () => {
+            expect(cssOf(`{ ':focus': { '&:hover': { color: 'red' } } }`)).toContain(
+                '.c:focus:hover {',
+            );
+        });
+
+        it('hoists an at-rule nested under a pseudo inside an at-rule', () => {
+            const css = cssOf(
+                `{ '@media (min-width: 1px)': { ':hover': { '@supports (display: grid)': { color: 'red' } } } }`,
+            );
+            expect(css).toMatch(
+                /@media \(min-width: 1px\) \{\s*@supports \(display: grid\) \{\s*\.c:hover \{ color: red; \}/,
+            );
+        });
+    });
 });
 
 describe('transform — dynamic slots', () => {

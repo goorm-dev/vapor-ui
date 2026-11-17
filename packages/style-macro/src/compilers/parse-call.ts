@@ -1,5 +1,5 @@
 import { generateArbitraryValueSelector } from '~/models/class-name';
-import { composeContext, parseSelector } from '~/models/selector';
+import { ROOT_CONTEXT, type RuleContext, contextKey, nestContext } from '~/models/selector';
 import { expandShorthand } from '~/models/shorthand';
 import { resolveToken } from '~/models/tokens';
 import type { AnyProp, BuildError, IRRule } from '~/models/types';
@@ -144,7 +144,7 @@ export function createParser(source: string) {
         return out;
     };
 
-    function walkObject(obj: AnyProp, selectorContext: string, isTop: boolean) {
+    function walkObject(obj: AnyProp, context: RuleContext, isTop: boolean) {
         if (!obj?.properties) return;
         for (const prop of obj.properties) {
             if (prop.type === 'SpreadElement') {
@@ -155,11 +155,11 @@ export function createParser(source: string) {
                 pushError(unsupportedProp(locOf(prop)));
                 continue;
             }
-            handleProperty(prop, selectorContext, isTop);
+            handleProperty(prop, context, isTop);
         }
     }
 
-    function handleProperty(prop: AnyProp, selectorContext: string, isTop: boolean) {
+    function handleProperty(prop: AnyProp, context: RuleContext, isTop: boolean) {
         const name = keyName(prop);
         if (prop.computed || name === null) {
             pushError(computedKey(locOf(prop.key ?? prop)));
@@ -170,7 +170,7 @@ export function createParser(source: string) {
 
         // 중첩 객체 → selector 확장
         if (value?.type === 'ObjectExpression') {
-            handleNestedObject(name, value, selectorContext, prop);
+            handleNestedObject(name, value, context, prop);
             return;
         }
 
@@ -189,36 +189,32 @@ export function createParser(source: string) {
 
         // 최상위 삼항 → build-time 2-way 전개
         if (isTop && value?.type === 'ConditionalExpression') {
-            handleTernary(cssProperty, value, selectorContext);
+            handleTernary(cssProperty, value, context);
             return;
         }
 
         // 리터럴/토큰 → static, 아니면 dynamic slot
         const staticVal = extractStaticValue(value);
         if (staticVal === null) {
-            handleDynamic(cssProperty, value, selectorContext);
+            handleDynamic(cssProperty, value, context);
             return;
         }
 
-        pushStatic(cssProperty, staticVal, selectorContext, locOf(value));
+        pushStatic(cssProperty, staticVal, context, locOf(value));
     }
 
-    function handleNestedObject(
-        name: string,
-        value: AnyProp,
-        selectorContext: string,
-        prop: AnyProp,
-    ) {
+    function handleNestedObject(name: string, value: AnyProp, context: RuleContext, prop: AnyProp) {
+        let nested: RuleContext;
         try {
-            parseSelector(name);
+            nested = nestContext(context, name);
         } catch {
             pushError(invalidSelector(locOf(prop.key ?? prop), name));
             return;
         }
-        walkObject(value, composeContext(selectorContext, name), false);
+        walkObject(value, nested, false);
     }
 
-    function handleTernary(cssProperty: string, value: AnyProp, selectorContext: string) {
+    function handleTernary(cssProperty: string, value: AnyProp, context: RuleContext) {
         const conseqLit = extractStaticValue(value.consequent);
         const altLit = extractStaticValue(value.alternate);
 
@@ -229,10 +225,10 @@ export function createParser(source: string) {
 
         const loc = locOf(value);
         const consequentRuleIndexes = recordRuleRange(() =>
-            pushStatic(cssProperty, conseqLit, selectorContext, loc),
+            pushStatic(cssProperty, conseqLit, context, loc),
         );
         const alternateRuleIndexes = recordRuleRange(() =>
-            pushStatic(cssProperty, altLit, selectorContext, loc),
+            pushStatic(cssProperty, altLit, context, loc),
         );
 
         ternaries.push({
@@ -243,7 +239,7 @@ export function createParser(source: string) {
         });
     }
 
-    function handleDynamic(cssProperty: string, value: AnyProp, selectorContext: string) {
+    function handleDynamic(cssProperty: string, value: AnyProp, context: RuleContext) {
         if (IDENTIFIER_PROPS.has(cssProperty)) {
             pushError(dynamicNotAllowed(locOf(value), cssProperty));
             return;
@@ -255,7 +251,7 @@ export function createParser(source: string) {
 
         const sourceExpr = source.slice(value.start, value.end);
         const slotId = generateArbitraryValueSelector(
-            `${cssProperty}|${selectorContext}|${sourceExpr}`,
+            `${cssProperty}|${contextKey(context)}|${sourceExpr}`,
         );
 
         // 동적 shorthand 는 longhand 로 분해하지 않고 원 property 를 유지한다.
@@ -267,7 +263,7 @@ export function createParser(source: string) {
             kind: 'dynamic',
             property: cssProperty,
             slotId,
-            selectorContext,
+            context,
             sourceExpr,
             start: value.start,
             end: value.end,
@@ -277,7 +273,7 @@ export function createParser(source: string) {
     function pushStatic(
         cssProperty: string,
         rawValue: string | number,
-        selectorContext: string,
+        context: RuleContext,
         loc: Loc,
     ) {
         const jsProperty = kebabToCamel(cssProperty);
@@ -292,7 +288,7 @@ export function createParser(source: string) {
                 property: e.property,
                 value: e.value,
                 rawValue: String(rawValue),
-                selectorContext,
+                context,
             });
         }
     }
@@ -319,7 +315,7 @@ export function createParser(source: string) {
             if (!arg || arg.type !== 'ObjectExpression') {
                 pushError(invalidInputShape(locOf(arg)));
             } else {
-                walkObject(arg, 'base', true);
+                walkObject(arg, ROOT_CONTEXT, true);
             }
             return { rules, ternaries, errors: buildErrors };
         },
