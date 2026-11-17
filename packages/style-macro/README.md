@@ -176,6 +176,27 @@ function C({ color }: { color: string }) {
 
 Runtime 에 `_resolveToken(property, value)` 호출 + inline `style={{ '--slot': ... }}` 자동 주입.
 
+### 값 없음 (`null` / `undefined`)
+
+`null` / `undefined` 리터럴은 선언을 만들지 않는다.
+
+```ts
+css({ color: undefined, width: '1px' }); // width 만
+```
+
+### 속성 이름 검사
+
+컴파일러는 속성 이름을 검사하지 않는다(Compiled · React Spectrum style macro 와 같다). 오타는 TypeScript 가 `StyleObject` 타입으로 잡는다. 인라인 리터럴은 자동으로 검사되지만, 상수로 선언한 object 는 타입을 붙여야 검사된다.
+
+```ts
+import { css, type StyleObject } from '@vapor-ui/style-macro';
+
+css({ colr: 'red' }); // ✗ TS: 'colr' does not exist in type 'StyleObject'
+
+const base = { colr: 'red' }; // 타입 없음 → 검사 안 됨
+const base = { colr: 'red' } satisfies StyleObject; // ✗ TS 에러
+```
+
 ## 지원 안 하는 값
 
 ### Shorthand property + 토큰
@@ -200,6 +221,7 @@ css({ borderWidth: '1px', borderStyle: 'solid', borderColor: '$basic-black' });
 - Computed keys (`[key]`)
 - Identifier property 의 dynamic value (`animation-name`, `content` 등)
 - 삼항 분기 안 dynamic value (`cond ? var1 : '$a'` X)
+- CSS 값이 될 수 없는 리터럴: boolean, 정규식, BigInt, 배열, 함수, 클래스 (`invalid-value`)
 
 ## FOUC guard
 
@@ -246,16 +268,19 @@ export default function Root({ children }) {
 
 ## Error 코드
 
-| Code                  | 상황                                                     |
-| --------------------- | -------------------------------------------------------- |
-| `unknown-token`       | 토큰 이름이 해당 axis 에 없음                            |
-| `scope-mismatch`      | 토큰이 다른 axis 소속                                    |
-| `unknown-property`    | property 가 token scope 미지원 (shorthand 등)            |
-| `invalid-input-shape` | 입력 shape 오류 (embedded `$token`, spread, 비정상 노드) |
-| `dynamic-value`       | 식별자 property 에 dynamic 값, 삼항 분기에 dynamic 값    |
-| `computed-key`        | computed key 사용                                        |
-| `spread`              | spread element 사용                                      |
-| `invalid-selector`    | nested selector 가 `:`/`::`/`@`/`[`/`&` 로 시작 안 함    |
+| Code                  | 상황                                                       |
+| --------------------- | ---------------------------------------------------------- |
+| `unknown-token`       | 토큰 이름이 해당 axis 에 없음                              |
+| `scope-mismatch`      | 토큰이 다른 axis 소속                                      |
+| `unknown-property`    | property 가 token scope 미지원 (shorthand 등)              |
+| `invalid-input-shape` | 입력 shape 오류 (embedded `$token`, spread, 비정상 노드)   |
+| `dynamic-value`       | 식별자 property 에 dynamic 값, 삼항 분기에 dynamic 값      |
+| `computed-key`        | computed key 사용                                          |
+| `spread`              | spread element 사용                                        |
+| `invalid-selector`    | nested selector 가 `:`/`::`/`@`/`[`/`&` 로 시작 안 함      |
+| `invalid-value`       | boolean · 정규식 · BigInt · 배열 · 함수 · 클래스 리터럴 값 |
+| `mutated-constant`    | `css()` 에 병합된 object 상수를 변경함                     |
+| `parse-error`         | 매크로를 import 한 파일의 문법 오류                        |
 
 ## 결정론
 

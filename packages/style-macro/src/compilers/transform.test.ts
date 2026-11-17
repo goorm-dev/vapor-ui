@@ -1354,3 +1354,68 @@ describe('transform — module constants resolve by lexical scope, not by name c
         expect(out.errors[0]).toMatchObject({ code: 'mutated-constant', loc: { line: 3 } });
     });
 });
+
+describe('transform — literal values that can never be CSS', () => {
+    const run = (style: string) =>
+        transform({
+            source: src(`export const A = ({ c }) => <div className={css(${style})} />;`),
+            filename: '/V.tsx',
+        });
+
+    it.each([
+        ['boolean', `{ color: true }`, 'a boolean'],
+        ['boolean in nested selector', `{ ':hover': { display: false } }`, 'a boolean'],
+        ['regex', `{ color: /x/ }`, 'a regular expression'],
+        ['bigint', `{ width: 10n }`, 'a BigInt'],
+        ['array', `{ margin: [1, 2] }`, 'an array'],
+        ['arrow function', `{ color: () => 'red' }`, 'a function'],
+        ['function expression', `{ color: function () { return 'red'; } }`, 'a function'],
+        ['class expression', `{ color: class {} }`, 'a class'],
+        ['wrapped in as / parens', `{ color: (true as never) }`, 'a boolean'],
+    ])('%s → invalid-value build error', (_label, style, kind) => {
+        const out = run(style);
+        expect(out.errors).toHaveLength(1);
+        expect(out.errors[0]!.code).toBe('invalid-value');
+        expect(out.errors[0]!.message).toContain(kind);
+    });
+
+    it('non-style object constant is reported through its values', () => {
+        const out = transform({
+            source: src(
+                `const opts = { enabled: true, retries: 3 };\nexport const A = () => <div className={css(opts)} />;`,
+            ),
+            filename: '/V2.tsx',
+        });
+        expect(out.errors.map((e) => e.code)).toEqual(['invalid-value']);
+    });
+
+    it.each([
+        ['null', `{ color: null, width: '1px' }`],
+        ['undefined', `{ color: undefined, width: '1px' }`],
+        ['null in nested selector', `{ ':hover': { color: null }, width: '1px' }`],
+        ['null wrapped in as', `{ color: null as never, width: '1px' }`],
+    ])('%s → declaration omitted, no slot', (_label, style) => {
+        const out = run(style);
+        expect(out.errors).toEqual([]);
+        expect(out.css).not.toContain('color');
+        expect(out.css).toContain('width: 1px');
+        expect(out.code).not.toContain('style=');
+    });
+
+    it('only-null object emits no block and no class', () => {
+        const out = run(`{ color: null }`);
+        expect(out.errors).toEqual([]);
+        expect(out.code).toContain(`className={''}`);
+    });
+
+    it.each([
+        ['dynamic expression', `{ color: c && 'red' }`],
+        ['binary expression', `{ width: c + 'px' }`],
+        ['call', `{ color: String(c) }`],
+        ['custom property', `{ '--x': c }`],
+    ])('%s → still a dynamic slot', (_label, style) => {
+        const out = run(style);
+        expect(out.errors).toEqual([]);
+        expect(out.code).toContain('style=');
+    });
+});

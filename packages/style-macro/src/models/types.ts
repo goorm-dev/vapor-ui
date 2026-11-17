@@ -12,7 +12,8 @@ export interface BuildError {
         | 'computed-key'
         | 'spread'
         | 'parse-error'
-        | 'mutated-constant';
+        | 'mutated-constant'
+        | 'invalid-value';
     message: string;
     loc: { line: number; column: number };
     hint?: string;

@@ -78,6 +78,51 @@ function extractStaticValue(node: AnyProp): string | number | null {
     return null;
 }
 
+/** 값에 영향 없는 래퍼(`as`, `satisfies`, `!`, 괄호)를 벗긴다. */
+function unwrapValue(node: AnyProp): AnyProp {
+    let n = node;
+    while (
+        n?.type === 'TSAsExpression' ||
+        n?.type === 'TSSatisfiesExpression' ||
+        n?.type === 'TSNonNullExpression' ||
+        n?.type === 'ParenthesizedExpression'
+    ) {
+        n = n.expression;
+    }
+    return n;
+}
+
+/** 값이 없음을 뜻하는 리터럴 (`null`, `undefined`). */
+function isAbsent(raw: AnyProp): boolean {
+    const node = unwrapValue(raw);
+    if (node?.type === 'Identifier') return node.name === 'undefined';
+    return node?.type === 'Literal' && node.value === null && !node.regex && node.raw === 'null';
+}
+
+/**
+ * CSS 값이 될 수 없는 리터럴의 종류. 판단에 속성 목록이 필요 없다 — 어떤 속성이든 이 값을
+ * 문자열로 바꾼 결과(`"true"`, `"/x/"`, `"1,2"`, 함수 본문)는 유효한 CSS 값이 아니다.
+ */
+function invalidLiteralKind(raw: AnyProp): string | null {
+    const node = unwrapValue(raw);
+    switch (node?.type) {
+        case 'Literal':
+            if (typeof node.value === 'boolean') return 'a boolean';
+            if (node.regex) return 'a regular expression';
+            if (node.bigint !== undefined) return 'a BigInt';
+            return null;
+        case 'ArrayExpression':
+            return 'an array';
+        case 'ArrowFunctionExpression':
+        case 'FunctionExpression':
+            return 'a function';
+        case 'ClassExpression':
+            return 'a class';
+        default:
+            return null;
+    }
+}
+
 const hasPosition = (node: AnyProp): boolean =>
     !!node && typeof node.start === 'number' && typeof node.end === 'number';
 
@@ -132,6 +177,17 @@ export function createParser(source: string) {
         }
 
         const cssProperty = hyphenate(name);
+
+        // null / undefined 리터럴 → 선언 없음 (Compiled 와 같은 규칙, TS 의 선택 속성).
+        if (isAbsent(value)) return;
+
+        // 어떤 CSS 속성에도 올 수 없는 리터럴 → 빌드 에러. 동적 slot 으로 넘기면 런타임에
+        // `"true"` 같은 잘못된 값이 되어 브라우저가 조용히 버린다.
+        const invalid = invalidLiteralKind(value);
+        if (invalid) {
+            pushError(invalidValue(locOf(value), cssProperty, invalid));
+            return;
+        }
 
         // 최상위 삼항 → build-time 2-way 전개
         if (isTop && value?.type === 'ConditionalExpression') {
@@ -313,6 +369,12 @@ const invalidSelector = (loc: Loc, name: string): BuildError => ({
 const ternaryDynamic = (loc: Loc): BuildError => ({
     code: 'dynamic-value',
     message: 'Ternary branches must be literals or tokens at the entry-level ternary.',
+    loc,
+});
+
+const invalidValue = (loc: Loc, cssProperty: string, kind: string): BuildError => ({
+    code: 'invalid-value',
+    message: `"${cssProperty}" is set to ${kind}, which is not a CSS value. Use a string, a number or a token (null / undefined omit the declaration).`,
     loc,
 });
 
