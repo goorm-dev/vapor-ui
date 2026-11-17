@@ -246,7 +246,7 @@ const CloseButton = () => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Props) => {
+const Body = ({ children, ...props }: DialogPrimitives.Body.Props) => {
     const bodyRef = useRef<HTMLDivElement>(null);
     const [overflowed, setOverflowed] = useState(false);
 
@@ -257,16 +257,17 @@ const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Prop
         setOverflowed(element.scrollHeight - element.clientHeight > 1);
     }, []);
 
-    const $css = {
-        maskImage: overflowed ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
-        paddingBottom: overflowed ? '$space-250' : '$space-000',
-        ...$cssProp,
-    } satisfies typeof $cssProp;
-
     if (!children) return null;
 
     return (
-        <DialogPrimitives.Body ref={bodyRef} $css={$css} {...props}>
+        <DialogPrimitives.Body
+            ref={bodyRef}
+            className={css({
+                maskImage: overflowed ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
+                paddingBottom: overflowed ? '$space-250' : '$space-000',
+            })}
+            {...props}
+        >
             {children}
         </DialogPrimitives.Body>
     );
