@@ -5,14 +5,18 @@ import { connections } from './code-connect';
 import { PACKAGES } from './entries-file';
 import type { Pkg, StoredEntry } from './entries-file';
 
-interface Published {
+export interface Published {
     key: string;
     name: string;
     node_id: string;
+    containing_frame?: {
+        pageName?: string;
+        containingComponentSet?: { name: string; nodeId: string };
+    };
 }
 
-// node id → published component (set), for every library file a URL points into.
-async function publishedByNode(fileKeys: Set<string>, token: string) {
+// Every published component set and component of one library file; variants are components inside a set.
+export async function fetchLibraryFile(fileKey: string, token: string) {
     const get = async <T>(path: string): Promise<T> => {
         const r = await fetch(`https://api.figma.com/v1/${path}`, {
             headers: { 'X-Figma-Token': token },
@@ -20,15 +24,20 @@ async function publishedByNode(fileKeys: Set<string>, token: string) {
         if (!r.ok) throw new Error(`GET ${path}: ${r.status} ${await r.text()}`);
         return (await r.json()) as T;
     };
+    const [sets, comps] = await Promise.all([
+        get<{ meta: { component_sets: Published[] } }>(`files/${fileKey}/component_sets`),
+        get<{ meta: { components: Published[] } }>(`files/${fileKey}/components`),
+    ]);
+    return { sets: sets.meta.component_sets, comps: comps.meta.components };
+}
+
+// node id → published component (set), for every library file a URL points into.
+async function publishedByNode(fileKeys: Set<string>, token: string) {
     const byNode = new Map<string, Published>();
     await Promise.all(
         [...fileKeys].map(async (fileKey) => {
-            const [sets, comps] = await Promise.all([
-                get<{ meta: { component_sets: Published[] } }>(`files/${fileKey}/component_sets`),
-                get<{ meta: { components: Published[] } }>(`files/${fileKey}/components`),
-            ]);
-            for (const c of [...comps.meta.components, ...sets.meta.component_sets])
-                byNode.set(`${fileKey}/${c.node_id}`, c);
+            const { sets, comps } = await fetchLibraryFile(fileKey, token);
+            for (const c of [...comps, ...sets]) byNode.set(`${fileKey}/${c.node_id}`, c);
         }),
     );
     return byNode;

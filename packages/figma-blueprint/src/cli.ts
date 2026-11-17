@@ -5,15 +5,19 @@ import type { Blueprint, BlueprintNode, FigmaTree } from '~/blueprint/blueprint'
 import { blueprint } from '~/blueprint/blueprint';
 import { fromInstalled, fromRepo } from '~/catalog/catalog';
 import { parseFigmaUrl, writeEntries } from '~/entries/write-entries';
+import { checkPackages } from '~/library/check-library';
 import { buildPackage } from '~/ship/ship';
 
 const USAGE = `usage: figma-blueprint <tree.json | figma URL> [--json] [--repo <root>]
        figma-blueprint entries [--repo <root>]
+       figma-blueprint library [--repo <root>]
        figma-blueprint ship
 
 Prints the elements the design requires, one per line with the Figma node id it came from.
 Without --repo, templates and tables come from the @vapor-ui packages installed in the current directory.
 Exits 2 when an instance could not be read (unscorable), so the design cannot be fully graded.
+library checks the published Figma libraries of core and composites against packages/<pkg>/figma-entries.json and
+figma-exceptions.json, and exits 1 when a component is unlinked without a reason, or an entry or exception is stale.
 ship runs in packages/core, composites or icons and writes their figma-blueprint/ folder.
 FIGMA_ACCESS_TOKEN is read from the environment or a .env file in the current directory.`;
 
@@ -62,6 +66,33 @@ async function entries(root: string) {
     return 1;
 }
 
+async function library(root: string) {
+    const token = figmaToken('the library files the Code Connect URLs point to');
+    let failed = false;
+    for (const { pkg, lists, names } of await checkPackages(root, token)) {
+        const line = (key: string, name = names.get(key), page = '') =>
+            `  ${key}  ${JSON.stringify(name ?? '')}${page && `  @${page}`}`;
+        const sections = [
+            ['entry no longer published in Figma', lists.gone.map((k) => line(k))],
+            [
+                'published in Figma, not in entries and not in figma-exceptions.json',
+                lists.unconnected.map((i) => line(i.key, i.name, i.page)),
+            ],
+            [
+                'stale exception (now linked or no longer published)',
+                lists.stale.map((k) => line(k)),
+            ],
+        ] as const;
+        for (const [title, rows] of sections) {
+            if (!rows.length) continue;
+            failed = true;
+            console.log(`${pkg}: ${title} (${rows.length})\n${rows.join('\n')}`);
+        }
+    }
+    if (!failed) console.log('every library component is linked or has a reason');
+    return failed ? 1 : 0;
+}
+
 // A node, then its children two spaces in, as the code writes them.
 function text({ nodes, excluded, unscorable, texts }: Blueprint) {
     const out: string[] = [];
@@ -91,6 +122,7 @@ async function run(argv: string[]) {
     const { positional, json, repo } = parseArgs(argv);
     const [command] = positional;
     if (command === 'entries') return entries(repo ?? process.cwd());
+    if (command === 'library') return library(repo ?? process.cwd());
     if (command === 'ship') {
         buildPackage(process.cwd(), join(process.cwd(), 'figma-blueprint'));
         return 0;
