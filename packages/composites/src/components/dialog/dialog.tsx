@@ -234,7 +234,7 @@ const Header = ({ title, description }: HeaderProps) => {
         <DialogPrimitives.Header
             $css={{ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 28px' }}
         >
-            <VStack $css={{ alignItems: 'flex-start', gap: '$050', flex: 1 }}>
+            <VStack $css={{ alignItems: 'flex-start', gap: '$050' }}>
                 <slots.title render={title} />
                 <slots.description render={description} />
             </VStack>
