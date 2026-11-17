@@ -983,3 +983,53 @@ describe('transform — plain style object constants (PR #752 review)', () => {
         expect(out.code).toContain('_cx([base,');
     });
 });
+
+describe('transform — module constants capture values at definition (PR #752 review)', () => {
+    it('branch test of a constant is captured, not re-read in the use-site scope', () => {
+        const out = transform({
+            source: src(
+                `const compact = false;\nconst base = css({ padding: compact ? '4px' : '16px' });\n` +
+                    `export const A = ({ compact }) => <div className={css(base, { color: 'red' })} />;`,
+            ),
+            filename: '/S1.tsx',
+        });
+        expect(out.errors).toEqual([]);
+        const capture = /const (__vaporCapture_\d+) = \(compact\);\nconst base =/.exec(out.code);
+        expect(capture).not.toBeNull();
+        expect(out.code).toMatch(new RegExp(`className=\\{\\(${capture![1]} \\? '\\w+' : '\\w+'\\)\\}`));
+    });
+
+    it('dynamic value of a constant is captured, not re-read in the use-site scope', () => {
+        const out = transform({
+            source: src(
+                `const theme = { c: 'red' };\nconst base = { color: theme.c };\n` +
+                    `export const A = ({ theme }) => <div className={css(base)} />;`,
+            ),
+            filename: '/S2.tsx',
+        });
+        expect(out.errors).toEqual([]);
+        const capture = /const (__vaporCapture_\d+) = \(theme\.c\);\nconst base =/.exec(out.code);
+        expect(capture).not.toBeNull();
+        expect(out.code).toContain(`_resolveToken(__vaporAxis_color, ${capture![1]}, 'px')`);
+    });
+
+    it('nested constants capture once at their own definition', () => {
+        const out = transform({
+            source: src(
+                `const a = css({ color: x ? 'red' : 'blue' });\nconst b = css(a, { width: 1 });\n` +
+                    `export const A = () => <div className={css(b)} />;\nexport const B = () => <div className={css(a)} />;`,
+            ),
+            filename: '/S3.tsx',
+        });
+        expect(out.errors).toEqual([]);
+        expect(out.code.match(/= \(x\);/g)).toHaveLength(1);
+    });
+
+    it('inline arguments are not captured', () => {
+        const out = transform({
+            source: src(`export const A = ({ on }) => <div className={css({ color: on ? 'red' : 'blue' })} />;`),
+            filename: '/S4.tsx',
+        });
+        expect(out.code).not.toContain('__vaporCapture_');
+    });
+});

@@ -148,7 +148,15 @@ class Transformer {
     /** `const x = css(...)` 로 선언된 지역 변수 이름. template literal 합성 감지용. */
     readonly #vaporLocals = new Set<string>();
     /** 모듈 최상위 `const x = css(...)` / `const x = { ... }` — 같은 파일 병합 대상. */
-    readonly #topLevelStatic = new Map<string, AnyProp>();
+    readonly #topLevelStatic = new Map<string, { init: AnyProp; stmtStart: number }>();
+    /**
+     * 최상위 상수를 푼 조각. 조건·dynamic 값 원문은 정의 위치에서 `__vaporCapture_N` 으로
+     * 캡처한 이름으로 바뀌어 있다 — 사용처 스코프에서 같은 이름이 다른 바인딩을 가리켜도
+     * 정의 시점 값을 읽는다. 상수마다 한 번만 푼다.
+     */
+    readonly #resolvedTopLevel = new Map<string, Piece[]>();
+    #captureCount = 0;
+    readonly #captureNames = new Set<string>();
     /** 파일 안에서 각 이름이 바인딩된 횟수. 2 이상이면 shadowing 가능성 → 병합 안 함. */
     readonly #bindingCounts = new Map<string, number>();
     /** `parseCallArg` 결과 캐시 (같은 object 를 여러 경로에서 풀 수 있음). */
@@ -272,7 +280,7 @@ class Transformer {
                 if (d.id?.type !== 'Identifier') continue;
                 const init = unwrapTypeOnly(d.init);
                 if (!this.#isCssCall(init) && init?.type !== 'ObjectExpression') continue;
-                this.#topLevelStatic.set(d.id.name, init);
+                this.#topLevelStatic.set(d.id.name, { init, stmtStart: stmt.start });
             }
         }
     }
@@ -420,13 +428,18 @@ class Transformer {
                 return node.value === null || node.value === false ? [] : null;
             case 'Identifier': {
                 if (node.name === 'undefined') return [];
-                const init = this.#topLevelStatic.get(node.name);
-                if (!init || (this.#bindingCounts.get(node.name) ?? 0) !== 1) return null;
+                const top = this.#topLevelStatic.get(node.name);
+                if (!top || (this.#bindingCounts.get(node.name) ?? 0) !== 1) return null;
+                const cached = this.#resolvedTopLevel.get(node.name);
+                if (cached) return cached;
                 if (visiting.has(node.name)) return null;
                 visiting.add(node.name);
-                const pieces = this.#resolve(init, visiting);
+                const pieces = this.#resolve(top.init, visiting);
                 visiting.delete(node.name);
-                return pieces;
+                if (!pieces) return null;
+                const captured = this.#capture(pieces, top.stmtStart);
+                this.#resolvedTopLevel.set(node.name, captured);
+                return captured;
             }
             case 'CallExpression':
                 return this.#isCssCall(node) ? this.#resolveAll(node.arguments, visiting) : null;
@@ -447,6 +460,39 @@ class Transformer {
             default:
                 return null;
         }
+    }
+
+    /**
+     * 최상위 상수의 조각에서 런타임 식(분기 조건, dynamic 값)을 정의 문장 바로 앞의
+     * `const __vaporCapture_N = (<expr>);` 로 옮기고 그 이름으로 바꾼다. 식은 원래도 모듈
+     * 평가 시점에 한 번 평가되므로 의미가 같다. 중첩 상수에서 온 조각은 이미 캡처 이름이라
+     * 다시 캡처하지 않는다.
+     */
+    #capture(pieces: Piece[], stmtStart: number): Piece[] {
+        const take = (expr: string): string => {
+            if (this.#captureNames.has(expr)) return expr;
+            const name = `__vaporCapture_${this.#captureCount++}`;
+            this.#captureNames.add(name);
+            this.#ms!.appendLeft(stmtStart, `const ${name} = (${expr});\n`);
+            return name;
+        };
+        const walkPieces = (ps: Piece[]): Piece[] =>
+            ps.map((p) =>
+                p.kind === 'fixed'
+                    ? {
+                          kind: 'fixed',
+                          rules: p.rules.map((r) =>
+                              r.kind === 'dynamic' ? { ...r, sourceExpr: take(r.sourceExpr) } : r,
+                          ),
+                      }
+                    : {
+                          kind: 'cond',
+                          test: take(p.test),
+                          whenTrue: walkPieces(p.whenTrue),
+                          whenFalse: walkPieces(p.whenFalse),
+                      },
+            );
+        return walkPieces(pieces);
     }
 
     #resolveAll(nodes: AnyProp[], visiting: Set<string>): Piece[] | null {
