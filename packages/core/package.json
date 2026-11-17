@@ -105,7 +105,7 @@
         "autoprefixer": "^10.5.4",
         "eslint": "catalog:",
         "happy-dom": "^20.11.1",
-        "postcss": "^8.5.32",
+        "postcss": "^8.5.33",
         "react": "catalog:",
         "react-dom": "catalog:",
         "rimraf": "^6.1.4",
