@@ -143,6 +143,15 @@ css({ backgroundColor: '$bg-primary' }); // ✓ axis 매치
 css({ padding: '$space-200' }); // ✓ shorthand expansion
 ```
 
+`$token` 은 값 component 하나다. 앞뒤가 값의 끝·공백·`(`·`)`·`,`·`/` 여야 한다. CSS 문자열(`"…"`)과 `url(…)` 안의 `$` 는 토큰이 아니라 글자 그대로다.
+
+```ts
+css({ padding: '$space-100 $space-200' }); // ✓ component 여러 개
+css({ marginTop: 'calc($space-100 * -1)' }); // ✓
+css({ content: '"Price $USD"' }); // ✓ 문자열 안 — 토큰 아님
+css({ marginTop: '-$space-100' }); // ✗ invalid-input-shape (다른 글자에 붙음)
+```
+
 ### 중첩 selector
 
 ```ts
@@ -206,7 +215,7 @@ shorthand 속성은 token scope가 없음.
 
 ```ts
 css({ background: '$bg-primary' }); // ✗ unknown-property
-css({ border: '1px solid $basic-black' }); // ✗ invalid-input-shape (embedded)
+css({ border: '1px solid $basic-black' }); // ✗ unknown-property
 ```
 
 → 전용 sub-property로 작성할 것:
@@ -274,7 +283,7 @@ export default function Root({ children }) {
 | `unknown-token`       | 토큰 이름이 해당 axis 에 없음                                                           |
 | `scope-mismatch`      | 토큰이 다른 axis 소속                                                                   |
 | `unknown-property`    | property 가 token scope 미지원 (shorthand 등)                                           |
-| `invalid-input-shape` | 입력 shape 오류 (embedded `$token`, spread, 비정상 노드, 런타임에 도달하는 스타일 객체) |
+| `invalid-input-shape` | 입력 shape 오류 (다른 글자에 붙은 `$token`, 비정상 노드, 런타임에 도달하는 스타일 객체) |
 | `dynamic-value`       | 식별자 property 에 dynamic 값, 삼항 분기에 dynamic 값                                   |
 | `computed-key`        | computed key 사용                                                                       |
 | `spread`              | spread element 사용                                                                     |

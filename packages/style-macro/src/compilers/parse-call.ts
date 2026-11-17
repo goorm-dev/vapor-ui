@@ -1,6 +1,7 @@
 import { generateArbitraryValueSelector } from '~/models/class-name';
 import { ROOT_CONTEXT, type RuleContext, contextKey, nestContext } from '~/models/selector';
 import { expandShorthand } from '~/models/shorthand';
+import { type TokenRef, findTokenRefs } from '~/models/token-ref';
 import { resolveToken } from '~/models/tokens';
 import type { AnyProp, BuildError, IRRule } from '~/models/types';
 import { normalizeValue } from '~/models/value';
@@ -31,12 +32,6 @@ const IDENTIFIER_PROPS = new Set([
     'content',
     'grid-template-areas',
 ]);
-
-// token name 은 반드시 알파벳으로 시작한다 (tokens/* 전부 검사됨). 첫 글자를
-// `[a-zA-Z]` 로 제한하면 `content: '"$5"'` 같은 사용자 문자열 내부의 `$<숫자>`
-// 가 토큰으로 오인되어 빌드 에러로 이어지는 리뷰 #8 결함을 방지한다.
-const HAS_TOKEN_REGEX = /\$[a-zA-Z][a-zA-Z0-9_-]*/;
-const TOKEN_SUBSTITUTE_REGEX = /\$([a-zA-Z][a-zA-Z0-9_-]*)/g;
 
 /* ----- utils ----- */
 
@@ -277,9 +272,10 @@ export function createParser(source: string) {
         loc: Loc,
     ) {
         const jsProperty = kebabToCamel(cssProperty);
+        const refs = typeof rawValue === 'string' ? findTokenRefs(rawValue) : [];
         const value =
-            typeof rawValue === 'string' && HAS_TOKEN_REGEX.test(rawValue)
-                ? substituteTokens(cssProperty, jsProperty, rawValue, loc)
+            refs.length > 0
+                ? substituteTokens(cssProperty, jsProperty, rawValue as string, refs, loc)
                 : normalizeValue({ property: jsProperty, rawValue }).css;
 
         for (const e of expandShorthand(cssProperty, value)) {
@@ -293,21 +289,30 @@ export function createParser(source: string) {
         }
     }
 
-    /** `$token` fragment 치환. 실패는 ctx.errors 로 push (build error). */
+    /** `$token` 참조를 CSS var 로 치환. 실패는 build error 로 push. */
     function substituteTokens(
         cssProperty: string,
         jsProperty: string,
         rawValue: string,
+        refs: TokenRef[],
         loc: Loc,
     ): string {
-        return rawValue.replace(TOKEN_SUBSTITUTE_REGEX, (match, tokenName: string) => {
-            const res = resolveToken(jsProperty, tokenName);
-            if ('error' in res) {
-                pushError(tokenError[res.error](loc, cssProperty, tokenName, rawValue));
-                return match;
+        let out = '';
+        let last = 0;
+        for (const ref of refs) {
+            const token = rawValue.slice(ref.start, ref.end);
+            let replacement = token;
+            if (ref.glued) {
+                pushError(gluedToken(loc, cssProperty, token, rawValue));
+            } else {
+                const res = resolveToken(jsProperty, ref.name);
+                if ('error' in res) pushError(tokenError[res.error](loc, cssProperty, token));
+                else replacement = res.cssVar;
             }
-            return res.cssVar;
-        });
+            out += rawValue.slice(last, ref.start) + replacement;
+            last = ref.end;
+        }
+        return out + rawValue.slice(last);
     }
 
     return {
@@ -382,39 +387,37 @@ const cannotCaptureDynamic = (loc: Loc, cssProperty: string): BuildError => ({
     loc,
 });
 
-const tokenErrorBlock = (header: string, cssProperty: string, rawValue: string) =>
-    ['', header, `  - 속성: ${cssProperty}`, `  - 입력: "${rawValue}"`, ''].join('\n');
-
-const unknownToken = (
-    loc: Loc,
-    cssProperty: string,
-    tokenName: string,
-    rawValue: string,
-): BuildError => ({
+const unknownToken = (loc: Loc, cssProperty: string, token: string): BuildError => ({
     code: 'unknown-token',
-    message: tokenErrorBlock('알 수 없는 토큰입니다.', cssProperty, rawValue),
+    message: `Unknown token \`${token}\` in \`${cssProperty}\`.`,
     loc,
 });
 
-const scopeMismatch = (
-    loc: Loc,
-    cssProperty: string,
-    tokenName: string,
-    rawValue: string,
-): BuildError => ({
+const scopeMismatch = (loc: Loc, cssProperty: string, token: string): BuildError => ({
     code: 'scope-mismatch',
-    message: tokenErrorBlock('토큰 scope 가 property 와 일치하지 않습니다.', cssProperty, rawValue),
+    message: `Token \`${token}\` belongs to another scope and cannot be used in \`${cssProperty}\`.`,
     loc,
 });
 
-const unknownProperty = (
+const unknownProperty = (loc: Loc, cssProperty: string, token: string): BuildError => ({
+    code: 'unknown-property',
+    message:
+        `\`${cssProperty}\` does not take tokens (\`${token}\`). ` +
+        `Use a longhand property that has a token scope (e.g. \`border-color\` instead of \`border\`).`,
+    loc,
+});
+
+const gluedToken = (
     loc: Loc,
     cssProperty: string,
-    tokenName: string,
+    token: string,
     rawValue: string,
 ): BuildError => ({
-    code: 'unknown-property',
-    message: tokenErrorBlock('토큰을 지원하지 않는 property 입니다.', cssProperty, rawValue),
+    code: 'invalid-input-shape',
+    message:
+        `Token \`${token}\` in \`${cssProperty}: ${rawValue}\` must be a whole value component, ` +
+        `separated by spaces, commas, slashes or parentheses (e.g. \`calc(${token} * -1)\`). ` +
+        `To use a literal \`$\`, put it in a CSS string.`,
     loc,
 });
 

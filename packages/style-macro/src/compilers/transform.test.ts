@@ -487,6 +487,52 @@ describe('transform — token resolve (build error)', () => {
         expect(out.errors[0].code).toBe('scope-mismatch');
     });
 
+    describe('a token is a whole value component outside CSS strings and url()', () => {
+        const run = (decl: string) =>
+            transform({ source: src(`const cls = css({ ${decl} });`), filename: '/TK.tsx' });
+
+        it.each([
+            [`content: '"Price $USD"'`, 'content: "Price $USD"'],
+            [`content: "'$a $b'"`, `content: '$a $b'`],
+            [`backgroundImage: 'url(/img/$logo.png)'`, 'background-image: url(/img/$logo.png)'],
+            [`backgroundImage: 'url("/img/$logo.png")'`, 'background-image: url("/img/$logo.png")'],
+            [`content: '"a\\\\"$b"'`, 'content: "a\\"$b"'],
+        ])('leaves `$` inside a string or url() alone: %s', (decl, expected) => {
+            const out = run(decl);
+            expect(out.errors).toEqual([]);
+            expect(out.css).toContain(expected);
+        });
+
+        it.each([
+            [
+                `paddingTop: 'calc($space-100 * 2)'`,
+                'padding-top: calc(var(--vapor-size-space-100) * 2)',
+            ],
+            [`margin: '0 $space-100'`, 'var(--vapor-size-space-100)'],
+        ])('resolves a token at a component boundary: %s', (decl, expected) => {
+            const out = run(decl);
+            expect(out.errors).toEqual([]);
+            expect(out.css).toContain(expected);
+        });
+
+        it.each([
+            `marginTop: '-$space-100'`,
+            `paddingTop: 'x$space-100'`,
+            `paddingTop: '$space-100%'`,
+        ])('rejects a token glued to other text: %s', (decl) => {
+            const out = run(decl);
+            expect(out.errors.map((e) => e.code)).toEqual(['invalid-input-shape']);
+        });
+
+        it('reports token errors on one line that names the token', () => {
+            const out = run(`border: '1px solid $basic-black'`);
+            expect(out.errors).toHaveLength(1);
+            expect(out.errors[0]!.message).not.toContain('\n');
+            expect(out.errors[0]!.message).toContain('$basic-black');
+            expect(out.errors[0]!.message).toContain('border');
+        });
+    });
+
     it('mixed resolved + unresolved → errors on unresolved fragment', () => {
         const source = src(`const cls = css({ padding: '$space-100 $nope-xyz' });`);
         const out = transform({ source, filename: '/EM8.tsx' });
