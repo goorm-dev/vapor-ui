@@ -65,7 +65,7 @@ node -e "require.resolve(require('path').join(require('child_process').execSync(
 
 아래 두 항목은 setup이 대신 하지 않는다. 방법만 안내한다.
 
-- `FIGMA_ACCESS_TOKEN`: Figma 설정의 Security 탭에서 개인 토큰을 만든다. 셸 환경 변수나 앱 폴더의 `.env`에 둔다. 토큰 값을 대화에 붙여 넣지 말라고 함께 말한다. `401`이나 `403`이면 토큰이 만료됐거나 잘못된 것이다.
+- `FIGMA_ACCESS_TOKEN`: Figma 설정의 Security 탭에서 개인 토큰을 만든다. scope는 `file_content:read`와 `current_user:read` 두 개를 켠다. 셸 환경 변수나 앱 폴더의 `.env`에 둔다. 토큰 값을 대화에 붙여 넣지 말라고 함께 말한다. `401`이나 `403`이면 토큰이 만료됐거나 잘못된 것이거나, `current_user:read` scope가 빠진 것이다.
 - Figma MCP: Claude Code에서는 `/plugin install figma@claude-plugins-official`로 Figma 공식 plugin을 설치한다. 다른 에이전트에서는 Figma MCP 서버를 연결한다.
 
 ## 4. 보고
