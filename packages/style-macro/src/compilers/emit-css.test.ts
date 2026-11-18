@@ -115,12 +115,21 @@ describe('emitBlocks', () => {
             rule({ value: 'var(--b)' }),
         ]);
         expect(pos(css, 'var(--b)')).toBeLessThan(pos(css, 'var(--h)'));
-        expect(pos(css, 'var(--h)')).toBeLessThan(pos(css, '@media (min-width: 768px)'));
+        expect(pos(css, 'var(--h)')).toBeLessThan(pos(css, '@media(min-width:768px)'));
+    });
+
+    it.each([
+        '@supports selector(a:hover)',
+        '@supports (display:grid) and selector(:has(a:hover))',
+        '@container card (min-width:400px)',
+        '@media(min-width:768px)',
+    ])('emits the at-rule prelude as written: %s', (prelude) => {
+        expect(emit([rule({ context: at(prelude) })])).toContain(`${prelude} {`);
     });
 
     it('nests a pseudo inside its media block', () => {
         const css = emit([rule({ context: at('@media(min-width:768px)', ':hover') })]);
-        expect(css).toMatch(/@media \(min-width: 768px\) \{\s*\.X:hover \{/);
+        expect(css).toMatch(/@media\(min-width:768px\) \{\s*\.X:hover \{/);
     });
 
     it('orders min-width ascending and max-width descending', () => {

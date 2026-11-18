@@ -71,7 +71,7 @@ export function compareAtRuleUnit(a: string, b: string): number {
     return ua.prelude < ub.prelude ? -1 : ua.prelude > ub.prelude ? 1 : 0;
 }
 
-export function compareAtRulePath(a: string[], b: string[]): number {
+export function compareAtRulePath(a: readonly string[], b: readonly string[]): number {
     const n = Math.min(a.length, b.length);
     for (let i = 0; i < n; i++) {
         const c = compareAtRuleUnit(a[i], b[i]);

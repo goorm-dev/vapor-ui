@@ -22,11 +22,6 @@ export interface EmitOutput {
     cssText: string;
 }
 
-/** 공백 생략형(`@media(min-width:768px)`) 을 정식 표기로 보정. 이미 공백이 있으면 멱등. */
-function formatAtRule(s: string): string {
-    return s.replace(/@([a-zA-Z-]+)(?=\()/g, '@$1 ').replace(/([a-zA-Z-]+):(?=\S)/g, '$1: ');
-}
-
 function slotKey(r: IRRule): string {
     return `${contextKey(r.context)}|${r.property}`;
 }
@@ -57,7 +52,7 @@ export function signatureOf(rules: IRRule[]): string {
 }
 
 interface Group {
-    atRulePath: string[];
+    atRulePath: readonly string[];
     selector: string;
     decls: string[];
     order: number;
@@ -66,7 +61,9 @@ interface Group {
 function groupsOf(block: Block, hashMode: 'dev' | 'prod'): Group[] {
     const byKey = new Map<string, Group>();
     for (const rule of block.rules) {
-        const atRulePath = rule.context.atRules.map(formatAtRule);
+        // prelude 는 작성한 그대로 낸다 (공백 축약만 `nestContext` 가 한다). `selector(a:hover)` 처럼
+        // `:` 가 문법의 일부인 곳이 있어 텍스트를 고쳐 쓰면 의미가 바뀐다.
+        const atRulePath = rule.context.atRules;
         const selector = resolveSelector(rule.context.selector, block.className);
         const key = `${atRulePath.join('\u0000')}\u0001${selector}`;
         let g = byKey.get(key);
