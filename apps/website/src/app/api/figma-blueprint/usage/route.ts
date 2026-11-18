@@ -24,14 +24,20 @@ const body = z.discriminatedUnion('outcome', [
 ]);
 
 export async function POST(request: Request) {
-    const parsed = body.safeParse(await request.json().catch(() => undefined));
-    if (!parsed.success) return new Response(null, { status: 400 });
+    let json: unknown;
+    try {
+        json = await request.json();
+    } catch {
+        return new Response('Body must be valid JSON', { status: 400 });
+    }
+
+    const parsed = body.safeParse(json);
+    if (!parsed.success) return new Response(z.prettifyError(parsed.error), { status: 400 });
 
     const { fileKey, nodeId, version, outcome } = parsed.data;
     const stage = parsed.data.outcome === 'error' ? parsed.data.stage : null;
     const status = parsed.data.outcome === 'error' ? (parsed.data.status ?? null) : null;
 
-    // Built per request so a missing DATABASE_URL fails the request, not the build.
     const sql = neon(process.env.DATABASE_URL!);
     await sql`
         insert into figma_blueprint_usage (file_key, node_id, version, outcome, stage, status)
