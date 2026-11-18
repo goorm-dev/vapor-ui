@@ -3,17 +3,17 @@
         "06abe6575faf48eb8bb60517c569cd5b364aff4e": "코드 미구현, 연결 대상 아님 (NavMenu)",
         "1b26952ac5d1c58c8aad9f79825307457afab173": "deprecated 컴포넌트",
         "376c988e2df6295a81a8e44e3774f9cf3c13ebb3": "코드 미구현, 연결 대상 아님 (Progress [TBD])",
-        "3a6760cd5860768bd2fa104463cd3dd982b2d7f8": "확인 필요 (NavigationMenu)",
+        "3a6760cd5860768bd2fa104463cd3dd982b2d7f8": "코드 미구현, 연결 대상 아님 (NavigationMenu.group)",
         "3bf53bb553095073cc36735e7411095b17474c9a": "deprecated 컴포넌트",
         "4032221fa6b8a123be375cef5167be5a6517ef5c": "코드 미구현, 연결 대상 아님 (Progress [TBD])",
         "48d6fee2bd1c3c7f6c6989b609b7cd45f6b5b7fd": "코드 미구현, 연결 대상 아님 (NavMenu)",
         "84bd79947b2279a6a39e186febe20d380ae82e6d": "deprecated 컴포넌트",
         "964c1475bee771c78da45ce6f20006fe97cedc61": "가이드용 사본",
         "9bf90ecf03b02e11d6ff76e77acb616e07621b73": "코드 미구현, 연결 대상 아님 (NavMenu)",
-        "a99f8d8ffebab98a46a152628e93c2c7018be71a": "확인 필요 (NavigationMenu)",
+        "a99f8d8ffebab98a46a152628e93c2c7018be71a": "코드 미구현, 연결 대상 아님 (NavigationMenu.GroupLabel)",
         "bc89601b00c1000f330ec4ab4feceb99f44091d5": "deprecated 컴포넌트",
         "c994fa64ad9566d481fb7edc7ec1240713c980c7": "가이드용 사본",
-        "d4cfbeb5a835abdeb54aca3cabf0352012e82ae8": "확인 필요 (Field)",
+        "d4cfbeb5a835abdeb54aca3cabf0352012e82ae8": "Code Connect 템플릿 미작성 (Field.Label, 코드에는 FieldLabel 있음)",
         "e6c513eded588cb6679be8429878221279ceb780": "코드 미구현, 연결 대상 아님 (NavMenu)"
     }
 }
