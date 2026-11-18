@@ -3,6 +3,7 @@ import { mergeProps } from '@base-ui/react';
 import { deprecatedSprinkles } from '~/styles/deprecated-sprinkles.css';
 import { sprinkles } from '~/styles/sprinkles.css';
 
+import { adaptRenderElement } from './adapt-render-element';
 import { createSplitProps } from './create-split-props';
 import { mergeStatefulProps } from './stateful-props';
 import type { DeprecatedSprinkles, Styles } from './types';
@@ -70,5 +71,11 @@ export const resolveStyles = <T extends object>(props: T) => {
         { className, style },
     );
 
-    return mergeStatefulProps(mergedProps, otherProps) as T;
+    const resolvedProps = mergeStatefulProps(mergedProps, otherProps) as T & { render?: unknown };
+
+    if (resolvedProps.render !== undefined) {
+        resolvedProps.render = adaptRenderElement(resolvedProps.render);
+    }
+
+    return resolvedProps as T;
 };
