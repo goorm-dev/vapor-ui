@@ -132,7 +132,13 @@ function renderEntries(trees: SlotTree[]): string[] {
  *   평가된다. `key` 는 spread 에 넣으면 React 가 경고하므로 명시 속성으로 앞에 둔다.
  */
 export function flushInjects(ctx: InjectContext): void {
-    for (const p of ctx.pending.values()) {
+    // 안쪽 element 부터 (Babel 의 exit 순회와 같다). 바깥 element 는 속성 구간의 현재 텍스트를
+    // 읽어 통째로 다시 쓰므로, 그 구간 안(render prop, style 값 등)의 element 편집이 먼저 끝나
+    // 있어야 그 텍스트에 담긴다. 서로 포함하지 않는 element 끼리는 순서가 결과에 영향이 없다.
+    const innerFirst = [...ctx.pending.values()].sort(
+        (a, b) => b.openingEl.start - a.openingEl.start,
+    );
+    for (const p of innerFirst) {
         const entries = renderEntries(p.trees);
         if (entries.length === 0) continue;
         const slotObj = `{ ${entries.join(', ')} }`;
