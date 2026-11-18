@@ -243,7 +243,7 @@ pre-hydration 시점에 `<html>` 에 theme attribute 를 세팅해 light↔dark 
 `injectColorScheme` 옵션 (default `true`) 으로 번들러가 `<head>` 에 inline `<script>` 자동 삽입.
 
 - Vite — `transformIndexHtml` hook
-- Webpack — 앱 설정에 있는 `html-webpack-plugin` 의 `alterAssetTagGroups` hook 으로 head 태그 맨 앞에 추가 (설정에 없으면 no-op)
+- Webpack — 앱 설정에 있는 `html-webpack-plugin` 의 `alterAssetTagGroups` hook 으로 플러그인이 넣는 head 태그 중 맨 앞(번들 script 앞)에 추가. 템플릿에 직접 쓴 head 내용 뒤에 온다 (설정에 없으면 no-op)
 
 ### 수동 주입 (Next.js / 프레임워크 기본 HTML 사용 불가 환경)
 

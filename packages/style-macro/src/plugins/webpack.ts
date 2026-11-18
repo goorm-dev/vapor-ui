@@ -49,7 +49,8 @@ interface HtmlWebpackPluginClass {
 const TAP_NAME = 'vapor-style-macro';
 
 /**
- * FOUC guard 를 `<head>` 맨 앞 태그로 넣는다. HTML 은 html-webpack-plugin 의 태그 API
+ * FOUC guard 를 플러그인이 넣는 head 태그 중 맨 앞(번들 script 앞)에 넣는다. 템플릿에 직접 쓴
+ * head 내용 뒤, `</head>` 앞이다 — body 보다 먼저 실행되므로 첫 paint 전이다. HTML 은 html-webpack-plugin 의 태그 API
  * (`alterAssetTagGroups` 의 `headTags`)에 맡긴다 — 위치를 정규식으로 찾지 않는다.
  *
  * 그 플러그인 class 는 앱 설정에 들어 있는 인스턴스의 constructor 를 쓴다. `getHooks` 는 class
