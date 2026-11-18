@@ -212,14 +212,17 @@ describe('the usage record of figma-blueprint <figma URL>', () => {
         expect(figma.calls(ENDPOINT)).toEqual([]);
     });
 
-    it('sends nothing, and asks Figma nothing about the account, with DO_NOT_TRACK=1', async () => {
-        vi.stubEnv('DO_NOT_TRACK', '1');
-        const figma = stubFigma();
+    it.each(['1', 'true', 'TRUE'])(
+        'sends nothing, and asks Figma nothing about the account, with DO_NOT_TRACK=%s',
+        async (value) => {
+            vi.stubEnv('DO_NOT_TRACK', value);
+            const figma = stubFigma();
 
-        expect(await go(URL_WITH_NODE)).toEqual({ code: 0, stdout: GRADED, stderr: '' });
-        expect(figma.calls(ME)).toEqual([]);
-        expect(figma.calls(ENDPOINT)).toEqual([]);
-    });
+            expect(await go(URL_WITH_NODE)).toEqual({ code: 0, stdout: GRADED, stderr: '' });
+            expect(figma.calls(ME)).toEqual([]);
+            expect(figma.calls(ENDPOINT)).toEqual([]);
+        },
+    );
 
     it('sends nothing without a token, and exits 1 as before', async () => {
         vi.stubEnv('FIGMA_ACCESS_TOKEN', '');

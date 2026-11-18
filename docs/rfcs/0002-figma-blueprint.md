@@ -229,7 +229,7 @@ core, composites, icons는 각각 아래처럼 바뀝니다.
 **보내는 조건.** 아래를 모두 만족할 때만 보냅니다.
 
 - 메인 명령에 Figma URL을 넘기고 `--repo`를 쓰지 않았습니다(`fromInstalled` 경로). tree.json 입력, `--repo`, `entries`, `library`, `ship`은 보내지 않습니다.
-- `DO_NOT_TRACK=1`이 아닙니다. `run()`이 `.env`를 먼저 읽으므로 `.env`에 적어도 꺼집니다.
+- `DO_NOT_TRACK`이 `1`이나 `true`(대소문자 무시)가 아닙니다. `run()`이 `.env`를 먼저 읽으므로 `.env`에 적어도 꺼집니다.
 - `FIGMA_ACCESS_TOKEN`이 있고 같은 토큰으로 `GET https://api.figma.com/v1/me`를 불러 받은 `email`이 `@goorm.io`로 끝납니다. 대소문자는 구분하지 않습니다. 이메일은 판별에만 쓰고 보내지 않습니다.
 - 토큰이 없거나, `/v1/me`가 2xx로 답하지 않거나, URL에서 fileKey를 얻지 못하면 보내지 않습니다. 토큰에 `current_user:read` scope가 없으면 `/v1/me`가 403을 내므로 이 경우에 해당합니다.
 

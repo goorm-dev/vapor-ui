@@ -74,7 +74,7 @@ A record is sent only when all of these hold:
 - The input is a Figma URL. A `tree.json` file never sends a record.
 - `--repo` is not set.
 - `FIGMA_ACCESS_TOKEN` is set, and Figma reports an email that ends in `@goorm.io` for it. A token without the `current_user:read` scope sends nothing.
-- `DO_NOT_TRACK` is not `1`.
+- `DO_NOT_TRACK` is not `1` or `true`.
 
 `figma-blueprint entries`, `library`, and `ship` never send a record.
 
@@ -82,7 +82,7 @@ The record cannot change the CLI. The output and the exit code are the same with
 
 ### Turn it off
 
-Set `DO_NOT_TRACK=1` in the environment, or in the `.env` file in the directory where you run the CLI. With it set, the CLI makes no request to Figma's account endpoint and no request to goorm.
+Set `DO_NOT_TRACK=1` (or `true`) in the environment, or in the `.env` file in the directory where you run the CLI. With it set, the CLI makes no request to Figma's account endpoint and no request to goorm.
 
 ```sh
 DO_NOT_TRACK=1 npx figma-blueprint 'https://www.figma.com/design/<fileKey>/<name>?node-id=1-2'

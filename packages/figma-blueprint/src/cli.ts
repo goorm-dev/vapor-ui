@@ -22,7 +22,7 @@ library checks the published Figma libraries of core and composites against pack
 figma-exceptions.json, and exits 1 when a component is unlinked without a reason, or an entry or exception is stale.
 ship runs in packages/core, composites or icons and writes their figma-blueprint/ folder.
 FIGMA_ACCESS_TOKEN is read from the environment or a .env file in the current directory.
-DO_NOT_TRACK=1 turns off the usage record that @goorm.io Figma accounts send when a figma URL is run without --repo.`;
+DO_NOT_TRACK=1 (or true) turns off the usage record that @goorm.io Figma accounts send when a figma URL is run without --repo.`;
 
 const isUrl = (arg: string) => /^https?:\/\//.test(arg);
 

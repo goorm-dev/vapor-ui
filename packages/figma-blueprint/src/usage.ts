@@ -19,7 +19,8 @@ export interface UsageRun {
 
 export function startUsage(url: string): UsageRun | undefined {
     const token = process.env.FIGMA_ACCESS_TOKEN;
-    if (process.env.DO_NOT_TRACK === '1' || !token || !URL.canParse(url)) return;
+    const optedOut = ['1', 'true'].includes(process.env.DO_NOT_TRACK?.toLowerCase() ?? '');
+    if (optedOut || !token || !URL.canParse(url)) return;
     const { fileKey, nodeId } = parseFigmaUrl(url);
     if (!fileKey) return;
 
