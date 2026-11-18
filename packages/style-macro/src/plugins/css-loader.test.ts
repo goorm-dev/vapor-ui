@@ -26,7 +26,7 @@ describe('css-loader — module CSS from the source module', () => {
             { resourcePath: file, getOptions: () => ({ root, hash: true }) },
             SRC,
         );
-        const cls = /const cls = '(v\w+)'/.exec(js)![1];
+        const cls = /const cls = '(v\w+)'/.exec(js!)![1];
         expect(css).toMatch(
             new RegExp(`^@layer vapor-utilities \\{[\\s\\S]*\\.${cls} \\{ gap: 0; \\}`),
         );

@@ -28,8 +28,20 @@ import { isShadowed } from './scope';
 // Public API
 // ────────────────────────────────────────────────────────────────
 
+/** Source map v3 (번들러가 받는 형태). */
+export interface SourceMapV3 {
+    version: number;
+    file?: string;
+    sources: string[];
+    sourcesContent?: (string | null)[];
+    names: string[];
+    mappings: string;
+}
+
 export interface TransformResult {
     code: string;
+    /** `code` → `source` source map. 바뀐 것이 없으면 `null`. */
+    map: SourceMapV3 | null;
     /** 이 모듈의 CSS. `css()` 가 없거나 에러면 `null`. */
     css: string | null;
     errors: BuildError[];
@@ -311,7 +323,17 @@ class Transformer {
 
         if (css && this.opts.cssImport) this.#insertCssImport(this.opts.cssImport);
 
-        return { code: this.#ms.toString(), css: css || null, errors: [] };
+        const map = this.#ms.generateMap({
+            source: filename,
+            includeContent: true,
+            hires: 'boundary',
+        });
+        return {
+            code: this.#ms.toString(),
+            map: { ...map, sources: [filename], sourcesContent: [source] },
+            css: css || null,
+            errors: [],
+        };
     }
 
     #shouldSkip(): boolean {
@@ -1066,11 +1088,11 @@ function rootName(node: AnyProp, allowBare: boolean): string | null {
 }
 
 function emptyResult(source: string): TransformResult {
-    return { code: source, css: null, errors: [] };
+    return { code: source, map: null, css: null, errors: [] };
 }
 
 function errorResult(source: string, errors: BuildError[]): TransformResult {
-    return { code: source, css: null, errors };
+    return { code: source, map: null, css: null, errors };
 }
 
 function noArgError(source: string, node: AnyProp): BuildError {

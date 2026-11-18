@@ -163,7 +163,7 @@ function moduleCssPlugin(rawOpts: VaporPluginOptions): VitePluginShape {
             cssByPath.set(cssId, css);
 
             if (server && prev !== undefined && prev !== css) reload(server, cssId);
-            return compiled.code === code ? null : { code: compiled.code, map: null };
+            return compiled.code === code ? null : { code: compiled.code, map: compiled.map };
         },
 
         resolveId(source: string, importer: string | undefined) {

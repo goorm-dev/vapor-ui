@@ -1,7 +1,7 @@
 import { basename, dirname, join } from 'node:path';
 
 import { formatBuildError } from '~/compilers/code-frame';
-import { transform } from '~/compilers/transform';
+import { type SourceMapV3, transform } from '~/compilers/transform';
 
 import { type ResolvedOptions, scopeOf } from './_options';
 
@@ -48,6 +48,8 @@ const defaultCssImport: CssImportOf = (cssName) => `./${cssName}`;
 export interface CompiledModule {
     /** 변환된 JS. CSS 가 있으면 `import './<file>.vapor.css'` 가 마지막 import 뒤에 들어 있다. */
     code: string;
+    /** `code` → 원본 source map. 바뀐 것이 없으면 `null`. */
+    map: SourceMapV3 | null;
     /** 이 모듈의 CSS (레이어 순서 선언 제외). 규칙이 없으면 `null`. */
     css: string | null;
     /** 모듈 CSS 의 절대 경로 (소스 옆). */
@@ -82,6 +84,7 @@ export function compileModule(
     }
     return {
         code: result.code,
+        map: result.map,
         css: result.css ? result.css.replace(LAYER_STATEMENT_RE, '') : null,
         cssPath: join(dirname(filename), cssName),
     };

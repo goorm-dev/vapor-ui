@@ -11,6 +11,8 @@ export interface TurbopackLoaderContext {
     resourceQuery?: string;
     rootContext?: string;
     getOptions?: () => VaporPluginOptions;
+    /** webpack loader 규약 — 있으면 source map 을 함께 넘긴다. */
+    callback?: (err: Error | null, code?: string, map?: unknown) => void;
 }
 
 /**
@@ -21,7 +23,7 @@ export interface TurbopackLoaderContext {
 export default async function vaporStyleTurbopackLoader(
     this: TurbopackLoaderContext,
     source: string,
-): Promise<string> {
+): Promise<string | undefined> {
     const opts = resolveOptions(this.getOptions ? this.getOptions() : {}, {
         root: this.rootContext,
     });
@@ -31,5 +33,9 @@ export default async function vaporStyleTurbopackLoader(
         opts,
         (_cssName, filename) => `./${basename(filename)}?${VAPOR_CSS_QUERY}`,
     );
+    if (compiled && compiled.code !== source && this.callback) {
+        this.callback(null, compiled.code, compiled.map);
+        return undefined;
+    }
     return compiled?.code ?? source;
 }

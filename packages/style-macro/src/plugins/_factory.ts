@@ -60,7 +60,7 @@ export default createUnplugin<VaporPluginOptions | undefined>((rawOpts) => {
                 return null;
             }
             if (!compiled || compiled.code === code) return null;
-            return { code: compiled.code, map: null };
+            return { code: compiled.code, map: compiled.map };
         },
     };
 });

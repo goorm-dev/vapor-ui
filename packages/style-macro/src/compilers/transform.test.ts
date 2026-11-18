@@ -1334,6 +1334,7 @@ describe('transform — parse language and parse errors (PR #752 review)', () =>
         const source = `const x = ;`;
         expect(transform({ source, filename: '/P.ts' })).toEqual({
             code: source,
+            map: null,
             css: null,
             errors: [],
         });

@@ -54,3 +54,19 @@ describe('turbopack', () => {
         await expect(run(ctx, src)).rejects.toThrow();
     });
 });
+
+describe('turbopack — source map', () => {
+    it('passes the map through the loader callback when available', async () => {
+        const src = `import { css } from '@vapor-ui/style-macro';\nconst cls = css({ gap: 0 });\n`;
+        const callback = vi.fn();
+        const out = await vaporStyleTurbopackLoader.call(
+            { resourcePath: '/src/M.tsx', getOptions: () => ({}), callback },
+            src,
+        );
+        expect(out).toBeUndefined();
+        const [err, code, map] = callback.mock.calls[0]!;
+        expect(err).toBeNull();
+        expect(code).toContain(`const cls = 'cls_`);
+        expect(map).toMatchObject({ version: 3, sources: ['/src/M.tsx'] });
+    });
+});

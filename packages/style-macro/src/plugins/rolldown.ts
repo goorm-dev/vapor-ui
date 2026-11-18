@@ -118,7 +118,7 @@ export function vaporRolldownPlugin(opts: VaporRolldownOptions = {}) {
             }
             if (!compiled) return null;
             if (compiled.css) cssByPath.set(compiled.cssPath, compiled.css);
-            return compiled.code === code ? null : { code: compiled.code, map: null };
+            return compiled.code === code ? null : { code: compiled.code, map: compiled.map };
         },
 
         resolveId(source: string, importer: string | undefined) {
