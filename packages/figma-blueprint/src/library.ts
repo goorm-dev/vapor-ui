@@ -1,5 +1,3 @@
-// `figma-blueprint library`, the weekly check that every component Figma publishes is linked or has a reason in
-// packages/<pkg>/figma-exceptions.json, and that no entry or exception is stale. checkLibrary is the pure part.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -16,32 +14,30 @@ export interface LibraryItem {
     page: string;
 }
 
-// Why a published library component has no Code Connect link on purpose, keyed by its Figma key.
+type FigmaKey = string;
+type Reason = string;
+
 export interface Exceptions {
-    figma: Record<string, string>;
+    figma: Record<FigmaKey, Reason>;
 }
 
-// Packages whose library file is checked, and which of its top-level items must be linked.
 const TARGETS: Partial<Record<Pkg, (item: LibraryItem) => boolean>> = {
     core: (item) => isCoreComponent(item.name),
     composites: () => true,
 };
 
-// Figma pads names and pages with control characters, spaces and the ❖ marker.
-const tidy = (s: string) => s.replace(/[\p{Cc}❖]/gu, '').trim();
+const stripControlsAndMarker = (s: string) => s.replace(/[\p{Cc}❖]/gu, '').trim();
 
-// Component sets and standalone components; the variants inside a set are not link targets.
 export function libraryItems(sets: Published[], comps: Published[]): LibraryItem[] {
     return [...sets, ...comps.filter((c) => !c.containing_frame?.containingComponentSet)].map(
         (c) => ({
             key: c.key,
-            name: tidy(c.name),
-            page: tidy(c.containing_frame?.pageName ?? ''),
+            name: stripControlsAndMarker(c.name),
+            page: stripControlsAndMarker(c.containing_frame?.pageName ?? ''),
         }),
     );
 }
 
-// Keys only: Figma names carry control characters, stray spaces and case drift.
 export function checkLibrary(
     items: LibraryItem[],
     entries: Record<string, StoredEntry>,
@@ -68,8 +64,6 @@ export function readExceptions(pkgDir: string): Exceptions {
     return { figma };
 }
 
-// Fetches each checked package's library file, found through the entries' own URLs, and checks it.
-// names labels every key a list can hold: a gone key only has its entry's name, a stale one its entry or item.
 async function checkPackages(root: string, token: string) {
     const results = [];
     for (const [pkg, isTarget] of Object.entries(TARGETS) as [Pkg, (i: LibraryItem) => boolean][]) {
@@ -94,7 +88,6 @@ async function checkPackages(root: string, token: string) {
     return results;
 }
 
-// `figma-blueprint library`: one section per non-empty list, exit 1 when any list has a row.
 export async function libraryCommand(root: string): Promise<number> {
     const token = figmaToken('the library files the Code Connect URLs point to');
     let failed = false;

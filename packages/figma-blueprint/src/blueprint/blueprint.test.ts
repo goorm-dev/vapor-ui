@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { Catalog, Tables } from '~/catalog/catalog';
-import { FIGMA_KEY } from '~/code-connect/stand-in';
+import { registerFigma } from '~/code-connect/stand-in';
 import type { TemplateFn } from '~/code-connect/stand-in';
 import type { FigmaTree } from '~/figma';
 import type { Pkg } from '~/packages';
@@ -20,7 +20,7 @@ interface Handle {
     findText(name: string): { textContent: string };
 }
 
-const figma = Reflect.get(globalThis, FIGMA_KEY) as {
+const figma = registerFigma() as unknown as {
     code(strings: TemplateStringsArray, ...values: unknown[]): unknown;
     selectedInstance: Handle;
 };
@@ -52,8 +52,6 @@ function fakeCatalog(
     };
 }
 
-// Each node as one line: data-in is the tag of the node it sits under, left out at the top level and where its
-// position must not be judged.
 const lines = ({ nodes }: Blueprint) => {
     const out: string[] = [];
     const walk = (list: BlueprintNode[], parent?: string) => {
@@ -645,7 +643,6 @@ describe('blueprint lines', () => {
             { node: 'I2:1;3', name: '💙IconButton', reason: 'inside-unscorable' },
         ]);
 
-        // An installed composites older than the design's component has no template for it.
         const older = fakeCatalog({
             ...core,
             'K-MENU': { name: 'Menu', run: fixed('menu', '<Menu.Root />'), pkg: 'composites' },

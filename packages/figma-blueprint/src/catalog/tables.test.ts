@@ -34,7 +34,6 @@ describe('internalParts', () => {
     const { internalParts } = extractTables(root);
 
     it('lists the library components a part always draws, through local components and JSX attributes', () => {
-        // VStack is layout, Divider's Code Connect file is excluded, and the slot's Button comes from the caller.
         expect(internalParts['Sheet.Root']).toEqual(['IconButton', 'Panel.Header']);
     });
 

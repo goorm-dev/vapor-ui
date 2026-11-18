@@ -1,16 +1,9 @@
-// Blueprint of a Figma frame: the tree of elements the code must contain, library instances only.
-// Each visible Code Connect instance runs its own template against the REST node (code-connect/stand-in.ts) and
-// contributes the elements its snippet draws itself. A connected instance inside another one counts only when the outer
-// template renders it (NESTED_TAG marker) or it sits in a SLOT; otherwise the part draws it itself (Select.Trigger's
-// chevron).
-// Prop rules: literal props only, no "false", no placeholder, no "..." example, aria-label → "*". A node sits under
-// the library element it is in; layout frames do not count.
 import ts from 'typescript';
 
 import type { Catalog, Entry } from '~/catalog/catalog';
 import { NESTED_TAG, templateId, templateRunner } from '~/code-connect/stand-in';
 import type { FigmaNode, FigmaTree } from '~/figma';
-import { isCompositesKey, marked } from '~/packages';
+import { hasLibraryMarker, isCompositesKey } from '~/packages';
 import type { Pkg } from '~/packages';
 
 import { boxesIn, textsIn } from './design';
@@ -24,14 +17,12 @@ interface Element {
     selfClosing: boolean;
 }
 
-// A kept snippet element and the node it became.
 interface Kept {
     el: Element;
     node: BlueprintNode;
 }
 
-// Where a node goes: under `node`, `any` when its position must not be judged; null is the top level.
-type Place = { node: BlueprintNode; any: boolean } | null;
+type Place = { node: BlueprintNode; anyParent: boolean } | null;
 
 interface Owner {
     name: string;
@@ -51,10 +42,11 @@ const idOf = (catalog: Catalog, entry: Entry) => {
     return ids.get(entry) ?? null;
 };
 
-// ---------- snippet → elements
 type Jsx = ts.JsxElement | ts.JsxSelfClosingElement;
 const open = (n: Jsx) => (ts.isJsxElement(n) ? n.openingElement : n);
-function attrsOf(el: Jsx, texts: Set<unknown>) {
+const ANY_VALUE = '*';
+const EXAMPLE_VALUE = '...';
+function attrsOf(el: Jsx, copy: Set<unknown>) {
     const out: string[] = [];
     for (const a of open(el).attributes.properties) {
         if (!ts.isJsxAttribute(a)) continue;
@@ -65,19 +57,22 @@ function attrsOf(el: Jsx, texts: Set<unknown>) {
         if (!init) out.push(k);
         else if (e && (ts.isStringLiteral(e) || ts.isNoSubstitutionTemplateLiteral(e))) {
             if (e.text === 'false') continue;
-            // Copy never matches the generated wording, so a prop holding Figma text only has to be present.
-            const v = k === 'aria-label' || texts.has(e.text) ? '*' : e.text;
-            // Any other "..." is a template's example value where the design has none (<Radio.Root value="..." />).
-            if (v === '...') continue;
+            const isCopy = k === 'aria-label' || copy.has(e.text);
+            const v = isCopy ? ANY_VALUE : e.text;
+            if (v === EXAMPLE_VALUE) continue;
             out.push(`${k}=${v.includes('"') ? `{${JSON.stringify(v)}}` : `"${v}"`}`);
         } else if (e?.kind === ts.SyntaxKind.TrueKeyword) out.push(k);
-        // A number cannot come from a Figma property, so it is a template's example value (totalPages={10}).
-        else if (e && ts.isNumericLiteral(e)) continue;
     }
     return out;
 }
-// One snippet as an element tree; a marker becomes the id of the nested instance in the element it sits in.
-function parse(code: string, texts: Set<unknown>) {
+const isUsageHint = (n: Jsx, copy: Set<unknown>) =>
+    ts.isJsxElement(n) &&
+    !copy.has(EXAMPLE_VALUE) &&
+    n.children
+        .map((c) => c.getText())
+        .join('')
+        .trim() === EXAMPLE_VALUE;
+function parse(code: string, copy: Set<unknown>) {
     const sf = ts.createSourceFile(
         'x.tsx',
         `<>${code}</>`,
@@ -90,23 +85,13 @@ function parse(code: string, texts: Set<unknown>) {
         if (ts.isJsxElement(n) || ts.isJsxSelfClosingElement(n)) {
             const tag = open(n).tagName.getText();
             if (tag === NESTED_TAG) {
-                at.nested.push(attrsOf(n, texts)[0].slice(4, -1));
+                at.nested.push(attrsOf(n, copy)[0].slice(4, -1));
                 return;
             }
-            // <Button>...</Button> is a usage hint the template adds (Dialog's trigger), not something the design draws,
-            // unless the "..." is the design's own text.
-            if (
-                ts.isJsxElement(n) &&
-                !texts.has('...') &&
-                n.children
-                    .map((c) => c.getText())
-                    .join('')
-                    .trim() === '...'
-            )
-                return;
+            if (isUsageHint(n, copy)) return;
             const el: Element = {
                 tag,
-                attrs: attrsOf(n, texts),
+                attrs: attrsOf(n, copy),
                 children: [],
                 nested: [],
                 selfClosing: ts.isJsxSelfClosingElement(n),
@@ -119,17 +104,15 @@ function parse(code: string, texts: Set<unknown>) {
     return root;
 }
 
-// "💙toggleGroup" = "ToggleGroup", "💙Breadcrumb" = "Breadcrumb.Root".
-const partName = (name: string) =>
+const partKey = (name: string) =>
     name
         .replace(/^\W+/u, '')
         .replace(/\s+/g, '')
         .replace(/\.Root$/, '')
         .toLowerCase();
-const byPartName = (table: Record<string, string[]>) =>
-    new Map(Object.entries(table).map(([k, v]) => [partName(k), new Set(v.map(partName))]));
+const byPartKey = (table: Record<string, string[]>) =>
+    new Map(Object.entries(table).map(([k, v]) => [partKey(k), new Set(v.map(partKey))]));
 
-// ---------- the walk
 export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
     const { entries } = catalog;
     // A design can hold an older copy of a library component under a key that is no longer published, and Figma still
@@ -137,8 +120,8 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
     // from a library (a design file's own "Dialog" is not one).
     const byName = new Map<string, Entry | null>();
     for (const e of Object.values(entries)) byName.set(e.name, byName.has(e.name) ? null : e);
-    const ownIcons = byPartName(catalog.tables.internalIcons);
-    const ownParts = byPartName(catalog.tables.internalParts);
+    const ownIcons = byPartKey(catalog.tables.internalIcons);
+    const partsDrawnByComposites = byPartKey(catalog.tables.internalParts);
 
     const { document, components = {}, componentSets = {} } = tree;
     const componentOf = (n: FigmaNode) => {
@@ -169,25 +152,23 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
         return e ? { id: idOf(catalog, e), entry: e } : null;
     };
     const templates = templateRunner(connected);
-    // One node per instance, so three identical Buttons in the design need three in the code.
     const nodes: BlueprintNode[] = [];
     const excluded: Excluded[] = [];
     const unscorable: Unscorable[] = [];
-    // A library instance is one the entries connect, a composites component, or one named like a library component that
-    // nothing installed connects (packages.ts marked).
     const isLib = (n: FigmaNode) =>
         n.type === 'INSTANCE' &&
-        (connected(n) !== null || fromComposites(n) || marked(nameOf(n)) || marked(n.name));
+        (connected(n) !== null ||
+            fromComposites(n) ||
+            hasLibraryMarker(nameOf(n)) ||
+            hasLibraryMarker(n.name));
     const boxOf = boxesIn(document);
 
-    // Library parts the design draws in a node's subtree, the node included.
     const drawn = (n: FigmaNode, out = new Set<string>()) => {
         if (n.visible === false) return out;
-        if (isLib(n)) out.add(partName(nameOf(n)));
+        if (isLib(n)) out.add(partKey(nameOf(n)));
         for (const c of n.children ?? []) drawn(c, out);
         return out;
     };
-    // The library instances inside one that is not a node cannot be nodes either.
     const excludeIn = (n: FigmaNode, reason: Excluded['reason']) => {
         for (const c of n.children ?? []) {
             if (c.visible === false) continue;
@@ -197,30 +178,29 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
             excludeIn(c, reason);
         }
     };
-    // Of a snippet only the elements the design draws (or that hold one, or hold a nested instance) are expected.
-    // Returns the element's node, or none; `out` gets every kept element in snippet order.
-    const keep = (el: Element, parts: Set<string>, pkg: Pkg, out: Kept[]): BlueprintNode[] => {
-        const below: Kept[] = [];
-        const children = el.children.flatMap((c) => keep(c, parts, pkg, below));
-        if (!children.length && !el.nested.length && !parts.has(partName(el.tag))) return [];
+    const keep = (
+        el: Element,
+        parts: Set<string>,
+        pkg: Pkg,
+    ): { node?: BlueprintNode; kept: Kept[] } => {
+        const below = el.children.map((c) => keep(c, parts, pkg));
+        const children = below.flatMap((b) => b.node ?? []);
+        if (!children.length && !el.nested.length && !parts.has(partKey(el.tag)))
+            return { kept: [] };
         const node: BlueprintNode = { id: '', tag: el.tag, props: el.attrs, pkg, children };
-        out.push({ el, node }, ...below);
-        return [node];
+        return { node, kept: [{ el, node }, ...below.flatMap((b) => b.kept)] };
     };
 
-    // owner: the nearest connected instance above, with the elements its snippet kept.
-    // trail: names of the library instances passed since the owner, innermost last.
-    // slotted: a SLOT node or a 🟨 slot layer was passed since the owner, the places a designer puts content.
     function visit(
         n: FigmaNode,
         at: Place,
         owner: Owner | null,
-        trail: string[],
-        slotted: boolean,
+        libsSinceOwner: string[],
+        inSlot: boolean,
     ) {
         if (n.visible === false) return;
         if (n.type === 'SLOT' || (n.type === 'INSTANCE' && nameOf(n).startsWith('🟨')))
-            slotted = true;
+            inSlot = true;
         const box = boxOf(n.absoluteBoundingBox);
         const boxed = box && { box };
         const c = connected(n);
@@ -231,49 +211,44 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
             };
             if (owner) {
                 const nestedIn = owner.nested.get(n.id);
-                if (nestedIn) at = { node: nestedIn, any: false };
-                // An icon the nearest part draws itself in code (Select.Trigger's chevron) is not expected.
+                if (nestedIn) at = { node: nestedIn, anyParent: false };
                 else if (
-                    ownIcons.get(partName(trail.at(-1) ?? owner.name))?.has(partName(nameOf(n)))
+                    ownIcons
+                        .get(partKey(libsSinceOwner.at(-1) ?? owner.name))
+                        ?.has(partKey(nameOf(n)))
                 )
                     return exclude('part-draws-icon');
-                // A core component a composites part draws itself, outside any slot (Dialog.Root's close IconButton).
-                // Only a composites owner: core 💙Dialog and composites Dialog share a part name.
                 else if (
                     owner.pkg === 'composites' &&
-                    !slotted &&
-                    ownParts.get(partName(owner.name))?.has(partName(nameOf(n)))
+                    !inSlot &&
+                    partsDrawnByComposites.get(partKey(owner.name))?.has(partKey(nameOf(n)))
                 )
                     return exclude('part-draws-itself');
-                // A part its template writes self-closing takes no children in code, so an instance in it outside
-                // any slot is the part's own drawing (the Breadcrumb.Ellipsis inside <Pagination.Items />).
-                else if (!slotted && owner.root?.el.selfClosing)
+                else if (!inSlot && owner.root?.el.selfClosing)
                     return exclude('inside-self-closing-part');
-                // An owner that kept no element (Dialog.Action's own output is dropped as not drawn) leaves the place
-                // it was put in.
                 else if (owner.root) {
                     const k =
-                        trail.map((t) => owner.byPart.get(partName(t))).findLast(Boolean) ??
+                        libsSinceOwner.map((t) => owner.byPart.get(partKey(t))).findLast(Boolean) ??
                         owner.root;
-                    // A part the template writes self-closing (<Table.Column />) holds nothing in code: Figma's
-                    // nesting is not the code's there (Figma's Table is column-major), so the parent is left open.
                     at = k.el.selfClosing
-                        ? { node: owner.root.node, any: true }
-                        : { node: k.node, any: false };
+                        ? { node: owner.root.node, anyParent: true }
+                        : { node: k.node, anyParent: false };
                 }
             }
-            const kept: Kept[] = [];
+            let kept: Kept[];
             let top: BlueprintNode[];
             try {
-                const { code, texts } = templates.run(
+                const { code, copy } = templates.run(
                     n,
                     catalog.runTemplate(c.entry),
                     c.entry.batch,
                 );
                 const parts = drawn(n);
-                top = parse(code, texts).children.flatMap((el) =>
-                    keep(el, parts, c.entry.pkg, kept),
+                const results = parse(code, copy).children.map((el) =>
+                    keep(el, parts, c.entry.pkg),
                 );
+                kept = results.flatMap((r) => r.kept);
+                top = results.flatMap((r) => r.node ?? []);
             } catch (e) {
                 unscorable.push({
                     node: n.id,
@@ -285,31 +260,27 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
                 excludeIn(n, 'inside-unscorable');
                 return;
             }
-            // An outer template can render an instance that sits deeper in Figma (Table.Root renders the
-            // ColumnGroup Figma nests in Table.Body), so what every owner above rendered carries down.
             const nested = new Map(owner?.nested);
             const byPart = new Map<string, Kept>();
             for (const [i, k] of kept.entries()) {
                 k.node.id = i ? `${n.id}#${i}` : n.id;
                 if (box) k.node.box = box;
                 for (const id of k.el.nested) nested.set(id, k.node);
-                byPart.set(partName(k.el.tag), k);
+                byPart.set(partKey(k.el.tag), k);
             }
-            if (at?.any) for (const node of top) node.anyParent = true;
+            if (at?.anyParent) for (const node of top) node.anyParent = true;
             (at ? at.node.children : nodes).push(...top);
             const root = kept[0];
             for (const ch of n.children ?? [])
                 visit(
                     ch,
-                    root ? { node: root.node, any: false } : at,
+                    root ? { node: root.node, anyParent: false } : at,
                     { name: nameOf(n), pkg: c.entry.pkg, nested, byPart, root },
                     [],
                     false,
                 );
             return;
         }
-        // A composites component nothing installed connects draws what it holds itself (Dialog's close IconButton), so
-        // none of that can be a node either.
         if (n.type === 'INSTANCE' && fromComposites(n)) {
             unscorable.push({
                 node: n.id,
@@ -326,9 +297,9 @@ export function blueprint(tree: FigmaTree, catalog: Catalog): Blueprint {
         }
         if (isLib(n)) {
             unscorable.push({ node: n.id, name: nameOf(n), cause: 'no-template', ...boxed });
-            trail = [...trail, nameOf(n)];
+            libsSinceOwner = [...libsSinceOwner, nameOf(n)];
         }
-        for (const ch of n.children ?? []) visit(ch, at, owner, trail, slotted);
+        for (const ch of n.children ?? []) visit(ch, at, owner, libsSinceOwner, inSlot);
     }
     visit(document, null, null, [], false);
     const frame = document.absoluteBoundingBox;

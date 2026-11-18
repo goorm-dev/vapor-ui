@@ -1,5 +1,3 @@
-// packages/<pkg>/figma-entries.json: which Code Connect template each Figma component (set) key runs. Keys only exist
-// in Figma, so `figma-blueprint entries` asks Figma for them and the result is committed; everything else reads it.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -10,8 +8,6 @@ import type { Published } from '~/figma';
 import { PACKAGES } from '~/packages';
 import type { Pkg } from '~/packages';
 
-// What `figma-blueprint entries` writes to packages/<pkg>/figma-entries.json, keyed by Figma component (set) key.
-// template is relative to the package directory.
 export interface StoredEntry extends CodeConnectEntry {
     name: string;
 }
@@ -19,8 +15,6 @@ export interface StoredEntry extends CodeConnectEntry {
 export const readEntries = (pkgDir: string): Record<string, StoredEntry> =>
     JSON.parse(readFileSync(join(pkgDir, 'figma-entries.json'), 'utf8'));
 
-// Code Connect URLs whose entry, as the package's source states it now (url, template, batch row), is not in its
-// figma-entries.json. Rerun `figma-blueprint entries` to add them.
 export function missingEntries(pkgDir: string): string[] {
     const stored = existsSync(join(pkgDir, 'figma-entries.json'))
         ? Object.values(readEntries(pkgDir))
@@ -33,7 +27,6 @@ export function missingEntries(pkgDir: string): string[] {
         .map((c) => c.url);
 }
 
-// node id → published component (set), for every library file a URL points into.
 async function publishedByNode(fileKeys: Set<string>, token: string) {
     const byNode = new Map<string, Published>();
     await Promise.all(
@@ -50,9 +43,6 @@ const nodeOf = (url: string) => {
     return `${fileKey}/${nodeId}`;
 };
 
-// Writes packages/<pkg>/figma-entries.json for core, composites and icons: every Code Connect entry keyed by the Figma
-// component (set) key its URL resolves to. Keys only exist in Figma, so this is the one step that needs a token.
-// Output is sorted, so a rerun with no Figma or repo change leaves the files byte-identical.
 async function writeEntries(root: string, token: string) {
     const pkgs = PACKAGES.map((pkg) => {
         const dir = join(root, 'packages', pkg);
@@ -83,7 +73,6 @@ async function writeEntries(root: string, token: string) {
     return { counts, unpublished };
 }
 
-// `figma-blueprint entries`: exits 1 when a Code Connect URL points at nothing published, which is left out.
 export async function entriesCommand(root: string): Promise<number> {
     const token = figmaToken('the library files the Code Connect URLs point to');
     const { counts, unpublished } = await writeEntries(root, token);

@@ -19,8 +19,6 @@ afterAll(() => {
     for (const app of apps) rmSync(app, { recursive: true, force: true });
 });
 
-// An app with the fixture packages installed the way a consumer gets them: figma-blueprint/ from
-// `figma-blueprint ship`, next to a package.json that exports it.
 function install(pkgs: Pkg[]) {
     const app = mkdtempSync(join(tmpdir(), 'figma-blueprint-app-'));
     apps.push(app);
@@ -83,6 +81,7 @@ describe('figma-blueprint ship', () => {
         const helper = shipped(app, 'core', 'templates/src/utils/figma.mjs');
 
         for (const js of [template, helper]) expect(js).not.toMatch(/from\s+['"]figma['"]/);
+        expect(template).toContain('globalThis[Symbol.for("@vapor-ui/figma-blueprint")]');
         expect(template).toContain(`from '../../utils/figma.mjs'`);
         expect(blueprint(tree, await fromInstalled(app)).nodes).toEqual(treeNodes);
     });

@@ -1,5 +1,3 @@
-// The command line: USAGE, argv, which module runs each command, and the exit code. A command's work and its report
-// live in its module (entries.ts, library.ts, catalog/catalog.ts buildPackage); the default command is composed here.
 import { existsSync, readFileSync } from 'node:fs';
 
 import { blueprint } from '~/blueprint/blueprint';
@@ -23,7 +21,6 @@ figma-exceptions.json, and exits 1 when a component is unlinked without a reason
 ship runs in packages/core, composites or icons and writes their figma-blueprint/ folder.
 FIGMA_ACCESS_TOKEN is read from the environment or a .env file in the current directory.`;
 
-// A design source: a URL is fetched from Figma, anything else is a tree.json file (even one named "http-…").
 async function loadTree(arg: string): Promise<FigmaTree> {
     if (!/^https?:\/\//.test(arg)) return JSON.parse(readFileSync(arg, 'utf8')) as FigmaTree;
     return fetchFrame(arg);
@@ -62,7 +59,6 @@ async function run(argv: string[]) {
     return result.unscorable.length ? 2 : 0;
 }
 
-// The exit code; bin/figma-blueprint.mjs sets it.
 export async function main(argv: string[]): Promise<number> {
     try {
         return await run(argv);

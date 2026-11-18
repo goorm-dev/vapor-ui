@@ -6,14 +6,9 @@ import { connectedComponents } from '~/code-connect/files';
 import type { Pkg } from '~/packages';
 
 export interface Tables {
-    // core part → icons it draws itself (Select.Trigger's chevron)
     internalIcons: Record<string, string[]>;
-    // composites part → core components it draws itself (Dialog.Root's close IconButton)
     internalParts: Record<string, string[]>;
-    // composites wrapper → the core element it renders, with fixed props (Dialog.Action is a primary lg Button). A
-    // list is a prop the wrapper picks from its context: AlertDialog.Action is danger or primary.
     presets: Record<string, { tag: string; props: Record<string, string | string[]> }>;
-    // core part → recipe defaultVariants (Button is variant "fill")
     defaults: Record<string, Record<string, string>>;
 }
 
@@ -30,7 +25,6 @@ const fromModule = (s: ts.Statement, spec: string): s is ts.ImportDeclaration =>
     ts.isStringLiteral(s.moduleSpecifier) &&
     s.moduleSpecifier.text === spec;
 
-// Every identifier a declaration mentions, its own name aside.
 const mentions = (name: string, decl: ts.Node) => {
     const ids = new Set<string>();
     (function visit(n: ts.Node) {
@@ -40,9 +34,6 @@ const mentions = (name: string, decl: ts.Node) => {
     return ids;
 };
 
-// Icons a core part draws itself (Select.Trigger's chevron), keyed by displayName: a design that shows one inside the
-// part expects nothing from the code. A part owns the '@vapor-ui/icons' imports its declaration mentions, plus those of
-// every same-file declaration it mentions, transitively.
 function internalIcons(core: string) {
     const out: Tables['internalIcons'] = {};
     const components = join(core, 'src/components');
@@ -88,32 +79,79 @@ function internalIcons(core: string) {
     return out;
 }
 
-// Variant defaults of core parts, so code that omits a default prop still matches (<Button> is variant "fill").
-// ponytail: `<dir>.css.ts` recipe names map to parts by convention (root → Button and Button.Root, trigger →
-// Select.Trigger); a recipe named otherwise is missed.
-// A root also takes a default its own recipe lacks from the file's other recipes when they all agree on it: Tabs.Root
-// hands size and variant to its parts through context, and Tabs.Button's recipe defaults them. A part that renders
-// another core component with `{...props}` takes that component's defaults under its own: IconButton is a Button.
+const pascal = (s: string) => s.replace(/(^|-)(\w)/g, (_, __, c: string) => c.toUpperCase());
+
+const literalProps = (obj: ts.ObjectLiteralExpression) =>
+    Object.fromEntries(
+        obj.properties
+            .filter(
+                (p): p is ts.PropertyAssignment =>
+                    ts.isPropertyAssignment(p) &&
+                    (ts.isStringLiteral(p.initializer) ||
+                        p.initializer.kind === ts.SyntaxKind.TrueKeyword ||
+                        p.initializer.kind === ts.SyntaxKind.FalseKeyword),
+            )
+            .map((p) => [
+                p.name.getText().replace(/['"]/g, ''),
+                ts.isStringLiteral(p.initializer) ? p.initializer.text : p.initializer.getText(),
+            ]),
+    );
+
+function recipeDefaults(cssSource: string) {
+    const recipes: { name: string; defaults: Record<string, string> }[] = [];
+    for (const s of ts.createSourceFile('x.ts', cssSource, ts.ScriptTarget.Latest, true)
+        .statements) {
+        if (!ts.isVariableStatement(s)) continue;
+        for (const d of s.declarationList.declarations) {
+            let dv: Record<string, string> | undefined;
+            (function find(n: ts.Node) {
+                if (
+                    ts.isPropertyAssignment(n) &&
+                    n.name.getText() === 'defaultVariants' &&
+                    ts.isObjectLiteralExpression(n.initializer)
+                )
+                    dv = literalProps(n.initializer);
+                ts.forEachChild(n, find);
+            })(d);
+            if (dv) recipes.push({ name: d.name.getText(), defaults: dv });
+        }
+    }
+    return recipes;
+}
+
+function agreedByEveryRecipe(recipes: Record<string, string>[]) {
+    const agreed: Record<string, string> = {};
+    for (const k of new Set(recipes.flatMap(Object.keys))) {
+        const values = new Set(recipes.flatMap((r) => (k in r ? [r[k]] : [])));
+        if (values.size === 1) agreed[k] = [...values][0];
+    }
+    return agreed;
+}
+
+function siblingRenderedWithSpread(file: string) {
+    const sf = tsx(file, readFileSync(file, 'utf8'));
+    const siblings = new Set(
+        sf.statements.flatMap((s) =>
+            ts.isImportDeclaration(s) &&
+            ts.isStringLiteral(s.moduleSpecifier) &&
+            /^\.\.\/[\w-]+$/.test(s.moduleSpecifier.text)
+                ? namedImports(s).map((e) => e.name.text)
+                : [],
+        ),
+    );
+    let base: string | undefined;
+    (function find(n: ts.Node) {
+        const o = ts.isJsxElement(n) ? n.openingElement : ts.isJsxSelfClosingElement(n) ? n : null;
+        const tag = o?.tagName.getText();
+        if (o && tag && siblings.has(tag) && o.attributes.properties.some(ts.isJsxSpreadAttribute))
+            base ??= tag;
+        ts.forEachChild(n, find);
+    })(sf);
+    return base;
+}
+
 function defaults(core: string) {
     const out: Tables['defaults'] = {};
-    const pascal = (s: string) => s.replace(/(^|-)(\w)/g, (_, __, c: string) => c.toUpperCase());
-    const literal = (obj: ts.ObjectLiteralExpression) =>
-        Object.fromEntries(
-            obj.properties
-                .filter(
-                    (p): p is ts.PropertyAssignment =>
-                        ts.isPropertyAssignment(p) &&
-                        (ts.isStringLiteral(p.initializer) ||
-                            p.initializer.kind === ts.SyntaxKind.TrueKeyword ||
-                            p.initializer.kind === ts.SyntaxKind.FalseKeyword),
-                )
-                .map((p) => [
-                    p.name.getText().replace(/['"]/g, ''),
-                    ts.isStringLiteral(p.initializer)
-                        ? p.initializer.text
-                        : p.initializer.getText(),
-                ]),
-        );
     const components = join(core, 'src/components');
     const roots = (dir: string) => [pascal(dir), `${pascal(dir)}.Root`];
     for (const dir of readdirSync(components)) {
@@ -123,72 +161,25 @@ function defaults(core: string) {
         } catch {
             continue;
         }
-        const recipes: Record<string, string>[] = [];
-        for (const s of ts.createSourceFile('x.ts', src, ts.ScriptTarget.Latest, true).statements) {
-            if (!ts.isVariableStatement(s)) continue;
-            for (const d of s.declarationList.declarations) {
-                let dv: Record<string, string> | undefined;
-                (function find(n: ts.Node) {
-                    if (
-                        ts.isPropertyAssignment(n) &&
-                        n.name.getText() === 'defaultVariants' &&
-                        ts.isObjectLiteralExpression(n.initializer)
-                    )
-                        dv = literal(n.initializer);
-                    ts.forEachChild(n, find);
-                })(d);
-                if (!dv) continue;
-                recipes.push(dv);
-                const name = d.name.getText();
-                const tags = name === 'root' ? roots(dir) : [`${pascal(dir)}.${pascal(name)}`];
-                for (const t of tags) out[t] = dv;
-            }
-        }
-        const agreed: Record<string, string> = {};
-        for (const k of new Set(recipes.flatMap(Object.keys))) {
-            const values = new Set(recipes.flatMap((r) => (k in r ? [r[k]] : [])));
-            if (values.size === 1) agreed[k] = [...values][0];
-        }
+        const recipes = recipeDefaults(src);
+        // ponytail: `<dir>.css.ts` recipe names map to parts by convention (root → Button and Button.Root, trigger →
+        // Select.Trigger); a recipe named otherwise is missed.
+        for (const { name, defaults: dv } of recipes)
+            for (const t of name === 'root' ? roots(dir) : [`${pascal(dir)}.${pascal(name)}`])
+                out[t] = dv;
+        const agreed = agreedByEveryRecipe(recipes.map((r) => r.defaults));
         if (Object.keys(agreed).length)
             for (const t of roots(dir)) out[t] = { ...agreed, ...out[t] };
     }
     for (const dir of readdirSync(components)) {
         const file = join(components, dir, `${dir}.tsx`);
         if (!existsSync(file)) continue;
-        const sf = tsx(file, readFileSync(file, 'utf8'));
-        const siblings = new Set(
-            sf.statements.flatMap((s) =>
-                ts.isImportDeclaration(s) &&
-                ts.isStringLiteral(s.moduleSpecifier) &&
-                /^\.\.\/[\w-]+$/.test(s.moduleSpecifier.text)
-                    ? namedImports(s).map((e) => e.name.text)
-                    : [],
-            ),
-        );
-        let base: string | undefined;
-        (function find(n: ts.Node) {
-            const o = ts.isJsxElement(n)
-                ? n.openingElement
-                : ts.isJsxSelfClosingElement(n)
-                  ? n
-                  : null;
-            const tag = o?.tagName.getText();
-            if (
-                o &&
-                tag &&
-                siblings.has(tag) &&
-                o.attributes.properties.some(ts.isJsxSpreadAttribute)
-            )
-                base ??= tag;
-            ts.forEachChild(n, find);
-        })(sf);
+        const base = siblingRenderedWithSpread(file);
         if (base && out[base]) for (const t of roots(dir)) out[t] = { ...out[base], ...out[t] };
     }
     return out;
 }
 
-// Components a Figma library instance can stand for: the ones core's Code Connect files connect.
-// A core export no file connects (VStack, Box) is layout, not a library part.
 function libraryComponents(core: string) {
     if (!existsSync(join(core, 'figma.config.json')))
         throw new Error(
@@ -199,7 +190,6 @@ function libraryComponents(core: string) {
 
 type Component = ts.ArrowFunction | ts.FunctionExpression | ts.FunctionDeclaration;
 
-// The strings a ternary of string literals can produce, or undefined when any branch is not one.
 function conditionalStrings(e: ts.Expression): string[] | undefined {
     if (ts.isParenthesizedExpression(e)) return conditionalStrings(e.expression);
     if (ts.isStringLiteral(e)) return [e.text];
@@ -208,8 +198,6 @@ function conditionalStrings(e: ts.Expression): string[] | undefined {
     return a && b ? [...new Set([...a, ...b])].sort() : undefined;
 }
 
-// What a component returns whatever its props are: a concise body, or a block's only return sitting directly in it.
-// An early return or a return under `if` means the props pick what is drawn.
 function fixedReturns(fn: Component): ts.Expression[] {
     const body = fn.body;
     if (!body) return [];
@@ -223,11 +211,75 @@ function fixedReturns(fn: Component): ts.Expression[] {
     return returns.length === 1 && only.parent === body && only.expression ? [only.expression] : [];
 }
 
-// composites preset wrappers (rules/composites.md §7): a public part that returns one core element with fixed
-// literal props and `{...props}`, so <Dialog.Action> is <Button size="lg" colorPalette="primary">.
-// internalParts: library components a non-preset public part always draws itself (Dialog.Root's close IconButton),
-// so a code author cannot add or remove them. Anything a condition guards stays expected, and so does a slot's
-// content (Dialog's action Button), which the caller passes: the walk never enters createSlots() arguments.
+function presetOf(fn: Component, core: Map<string, string>): Tables['presets'][string] | undefined {
+    const returns: ts.Expression[] = [];
+    (function find(n: ts.Node) {
+        if (ts.isReturnStatement(n) && n.expression) returns.push(n.expression);
+        if (!ts.isFunctionLike(n) || n === fn) ts.forEachChild(n, find);
+    })(fn);
+    const el =
+        returns.length === 1 &&
+        (ts.isParenthesizedExpression(returns[0]) ? returns[0].expression : returns[0]);
+    const open =
+        el &&
+        (ts.isJsxElement(el) ? el.openingElement : ts.isJsxSelfClosingElement(el) ? el : null);
+    const tag = open && core.get(open.tagName.getText());
+    if (!open || !tag || !open.attributes.properties.some(ts.isJsxSpreadAttribute))
+        return undefined;
+    const props: Tables['presets'][string]['props'] = {};
+    for (const a of open.attributes.properties) {
+        if (!ts.isJsxAttribute(a) || !a.initializer) continue;
+        if (ts.isStringLiteral(a.initializer)) props[a.name.getText()] = a.initializer.text;
+        else if (ts.isJsxExpression(a.initializer) && a.initializer.expression) {
+            const branches = conditionalStrings(a.initializer.expression);
+            if (branches) props[a.name.getText()] = branches;
+        }
+    }
+    return { tag, props };
+}
+
+interface CompositesFile {
+    publicName: Map<string, string>;
+    fns: Map<string, Component>;
+    coreImports: Map<string, string>;
+    library: Set<string>;
+}
+
+function partsAlwaysDrawn(
+    fn: Component,
+    { publicName, fns, coreImports, library }: CompositesFile,
+) {
+    const drawn = new Set<string>();
+    const seen = new Set<Component>([fn]);
+    const visit = (n: ts.Node): void => {
+        if (ts.isParenthesizedExpression(n) || ts.isJsxExpression(n)) {
+            if (n.expression) visit(n.expression);
+            return;
+        }
+        if (ts.isJsxFragment(n)) return n.children.forEach(visit);
+        if (!ts.isJsxElement(n) && !ts.isJsxSelfClosingElement(n)) return;
+        const o = ts.isJsxElement(n) ? n.openingElement : n;
+        const [head, ...member] = o.tagName.getText().split('.');
+        if (publicName.has(head)) return;
+        const inner = member.length ? undefined : fns.get(head);
+        if (inner) {
+            if (!seen.has(inner)) {
+                seen.add(inner);
+                fixedReturns(inner).forEach(visit);
+            }
+            return;
+        }
+        const exported = coreImports.get(head);
+        const component = exported && [exported, ...member].join('.');
+        if (component && library.has(component)) drawn.add(component);
+        for (const a of o.attributes.properties)
+            if (ts.isJsxAttribute(a) && a.initializer) visit(a.initializer);
+        if (ts.isJsxElement(n)) n.children.forEach(visit);
+    };
+    fixedReturns(fn).forEach(visit);
+    return [...drawn].sort();
+}
+
 function composites(pkgDir: string) {
     const presets: Tables['presets'] = {};
     const internalParts: Tables['internalParts'] = {};
@@ -250,13 +302,12 @@ function composites(pkgDir: string) {
             ]),
         );
         const sf = tsx('x.tsx', readFileSync(join(components, dir, `${dir}.tsx`), 'utf8'));
-        // local name → core export (DialogPrimitives → Dialog)
-        const core = new Map<string, string>();
+        const coreImports = new Map<string, string>();
         const fns = new Map<string, Component>();
         for (const s of sf.statements) {
             if (fromModule(s, '@vapor-ui/core'))
                 for (const e of namedImports(s))
-                    core.set(e.name.text, (e.propertyName ?? e.name).getText());
+                    coreImports.set(e.name.text, (e.propertyName ?? e.name).getText());
             else if (ts.isFunctionDeclaration(s) && s.name) fns.set(s.name.text, s);
             else if (ts.isVariableStatement(s))
                 for (const d of s.declarationList.declarations) {
@@ -270,77 +321,22 @@ function composites(pkgDir: string) {
                 }
         }
 
+        const file: CompositesFile = { publicName, fns, coreImports, library };
         for (const [local, name] of publicName) {
             const fn = fns.get(local);
             if (!fn) continue;
-            const returns: ts.Expression[] = [];
-            (function find(n: ts.Node) {
-                if (ts.isReturnStatement(n) && n.expression) returns.push(n.expression);
-                if (!ts.isFunctionLike(n) || n === fn) ts.forEachChild(n, find);
-            })(fn);
-            const el =
-                returns.length === 1 &&
-                (ts.isParenthesizedExpression(returns[0]) ? returns[0].expression : returns[0]);
-            const open =
-                el &&
-                (ts.isJsxElement(el)
-                    ? el.openingElement
-                    : ts.isJsxSelfClosingElement(el)
-                      ? el
-                      : null);
-            const tag = open && core.get(open.tagName.getText());
-            if (open && tag && open.attributes.properties.some(ts.isJsxSpreadAttribute)) {
-                const props: Tables['presets'][string]['props'] = {};
-                for (const a of open.attributes.properties) {
-                    if (!ts.isJsxAttribute(a) || !a.initializer) continue;
-                    if (ts.isStringLiteral(a.initializer))
-                        props[a.name.getText()] = a.initializer.text;
-                    // colorPalette={type === 'critical' ? 'danger' : 'primary'}: either branch is right code.
-                    else if (ts.isJsxExpression(a.initializer) && a.initializer.expression) {
-                        const branches = conditionalStrings(a.initializer.expression);
-                        if (branches) props[a.name.getText()] = branches;
-                    }
-                }
-                presets[name] = { tag, props };
+            const preset = presetOf(fn, coreImports);
+            if (preset) {
+                presets[name] = preset;
                 continue;
             }
-
-            const drawn = new Set<string>();
-            const seen = new Set<Component>([fn]);
-            // Walks only JSX nesting: a condition, a call or a variable on the way ends the path.
-            const visit = (n: ts.Node): void => {
-                if (ts.isParenthesizedExpression(n) || ts.isJsxExpression(n)) {
-                    if (n.expression) visit(n.expression);
-                    return;
-                }
-                if (ts.isJsxFragment(n)) return n.children.forEach(visit);
-                if (!ts.isJsxElement(n) && !ts.isJsxSelfClosingElement(n)) return;
-                const o = ts.isJsxElement(n) ? n.openingElement : n;
-                const [head, ...member] = o.tagName.getText().split('.');
-                if (publicName.has(head)) return;
-                const inner = member.length ? undefined : fns.get(head);
-                if (inner) {
-                    if (!seen.has(inner)) {
-                        seen.add(inner);
-                        fixedReturns(inner).forEach(visit);
-                    }
-                    return;
-                }
-                const exported = core.get(head);
-                const component = exported && [exported, ...member].join('.');
-                if (component && library.has(component)) drawn.add(component);
-                for (const a of o.attributes.properties)
-                    if (ts.isJsxAttribute(a) && a.initializer) visit(a.initializer);
-                if (ts.isJsxElement(n)) n.children.forEach(visit);
-            };
-            fixedReturns(fn).forEach(visit);
-            if (drawn.size) internalParts[name] = [...drawn].sort();
+            const drawn = partsAlwaysDrawn(fn, file);
+            if (drawn.length) internalParts[name] = drawn;
         }
     }
     return { presets, internalParts };
 }
 
-// The tables a package ships, each built from that package's source. composites reads core's sources next to it.
 export const TABLES_OF = {
     core: (dir: string) => ({ internalIcons: internalIcons(dir), defaults: defaults(dir) }),
     composites,

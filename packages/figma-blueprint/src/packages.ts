@@ -1,16 +1,14 @@
-// The @vapor-ui packages whose Code Connect templates this package runs, and how a Figma instance shows that it comes
-// from one of their libraries. Every list of packages is this one or is checked against it (Record<Pkg, ...>).
 import compositesEntries from '../../composites/figma-entries.json';
 
 export const PACKAGES = ['core', 'composites', 'icons'] as const;
 export type Pkg = (typeof PACKAGES)[number];
 
-// A name or layer path marked as a library component: 💙 core, ❤️ icons, and 🩵 on a composites part's layer
-// ("Dialog/🩵Action"), at the start of the name or of a path segment.
-export const marked = (s: string) => /(^|\/)(💙|❤️|🩵)/u.test(s);
+const LIBRARY_MARKER = { core: '💙', icons: '❤️', composites: '🩵' } satisfies Record<Pkg, string>;
+const MARKED_SEGMENT = new RegExp(`(^|/)(${Object.values(LIBRARY_MARKER).join('|')})`, 'u');
 
-// core's library components, the ones a Code Connect link is expected for: 💙 anywhere in the name.
-export const isCoreComponent = (name: string) => name.includes('💙');
+export const hasLibraryMarker = (nameOrLayerPath: string) => MARKED_SEGMENT.test(nameOrLayerPath);
+
+export const isCoreComponent = (name: string) => name.includes(LIBRARY_MARKER.core);
 
 // A composites component's Figma name carries no marker, so without composites installed only its key tells it from
 // another library's. ponytail: keys as of this build; a component composites publishes later goes unseen until rebuilt.

@@ -1,13 +1,7 @@
-// The `figma` module Code Connect templates import, backed by a Figma REST node tree instead of Figma's servers.
-// A compiled template finds it at globalThis[FIGMA_KEY] (compile.ts writes that lookup) and runs as a function, so
-// `figma.selectedInstance` / `figma.batch` read the top of a stack. Nested templates are not run inline:
-// executeTemplate() returns an INSTANCE section, rendered as a marker that blueprint.ts uses to find which element the
-// nested instance sits in. Every handle a template can get, the real ones and the id-only dummy, is made here.
 import type { FigmaNode } from '~/figma';
 
 import type { Batch } from './files';
 
-// Where a compiled template looks for `figma`. Published inside @vapor-ui/core and icons, so it never changes.
 export const FIGMA_KEY = Symbol.for('@vapor-ui/figma-blueprint');
 
 export interface TemplateResult {
@@ -15,14 +9,12 @@ export interface TemplateResult {
     example?: unknown;
 }
 
-// A compiled template's default export: its module body, run once per instance.
 export type TemplateFn = () => TemplateResult;
 
 interface Context {
     handle: object;
     batch: Batch | null;
-    // Copy a template read from Figma text during this run; blueprint.ts turns props holding it into "*".
-    texts: Set<unknown>;
+    copy: Set<unknown>;
 }
 
 interface InstanceSection {
@@ -30,7 +22,6 @@ interface InstanceSection {
     guid: string;
 }
 
-// The element a rendered INSTANCE section becomes in a snippet: <__nested id="<node id>" />.
 export const NESTED_TAG = '__nested';
 
 const code = (strings: readonly string[], ...values: unknown[]) => ({
@@ -52,7 +43,6 @@ function render(v: unknown): string {
     return '';
 }
 
-// figma.helpers.react, as far as composites' figma-utils uses it: props render as JSX attribute fragments.
 const react = {
     renderProp(name: string, v: unknown) {
         if (v == null || v === false || v === '') return '';
@@ -65,7 +55,7 @@ const react = {
 };
 
 const top = () => {
-    const ctx = stack.at(-1);
+    const ctx = registerFigma().stack.at(-1);
     if (!ctx) throw new Error('figma used outside a template run');
     return ctx;
 };
@@ -84,12 +74,11 @@ const standIn = {
         return top().batch ?? {};
     },
 };
-// One stand-in per process, with the run stack on it: a template binds the first one registered, so a second copy of
-// this module (another install, a test runner re-evaluating the package) must run templates through the same one.
-const { stack } = ((globalThis as unknown as Record<symbol, typeof standIn>)[FIGMA_KEY] ??=
-    standIn);
+export const registerFigma = () =>
+    ((globalThis as unknown as Record<symbol, typeof standIn>)[FIGMA_KEY] ??= standIn);
 
 function withContext<T>(ctx: Context, fn: () => T): T {
+    const { stack } = registerFigma();
     stack.push(ctx);
     try {
         return fn();
@@ -105,13 +94,12 @@ const errorHandle = (message: string) => ({
     __render__: () => [],
 });
 
-// Whether a node has a template, and the id that template declares; the hook blueprint.ts provides.
-type Connected = (n: FigmaNode) => { id: string | null } | null;
+type ConnectionOf = (n: FigmaNode) => { id: string | null } | null;
 
 type Visit = { traverseInstances?: boolean } | undefined;
 
-function makeHandles(tree: { connected: Connected }) {
-    const cache = new Map<string, object>();
+function makeHandles(tree: { connected: ConnectionOf }) {
+    const cache = new WeakMap<FigmaNode, object>();
     const visible = (n: FigmaNode) => n.visible !== false;
     const prop = (n: FigmaNode, name: string) => {
         const props = n.componentProperties ?? {};
@@ -119,12 +107,10 @@ function makeHandles(tree: { connected: Connected }) {
             props[name] ?? Object.entries(props).find(([k]) => k.replace(/#.*/, '') === name)?.[1]
         );
     };
-    // Layers a template sees as children: instances and text. Frames, groups and SLOT nodes are see-through.
     const layers = (n: FigmaNode): FigmaNode[] =>
         (n.children ?? [])
             .filter(visible)
             .flatMap((c) => (c.type === 'INSTANCE' || c.type === 'TEXT' ? [c] : layers(c)));
-    // Descendants, entering plain instances (🟨 slot layers) but not connected ones unless traverseInstances.
     function* walk(n: FigmaNode, opts?: Visit): Generator<FigmaNode> {
         for (const c of layers(n)) {
             yield c;
@@ -140,7 +126,7 @@ function makeHandles(tree: { connected: Connected }) {
     }
 
     const textHandle = (n: FigmaNode) => {
-        top().texts.add(n.characters);
+        top().copy.add(n.characters);
         return {
             type: 'TEXT',
             name: n.name,
@@ -151,7 +137,7 @@ function makeHandles(tree: { connected: Connected }) {
     const wrap = (n: FigmaNode): object => (n.type === 'TEXT' ? textHandle(n) : handle(n));
 
     function handle(n: FigmaNode): object {
-        const cached = cache.get(n.id);
+        const cached = cache.get(n);
         if (cached) return cached;
         const h = {
             type: 'INSTANCE',
@@ -176,7 +162,7 @@ function makeHandles(tree: { connected: Connected }) {
             // answers '' instead of failing the whole template the way Figma's drift check would.
             getString(name: string) {
                 const v = prop(n, name)?.value ?? '';
-                top().texts.add(v);
+                top().copy.add(v);
                 return v;
             },
             getBoolean(name: string, options?: Record<string, unknown>) {
@@ -188,8 +174,6 @@ function makeHandles(tree: { connected: Connected }) {
                 const v = prop(n, name)?.value;
                 return v === undefined ? undefined : options[String(v)];
             },
-            // The swapped-in layer is the child bound to the property, not the property's value (a component id
-            // that can differ from what the layer shows).
             getInstanceSwap(name: string) {
                 const hit = [...walk(n)].find(
                     (c) =>
@@ -241,14 +225,13 @@ function makeHandles(tree: { connected: Connected }) {
                 example: tree.connected(n) ? [{ type: 'INSTANCE', guid: n.id }] : [],
             }),
         };
-        cache.set(n.id, h);
+        cache.set(n, h);
         return h;
     }
     return handle;
 }
 
-// Template id without a real instance: every getter answers with its first option, every search finds nothing.
-const dummy: object = {
+const idProbe: object = {
     type: 'INSTANCE',
     children: [],
     properties: {},
@@ -256,7 +239,7 @@ const dummy: object = {
     getBoolean: (_: string, o?: Record<string, unknown>) => (o ? Object.values(o)[0] : false),
     getString: () => '',
     getInstanceSwap: () => undefined,
-    findInstance: () => dummy,
+    findInstance: () => idProbe,
     findText: () => ({ type: 'TEXT', textContent: '' }),
     findConnectedInstance: () => null,
     findConnectedInstances: () => [],
@@ -266,33 +249,26 @@ const dummy: object = {
     executeTemplate: () => ({ example: [] }),
 };
 
-// The id a template declares, read under the dummy. load runs inside the guard: a template that cannot be loaded, or
-// cannot run without a real instance, has no id.
 export function templateId(load: () => TemplateFn, batch: Batch | null): string | null {
     try {
-        return withContext({ handle: dummy, batch, texts: new Set() }, load()).id ?? null;
+        return withContext({ handle: idProbe, batch, copy: new Set() }, load()).id ?? null;
     } catch {
         return null;
     }
 }
 
-// One template run, as the walk reads it.
 export interface Snippet {
-    // The example's code; a connected instance the template rendered is `<__nested id="<node id>" />`.
     code: string;
-    // Copy the template read from Figma text during the run; blueprint.ts turns props holding it into "*".
-    texts: Set<unknown>;
+    copy: Set<unknown>;
 }
 
-// Runs templates against one REST tree. Handles are cached per node for the runner's life, so make one per tree.
-export function templateRunner(connected: Connected) {
+export function templateRunner(connected: ConnectionOf) {
     const handle = makeHandles({ connected });
     return {
-        // fn as the template of n: figma.selectedInstance is n, figma.batch is batch. Throws what the template throws.
         run(n: FigmaNode, fn: TemplateFn, batch: Batch | null): Snippet {
-            const texts = new Set<unknown>();
-            const { example } = withContext({ handle: handle(n), batch, texts }, fn);
-            return { code: render(example), texts };
+            const copy = new Set<unknown>();
+            const { example } = withContext({ handle: handle(n), batch, copy }, fn);
+            return { code: render(example), copy };
         },
     };
 }
