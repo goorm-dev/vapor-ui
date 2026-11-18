@@ -70,13 +70,13 @@ MCP, Figma 앱, OAuth 없이 `FIGMA_ACCESS_TOKEN` 하나로 동작합니다. 토
 
 `packages/figma-blueprint`에 `@vapor-ui/figma-blueprint`를 새로 만들고 PoC를 TypeScript로 옮깁니다. `typescript`는 JSX 파싱에 쓰는 정식 dependency가 됩니다.
 
-| 진입점                                              | 역할                                                              |
-| --------------------------------------------------- | ----------------------------------------------------------------- |
-| `figma-blueprint <tree.json \| Figma URL> [--json]` | 정답 트리와 텍스트 줄을 출력한다                                  |
-| `figma-blueprint ship`                              | 컴포넌트 패키지 빌드에서 템플릿과 표를 컴파일한다                 |
-| `figma-blueprint entries`                           | 토큰으로 `entries` 표를 생성한다. 사람이 실행하고 결과를 커밋한다 |
-| `figma-blueprint library`                           | 토큰으로 발행된 Figma 라이브러리를 `entries`·예외 목록과 대조한다 |
-| JS API `blueprint`, `fromInstalled`, `fromRepo`     | 플러그인 스킬과 비공개 벤치가 import해서 쓴다                     |
+| 진입점                                                              | 역할                                                              |
+| ------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `figma-blueprint <tree.json \| Figma URL> [--json] [--repo <root>]` | 정답 트리와 텍스트 줄을 출력한다                                  |
+| `figma-blueprint ship`                                              | 컴포넌트 패키지 빌드에서 템플릿과 표를 컴파일한다                 |
+| `figma-blueprint entries`                                           | 토큰으로 `entries` 표를 생성한다. 사람이 실행하고 결과를 커밋한다 |
+| `figma-blueprint library`                                           | 토큰으로 발행된 Figma 라이브러리를 `entries`·예외 목록과 대조한다 |
+| JS API `blueprint`, `fromInstalled`, `fromRepo`                     | 비공개 벤치가 import해서 쓴다. 플러그인 스킬은 CLI를 실행한다     |
 
 빌드는 `@vapor-ui/codemod`처럼 tsup으로 합니다. `src`는 바뀔 수 있는 결정 하나를 모듈 하나가 맡도록 나눕니다. 바깥 시스템(Figma REST API, Code Connect, `@vapor-ui` 패키지)마다 모듈이 하나 있고, 흐름이 만드는 산출물(`figma-entries.json`, `figma-blueprint/` 폴더와 `Catalog`, 정답 트리, 라이브러리 점검)마다 모듈이 하나 있습니다. 한 형식을 쓰는 쪽과 읽는 쪽은 같은 모듈에 둡니다. import는 아래 표에서 위쪽 잎 모듈(`figma.ts`, `packages.ts`, `code-connect/files.ts`) 방향으로만 향하고, `eslint.config.mjs`의 zone 규칙이 이 방향을 강제합니다.
 
@@ -229,14 +229,14 @@ core, composites, icons는 각각 아래처럼 바뀝니다.
 - **vapor-ui CI**: 규칙마다 손으로 만든 작은 REST 트리로 단위 테스트를 둡니다(슬롯 밖 인스턴스 제외, node id, `anyParent` 위치 등). 레포의 모든 Code Connect URL이 `entries`에 있는지도 토큰 없이 검사합니다. 매주 main에서 도는 job은 토큰으로 `entries`를 다시 생성해 커밋된 것과 다르면 실패하고, `figma-blueprint library`로 Figma에서 사라진 `entries` 키, 연결도 예외 사유도 없는 컴포넌트, 이미 연결됐거나 사라진 예외를 잡아 실패합니다.
 - **비공개 벤치**: figma-blueprint를 버전 고정해 씁니다. 처음 설계의 정적 대조 스크립트는 벤치로 옮기고, 같은 run을 그 스크립트와 검증 에이전트로 모두 채점해 일치율을 잽니다.
 
-완료 조건은 정답 트리의 **오류 0**입니다. 벤치의 픽스처 25개에서 채점 불가가 없어야 하고, 사람이 코드를 읽고 판정해 둔 에이전트 실행 12개를 이 트리로 채점했을 때 FP 0, FN 0이어야 합니다. 다만 Dialog 닫기 버튼을 빼는 `internalParts` 추출이 `createSlots()`만 제외하는 임시 규칙이라, 위의 조건 기준으로 바꿉니다.
+완료 조건은 정답 트리의 **오류 0**입니다. 벤치의 픽스처 25개에서 채점 불가가 없어야 하고, 사람이 코드를 읽고 판정해 둔 에이전트 실행 12개를 이 트리로 채점했을 때 FP 0, FN 0이어야 합니다.
 
-PoC를 RFC의 종료 코드 규칙으로 돌리면 픽스처 25개 중 17개가 채점 불가입니다. PoC는 템플릿이 없는 인스턴스와 템플릿 실행 실패를 정답에서 조용히 빼 왔기 때문입니다. 원인은 두 가지입니다.
+이 RFC를 쓸 때 PoC를 RFC의 종료 코드 규칙으로 돌리면 픽스처 25개 중 17개가 채점 불가였습니다. PoC는 템플릿이 없는 인스턴스와 템플릿 실행 실패를 정답에서 조용히 빼 왔기 때문입니다. 원인은 두 가지입니다.
 
 - Code Connect가 없는 컴포넌트입니다. core의 `Field`, `Toolbar`, `Menu.GroupLabel`, `Progress.Track`이 해당합니다.
 - 템플릿과 Figma 속성의 불일치입니다. `Pagination.Previous`와 `Pagination.Next`의 `disabled`, `Button`의 `variant`가 해당합니다.
 
-규칙은 그대로 두고 빠진 연결과 불일치를 고칩니다. 이 작업은 Code Connect 작업(VAPOR-232)과 Figma·코드 불일치 수정(VAPOR-245)에서 합니다.
+규칙은 그대로 두고 빠진 연결과 불일치를 고칩니다. 이 작업은 Code Connect 작업(VAPOR-232)과 Figma·코드 불일치 수정(VAPOR-245)에서 합니다. `Toolbar`처럼 이후 연결된 컴포넌트가 있으므로, 지금 남은 항목은 두 이슈에서 확인합니다.
 
 ## Drawbacks
 

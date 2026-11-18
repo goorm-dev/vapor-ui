@@ -18,6 +18,7 @@ An open-source React UI component library and design system maintained by goorm.
 | `@vapor-ui/color-generator` | OKLCH-based WCAG-compliant color palette generator — produces design tokens used by `css-generator`                                                       |
 | `@vapor-ui/css-generator`   | Generates CSS variables and themes from design tokens produced by `color-generator`                                                                       |
 | `@vapor-ui/codemod`         | jscodeshift-based automated code migration tools for major version upgrades                                                                               |
+| `@vapor-ui/figma-blueprint` | Builds the element tree a Figma design requires by running Code Connect templates. The vapor-ui Claude plugin runs it to grade code against a design      |
 
 **Apps** (`apps/`) — not published:
 
@@ -113,3 +114,4 @@ Component architecture, TypeScript rules, styling patterns, testing strategy, an
 
 - **`packages/core/CLAUDE.md`** — component API design, Vanilla Extract styling, Base UI composition, compound component patterns, test strategy
 - **`apps/website/CLAUDE.md`** — documentation content rules, public API accuracy, Next.js conventions
+- **`packages/figma-blueprint/CLAUDE.md`** covers its contracts with the vapor-ui plugin, the generated Figma data files, and build order

@@ -162,3 +162,9 @@ pnpm --filter @vapor-ui/core exec figma connect unpublish -f <file>
 - Publish leaf components (Button, Badge, Toggle) before parents that embed them.
 
 The token needs the **Code Connect: Write** and **File content: Read** scopes. The CLI reads `FIGMA_ACCESS_TOKEN` only, from the environment or `packages/core/.env`.
+
+## figma-blueprint
+
+`@vapor-ui/figma-blueprint` also runs these templates, through a stand-in that implements only the `figma` API the repo's templates use. A template that calls anything else still builds and publishes, but figma-blueprint marks its instances unscorable.
+
+When you add or move a template, or change a `// url=` line or a batch row, run `pnpm figma-blueprint figma:entries`. It reads the token from `packages/figma-blueprint/.env`, not `packages/core/.env`. Until you do, the figma-blueprint test fails. See [`packages/figma-blueprint/CLAUDE.md`](../../packages/figma-blueprint/CLAUDE.md).
