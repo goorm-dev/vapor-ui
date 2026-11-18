@@ -18,7 +18,7 @@ export interface Exceptions {
 }
 
 // Packages whose library file is checked, and which of its top-level items must be linked.
-export const TARGETS: Partial<Record<Pkg, (item: LibraryItem) => boolean>> = {
+const TARGETS: Partial<Record<Pkg, (item: LibraryItem) => boolean>> = {
     core: (item) => item.name.includes('💙'),
     composites: () => true,
 };

@@ -1,8 +1,11 @@
+import { mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import type { StoredEntry } from '~/entries/entries-file';
 
-import { checkLibrary, libraryItems } from './check-library';
+import { checkLibrary, libraryItems, readExceptions } from './check-library';
 
 const entry = (name: string) => ({ name, url: '', template: '', batch: null }) as StoredEntry;
 const set = (key: string, name: string) => ({ key, name, node_id: key });
@@ -57,5 +60,14 @@ describe('checkLibrary', () => {
         );
 
         expect(stale).toEqual(['linked', 'deleted']);
+    });
+});
+
+describe('readExceptions', () => {
+    it('rejects an exception whose reason is blank', () => {
+        const dir = mkdtempSync(join(tmpdir(), 'figma-exceptions-'));
+        writeFileSync(join(dir, 'figma-exceptions.json'), JSON.stringify({ figma: { k: ' ' } }));
+
+        expect(() => readExceptions(dir)).toThrow('k needs a non-empty reason');
     });
 });
