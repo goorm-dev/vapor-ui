@@ -1,7 +1,6 @@
 import { createContext, forwardRef, useCallback, useContext, useMemo, useRef } from 'react';
 import type { ReactNode } from 'react';
 
-import { useId } from '@base-ui/utils/useId';
 import { AlertDialog as AlertDialogPrimitives, Button, VStack } from '@vapor-ui/core';
 
 import type { SlotProps } from '~/utils/create-slots';
@@ -45,7 +44,7 @@ export const AlertDialogRoot = forwardRef<HTMLDivElement, AlertDialogRoot.Props>
         keepMounted,
 
         // DOM
-        id: idProp,
+        id,
         className,
 
         // variants
@@ -59,8 +58,6 @@ export const AlertDialogRoot = forwardRef<HTMLDivElement, AlertDialogRoot.Props>
         action,
         children,
     } = props;
-
-    const id = useId(idProp);
 
     const fallbackActionsRef = useRef<AlertDialogPrimitives.Root.Actions>(null);
     const actionsRef = actionsRefProp ?? fallbackActionsRef;
@@ -83,7 +80,11 @@ export const AlertDialogRoot = forwardRef<HTMLDivElement, AlertDialogRoot.Props>
                     keepMounted={keepMounted}
                 >
                     <AlertDialogPrimitives.OverlayPrimitive />
-                    <AlertDialogPrimitives.PopupPrimitive ref={ref} id={id} className={className}>
+                    <AlertDialogPrimitives.PopupPrimitive
+                        ref={ref}
+                        {...(id && { id })}
+                        className={className}
+                    >
                         <Header title={title} description={description} />
                         <Body>{children}</Body>
                         <Footer action={action} cancel={cancel} />
@@ -256,9 +257,7 @@ const Footer = ({ action, cancel }: FooterProps) => {
 /* -----------------------------------------------------------------------------------------------*/
 
 export const AlertDialogAction = forwardRef<HTMLElement, AlertDialogAction.Props>((props, ref) => {
-    const { id: idProp, isDisabled, closeOnClick = true, className, onClick, children } = props;
-
-    const id = useId(idProp);
+    const { id, isDisabled, closeOnClick = true, className, onClick, children } = props;
 
     const { close, type } = useAlertDialogContext();
     const handleClick = (event: Parameters<NonNullable<ButtonProps['onClick']>>[0]) => {
@@ -272,7 +271,7 @@ export const AlertDialogAction = forwardRef<HTMLElement, AlertDialogAction.Props
     return (
         <Button
             ref={ref}
-            id={id}
+            {...(id && { id })}
             size="lg"
             colorPalette={type === 'critical' ? 'danger' : 'primary'}
             disabled={isDisabled}
@@ -328,9 +327,7 @@ export namespace AlertDialogAction {
 /* -----------------------------------------------------------------------------------------------*/
 
 export const AlertDialogCancel = forwardRef<HTMLElement, AlertDialogCancel.Props>((props, ref) => {
-    const { id: idProp, isDisabled, closeOnClick = true, className, onClick, children } = props;
-
-    const id = useId(idProp);
+    const { id, isDisabled, closeOnClick = true, className, onClick, children } = props;
 
     const { close } = useAlertDialogContext();
     const handleClick = useCallback(
@@ -347,7 +344,7 @@ export const AlertDialogCancel = forwardRef<HTMLElement, AlertDialogCancel.Props
     return (
         <Button
             ref={ref}
-            id={id}
+            {...(id && { id })}
             size="lg"
             colorPalette="secondary"
             disabled={isDisabled}

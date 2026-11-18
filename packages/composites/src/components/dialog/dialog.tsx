@@ -12,7 +12,6 @@ import {
     useState,
 } from 'react';
 
-import { useId } from '@base-ui/utils/useId';
 import { Button, Dialog as DialogPrimitives, IconButton, VStack } from '@vapor-ui/core';
 import { CloseOutlineIcon } from '@vapor-ui/icons';
 
@@ -59,7 +58,7 @@ export const DialogRoot = forwardRef<HTMLDivElement, DialogRoot.Props>((props, r
         ariaLabels,
 
         // DOM
-        id: idProp,
+        id,
         className,
 
         // variants
@@ -73,8 +72,6 @@ export const DialogRoot = forwardRef<HTMLDivElement, DialogRoot.Props>((props, r
         action,
         children,
     } = props;
-
-    const id = useId(idProp);
 
     const actionsRef = useRef<DialogPrimitives.Root.Actions>(null);
     const mergedRef = actionsRefProp ?? actionsRef;
@@ -96,7 +93,11 @@ export const DialogRoot = forwardRef<HTMLDivElement, DialogRoot.Props>((props, r
                 <DialogPrimitives.PortalPrimitive container={container} keepMounted={keepMounted}>
                     <DialogPrimitives.OverlayPrimitive />
 
-                    <DialogPrimitives.PopupPrimitive ref={ref} id={id} className={className}>
+                    <DialogPrimitives.PopupPrimitive
+                        ref={ref}
+                        {...(id && { id })}
+                        className={className}
+                    >
                         <Header title={title} description={description} />
                         <Body>{children}</Body>
                         <Footer action={action} assistive={assistive} />
@@ -319,9 +320,7 @@ const Footer = ({ action, assistive }: FooterProps) => {
 /* -----------------------------------------------------------------------------------------------*/
 
 export const DialogAction = forwardRef<HTMLElement, DialogAction.Props>((props, ref) => {
-    const { id: idProp, isDisabled, closeOnClick = true, className, onClick, children } = props;
-
-    const id = useId(idProp);
+    const { id, isDisabled, closeOnClick = true, className, onClick, children } = props;
 
     const { close } = useDialogContext();
     const handleClick = (event: Parameters<NonNullable<Button.Props['onClick']>>[0]) => {
@@ -335,7 +334,7 @@ export const DialogAction = forwardRef<HTMLElement, DialogAction.Props>((props, 
     return (
         <Button
             ref={ref}
-            id={id}
+            {...(id && { id })}
             size="lg"
             colorPalette="primary"
             disabled={isDisabled}
@@ -391,9 +390,7 @@ export namespace DialogAction {
 /* -----------------------------------------------------------------------------------------------*/
 
 export const DialogAssistive = forwardRef<HTMLElement, DialogAssistive.Props>((props, ref) => {
-    const { id: idProp, isDisabled, closeOnClick = true, className, onClick, children } = props;
-
-    const id = useId(idProp);
+    const { id, isDisabled, closeOnClick = true, className, onClick, children } = props;
 
     const { close } = useDialogContext();
     const handleClick = (event: Parameters<NonNullable<Button.Props['onClick']>>[0]) => {
@@ -407,7 +404,7 @@ export const DialogAssistive = forwardRef<HTMLElement, DialogAssistive.Props>((p
     return (
         <Button
             ref={ref}
-            id={id}
+            {...(id && { id })}
             size="lg"
             colorPalette="secondary"
             variant="outline"

@@ -2,7 +2,6 @@ import { createContext, forwardRef, useContext, useMemo } from 'react';
 import type { ReactNode } from 'react';
 
 import { useControlled } from '@base-ui/utils/useControlled';
-import { useId } from '@base-ui/utils/useId';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { Box, Menu as MenuPrimitives, Text, VStack } from '@vapor-ui/core';
 import { ChevronRightOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
@@ -54,7 +53,7 @@ const ParentMenu = forwardRef<HTMLDivElement, ParentMenuProps>((props, ref) => {
         container,
 
         // DOM
-        id: idProp,
+        id,
         className,
 
         // variants
@@ -65,8 +64,6 @@ const ParentMenu = forwardRef<HTMLDivElement, ParentMenuProps>((props, ref) => {
         trigger,
         children,
     } = props;
-
-    const id = useId(idProp);
 
     return (
         <MenuPrimitives.Root
@@ -80,7 +77,11 @@ const ParentMenu = forwardRef<HTMLDivElement, ParentMenuProps>((props, ref) => {
 
             <MenuPrimitives.PortalPrimitive container={container}>
                 <MenuPrimitives.PositionerPrimitive side={side} align={align}>
-                    <MenuPrimitives.PopupPrimitive ref={ref} id={id} className={className}>
+                    <MenuPrimitives.PopupPrimitive
+                        ref={ref}
+                        {...(id && { id })}
+                        className={className}
+                    >
                         {children}
                     </MenuPrimitives.PopupPrimitive>
                 </MenuPrimitives.PositionerPrimitive>
@@ -101,7 +102,7 @@ const Submenu = forwardRef<HTMLDivElement, SubmenuProps>((props, ref) => {
         container,
 
         // DOM
-        id: idProp,
+        id,
         className,
 
         // variants
@@ -112,8 +113,6 @@ const Submenu = forwardRef<HTMLDivElement, SubmenuProps>((props, ref) => {
         trigger,
         children,
     } = props;
-
-    const id = useId(idProp);
 
     return (
         <MenuPrimitives.SubmenuRoot
@@ -127,7 +126,11 @@ const Submenu = forwardRef<HTMLDivElement, SubmenuProps>((props, ref) => {
 
             <MenuPrimitives.PortalPrimitive container={container}>
                 <MenuPrimitives.PositionerPrimitive side={side} sideOffset={8} align={align}>
-                    <MenuPrimitives.SubmenuPopupPrimitive ref={ref} id={id} className={className}>
+                    <MenuPrimitives.SubmenuPopupPrimitive
+                        ref={ref}
+                        {...(id && { id })}
+                        className={className}
+                    >
                         {children}
                     </MenuPrimitives.SubmenuPopupPrimitive>
                 </MenuPrimitives.PositionerPrimitive>
@@ -233,15 +236,13 @@ const groupSlots = createSlots({
 });
 
 export const MenuGroup = forwardRef<HTMLDivElement, MenuGroup.Props>((props, ref) => {
-    const { label, id: idProp, className, children } = props;
-
-    const id = useId(idProp);
+    const { label, id, className, children } = props;
 
     return (
         <>
             <Separator />
 
-            <MenuPrimitives.Group ref={ref} id={id} className={className}>
+            <MenuPrimitives.Group ref={ref} {...(id && { id })} className={className}>
                 <groupSlots.label render={label} />
                 {children}
             </MenuPrimitives.Group>
@@ -322,17 +323,7 @@ export const MenuCheckGroup = forwardRef<HTMLDivElement, MenuCheckGroup.Props>((
 MenuCheckGroup.displayName = 'Menu.CheckGroup';
 
 const SingleCheckGroup = forwardRef<HTMLDivElement, MenuSingleCheckGroupProps>((props, ref) => {
-    const {
-        value: valueProp,
-        defaultValue,
-        onValueChange,
-        label,
-        id: idProp,
-        className,
-        children,
-    } = props;
-
-    const id = useId(idProp);
+    const { value: valueProp, defaultValue, onValueChange, label, id, className, children } = props;
 
     const [value, setValueState] = useControlled<string | undefined>({
         name: 'MenuCheckGroup',
@@ -358,7 +349,7 @@ const SingleCheckGroup = forwardRef<HTMLDivElement, MenuSingleCheckGroupProps>((
 
             <MenuPrimitives.RadioGroup
                 ref={ref}
-                id={id}
+                {...(id && { id })}
                 className={className}
                 value={value}
                 onValueChange={handleValueChange}
@@ -373,17 +364,7 @@ const SingleCheckGroup = forwardRef<HTMLDivElement, MenuSingleCheckGroupProps>((
 });
 
 const MultipleCheckGroup = forwardRef<HTMLDivElement, MenuMultipleCheckGroupProps>((props, ref) => {
-    const {
-        value: valueProp,
-        defaultValue,
-        onValueChange,
-        label,
-        id: idProp,
-        className,
-        children,
-    } = props;
-
-    const id = useId(idProp);
+    const { value: valueProp, defaultValue, onValueChange, label, id, className, children } = props;
 
     const [value, setValueState] = useControlled<string[]>({
         name: 'MenuCheckGroup',
@@ -411,7 +392,7 @@ const MultipleCheckGroup = forwardRef<HTMLDivElement, MenuMultipleCheckGroupProp
         <MenuCheckGroupContext.Provider value={context}>
             <Separator />
 
-            <MenuPrimitives.Group ref={ref} id={id} className={className}>
+            <MenuPrimitives.Group ref={ref} {...(id && { id })} className={className}>
                 <checkGroupSlots.label render={label} />
                 {children}
             </MenuPrimitives.Group>
@@ -523,24 +504,13 @@ export namespace MenuCheckGroup {
 /* -----------------------------------------------------------------------------------------------*/
 
 export const MenuItem = forwardRef<HTMLDivElement, MenuItem.Props>((props, ref) => {
-    const {
-        isDisabled,
-        variant,
-        label,
-        description,
-        leading,
-        trailing,
-        onClick,
-        id: idProp,
-        className,
-    } = props;
-
-    const id = useId(idProp);
+    const { isDisabled, variant, label, description, leading, trailing, onClick, id, className } =
+        props;
 
     return (
         <MenuPrimitives.Item
             ref={ref}
-            id={id}
+            {...(id && { id })}
             className={className}
             disabled={isDisabled}
             onClick={onClick}
@@ -630,11 +600,9 @@ export const MenuCheckItem = forwardRef<HTMLDivElement, MenuCheckItem.Props>((pr
         label,
         description,
         trailing,
-        id: idProp,
+        id,
         className,
     } = props;
-
-    const id = useId(idProp);
 
     const context = useMenuCheckGroupContext();
     const { mode, hasSelection } = context;
@@ -648,7 +616,7 @@ export const MenuCheckItem = forwardRef<HTMLDivElement, MenuCheckItem.Props>((pr
         return (
             <MenuPrimitives.RadioItemPrimitive
                 ref={ref}
-                id={id}
+                {...(id && { id })}
                 className={className}
                 closeOnClick
                 disabled={isDisabled}
@@ -679,7 +647,7 @@ export const MenuCheckItem = forwardRef<HTMLDivElement, MenuCheckItem.Props>((pr
     return (
         <MenuPrimitives.CheckboxItemPrimitive
             ref={ref}
-            id={id}
+            {...(id && { id })}
             className={className}
             disabled={isDisabled}
             checked={checked}
@@ -760,9 +728,7 @@ export namespace MenuCheckItem {
 /* -----------------------------------------------------------------------------------------------*/
 
 export const MenuSubmenuItem = forwardRef<HTMLDivElement, MenuSubmenuItem.Props>((props, ref) => {
-    const { isDisabled, leading, description, label, trailing, id: idProp, className } = props;
-
-    const id = useId(idProp);
+    const { isDisabled, leading, description, label, trailing, id, className } = props;
 
     const itemLayout = getItemLayout({
         hasLeading: !!leading,
@@ -773,7 +739,7 @@ export const MenuSubmenuItem = forwardRef<HTMLDivElement, MenuSubmenuItem.Props>
     return (
         <MenuPrimitives.SubmenuTrigger
             ref={ref}
-            id={id}
+            {...(id && { id })}
             className={className}
             disabled={isDisabled}
             $css={{ display: 'grid', gap: '$000', ...itemLayout }}
