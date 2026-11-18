@@ -98,9 +98,16 @@ function render() {
     }
 
     if (part === 'submenuTriggerItem') {
+        // `hasPopup` toggles the nested SubmenuPopup; code needs one either way.
+        const slot = instance.findInstance('🟨Menu.SubTriggerItem/SlotLayer');
+        const popup =
+            slot.type === 'INSTANCE' && toggle(slot, 'hasPopup')
+                ? example(slot.findConnectedInstance(MENU_PART_ID.submenuPopup))
+                : '';
+
         return figma.code`<Menu.SubmenuRoot>
     <Menu.SubmenuTriggerItem${disabled}>${itemContents()}</Menu.SubmenuTriggerItem>
-    <Menu.SubmenuPopup>{/* contents */}</Menu.SubmenuPopup>
+    ${popup || '<Menu.SubmenuPopup>{/* contents */}</Menu.SubmenuPopup>'}
 </Menu.SubmenuRoot>`;
     }
 
