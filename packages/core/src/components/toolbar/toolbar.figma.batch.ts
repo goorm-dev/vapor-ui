@@ -25,8 +25,6 @@ type ToolbarPart = keyof typeof TOOLBAR_PART_ID;
 const instance = figma.selectedInstance;
 const part: ToolbarPart = figma.batch.part;
 
-// The inner Toggle or IconButton is connected, so its own template writes it. Writing it here too would put it in the
-// figma-blueprint answer sheet twice.
 function toolbarButton(inner: InstanceHandle) {
     const disabled = flags({ disabled: bool(inner, 'disabled') });
 
@@ -34,6 +32,7 @@ function toolbarButton(inner: InstanceHandle) {
 }
 
 function selectButton(trigger: InstanceHandle) {
+    const size = pick(trigger, 'size', { sm: 'sm', md: 'md', lg: 'lg', xl: 'xl' });
     const props = flags({
         invalid: bool(trigger, 'invalid'),
         readOnly: bool(trigger, 'readOnly'),
@@ -42,11 +41,8 @@ function selectButton(trigger: InstanceHandle) {
     const slot = trigger.findInstance('🟨Select.Trigger/SlotLayer');
     const hint = slot.type === 'INSTANCE' ? placeholder(slot) : '';
 
-    return figma.code`<Select.Root${hint}${props}>
-    <Toolbar.Button render={<Select.TriggerPrimitive />}${disabled}>
-        <Select.ValuePrimitive />
-        <Select.TriggerIconPrimitive />
-    </Toolbar.Button>
+    return figma.code`<Select.Root size="${size}"${hint}${props}>
+    <Toolbar.Button render={<Select.Trigger />}${disabled} />
     <Select.Popup>{/* contents */}</Select.Popup>
 </Select.Root>`;
 }
