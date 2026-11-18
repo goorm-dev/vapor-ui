@@ -238,6 +238,23 @@ describe('transform — dynamic slots', () => {
             expect(prologue(out.code)).toEqual(prologue(source));
         });
 
+        it.each([
+            ['hashbang only', `#!/usr/bin/env node\nimport { css } from '@vapor-ui/style-macro';`],
+            [
+                'hashbang + directive',
+                `#!/usr/bin/env node\n'use client';\nimport { css } from '@vapor-ui/style-macro';`,
+            ],
+        ])('keeps a hashbang on the first line: %s', (_, head) => {
+            const source = `${head}\n${dynamicBody}`;
+            const out = transform({ source, filename: '/D.tsx' });
+            expect(out.errors).toEqual([]);
+            expect(out.code.startsWith('#!/usr/bin/env node\n')).toBe(true);
+            expect(prologue(out.code)).toEqual(prologue(source));
+            expect(
+                parseSync('/D.tsx', out.code, { sourceType: 'module', lang: 'tsx' }).errors,
+            ).toEqual([]);
+        });
+
         it('keeps the prologue first with a CSS import and no other import', () => {
             // css 가 import 로 오지 않으면 매크로가 적용되지 않으므로, 소스 import 를 뒤에 둔다.
             const source = `'use client'; // c\nimport { css } from '@vapor-ui/style-macro';\nexport const a = css({ color: 'red' });`;

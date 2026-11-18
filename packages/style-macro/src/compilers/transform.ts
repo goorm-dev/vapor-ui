@@ -211,7 +211,7 @@ class Transformer {
     /** 마지막 import 문의 끝 위치. 없으면 -1. */
     #lastImportEnd = -1;
     /**
-     * directive prologue(`'use client'` 등) 마지막 문의 끝 위치. 없으면 0.
+     * 파일 머리(hashbang, directive prologue) 끝 위치. 없으면 0.
      * 파서가 prologue 로 판정한 문(ESTree `ExpressionStatement.directive`)만 센다 —
      * 주석·괄호·같은 줄 코드 처리를 파서와 똑같이 따른다.
      */
@@ -1032,9 +1032,12 @@ function shorthandValueKeys(obj: AnyProp): Map<number, string> {
     return out;
 }
 
-/** directive prologue 마지막 문의 끝. prologue 가 없으면 0. */
+/**
+ * 파일 머리(hashbang + directive prologue)의 끝. 삽입하는 문은 모두 이 뒤에 온다 — hashbang 은
+ * 파일 첫 글자여야 하고, directive 는 첫 문이어야 한다. 둘 다 없으면 0.
+ */
 function prologueEnd(program: AnyProp): number {
-    let end = 0;
+    let end = program.hashbang?.end ?? 0;
     for (const stmt of program.body) {
         if (stmt.type !== 'ExpressionStatement' || typeof stmt.directive !== 'string') break;
         end = stmt.end;
