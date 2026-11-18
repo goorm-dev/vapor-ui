@@ -124,9 +124,9 @@ export const TestBed_Dark: StoryObj<typeof Component> = {
 
 완료: 위 2·3 통과, 4의 셀 개수 일치. 스크린샷 기준 파일 갱신은 이 스킬 범위 밖 — 사용자가 루트의 `pnpm test:update-snapshots`(`apps/storybook`의 `test:regressions`)를 별도로 실행한다.
 
-### 8. 축 근거 리포트 — MANDATORY, 항상 마지막
+### 8. 축 근거 리포트 (응답 마지막 섹션)
 
-Test Bed 작업 완료 응답의 **마지막 섹션**은 항상 축 선정 근거 설명이다. 생략 금지. 사용자가 축 조정을 요청할 때 판단 근거가 되므로, 검증 통과 요약보다 뒤에 붙인다.
+Test Bed 작업 완료 응답의 마지막 섹션은 축 선정 근거 설명이다. 사용자가 축 조정을 요청할 때 판단 근거가 되므로, 검증 통과 요약보다 뒤에 붙인다.
 
 포함 항목:
 

@@ -21,7 +21,7 @@
 - 슬롯 prop은 Figma의 아나토미와 1:1로 맞춘다 (`trigger`, `title`, `description`, `leadingIcon` 등).
 - 폴리모픽(`asChild` / `as`)은 제공하지 않는다. 폴리모픽이 필요하면 소비자가 `@vapor-ui/core`로 직접 만든다.
 - 모든 컴포넌트는 제어/비제어를 함께 지원한다: `state` / `defaultState` / `onStateChange` (예: `open` / `defaultOpen` / `onOpenChange`).
-- 논리 상태 boolean에는 `is` 프리픽스를 붙인다: `isOpen`, `isDisabled`, `isChecked`. HTML 네이티브 속성과 구분한다.
+- 논리 상태 boolean에는 `is` 프리픽스를 붙인다: `isDisabled`, `isChecked`. HTML 네이티브 속성과 구분한다. 위의 제어/비제어 상태 prop(`open` / `defaultOpen`)은 primitive 이름을 그대로 쓴다.
 - 아이템을 나열하는 경우 `items` prop 대신 dot-notation 서브 컴포넌트로 노출한다 (`Select.Root` / `Select.Option`).
 - 모든 prop(시각 / 기능 / 슬롯)에 JSDoc을 작성한다. 이 내용을 그대로 Props Table 자동 생성에 사용한다. JSDoc의 형식·톤·태그 규칙은 [`.claude/rules/composites.md §2`](../../.claude/rules/composites.md#2-모든-prop에-jsdoc을-붙인다)를 따른다.
 
