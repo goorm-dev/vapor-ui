@@ -4,7 +4,13 @@ import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { type ColorSchemeScriptOpts, buildColorSchemeScript } from '~/helpers/fouc-script';
 
 import { compileModule, isModuleCss, sourceOfModuleCss } from './_module-css';
-import { type ResolvedOptions, type VaporPluginOptions, resolveOptions, toPosix } from './_options';
+import {
+    type ResolvedOptions,
+    type VaporPluginOptions,
+    includedPackages,
+    resolveOptions,
+    toPosix,
+} from './_options';
 
 export type { VaporPluginOptions };
 
@@ -112,6 +118,13 @@ function moduleCssPlugin(rawOpts: VaporPluginOptions): VitePluginShape {
     return {
         name: 'vapor-style-macro',
         enforce: 'pre',
+
+        // include 로 지목한 패키지는 dev 의 dependency pre-bundling(esbuild)을 거치면 매크로가
+        // 빠진 채 묶인다. 사전 번들에서 빼 일반 모듈처럼 transform 을 거치게 한다.
+        config() {
+            const exclude = includedPackages(rawOpts.include ?? []);
+            return exclude.length ? { optimizeDeps: { exclude } } : null;
+        },
 
         configResolved(config: { root: string }) {
             opts = resolveOptions(rawOpts, { root: config.root });

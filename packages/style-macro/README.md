@@ -95,14 +95,14 @@ interface VaporPluginOptions {
 }
 ```
 
-| 옵션                | 기본값                                  | 설명                                                                                                                                                                                     |
-| ------------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `include`           | `[]`                                    | 추가 대상 glob (`root` 기준, picomatch). 기본 대상(`root` 하위 JS/TS, `node_modules` 제외)에 **더해진다**. prebuilt 패키지 포함 예: `['node_modules/@acme/ui/dist/**']`                  |
-| `exclude`           | `[]`                                    | 제외 glob (`root` 기준). `include` 보다 우선                                                                                                                                             |
-| `root`              | 번들러 프로젝트 루트                    | `include`/`exclude` glob 기준 경로                                                                                                                                                       |
-| `hash`              | `process.env.NODE_ENV === 'production'` | class name hash 모드 (readable vs hashed)                                                                                                                                                |
-| `injectColorScheme` | `true`                                  | Vite `transformIndexHtml` 로 FOUC guard script 자동 주입. object 로 커스텀 가능                                                                                                          |
-| `layer`             | `'vapor-utilities'`                     | `css()` 규칙을 담을 CSS cascade layer 이름 (`acme.ui` 같은 sub-layer 가능). CSS 진입점의 레이어 순서 선언에 포함돼야 한다 — 빠지면 브라우저가 맨 뒤 레이어로 취급해 앱 스타일까지 이긴다 |
+| 옵션                | 기본값                                  | 설명                                                                                                                                                                                                                                                 |
+| ------------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `include`           | `[]`                                    | 추가 대상 glob (`root` 기준 상대 경로, picomatch). 기본 대상(JS/TS, `node_modules` 제외)에 **더해진다**. 패키지는 `node_modules/<이름>/…` 로 쓰면 설치 방식(npm hoist, pnpm store 실경로)과 무관하게 맞는다. 예: `['node_modules/@acme/ui/dist/**']` |
+| `exclude`           | `[]`                                    | 제외 glob (`include` 와 같은 규칙). `include` 보다 우선                                                                                                                                                                                              |
+| `root`              | 번들러 프로젝트 루트                    | `include`/`exclude` glob 기준 경로. 경로 자체에 `(`·`[` 같은 glob 문자가 있어도 된다                                                                                                                                                                 |
+| `hash`              | `process.env.NODE_ENV === 'production'` | class name hash 모드 (readable vs hashed)                                                                                                                                                                                                            |
+| `injectColorScheme` | `true`                                  | Vite `transformIndexHtml` 로 FOUC guard script 자동 주입. object 로 커스텀 가능                                                                                                                                                                      |
+| `layer`             | `'vapor-utilities'`                     | `css()` 규칙을 담을 CSS cascade layer 이름 (`acme.ui` 같은 sub-layer 가능). CSS 진입점의 레이어 순서 선언에 포함돼야 한다 — 빠지면 브라우저가 맨 뒤 레이어로 취급해 앱 스타일까지 이긴다                                                             |
 
 ## 라이브러리 배포
 

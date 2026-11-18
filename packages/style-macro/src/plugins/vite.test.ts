@@ -190,3 +190,16 @@ describe('vite adapter — dev server', () => {
         expect(viaFs).toContain('gap: 5px');
     });
 });
+
+describe('vite adapter — included packages skip dependency pre-bundling', () => {
+    it('adds packages named in `include` to optimizeDeps.exclude', () => {
+        const [plugin] = vaporVitePlugin({ include: ['node_modules/@acme/ui/dist/**', 'src/**'] });
+        const config = (plugin as { config?: () => unknown }).config?.();
+        expect(config).toEqual({ optimizeDeps: { exclude: ['@acme/ui'] } });
+    });
+
+    it('adds nothing without package includes', () => {
+        const [plugin] = vaporVitePlugin();
+        expect((plugin as { config?: () => unknown }).config?.() ?? null).toBeNull();
+    });
+});

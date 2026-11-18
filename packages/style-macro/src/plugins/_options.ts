@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
+import { dirname, isAbsolute, join, posix, relative, resolve, sep } from 'node:path';
 import picomatch from 'picomatch';
 
 import { DEFAULT_LAYER } from '~/compilers/emit-css';
@@ -105,9 +105,48 @@ export function toPosix(p: string): string {
     return sep === '/' ? p : p.split(sep).join('/');
 }
 
-/** glob 을 `root` 기준 절대 posix 경로로. `**` 등 glob 문법은 `resolve` 가 건드리지 않는다. */
-function absoluteGlob(root: string, glob: string): string {
-    return toPosix(isAbsolute(glob) ? glob : resolve(root, glob));
+/**
+ * glob 하나 → 경로 판정 함수. `root` 는 glob 에 섞지 않는다 — 상대 glob 은 root 기준 상대 경로와,
+ * 절대 glob 은 절대 경로와 맞춘다. 그래서 root 에 glob 문자(`(`, `[`, `{`, `*` …)가 있어도
+ * 그대로 경로다. glob 문법은 사용자가 쓴 패턴에만 적용된다.
+ */
+function globMatcher(root: string, glob: string): (abs: string) => boolean {
+    if (isAbsolute(glob)) {
+        const m = picomatch(toPosix(glob), { dot: true });
+        return (abs) => m(abs);
+    }
+    const m = picomatch(posix.normalize(toPosix(glob)), { dot: true });
+    return (abs) => m(toPosix(relative(root, abs)));
+}
+
+const NODE_MODULES = `${sep}node_modules${sep}`;
+
+/**
+ * 판정에 쓸 경로들. `node_modules` 안의 파일은 패키지 경로(마지막 `node_modules/` 뒤 —
+ * Node 모듈 해석이 패키지를 식별하는 방식)를 `root/node_modules/` 아래에 둔 경로로도 본다.
+ * 그래서 `node_modules/@acme/ui/**` 가 npm·yarn 의 hoist 경로, pnpm 의 store 실경로
+ * (`.pnpm/@acme+ui@1.0.0/node_modules/@acme/ui/…`) 어디에서나 같은 패키지를 가리킨다.
+ */
+function candidates(root: string, abs: string): string[] {
+    const i = abs.lastIndexOf(NODE_MODULES);
+    if (i === -1) return [abs];
+    return [abs, join(root, 'node_modules', abs.slice(i + NODE_MODULES.length))];
+}
+
+const PACKAGE_IN_GLOB_RE = /^(?:\.\/)?node_modules\/((?:@[^/]+\/)?[^/]+)(?:\/|$)/;
+
+/**
+ * `include` 가 `node_modules/<이름>/…` 로 지목한 패키지 이름들. 이름 부분에 glob 문자가 있으면
+ * 이름을 정할 수 없으므로 뺀다. Vite 가 이 패키지들을 dependency pre-bundling(esbuild)에서 빼야
+ * dev 에서도 매크로 변환을 거친다.
+ */
+export function includedPackages(include: string[]): string[] {
+    const names = new Set<string>();
+    for (const glob of include) {
+        const name = PACKAGE_IN_GLOB_RE.exec(toPosix(glob))?.[1];
+        if (name && !picomatch.scan(name).isGlob) names.add(name);
+    }
+    return [...names];
 }
 
 export function resolveOptions(
@@ -124,16 +163,19 @@ export function resolveOptions(
     } = opts;
 
     const root = resolve(rawRoot ?? defaults.root ?? process.cwd());
-    const includeGlobs = include.map((g) => absoluteGlob(root, g));
-    const excludeGlobs = exclude.map((g) => absoluteGlob(root, g));
-    const isIncluded = includeGlobs.length ? picomatch(includeGlobs, { dot: true }) : null;
-    const isExcluded = excludeGlobs.length ? picomatch(excludeGlobs, { dot: true }) : null;
+    const includeMatchers = include.map((g) => globMatcher(root, g));
+    const excludeMatchers = exclude.map((g) => globMatcher(root, g));
+    const matches = (matchers: ((abs: string) => boolean)[], paths: string[]) =>
+        matchers.some((m) => paths.some((p) => m(p)));
 
     const includeFn = (id: string): boolean => {
-        const abs = toPosix(isAbsolute(id) ? id : resolve(root, id));
-        if (isExcluded && isExcluded(abs)) return false;
-        if (isIncluded && isIncluded(abs)) return SOURCE_EXT_RE.test(abs);
-        return defaultInclude(abs);
+        // `\0` 접두 id 는 다른 플러그인의 가상 모듈이다 (Rollup 관례). 파일이 아니다.
+        if (id.startsWith('\0')) return false;
+        const abs = isAbsolute(id) ? id : resolve(root, id);
+        const paths = candidates(root, abs);
+        if (matches(excludeMatchers, paths)) return false;
+        if (matches(includeMatchers, paths)) return SOURCE_EXT_RE.test(abs);
+        return defaultInclude(toPosix(abs));
     };
 
     return {
