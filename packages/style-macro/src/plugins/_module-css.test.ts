@@ -24,6 +24,25 @@ describe('module CSS naming', () => {
     });
 });
 
+describe('compileModule — only plain module requests are source modules', () => {
+    const opts = resolveOptions({ root: '/r' });
+    const code = `import { css } from '@vapor-ui/style-macro';\nexport const a = css({ gap: 0 });\n`;
+
+    it.each(['?raw', '?url', '?raw&lang.ts', '?import&raw', '?url&no-inline'])(
+        'skips %s (the module is the file as an asset, not the source as JS)',
+        (q) => {
+            expect(compileModule(code, `/r/src/a.tsx${q}`, opts)).toBeNull();
+        },
+    );
+
+    it.each(['', '?v=abc123', '?t=1700000000', '?vapor-css', '?used', '?worker', '?url-ish'])(
+        'compiles %j',
+        (q) => {
+            expect(compileModule(code, `/r/src/a.tsx${q}`, opts)).not.toBeNull();
+        },
+    );
+});
+
 describe('compileModule', () => {
     function setup(layer?: string) {
         const root = mkdtempSync(join(tmpdir(), 'vapor-module-css-'));

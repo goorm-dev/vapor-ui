@@ -90,6 +90,18 @@ describe('vite adapter — per-module CSS (build)', () => {
         expect(css).not.toMatch(/@layer vapor-composites;/);
     });
 
+    it.each(['raw', 'url'])(
+        'a `?%s` import of the same source does not replace its module CSS',
+        async (query) => {
+            const { css } = await buildApp({
+                'a.tsx': src('a', '1px'),
+                'lazy.ts': `export { default } from './a.tsx?${query}';\n`,
+                'main.ts': `import { a } from './a.tsx';\ndocument.body.className = a;\nvoid import('./lazy.ts');\n`,
+            });
+            expect(css).toContain('gap: 1px');
+        },
+    );
+
     it('fails the build with a code frame on invalid css()', async () => {
         await expect(
             buildApp({

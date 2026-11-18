@@ -61,13 +61,22 @@ export interface CompiledModule {
  * 공유한다. `include` 밖이거나 매크로 import 가 없으면 `null`. 컴파일 오류는 code frame 을
  * 붙인 메시지로 throw 한다.
  */
+/**
+ * 소스 파일을 JS 모듈이 아니라 자산으로 가져오는 쿼리 (`?raw` 텍스트, `?url` 주소). 이런 요청의
+ * 모듈은 소스가 아니므로 매크로 대상이 아니다 — 컴파일하면 그 소스의 모듈 CSS 를 이 (CSS 없는)
+ * 결과로 덮는다. Vite 의 `SPECIAL_QUERY_RE` 에서 소스를 JS 로 실행하는 worker 를 뺀 것이다
+ * (`?inline` 은 CSS 전용이라 JS 소스에는 붙지 않는다).
+ */
+const ASSET_QUERY_RE = /[?&](?:raw|url)(?:&|=|$)/;
+
 export function compileModule(
     code: string,
     id: string,
     opts: Pick<ResolvedOptions, 'include' | 'hash' | 'layer' | 'root'>,
     cssImportOf: CssImportOf = defaultCssImport,
 ): CompiledModule | null {
-    const filename = id.split('?')[0]!;
+    const [filename, query = ''] = id.split('?') as [string, string?];
+    if (ASSET_QUERY_RE.test(`?${query}`)) return null;
     if (!opts.include(filename) || !code.includes('@vapor-ui/style-macro')) return null;
 
     const cssName = moduleCssName(filename);
