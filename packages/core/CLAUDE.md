@@ -10,13 +10,15 @@ To run a single test file: `pnpm vitest run src/components/button/button.test.ts
 
 ## Detailed Rules
 
-Full rule files live in `.claude/rules/` at the repo root. Load them when you need deeper guidance:
+Full rule files live in `.claude/rules/` at the repo root. Claude Code loads each file automatically for the paths in its frontmatter. Read a file directly when you need deeper guidance:
 
 - `@.claude/rules/component-api.md` — component API, file structure, compound pattern, props typing
 - `@.claude/rules/styling.md` — Vanilla Extract styling, tokens, layer cascade, sprinkles
+- `@.claude/rules/tokens.md` — token references, naming grammar, component-scoped CSS variables
 - `@.claude/rules/typescript.md` — TypeScript conventions, naming, coding style
 - `@.claude/rules/testing.md` — testing stack, coverage expectations, fake timers
 - `@.claude/rules/docs.md` — Storybook story structure, `TestBed` story convention
+- `@.claude/rules/code-connect.md` — Figma Code Connect templates (`*.figma.ts`, `*.figma.batch.*`), Figma-to-code mapping, verify and publish commands
 
 ## Component Architecture
 
@@ -118,7 +120,7 @@ Use `createVar` to avoid N×M `compoundVariants`:
 const variables = { foreground: createVar('foreground'), background: createVar('background') };
 
 variants: {
-    colorPalette: { primary: { vars: { [variables.background]: vars.color.background.primary[200] } } },
+    colorPalette: { primary: { vars: { [variables.background]: vars.color.background.primary } } },
     variant: { fill: { backgroundColor: variables.background } },
 }
 ```
@@ -137,7 +139,7 @@ Always use the `vars` object from `~/styles/themes.css`. Never use hard-coded va
 
 ### `$css` prop
 
-`$css` is the public API for sprinkle styles. Deprecated flat props (`padding`, `margin`, etc.) are being removed — always write `$css={{ padding: '150' }}` instead.
+`$css` is the public API for sprinkle styles. Deprecated flat props (`padding`, `margin`, etc.) are being removed — always write `$css={{ padding: '$150' }}` instead. Token values take a `$` prefix. A bare `'150'` is treated as a raw CSS value, not a token.
 
 ### `@layer` cascade order
 
@@ -153,7 +155,7 @@ User `className` always wins over component styles without `!important`.
 - Test files are colocated: `button.tsx` → `button.test.tsx`
 - New public components must include a `vitest-axe` accessibility check. Full coverage of existing components is a pending backlog item — current gaps (`input-group`, `radio`) are not intentional exceptions and should be backfilled
 - Use `vi.useFakeTimers()` for delay-driven behavior (tooltips, animations)
-- Visual regressions are in `__tests__/regressions.test.ts` via Playwright against Storybook "Test Bed" stories
+- Visual regressions are in `apps/storybook/__tests__/regressions.test.ts` via Playwright against Storybook "Test Bed" stories
 
 ## Path Aliases
 
@@ -166,4 +168,4 @@ import { cn } from '~/utils/cn';
 
 ## Build
 
-Rollup produces three artifacts per entry point: ESM (`.js`), CJS (`.cjs`), and TypeScript declarations (`.d.ts`). Each component's `index.ts` is a separate entry point — tree-shaking works at the component level. The `preserveDirectives` plugin keeps `'use client'` directives.
+Rolldown (`rolldown.config.ts`, with the shared `bundle()` from `@repo/rolldown-config`) builds every entry point as ESM (`.mjs`), CJS (`.cjs`), and TypeScript declarations (`.d.mts` and `.d.cts`). Each component's `index.ts` is a separate entry point, and `preserveModules` keeps one output file per source module, so tree-shaking works at the component level.

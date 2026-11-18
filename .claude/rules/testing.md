@@ -39,9 +39,10 @@ afterEach(() => {
 
 it('shows tooltip after delay', async () => {
     render(
-        <Tooltip content="Hello">
-            <button>Hover me</button>
-        </Tooltip>,
+        <Tooltip.Root>
+            <Tooltip.Trigger>Hover me</Tooltip.Trigger>
+            <Tooltip.Popup>Hello</Tooltip.Popup>
+        </Tooltip.Root>,
     );
     await userEvent.hover(screen.getByRole('button'));
     await act(() => vi.advanceTimersByTime(300));

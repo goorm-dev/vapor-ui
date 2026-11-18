@@ -34,7 +34,7 @@
 
 ## 5. 코딩 스타일
 
-- `packages/core/CLAUDE.md`의 규칙(타입스크립트, 파일·폴더 kebab-case, `index.ts` + `index.parts.ts` 재수출 패턴, Vanilla Extract 사용, 테스트 컨벤션)을 그대로 따른다.
+- `packages/core/CLAUDE.md`의 규칙(타입스크립트, 파일·폴더 kebab-case, `index.ts` + `index.parts.ts` 재수출 패턴, 테스트 컨벤션)을 그대로 따른다.
 - 예외: composites 컴포넌트의 기본 형태는 Flat이다. Compound 네임스페이스는 §3의 아이템 나열 케이스에만 사용한다.
 - 슬롯 유틸(`createSlots`), 스타일(`$css`), primitive prop 재정의, `namespace` 타입 export, `index.parts.ts` 분리 규칙은 [`.claude/rules/composites.md`](../../.claude/rules/composites.md)에서 다룬다.
 
@@ -45,12 +45,11 @@
 
 ## 7. Storybook
 
-- 스토리 파일은 루트 Storybook 앱이 `packages/**/src/**/*.stories.@(...)` glob으로 자동 수집한다.
-- 시각적 회귀 필터가 인식하도록 `title`을 `'Composites/<Name>'` 형태로 작성한다.
-- `apps/storybook/.storybook/main.ts`에서 `@vapor-ui/composites`와 `@vapor-ui/core`를 각 패키지의 `src` 디렉터리로 alias 처리한다. 소스를 수정하면 HMR로 바로 반영한다.
+- 스토리 파일은 `apps/storybook/.storybook/main.ts`의 `stories` glob(`packages/composites/src/**/*.stories.tsx`)이 자동 수집한다.
+- `title`은 `'Composites/<Name>'` 형태로 작성한다. 시각적 회귀 스위트의 `COMPONENT` 필터가 `title`로 스토리를 고른다.
+- `apps/storybook/.storybook/main.ts`는 `~/` alias를 스토리가 속한 패키지의 `src`로 해석한다. composites 소스 수정은 HMR로 바로 반영된다. composites가 import하는 `@vapor-ui/core`는 빌드 결과(`packages/core/dist`)라서, core 변경은 `packages/core`를 다시 빌드해야 composites 스토리에 반영된다.
 
 ## 8. 하지 말아야 할 것
 
-- Flat Component 설계가 확정되기 전에는 `src/components/` 아래 구현 코드를 수정하지 않는다.
 - 명시적인 지시가 없으면 `className` / `style` 오버라이드 prop을 추가하지 않는다. 오버라이드 정책은 아직 정하지 않았다. 컴포넌트 내부 스타일은 [`.claude/rules/composites.md §3`](../../.claude/rules/composites.md#3-스타일은-css-prop으로-작성한다)의 `$css` 규칙을 따른다.
 - Code Connect 템플릿은 서브 컴포넌트 보유 여부에 따라 batch(`<name>.figma.batch.json` + `<name>.figma.batch.ts`) 또는 단일 raw template(`<name>.figma.ts`) 중 하나로 작성한다. 상세 규칙은 [`.claude/rules/code-connect-composites.md`](../../.claude/rules/code-connect-composites.md)를 따른다.

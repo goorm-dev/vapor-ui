@@ -1,7 +1,6 @@
 # CLAUDE.md
 
 This coding convention applies to files under `apps/website/**`.
-It is updated to match the current website code and the public API exposed by `@vapor-ui/core`.
 
 # 0. Review Response Style
 
@@ -62,8 +61,6 @@ It is updated to match the current website code and the public API exposed by `@
 
     <RadioGroup.Root>{/* ... */}</RadioGroup.Root>;
     ```
-
-- Do not document outdated APIs such as `Button.Root` for standalone components.
 
 ## 3.2. Naming Conventions
 
@@ -149,7 +146,7 @@ content/docs/components/(components)/button/
 ## 6.3. Composition Patterns
 
 - When consuming `@vapor-ui/core`, follow the composition API the component exposes.
-- In the current codebase, this primarily means compound namespaces and `render`-based composition for Vapor UI components.
+- For Vapor UI components this means compound namespaces and `render`-based composition.
 - Use `asChild` only when the specific component or external library explicitly supports it.
 - App-specific website UI may intentionally compose with other libraries such as base-ui or Fumadocs when Vapor UI is not the source of that behavior.
 
@@ -158,31 +155,17 @@ content/docs/components/(components)/button/
 - Prefer using Vapor UI public components in docs and product surfaces when they represent the intended design system usage.
 - If the website uses a third-party primitive for app-specific behavior, keep that choice intentional and do not let it drift into Vapor UI documentation examples.
 
-# 7. Styling
+# 7. Documentation
 
 ---
 
-- Keep styling readable and consistent with the existing website structure.
-- Prefer reusable patterns over one-off styling that obscures the example or documentation intent.
-
-# 8. Testing
-
----
-
-- When tests are added for website UI, prioritize rendering behavior, interaction flows, and accessibility expectations that matter to end users.
-- Keep any website-specific tests aligned with the actual documented behavior of `@vapor-ui/core` examples and website-only UI features.
-
-# 9. Documentation
-
----
-
-## 9.1. Storybook and Docs Alignment
+## 7.1. Storybook and Docs Alignment
 
 - Keep website documentation aligned with Storybook and the actual `@vapor-ui/core` API.
 - If a component API changes, update website examples and explanatory content in the same change when possible.
 - Every page under `content/docs` is also published as markdown in `@vapor-ui/core/docs/` (`pnpm --filter website docs:llms <outDir>`, run on prepack). It uses the same rendering as the `/docs/**.mdx` routes (`src/utils/get-llm-text.ts`), so keep that code free of Next.js imports.
 
-## 9.2. Vapor Docs Content Rules
+## 7.2. Vapor Docs Content Rules
 
 - Use the website for use-case documentation, subcomponent composition examples, and variant showcases.
 - Do not use emojis in titles.

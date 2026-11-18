@@ -72,7 +72,7 @@ import { componentStyle } from '~/styles/mixins/layer-style.css';
 
 export const title = componentStyle({
     paddingInline: vars.size.space['150'],
-    color: vars.color.foreground.normal[200],
+    color: vars.color.foreground.normal,
 });
 ```
 
@@ -211,14 +211,14 @@ selectors: {
 
 ## Sprinkles (`$css` prop)
 
-`$css` accepts any CSS property with design-token–aware values. Token values produce a className; arbitrary values fall back to inline `style`.
+`$css` accepts any CSS property with design-token–aware values. Token values produce a className; arbitrary values fall back to inline `style`. Token values take a `$` prefix, such as `'$150'` or `'$bg-primary-weak'`. A bare `'150'` is treated as a raw CSS value, not a token.
 
 ```tsx
 // ✅
-<Box $css={{ padding: '150', backgroundColor: 'bg-primary-100' }} />
+<Box $css={{ padding: '$150', backgroundColor: '$bg-primary-weak' }} />
 
 // ❌ (deprecated flat props)
-<Box padding="150" backgroundColor="bg-primary-100" />
+<Box padding="$150" backgroundColor="$bg-primary-weak" />
 ```
 
 Deprecated flat sprinkle props (`padding`, `margin`, `color`, etc.) are being phased out — always use `$css={{ ... }}` instead.

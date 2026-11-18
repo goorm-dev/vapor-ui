@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 `packages/composites` 컴포넌트의 시각적 회귀 diff를 위한 정적 `Test Bed` 스토리 하나를 대상 `*.stories.tsx`에 추가한다.
 
-- 회귀 하네스 필터: `story.name`이 `'Test Bed'`로 시작 + `title`이 `'Composites/'`로 시작. (`packages/composites/__tests__/regressions.test.ts:12`) — `Test Bed Light`, `Test Bed Dark` 두 스토리 모두 매칭.
+- 회귀 하네스 필터: `story.name`이 `'Test Bed'`로 시작. (`apps/storybook/__tests__/regressions.test.ts:11`) — `Test Bed Light`, `Test Bed Dark` 두 스토리 모두 매칭. `title`은 필터 조건이 아니지만 `'Composites/<Name>'` 규칙을 지킨다.
 - 컴포넌트당 스토리 2개: **`TestBed_Light`** (라이트 모드) + **`TestBed_Dark`** (다크 모드). 동일한 회귀 조건 테이블을 두 appearance에서 각각 렌더한다.
 - 테이블 구조: 회귀 조건별 컬럼(현재는 각 variant prop 하나) + 마지막 `render` 컬럼(조건 적용된 컴포넌트 렌더 결과).
 - 테이블 렌더는 `packages/composites/src/utils/regressions.tsx`의 `Regression.Table` 편의 컴포넌트를 재사용한다. `conditions`(각 조건의 `key`·`label`·`values`·`format`), `render`(row + container → 컴포넌트) 2개 prop만 넘기면 카테시안 곱 rows·ColumnGroup·Header·Condition 셀·Render 셀이 자동 생성된다. 세밀한 커스텀이 필요하면 하위 컴파운드(`Regression.Root / ColumnGroup / ConditionColumn / RenderColumn / Header / Body / Row / Heading / Condition / Render`)를 직접 조립한다. Vapor `Table` 위에 얹혀 있고, 스타일은 `$css`로 붙는다.
@@ -122,7 +122,7 @@ export const TestBed_Dark: StoryObj<typeof Component> = {
 3. `pnpm --filter @vapor-ui/composites <typecheck-script>` 실행 후 실패 시 수정.
 4. Storybook을 띄워 `Composites/<Name> > Test Bed Light`와 `Composites/<Name> > Test Bed Dark` 두 트리 노드가 렌더되고, 각 스토리에서 셀 개수가 5단계 계산값과 일치, Dark 스토리는 실제로 dark 토큰(배경 등)이 적용된 것을 육안 확인.
 
-완료: 위 2·3 통과, 4의 셀 개수 일치. 스크린샷 기준 파일 갱신은 이 스킬 범위 밖 — 사용자가 `packages/composites/package.json`의 시각적 회귀 스크립트를 별도로 실행한다.
+완료: 위 2·3 통과, 4의 셀 개수 일치. 스크린샷 기준 파일 갱신은 이 스킬 범위 밖 — 사용자가 루트의 `pnpm test:update-snapshots`(`apps/storybook`의 `test:regressions`)를 별도로 실행한다.
 
 ### 8. 축 근거 리포트 — MANDATORY, 항상 마지막
 

@@ -13,6 +13,7 @@ An open-source React UI component library and design system maintained by goorm.
 | Package                     | Role                                                                                                                                                      |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `@vapor-ui/core`            | 40+ accessible React components. Headless-first via `@base-ui/react`, zero-runtime styling via Vanilla Extract, variant system via `recipe()` + Sprinkles |
+| `@vapor-ui/composites`      | Slot-based components that compose `core` primitives with design decisions built in. Consumers use this package by default                                |
 | `@vapor-ui/hooks`           | Shared React hooks for state and UI management — used internally by `core` and available to consumers                                                     |
 | `@vapor-ui/icons`           | SVG-to-React icon components, synced automatically from Figma                                                                                             |
 | `@vapor-ui/color-generator` | OKLCH-based WCAG-compliant color palette generator — produces design tokens used by `css-generator`                                                       |
@@ -60,6 +61,7 @@ pnpm --filter website docs:translate:check  # what CI runs: list missing transla
 
 ```bash
 pnpm core <cmd>       # run <cmd> in @vapor-ui/core
+pnpm composites <cmd> # run <cmd> in @vapor-ui/composites
 pnpm hooks <cmd>      # run <cmd> in @vapor-ui/hooks
 pnpm icons <cmd>      # run <cmd> in @vapor-ui/icons
 pnpm website <cmd>    # run <cmd> in the docs website
@@ -105,11 +107,12 @@ Primary types:
 | `chore`           | Build, config, dependency updates               |
 | `BREAKING CHANGE` | Add `!` after type or `BREAKING CHANGE:` footer |
 
-Commit type alone does not determine the release version — the changeset level (`patch` / `minor` / `major`) decides that. See `packages/core/CLAUDE.md` for detailed rules.
+Commit type alone does not determine the release version — the changeset level (`patch` / `minor` / `major`) decides that.
 
 ## Detailed Conventions
 
 Component architecture, TypeScript rules, styling patterns, testing strategy, and documentation guidelines are documented per workspace:
 
 - **`packages/core/CLAUDE.md`** — component API design, Vanilla Extract styling, Base UI composition, compound component patterns, test strategy
+- **`packages/composites/CLAUDE.md`** — package policy, boundary with `core`, slot-based component API rules, prop gateway
 - **`apps/website/CLAUDE.md`** — documentation content rules, public API accuracy, Next.js conventions

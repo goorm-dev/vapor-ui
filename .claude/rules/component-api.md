@@ -177,7 +177,7 @@ const { className, style, render } = adaptStatefulCallbacks(
 ```tsx
 import { Button, Dialog, RadioGroup, TextInput } from '@vapor-ui/core';
 
-<Button variant="solid">Click me</Button>;
+<Button variant="fill">Click me</Button>;
 <TextInput placeholder="Email" />;
 
 <Dialog.Root>

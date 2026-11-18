@@ -41,7 +41,7 @@ const Button = ({ children }: Props) => { ... }
 ```ts
 // ✅ interface for props (catches conflicts early)
 interface ButtonProps {
-    variant?: 'solid' | 'outline';
+    variant?: 'fill' | 'outline';
 }
 
 // ✅ type for unions and computed types
@@ -83,7 +83,7 @@ const items: Array<string> = [];
 ```ts
 // ✅ as const (preferred)
 const ButtonVariant = {
-    Solid: 'solid',
+    Fill: 'fill',
     Outline: 'outline',
 } as const;
 

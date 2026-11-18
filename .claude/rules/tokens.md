@@ -23,7 +23,7 @@ Always reference design tokens via the `vars` object from `~/styles/themes.css`.
 
 ```ts
 // ✅
-color: vars.color.foreground.normal[200];
+color: vars.color.foreground.normal;
 padding: vars.size.space['150'];
 
 // ❌
@@ -49,10 +49,10 @@ same shape with the component slots empty, so there is never a second form to ch
 | `specialty` | rarely                                  | A subject that is not a library component (`canvas`, `link`, `logo`)   |
 | `variant`   | when not default                        | The meaning of the color (`primary`, `success`, `error`)               |
 | `modifier`  | rarely                                  | A qualifier on the value's shape (`gradientFrom`, `gradientTo`)        |
-| `scale`     | when not default                        | Intensity: `bold`, _(omitted)_, `subtle`, `subtlest`                   |
+| `scale`     | when not default                        | Intensity: `strong`, _(omitted)_, `weak`. `100`, `200` are deprecated  |
 
 ```text
---vapor-color-background-primary-bold                                 foundation
+--vapor-color-background-primary-weak                                 foundation
 --vapor-color-background-canvas-base                                  foundation, specialty
 --vapor-color-foreground-staticWhite                                  foundation
 --vapor-color-progressbar-indicator-background                        component, default variant
@@ -115,8 +115,8 @@ const variables = {
 
 variants: {
     colorPalette: {
-        primary: { vars: { [variables.background]: vars.color.background.primary[200] } },
-        danger:  { vars: { [variables.background]: vars.color.background.danger[200] } },
+        primary: { vars: { [variables.background]: vars.color.background.primary } },
+        danger:  { vars: { [variables.background]: vars.color.background.danger } },
     },
     variant: {
         fill:  { backgroundColor: variables.background },   // consumes the var
