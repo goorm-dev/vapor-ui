@@ -224,7 +224,7 @@ core, composites, icons는 각각 아래처럼 바뀝니다.
 
 공개 레포에는 실제 시안 픽스처를 두지 않습니다. 픽스처와 에이전트 실행 결과는 비공개 벤치 데이터입니다.
 
-- **vapor-ui CI**: 규칙마다 손으로 만든 작은 REST 트리로 단위 테스트를 둡니다(슬롯 밖 인스턴스 제외, node id, `anyParent` 위치 등). 레포의 모든 Code Connect URL이 `entries`에 있는지도 토큰 없이 검사합니다. 매주 main에서 도는 job은 토큰으로 `entries`를 다시 생성해 바뀐 게 있으면 PR을 열고, `figma-blueprint library`로 Figma에서 사라진 `entries` 키, 연결도 예외 사유도 없는 컴포넌트, 이미 연결됐거나 사라진 예외를 잡아 실패합니다.
+- **vapor-ui CI**: 규칙마다 손으로 만든 작은 REST 트리로 단위 테스트를 둡니다(슬롯 밖 인스턴스 제외, node id, `anyParent` 위치 등). 레포의 모든 Code Connect URL이 `entries`에 있는지도 토큰 없이 검사합니다. 매주 main에서 도는 job은 토큰으로 `entries`를 다시 생성해 커밋된 것과 다르면 실패하고, `figma-blueprint library`로 Figma에서 사라진 `entries` 키, 연결도 예외 사유도 없는 컴포넌트, 이미 연결됐거나 사라진 예외를 잡아 실패합니다.
 - **비공개 벤치**: figma-blueprint를 버전 고정해 씁니다. 처음 설계의 정적 대조 스크립트는 벤치로 옮기고, 같은 run을 그 스크립트와 검증 에이전트로 모두 채점해 일치율을 잽니다.
 
 완료 조건은 정답 트리의 **오류 0**입니다. 벤치의 픽스처 25개에서 채점 불가가 없어야 하고, 사람이 코드를 읽고 판정해 둔 에이전트 실행 12개를 이 트리로 채점했을 때 FP 0, FN 0이어야 합니다. 다만 Dialog 닫기 버튼을 빼는 `internalParts` 추출이 `createSlots()`만 제외하는 임시 규칙이라, 위의 조건 기준으로 바꿉니다.
@@ -241,7 +241,7 @@ PoC를 RFC의 종료 코드 규칙으로 돌리면 픽스처 25개 중 17개가 
 - core, composites, icons의 배포 산출물이 커지고 세 패키지의 빌드가 figma-blueprint에 의존합니다. 앱 번들에는 들어가지 않습니다.
 - figma 대역은 Figma의 템플릿 API를 다시 구현한 것입니다. Code Connect에 새 API가 생기거나 템플릿이 대역에 없는 API를 쓰면, 대역을 고칠 때까지 그 인스턴스는 채점 불가가 됩니다.
 - 판정은 에이전트가 내리므로 결정적이지 않습니다. 판정이 흔들리는 정도는 벤치 일치율로 보고, 그때 검증자를 늘릴지 정합니다.
-- `entries`가 Figma 재발행을 따라가는 데 최대 일주일이 걸립니다. 그 사이 PR CI는 빠진 항목만 잡고 키가 바뀐 경우는 잡지 못합니다. 주간 job이 연 재생성 PR은 사람이 머지해야 합니다.
+- `entries`가 Figma 재발행을 따라가는 데 최대 일주일이 걸립니다. 그 사이 PR CI는 빠진 항목만 잡고 키가 바뀐 경우는 잡지 못합니다. 주간 job이 실패하면 사람이 `figma:entries`로 재생성해 일반 PR로 올립니다. 봇이 `GITHUB_TOKEN`으로 연 PR에서는 CI가 돌지 않고 changeset도 사람이 판단해야 해서 자동 PR을 두지 않습니다.
 - 실제 시안 회귀는 비공개 벤치에서만 돌아갑니다. 외부 기여자는 공개 단위 테스트까지만 확인할 수 있습니다.
 - figma-blueprint는 빌드할 때의 composites 키만 압니다. composites가 컴포넌트를 새로 발행하면, figma-blueprint를 다시 배포하기 전까지 composites가 설치되지 않은 소비자에서는 그 컴포넌트를 알아보지 못합니다.
 
