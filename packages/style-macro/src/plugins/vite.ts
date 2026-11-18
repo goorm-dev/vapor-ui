@@ -133,11 +133,14 @@ function moduleCssPlugin(rawOpts: VaporPluginOptions): VitePluginShape {
         name: 'vapor-style-macro',
         enforce: 'pre',
 
-        // include 로 지목한 패키지는 dev 의 dependency pre-bundling(esbuild)을 거치면 매크로가
-        // 빠진 채 묶인다. 사전 번들에서 빼 일반 모듈처럼 transform 을 거치게 한다.
+        // include 로 지목한 패키지는 앱 소스처럼 이 플러그인의 transform 을 거쳐야 한다. Vite 는
+        // node_modules 의존성을 두 곳에서 우회한다 — dev 의 dependency pre-bundling(esbuild)과 SSR
+        // 의 externalize(Node 가 직접 import). 둘 다에서 빼는 것이 Vite 가 정한 방법이다
+        // (`optimizeDeps.exclude`, `ssr.noExternal`; 소스 상태로 배포되는 패키지와 같은 취급).
         config() {
-            const exclude = includedPackages(rawOpts.include ?? []);
-            return exclude.length ? { optimizeDeps: { exclude } } : null;
+            const packages = includedPackages(rawOpts.include ?? []);
+            if (!packages.length) return null;
+            return { optimizeDeps: { exclude: packages }, ssr: { noExternal: packages } };
         },
 
         configResolved(config: { root: string }) {

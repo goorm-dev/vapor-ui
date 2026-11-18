@@ -203,11 +203,49 @@ describe('vite adapter — dev server', () => {
     });
 });
 
+describe('vite adapter — included packages are compiled in SSR too', () => {
+    it('an included node_modules package is not externalized and its SSR module is compiled', async () => {
+        const { root, w } = fixture({ 'main.ts': `export { cls } from '@acme/ui';\n` });
+        w(
+            'node_modules/@acme/ui/package.json',
+            JSON.stringify({ name: '@acme/ui', type: 'module', main: 'index.js' }),
+        );
+        const file = join(root, 'node_modules/@acme/ui/index.js');
+        w(
+            'node_modules/@acme/ui/index.js',
+            `import { css } from '@vapor-ui/style-macro';\nexport const cls = css({ gap: '1px' });\n`,
+        );
+        const server = await createServer({
+            root,
+            configFile: false,
+            logLevel: 'silent',
+            server: { middlewareMode: true },
+            plugins: [
+                vaporVitePlugin({
+                    include: ['node_modules/@acme/ui/**'],
+                    injectColorScheme: false,
+                }),
+            ],
+        });
+        try {
+            // SSR externalize 여부는 이 설정으로 정해진다 (Vite `shouldExternalize`).
+            expect(server.config.ssr.noExternal).toEqual(expect.arrayContaining(['@acme/ui']));
+            const out = await server.environments.ssr.transformRequest(file);
+            expect(out?.code).toMatch(/cls = ['"]cls_\w+['"]/);
+        } finally {
+            await server.close();
+        }
+    });
+});
+
 describe('vite adapter — included packages skip dependency pre-bundling', () => {
     it('adds packages named in `include` to optimizeDeps.exclude', () => {
         const [plugin] = vaporVitePlugin({ include: ['node_modules/@acme/ui/dist/**', 'src/**'] });
         const config = (plugin as { config?: () => unknown }).config?.();
-        expect(config).toEqual({ optimizeDeps: { exclude: ['@acme/ui'] } });
+        expect(config).toEqual({
+            optimizeDeps: { exclude: ['@acme/ui'] },
+            ssr: { noExternal: ['@acme/ui'] },
+        });
     });
 
     it('adds nothing without package includes', () => {
