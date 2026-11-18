@@ -24,8 +24,13 @@ export function hasSlots(tree: SlotTree): boolean {
 export interface DynamicCallSite {
     /** call node (CallExpression). */
     call: AnyProp;
-    /** parent chain at walk time (자기 자신 제외, top-down). */
-    parents: AnyProp[];
+    /** `locateJsx` 결과. */
+    found: FoundJsx;
+    /**
+     * `found.guards` 와 같은 순서의 조건 식(style 쪽에서 읽을 원문). 조건 원문을 그대로 쓰거나,
+     * 임시 변수 이름·대입식을 쓴다 (`./memo`).
+     */
+    guardTests: (() => string)[];
     /** 호출 인자의 분기 트리를 따라 만든 slot 트리. */
     slots: SlotTree;
 }
@@ -72,10 +77,7 @@ const WRAPPER_TYPES = new Set([
  * 실제 삽입은 `flushInjects` 가 모든 call 수집 후 element 단위로 한 번에 처리.
  */
 export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext): InjectOutcome {
-    const found = findJsxAttribute(ctx.ms.original, site.call, site.parents);
-    if ('error' in found) return { success: false, error: found.error };
-
-    const { openingEl, guards } = found;
+    const { openingEl, guards } = site.found;
 
     // 문자열 style(`style="…"`)은 React 에서도 유효하지 않고 합칠 수 없다.
     for (const a of openingEl.attributes as AnyProp[]) {
@@ -91,9 +93,9 @@ export function injectJsxStyleForCall(site: DynamicCallSite, ctx: InjectContext)
 
     // guards 는 바깥 → 안쪽. 안쪽부터 감싸야 바깥 조건이 가장 먼저 평가된다.
     const tree = guards.reduceRight<SlotTree>(
-        (inner, g) => ({
+        (inner, g, i) => ({
             kind: 'cond',
-            test: () => guardTest(g, ctx.ms),
+            test: () => guardTest(g, site.guardTests[i]!()),
             whenTrue: inner,
             whenFalse: EMPTY_SLOTS,
         }),
@@ -225,13 +227,13 @@ function propEntry(a: AnyProp, ms: MagicString): string | null {
  * - `falsy`: `test || call`, `test ? … : call`
  * - `nullish`: `test ?? call`
  */
-interface Guard {
+export interface Guard {
     test: AnyProp;
     when: 'truthy' | 'falsy' | 'nullish';
 }
 
-function guardTest({ test, when }: Guard, ms: MagicString): string {
-    const t = `(${ms.slice(test.start, test.end)})`;
+function guardTest({ when }: Guard, test: string): string {
+    const t = `(${test})`;
     if (when === 'truthy') return t;
     if (when === 'falsy') return `!${t}`;
     return `${t} == null`;
@@ -252,13 +254,27 @@ function guardOf(parent: AnyProp, child: AnyProp): Guard | null {
     return null;
 }
 
-interface FoundJsx {
+export interface FoundJsx {
     openingEl: AnyProp;
+    /** call 이 들어 있는 `className` 속성. */
+    classAttr: AnyProp;
     /** 바깥 → 안쪽. */
     guards: Guard[];
 }
 
-function findJsxAttribute(
+/**
+ * element 의 slot(style) 식이 className 식보다 먼저 평가되는지. slot 은 첫 style 출처
+ * (`style` 속성 또는 spread) 자리에서 평가되고, 출처가 없으면 마지막 속성 뒤에 붙는다
+ * (`flushInjects`). JSX 속성은 적힌 순서대로 평가된다.
+ */
+export function slotsEvaluateFirst({ openingEl, classAttr }: FoundJsx): boolean {
+    const attrs = openingEl.attributes as AnyProp[];
+    const firstSource = attrs.findIndex((a) => isStyleAttr(a) || a.type === 'JSXSpreadAttribute');
+    return firstSource !== -1 && firstSource < attrs.indexOf(classAttr);
+}
+
+/** call 을 담은 `className={...}` 의 element 와 call 을 감싼 조건들. */
+export function locateJsx(
     source: string,
     _call: AnyProp,
     parents: AnyProp[],
@@ -286,7 +302,7 @@ function findJsxAttribute(
             if (!openingEl || openingEl.type !== 'JSXOpeningElement') {
                 return { error: mkErr(source, _call, 'no-opening') };
             }
-            return { openingEl, guards: guards.reverse() };
+            return { openingEl, classAttr: attr, guards: guards.reverse() };
         }
         if (!WRAPPER_TYPES.has(n.type)) {
             return { error: mkErr(source, _call, `unwrap:${n.type}`) };

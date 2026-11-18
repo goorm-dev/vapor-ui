@@ -20,6 +20,7 @@ export interface TernarySite {
     alternateRuleIndexes: number[];
     testStart: number;
     testEnd: number;
+    testNode: AnyProp;
 }
 
 export interface ParseCallResult {
@@ -247,6 +248,7 @@ export function createParser(source: string) {
             alternateRuleIndexes,
             testStart: value.test.start,
             testEnd: value.test.end,
+            testNode: value.test,
         });
     }
 

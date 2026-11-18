@@ -9,13 +9,17 @@ import { isUnitless } from '~/tokens/css-reference';
 
 import { type Block, DEFAULT_LAYER, emitBlocks, normalizeRules, signatureOf } from './emit-css';
 import {
+    type FoundJsx,
     type InjectContext,
     type SlotTree,
     flushInjects,
     hasSlots,
     injectJsxStyleForCall,
+    locateJsx,
+    slotsEvaluateFirst,
 } from './jsx-inject';
 import { locAt, locOfNode } from './loc';
+import { MemoTemps, isRereadable, memoScopeOf } from './memo';
 import { walk } from './oxc-walk';
 import { type ParseCallResult, parseCallArg } from './parse-call';
 import { isShadowed } from './scope';
@@ -64,17 +68,19 @@ export function transform(opts: TransformOpts): TransformResult {
  * - `cond`: 런타임 조건에 따라 두 분기 중 하나가 붙는다. 분기 안에 다시 조각이 올 수 있다.
  * 조각을 순서대로 이어 붙인 규칙이 한 블록이 되고, 뒤 조각이 같은 선언 슬롯을 이긴다.
  */
-type Piece =
-    | { kind: 'fixed'; rules: IRRule[] }
-    | {
-          kind: 'cond';
-          test: string;
-          /** `test` 의 원본 소스 위치. */
-          start: number;
-          end: number;
-          whenTrue: Piece[];
-          whenFalse: Piece[];
-      };
+type Piece = { kind: 'fixed'; rules: IRRule[] } | CondPiece;
+
+interface CondPiece {
+    kind: 'cond';
+    test: string;
+    /** `test` 의 원본 소스 위치. */
+    start: number;
+    end: number;
+    /** 다시 평가해도 결과·부작용이 같은 식인지 (`./memo` 의 `isRereadable`, 캡처된 이름). */
+    rereadable: boolean;
+    whenTrue: Piece[];
+    whenFalse: Piece[];
+}
 
 /** 한 호출이 만들 수 있는 분기 조합 수 상한. 넘으면 빌드 에러. */
 const MAX_COMBINATIONS = 16;
@@ -96,7 +102,7 @@ function project<T>(
     pieces: Piece[],
     acc: IRRule[],
     leaf: (rules: IRRule[]) => T,
-    fork: (test: string, whenTrue: T, whenFalse: T) => T,
+    fork: (cond: CondPiece, whenTrue: T, whenFalse: T) => T,
 ): T {
     const i = pieces.findIndex((p) => p.kind === 'cond');
     if (i === -1) {
@@ -106,11 +112,11 @@ function project<T>(
     }
     const head: IRRule[] = [...acc];
     for (const p of pieces.slice(0, i)) if (p.kind === 'fixed') head.push(...p.rules);
-    const c = pieces[i] as Extract<Piece, { kind: 'cond' }>;
+    const c = pieces[i] as CondPiece;
     const rest = pieces.slice(i + 1);
     const t = project([...c.whenTrue, ...rest], head, leaf, fork);
     const f = project([...c.whenFalse, ...rest], head, leaf, fork);
-    return fork(c.test, t, f);
+    return fork(c, t, f);
 }
 
 /** 호출 인자 하나. 로컬로 풀리면 `pieces`, 아니면 런타임 class 문자열(`external`). */
@@ -147,6 +153,10 @@ class Transformer {
     readonly #blocks: Block[] = [];
 
     #bindingName: string | null = null;
+    /** className·style 이 공유하는 조건의 임시 변수. */
+    readonly #memo = new MemoTemps();
+    /** 임시 변수 대입·참조로 이미 바꾼 guard 조건 노드. */
+    readonly #memoWrapped = new Set<AnyProp>();
     /** import 바인딩을 참조하는 `css(...)` 호출 노드. */
     readonly #macroCalls = new Set<AnyProp>();
     #ms: MagicString | null = null;
@@ -255,10 +265,22 @@ class Transformer {
                 continue;
             }
 
-            const slots = this.#slotTree(pieces);
-            if (hasSlots(slots)) {
+            let classPieces = pieces;
+            if (hasSlots(this.#slotTree(pieces))) {
+                const found = locateJsx(this.opts.source, call.node, call.parents);
+                if ('error' in found) {
+                    this.#errors.push(found.error);
+                    continue;
+                }
+                const shared = this.#shareConditions(call, pieces, found);
+                classPieces = shared.classPieces;
                 const outcome = injectJsxStyleForCall(
-                    { call: call.node, parents: call.parents, slots },
+                    {
+                        call: call.node,
+                        found,
+                        guardTests: shared.guardTests,
+                        slots: shared.slots,
+                    },
                     injectCtx,
                 );
                 if (!outcome.success) {
@@ -267,8 +289,13 @@ class Transformer {
                 }
             }
 
-            this.#ms.overwrite(call.node.start, call.node.end, this.#buildCallReplacement(call));
+            this.#ms.overwrite(
+                call.node.start,
+                call.node.end,
+                this.#buildCallReplacement(call, classPieces),
+            );
         }
+        this.#memo.flush(this.#ms, (line) => this.#insertAtTop(line));
 
         if (this.#errors.length) return errorResult(source, this.#errors);
 
@@ -601,6 +628,8 @@ class Transformer {
                     : {
                           ...p,
                           test: take(p.test, p.start, p.end),
+                          rereadable:
+                              p.rereadable || (p.start >= top.init.start && p.end <= top.init.end),
                           whenTrue: walkPieces(p.whenTrue),
                           whenFalse: walkPieces(p.whenFalse),
                       },
@@ -647,6 +676,7 @@ class Transformer {
                     test: this.opts.source.slice(t.testStart, t.testEnd),
                     start: t.testStart,
                     end: t.testEnd,
+                    rereadable: isRereadable(t.testNode),
                     whenTrue: [
                         { kind: 'fixed', rules: t.consequentRuleIndexes.map((j) => rules[j]) },
                     ],
@@ -667,16 +697,107 @@ class Transformer {
     }
 
     #condTest(node: AnyProp) {
-        return { kind: 'cond' as const, test: this.#src(node), start: node.start, end: node.end };
+        return {
+            kind: 'cond' as const,
+            test: this.#src(node),
+            start: node.start,
+            end: node.end,
+            rereadable: isRereadable(node),
+        };
     }
 
     // ── 출력 ───────────────────────────────────────────────────
 
     /**
+     * className 식과 style(slot) 식이 같은 조건을 읽을 때 조건을 한 번만 평가하게 한다.
+     *
+     * 두 식은 같은 분기 트리에서 나오지만 서로 다른 JSX 속성이라 조건을 각자 평가한다.
+     * 다시 읽어도 같은 조건(`isRereadable`)은 그대로 두고, 그 밖의 조건은 먼저 평가되는 쪽이
+     * 임시 변수에 담고(`(t = test)`) 나중 쪽이 그 변수를 읽는다. 어느 쪽이 먼저인지는 속성
+     * 순서로 정한다 (`slotsEvaluateFirst`).
+     *
+     * 나중 쪽이 읽는 모든 자리에서 먼저 쪽이 대입했어야 한다.
+     * - className 이 먼저: className 이 분기를 접는(두 분기 class 가 같은) 곳은 slot 도 같아 style
+     *   도 접는다. 그래서 style 이 읽는 곳은 className 이 항상 평가한 곳이다.
+     * - style 이 먼저: style 은 slot 이 같으면 분기를 접지만 class 는 다를 수 있다. 그래서 공유하는
+     *   조건에서는 style 이 분기를 접지 않는다.
+     * style 트리에 나오지 않는 조건은 className 만 평가하므로 공유하지 않는다.
+     */
+    #shareConditions(
+        call: CallRecord,
+        pieces: Piece[],
+        found: FoundJsx,
+    ): { classPieces: Piece[]; slots: SlotTree; guardTests: (() => string)[] } {
+        const ms = this.#ms!;
+        const scope = memoScopeOf(call.parents, call.node);
+        const styleFirst = slotsEvaluateFirst(found);
+
+        // style 트리(분기를 접은 상태)에 실제로 나오는 조건만 공유 대상이다.
+        const inStyle = new Set<CondPiece>();
+        this.#slotTree(
+            pieces,
+            () => false,
+            (c) => inStyle.add(c),
+        );
+        const shared = (c: CondPiece) => !c.rereadable && inStyle.has(c);
+
+        const origin = new Map<CondPiece, CondPiece>();
+        const rewrite = (ps: Piece[], assign: boolean): Piece[] =>
+            ps.map((p) => {
+                if (p.kind === 'fixed') return p;
+                let test = p.test;
+                if (shared(p)) {
+                    const name = this.#memo.nameFor(p.start, p.end, scope);
+                    test = assign ? `(${name} = ${p.test})` : name;
+                }
+                const out: CondPiece = {
+                    ...p,
+                    test,
+                    whenTrue: rewrite(p.whenTrue, assign),
+                    whenFalse: rewrite(p.whenFalse, assign),
+                };
+                origin.set(out, p);
+                return out;
+            });
+
+        const classPieces = rewrite(pieces, !styleFirst);
+        const slots = styleFirst
+            ? this.#slotTree(rewrite(pieces, true), (c) => shared(origin.get(c)!))
+            : this.#slotTree(rewrite(pieces, false));
+
+        const guardTests = found.guards.map(({ test }) => {
+            if (isRereadable(test)) return () => ms.slice(test.start, test.end);
+            const name = this.#memo.nameFor(test.start, test.end, scope);
+            if (!styleFirst) {
+                if (this.#memoWrapped.has(test)) return () => name;
+                this.#memoWrapped.add(test);
+                ms.appendLeft(test.start, `(${name} = `);
+                ms.appendRight(test.end, `)`);
+                return () => name;
+            }
+            // style 이 먼저: 원문(다른 css() 치환 반영)을 지금 읽어 대입식으로 쓰고, className 은
+            // 변수를 읽는다.
+            const text = ms.slice(test.start, test.end);
+            if (!this.#memoWrapped.has(test)) {
+                this.#memoWrapped.add(test);
+                ms.overwrite(test.start, test.end, name);
+                return () => `(${name} = ${text})`;
+            }
+            return () => name;
+        });
+
+        return { classPieces, slots, guardTests };
+    }
+
+    /**
      * className 과 같은 분기 트리를 따라 slot 트리를 만든다. leaf 의 slot 은 그 분기 블록의
      * 정규화된 규칙에서 뽑으므로, 뒤 선언에 덮인 dynamic 값은 평가조차 하지 않는다.
      */
-    #slotTree(pieces: Piece[]): SlotTree {
+    #slotTree(
+        pieces: Piece[],
+        keep: (c: CondPiece) => boolean = () => false,
+        onCond: (c: CondPiece) => void = () => {},
+    ): SlotTree {
         return project<SlotTree>(
             pieces,
             [],
@@ -690,10 +811,11 @@ class Transformer {
                 }
                 return { kind: 'obj', entries };
             },
-            (test, whenTrue, whenFalse) =>
-                sameSlots(whenTrue, whenFalse)
-                    ? whenTrue
-                    : { kind: 'cond', test: () => test, whenTrue, whenFalse },
+            (c, whenTrue, whenFalse) => {
+                if (sameSlots(whenTrue, whenFalse) && !keep(c)) return whenTrue;
+                onCond(c);
+                return { kind: 'cond', test: () => c.test, whenTrue, whenFalse };
+            },
         );
     }
 
@@ -748,7 +870,7 @@ class Transformer {
             pieces,
             [],
             (rules) => jsSingleQuoted(this.#blockClass(rules, debugId)),
-            (test, t, f) => (t === f ? t : `(${test} ? ${t} : ${f})`),
+            (c, t, f) => (t === f ? t : `(${c.test} ? ${t} : ${f})`),
         );
     }
 
@@ -758,8 +880,7 @@ class Transformer {
      *   병합한다 — 뒤 인자가 같은 선언 슬롯을 이긴다.
      * - 그 밖의 인자는 `_cx([...])` 로 이어붙인다. 승패는 CSS 로드 순서(import 순서)를 따른다.
      */
-    #buildCallReplacement(call: CallRecord): string {
-        const locals = call.args.flatMap((a) => (a.kind === 'local' ? a.pieces : []));
+    #buildCallReplacement(call: CallRecord, locals: Piece[]): string {
         const firstLocal = call.args.findIndex((a) => a.kind === 'local');
         const localExpr = firstLocal === -1 ? null : this.#combine(locals, call.debugId);
 
