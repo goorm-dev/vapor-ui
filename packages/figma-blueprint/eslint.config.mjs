@@ -35,6 +35,11 @@ const zones = [
         except: ['./figma.ts', './entries.ts', './packages.ts'],
     },
     {
+        target: './src/usage.ts',
+        from: './src',
+        except: ['./figma.ts'],
+    },
+    {
         target: './src/blueprint',
         from: './src',
         except: [
@@ -86,11 +91,15 @@ export default [
     },
     {
         files: ['src/**/*.ts'],
-        ignores: ['src/figma.ts', 'src/**/*.test.ts'],
+        ignores: ['src/figma.ts', 'src/usage.ts', 'src/**/*.test.ts'],
         rules: {
             'no-restricted-globals': [
                 'error',
-                { name: 'fetch', message: 'Figma requests go through figma.ts' },
+                {
+                    name: 'fetch',
+                    message:
+                        'Figma requests go through figma.ts, the usage record through usage.ts',
+                },
             ],
         },
     },

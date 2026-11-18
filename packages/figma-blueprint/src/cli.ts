@@ -4,9 +4,11 @@ import { blueprint } from '~/blueprint/blueprint';
 import { formatText } from '~/blueprint/output';
 import { buildPackage, fromInstalled, fromRepo } from '~/catalog/catalog';
 import { entriesCommand } from '~/entries';
-import { fetchFrame } from '~/figma';
+import { FigmaHttpError, fetchFrame } from '~/figma';
 import type { FigmaTree } from '~/figma';
 import { libraryCommand } from '~/library';
+import { startUsage } from '~/usage';
+import type { Stage } from '~/usage';
 
 const USAGE = `usage: figma-blueprint <tree.json | figma URL> [--json] [--repo <root>]
        figma-blueprint entries [--repo <root>]
@@ -19,11 +21,19 @@ Exits 2 when an instance could not be read (unscorable), so the design cannot be
 library checks the published Figma libraries of core and composites against packages/<pkg>/figma-entries.json and
 figma-exceptions.json, and exits 1 when a component is unlinked without a reason, or an entry or exception is stale.
 ship runs in packages/core, composites or icons and writes their figma-blueprint/ folder.
-FIGMA_ACCESS_TOKEN is read from the environment or a .env file in the current directory.`;
+FIGMA_ACCESS_TOKEN is read from the environment or a .env file in the current directory.
+DO_NOT_TRACK=1 turns off the usage record that @goorm.io Figma accounts send when a figma URL is run without --repo.`;
+
+const isUrl = (arg: string) => /^https?:\/\//.test(arg);
 
 async function loadTree(arg: string): Promise<FigmaTree> {
-    if (!/^https?:\/\//.test(arg)) return JSON.parse(readFileSync(arg, 'utf8')) as FigmaTree;
+    if (!isUrl(arg)) return JSON.parse(readFileSync(arg, 'utf8')) as FigmaTree;
     return fetchFrame(arg);
+}
+
+function fail(e: unknown) {
+    console.error(`figma-blueprint: ${(e as Error).message}`);
+    return 1;
 }
 
 function parseArgs(argv: string[]) {
@@ -53,17 +63,30 @@ async function run(argv: string[]) {
         console.error(USAGE);
         return 1;
     }
-    const catalog = repo ? await fromRepo(repo) : await fromInstalled(process.cwd());
-    const result = blueprint(await loadTree(command), catalog);
-    console.log(json ? JSON.stringify(result, null, 2) : formatText(result));
-    return result.unscorable.length ? 2 : 0;
+    const usage = repo || !isUrl(command) ? undefined : startUsage(command);
+    let stage: Stage = 'catalog';
+    try {
+        const catalog = repo ? await fromRepo(repo) : await fromInstalled(process.cwd());
+        stage = 'fetch';
+        const tree = await loadTree(command);
+        stage = 'blueprint';
+        const result = blueprint(tree, catalog);
+        console.log(json ? JSON.stringify(result, null, 2) : formatText(result));
+        const code = result.unscorable.length ? 2 : 0;
+        await usage?.done({ outcome: code ? 'unscorable' : 'ok' });
+        return code;
+    } catch (e) {
+        const code = fail(e);
+        const status = e instanceof FigmaHttpError ? e.status : undefined;
+        await usage?.done({ outcome: 'error', stage, status });
+        return code;
+    }
 }
 
 export async function main(argv: string[]): Promise<number> {
     try {
         return await run(argv);
     } catch (e) {
-        console.error(`figma-blueprint: ${(e as Error).message}`);
-        return 1;
+        return fail(e);
     }
 }

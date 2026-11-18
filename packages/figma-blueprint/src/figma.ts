@@ -53,13 +53,26 @@ export const parseFigmaUrl = (url: string) => {
     };
 };
 
-async function request<T>(path: string, token: string): Promise<T> {
+export class FigmaHttpError extends Error {
+    constructor(
+        readonly status: number,
+        message: string,
+    ) {
+        super(message);
+    }
+}
+
+async function request<T>(path: string, token: string, signal?: AbortSignal): Promise<T> {
     const r = await fetch(`https://api.figma.com/v1/${path}`, {
         headers: { 'X-Figma-Token': token },
+        signal,
     });
-    if (!r.ok) throw new Error(`GET ${path}: ${r.status} ${await r.text()}`);
+    if (!r.ok) throw new FigmaHttpError(r.status, `GET ${path}: ${r.status} ${await r.text()}`);
     return (await r.json()) as T;
 }
+
+export const fetchMe = (token: string, signal: AbortSignal) =>
+    request<{ email?: string }>('me', token, signal);
 
 export async function fetchFrame(url: string): Promise<FigmaTree> {
     const { fileKey, nodeId } = parseFigmaUrl(url);
