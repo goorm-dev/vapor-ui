@@ -1,6 +1,6 @@
 import { type ClassNameMode, dynamicVarName } from '~/models/class-name';
 import { contextKey, resolveSelector } from '~/models/selector';
-import { compareAtRulePath } from '~/models/sort';
+import { orderAtRulePaths } from '~/models/sort';
 import type { IRRule } from '~/models/types';
 
 export const DEFAULT_LAYER = 'vapor-utilities';
@@ -76,21 +76,24 @@ function groupsOf(block: Block, hashMode: 'dev' | 'prod'): Group[] {
         g.decls.push(`${rule.property}: ${value};`);
     }
 
-    // base selector 그룹 → 중첩 selector 그룹 (등장 순) → at-rule 그룹 (min 오름 / max 내림).
+    // base selector 그룹 → 중첩 selector 그룹 (등장 순) → at-rule 그룹. at-rule 그룹은 path 별로
+    // 묶어 작성 순으로 두고 width media query 만 그 자리들 안에서 정렬한다 (`orderAtRulePaths`).
+    // 같은 path 안에서는 base selector 먼저, 그다음 등장 순.
     const base = `.${block.className}`;
-    return [...byKey.values()].sort((a, b) => {
-        const aAt = a.atRulePath.length > 0;
-        const bAt = b.atRulePath.length > 0;
-        if (aAt !== bAt) return aAt ? 1 : -1;
-        if (aAt) {
-            const c = compareAtRulePath(a.atRulePath, b.atRulePath);
-            if (c !== 0) return c;
-        }
-        const aBase = a.selector === base;
-        const bBase = b.selector === base;
-        if (aBase !== bBase) return aBase ? -1 : 1;
-        return a.order - b.order;
-    });
+    const baseFirst = (a: Group, b: Group) =>
+        Number(b.selector === base) - Number(a.selector === base) || a.order - b.order;
+
+    const all = [...byKey.values()];
+    const plain = all.filter((g) => g.atRulePath.length === 0).sort(baseFirst);
+    const byPath = new Map<string, Group[]>();
+    for (const g of all) {
+        if (g.atRulePath.length === 0) continue;
+        const key = g.atRulePath.join('\u0000');
+        byPath.set(key, [...(byPath.get(key) ?? []), g]);
+    }
+    const buckets = orderAtRulePaths([...byPath.values()].map((gs) => gs[0]!.atRulePath));
+    const ordered = buckets.flatMap((path) => byPath.get(path.join('\u0000'))!.sort(baseFirst));
+    return [...plain, ...ordered];
 }
 
 /**

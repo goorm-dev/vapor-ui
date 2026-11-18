@@ -3,7 +3,7 @@
 빌드 타임에 동작하는 zero-runtime CSS-in-JS. `css({...})` 호출 1개를 **class 1개 + CSS 블록 1개** 로 컴파일한다 (Vanilla Extract 와 같은 모델). `css()` 를 쓰는 모듈은 자기 CSS 만 import 하므로, 앱이 import 하지 않는 컴포넌트의 CSS 는 번들에 들어가지 않는다.
 
 - 반환값은 순수 `string` — Server Component 에서 만들어 Client Component 로 넘겨도 된다.
-- 블록 안 선언 순서는 작성 순서 그대로다. 같은 selector·property 는 뒤에 쓴 것이 이긴다. selector 그룹은 base → 중첩 selector(작성 순) → at-rule(`min-width` 오름 / `max-width` 내림) 순으로 나온다.
+- 블록 안 선언 순서는 작성 순서 그대로다. 같은 selector·property 는 뒤에 쓴 것이 이긴다. selector 그룹은 base → 중첩 selector(작성 순) → at-rule(작성 순) 순으로 나온다. 단 같은 형태의 width media query 끼리는 `min-width` 오름 / `max-width` 내림으로 정렬한다(다른 at-rule 과는 섞지 않는다).
 - `css(a, b)` 합성:
     - 같은 파일에서 정적으로 풀리는 인자(object 리터럴, 모듈 최상위 `const x = css(...)` / `const x = { ... }` 상수, 그 사이의 `&&` / `?:`)는 compile-time 에 **한 블록으로 병합**한다. 뒤 인자가 이기고, 조건부 조합은 분기마다 병합 블록을 미리 만든다(최대 16 조합).
     - 그 밖의 인자(import, props, 함수 결과)는 `_cx([...])` 로 이어붙인다. 같은 속성을 가진 두 class 의 승패는 CSS 로드 순서(import 순서)를 따른다.
@@ -322,7 +322,7 @@ webpack 계열은 `unplugin` 의 webpack transform loader 가 앞 loader 에서 
 | `src/compilers/jsx-inject.ts`  | Dynamic value JSX `style` prop 주입                                                       |
 | `src/models/*.ts`              | class name, selector, shorthand, token, value 모델                                        |
 | `src/plugins/*.ts`             | 번들러 adapter (unplugin + turbopack loader)                                              |
-| `src/models/sort.ts`           | 블록 안 at-rule 정렬 (Compiled 이식)                                                      |
+| `src/models/sort.ts`           | at-rule 출력 순서 (작성 순 + width query 정렬)                                                    |
 | `src/helpers/cx.ts`            | runtime `_cx` — class 이어붙이기·중복 제거 (`__runtime__`)                                |
 | `src/helpers/resolve-token.ts` | runtime `_resolveToken` helper (`__runtime__` subpath 로 노출)                            |
 

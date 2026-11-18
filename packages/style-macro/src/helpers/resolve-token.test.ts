@@ -16,14 +16,12 @@ describe('_resolveToken — same `$token` grammar as compile time (models/token-
         expect(_resolveToken(space, input)).toBe(expected);
     });
 
-    it.each([
-        ['"$space-100"'],
-        ['url($space-100)'],
-        ['12px'],
-        ['$5'],
-    ])('leaves non-token text as written: %j', (input) => {
-        expect(_resolveToken(space, input)).toBe(input);
-    });
+    it.each([['"$space-100"'], ['url($space-100)'], ['12px'], ['$5']])(
+        'leaves non-token text as written: %j',
+        (input) => {
+            expect(_resolveToken(space, input)).toBe(input);
+        },
+    );
 
     it.each([['$nope'], ['-$space-100'], ['$space-100px']])(
         'keeps an unknown or glued token verbatim (invalid CSS) instead of guessing: %j',

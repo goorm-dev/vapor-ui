@@ -118,6 +118,18 @@ describe('emitBlocks', () => {
         expect(pos(css, 'var(--h)')).toBeLessThan(pos(css, '@media(min-width:768px)'));
     });
 
+    it('keeps non-width at-rules in written order so the later one wins', () => {
+        const css = emit([
+            rule({
+                property: 'color',
+                value: 'a',
+                context: at('@media (prefers-reduced-motion: no-preference)'),
+            }),
+            rule({ property: 'color', value: 'b', context: at('@media (hover: hover)') }),
+        ]);
+        expect(pos(css, 'prefers-reduced-motion')).toBeLessThan(pos(css, '(hover: hover)'));
+    });
+
     it.each([
         '@supports selector(a:hover)',
         '@supports (display:grid) and selector(:has(a:hover))',
