@@ -22,12 +22,15 @@ export interface VaporRolldownOptions extends VaporPluginOptions {
 interface ModuleInfoLike {
     id: string;
     isEntry: boolean;
-    importers: readonly string[];
     importedIds: readonly string[];
+    dynamicallyImportedIds?: readonly string[];
     meta?: { css?: string };
 }
 
+type InputOption = string | string[] | Record<string, string> | undefined;
+
 interface BuildEndContext {
+    resolve(source: string): Promise<{ id: string } | null>;
     getModuleIds(): Iterable<string>;
     getModuleInfo(id: string): ModuleInfoLike | null;
     emitFile(file: {
@@ -89,13 +92,21 @@ export function vaporRolldownPlugin(opts: VaporRolldownOptions = {}) {
     let extractedIds = new Set<string>();
     /** 모듈 CSS 의 절대 경로 → CSS. `transform` 이 채우고 `resolveId` 가 meta 로 옮긴다. */
     const cssByPath = new Map<string, string>();
+    /**
+     * `buildStart` 가 받은 `input` 의 entry 지정자들 (rolldown 이 정규화한 순서 — 이름순).
+     * 서로 import 하지 않는 entry 끼리의 CSS 순서는 의미가 없고(같은 element 에 겹칠 class 가
+     * 없다), 빌드마다 같기만 하면 된다. `getModuleIds` 의 발견 순서는 병렬 로딩이라 보장이 없다.
+     */
+    let inputs: string[] = [];
 
     return {
         name: 'vapor-style-macro:rolldown',
 
-        buildStart() {
+        buildStart(options?: { input?: InputOption }) {
             cssByPath.clear();
             extractedIds = new Set();
+            const input = options?.input;
+            inputs = !input ? [] : typeof input === 'string' ? [input] : Object.values(input);
         },
 
         transform(this: TransformContext, code: string, id: string) {
@@ -149,12 +160,20 @@ export function vaporRolldownPlugin(opts: VaporRolldownOptions = {}) {
         },
 
         ...(extractName && {
-            /** 모듈 그래프가 확정된 뒤 import 순서대로 모듈 CSS 를 이어 붙인다. */
-            buildEnd(this: BuildEndContext) {
-                const ids = [...this.getModuleIds()].filter(
+            /** 모듈 그래프가 확정된 뒤 평가 순서대로 모듈 CSS 를 이어 붙인다. */
+            async buildEnd(this: BuildEndContext) {
+                const entries: string[] = [];
+                for (const input of inputs) {
+                    const id = (await this.resolve(input))?.id;
+                    if (id && !entries.includes(id)) entries.push(id);
+                }
+                // input 으로 못 찾은 entry(다른 플러그인이 emit 한 chunk 등)는 발견 순서로 뒤에.
+                for (const id of this.getModuleIds()) {
+                    if (this.getModuleInfo(id)?.isEntry && !entries.includes(id)) entries.push(id);
+                }
+                const ordered = evaluationOrder(this, entries).filter(
                     (id) => this.getModuleInfo(id)?.meta?.css !== undefined,
                 );
-                const ordered = sortByImportChain(this, ids);
                 extractedIds = new Set(ordered);
                 this.emitFile({
                     type: 'asset',
@@ -183,40 +202,29 @@ const SIDE_EFFECT_IMPORT_RE =
     /^\s*(?:import\s+['"]([^'"]+)['"]|require\s*\(\s*['"]([^'"]+)['"]\s*\))\s*;?[ \t]*\n?/gm;
 
 /**
- * CSS 모듈을 import 순서로 정렬한다 (`@vanilla-extract/rollup-plugin` 의 `buildImportChain` /
- * `sortModules` 이식). 각 CSS 에서 entry 까지 마지막 importer 를 따라 올라가며
- * `[모듈, importer 안에서의 import 순번]` 사슬을 만들고, 사슬을 entry 쪽부터 비교한다.
+ * 모듈들이 ES 모듈 평가 순서로 실행되는 순서 — 브라우저가 모듈 CSS 를 적용하는 순서이기도 하다.
+ * entry 부터 깊이 우선으로, 각 모듈의 static import 를 적힌 순서대로 먼저 평가하고 그 모듈을
+ * 평가한다(post-order). 이미 방문한 모듈(공유 모듈, 순환)은 처음 평가된 자리에 한 번만 둔다.
+ * 모듈 CSS 는 자기 모듈의 마지막 import 로 들어가므로, 의존 모듈의 CSS 가 먼저 오고 그 모듈의
+ * CSS 가 뒤에 온다. dynamic import 는 static 그래프 전체가 평가된 뒤 로드되므로 그 뒤에 둔다.
+ *
+ * Rollup 의 chunk 실행 순서(`execIndex`)와 Vite 의 CSS code split 순서가 같은 규칙이다.
+ * 그래프를 위로(importers) 거슬러 오르지 않는다 — rolldown 은 external 모듈의 importers 를
+ * 채우지 않는다.
  */
-function sortByImportChain(ctx: BuildEndContext, ids: string[]): string[] {
-    const chainOf = (id: string): Array<[string, number]> => {
-        let mod = ctx.getModuleInfo(id);
-        const chain: Array<[string, number]> = [[id, -1]];
-        while (mod && !mod.isEntry) {
-            const importer = mod.importers.at(-1);
-            if (!importer) break;
-            if (chain.some(([c]) => c === importer)) {
-                ctx.warn(
-                    `[@vapor-ui/style-macro] Circular import; CSS order may be off near ${importer}`,
-                );
-                break;
-            }
-            const parent = ctx.getModuleInfo(importer);
-            if (!parent) break;
-            chain.push([importer, parent.importedIds.indexOf(mod.id)]);
-            mod = parent;
-        }
-        return chain.reverse();
+function evaluationOrder(ctx: BuildEndContext, entries: string[]): string[] {
+    const order: string[] = [];
+    const visited = new Set<string>();
+    const dynamic: string[] = [];
+    const visit = (id: string) => {
+        if (visited.has(id)) return;
+        visited.add(id);
+        const info = ctx.getModuleInfo(id);
+        for (const dep of info?.importedIds ?? []) visit(dep);
+        dynamic.push(...(info?.dynamicallyImportedIds ?? []));
+        order.push(id);
     };
-    const chains = new Map(ids.map((id) => [id, chainOf(id)]));
-    return [...ids].sort((a, b) => {
-        const ca = chains.get(a)!;
-        const cb = chains.get(b)!;
-        for (let i = 0; i < Math.min(ca.length, cb.length); i++) {
-            const [ma, oa] = ca[i]!;
-            const [mb, ob] = cb[i]!;
-            if (ma === mb && oa === ob) continue;
-            if (oa !== ob) return oa - ob;
-        }
-        return 0;
-    });
+    for (const e of entries) visit(e);
+    while (dynamic.length) visit(dynamic.shift()!);
+    return order;
 }

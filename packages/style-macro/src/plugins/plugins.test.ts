@@ -304,10 +304,11 @@ describe('rolldown() adapter — extract (single CSS file)', () => {
         isEntry: boolean;
         importers: string[];
         importedIds: string[];
+        dynamicallyImportedIds: string[];
         meta: Record<string, unknown>;
     };
 
-    function setup(extract: VaporRolldownOptions['extract']) {
+    async function setup(extract: VaporRolldownOptions['extract']) {
         const root = mkdtempSync(join(tmpdir(), 'vapor-extract-'));
         writeFileSync(join(root, 'package.json'), JSON.stringify({ name: '@acme/ui' }));
         const plugin = vaporRolldownPlugin({ root, hash: true, extract }) as unknown as Record<
@@ -321,7 +322,15 @@ describe('rolldown() adapter — extract (single CSS file)', () => {
         };
         const graph = new Map<string, Info>();
         const add = (id: string, o: Partial<Info>) =>
-            graph.set(id, { id, isEntry: false, importers: [], importedIds: [], meta: {}, ...o });
+            graph.set(id, {
+                id,
+                isEntry: false,
+                importers: [],
+                importedIds: [],
+                dynamicallyImportedIds: [],
+                meta: {},
+                ...o,
+            });
 
         // index → a, index → b. a and b each use css().
         const src = (name: string, gap: string) =>
@@ -336,14 +345,15 @@ describe('rolldown() adapter — extract (single CSS file)', () => {
         add('index', { isEntry: true, importedIds: [files.a, files.b] });
         add(files.a, { importers: ['index'], importedIds: [cssA.id] });
         add(files.b, { importers: ['index'], importedIds: [cssB.id] });
-        add(cssA.id, { importers: [files.a], meta: cssA.meta });
-        add(cssB.id, { importers: [files.b], meta: cssB.meta });
+        // rolldown 은 external 모듈의 importers 를 채우지 않는다 (실측: 항상 []).
+        add(cssA.id, { meta: cssA.meta });
+        add(cssB.id, { meta: cssB.meta });
 
         const emitted: Array<{ type: string; name: string; source: string }> = [];
         const warn: string[] = [];
-        plugin.buildStart?.call({});
         // re-run transforms after buildStart cleared state is not needed: buildStart runs first in rolldown
-        plugin.buildEnd?.call({
+        await plugin.buildEnd?.call({
+            resolve: async () => null,
             getModuleIds: () => graph.keys(),
             getModuleInfo: (id: string) => graph.get(id) ?? null,
             emitFile: (f: (typeof emitted)[number]) => emitted.push(f),
@@ -375,8 +385,8 @@ describe('rolldown() adapter — extract (single CSS file)', () => {
         expect(plugin.buildEnd).toBeUndefined();
     });
 
-    it('extract: true emits one index.css with every module CSS in import order', () => {
-        const { emitted, code } = setup(true);
+    it('extract: true emits one index.css with every module CSS in import order', async () => {
+        const { emitted, code } = await setup(true);
         expect(emitted).toHaveLength(1);
         expect(emitted[0]).toMatchObject({ type: 'asset', name: 'index.css' });
         const clsA = /'(v\w+)'/.exec(code.a)![1];
@@ -386,17 +396,136 @@ describe('rolldown() adapter — extract (single CSS file)', () => {
         expect(css.indexOf(`.${clsA}`)).toBeLessThan(css.indexOf(`.${clsB}`));
     });
 
-    it('extract: { name } sets the file name', () => {
-        expect(setup({ name: 'styles.css' }).emitted[0]).toMatchObject({ name: 'styles.css' });
+    describe('extract order = ES module evaluation order (dependencies first, in import order)', () => {
+        const ctx = {
+            error: (m: string) => {
+                throw new Error(m);
+            },
+        };
+        const src = (name: string) =>
+            `import { css } from '@vapor-ui/style-macro';\nexport const ${name} = css({ gap: '1px' });\n`;
+
+        /** 모듈 그래프를 rolldown 모양으로 만들고 extract 결과의 CSS 순서(모듈 이름)를 돌려준다. */
+        async function order(
+            entries: string[],
+            imports: Record<string, string[]>,
+            dynamic: Record<string, string[]> = {},
+        ): Promise<string[]> {
+            const root = mkdtempSync(join(tmpdir(), 'vapor-order-'));
+            writeFileSync(join(root, 'package.json'), JSON.stringify({ name: '@acme/ui' }));
+            const plugin = vaporRolldownPlugin({
+                root,
+                hash: false,
+                extract: true,
+            }) as unknown as Record<string, Hook>;
+            const names = new Set([
+                ...entries,
+                ...Object.keys(imports),
+                ...Object.values(imports).flat(),
+                ...Object.values(dynamic).flat(),
+            ]);
+            const file = (n: string) => join(root, 'src', `${n}.tsx`);
+            const graph = new Map<string, Info>();
+            const cssOf = new Map<string, string>();
+            for (const n of names) {
+                plugin.transform!.call(ctx, src(n), file(n));
+                const css = plugin.resolveId!.call(ctx, `./${n}.tsx.vapor.css`, file(n)) as Info;
+                cssOf.set(css.id, n);
+                graph.set(css.id, {
+                    id: css.id,
+                    isEntry: false,
+                    importers: [],
+                    importedIds: [],
+                    dynamicallyImportedIds: [],
+                    meta: css.meta,
+                });
+                // 모듈 CSS import 는 그 모듈의 마지막 import 뒤에 들어간다.
+                graph.set(file(n), {
+                    id: file(n),
+                    isEntry: entries.includes(n),
+                    importers: [],
+                    importedIds: [...(imports[n] ?? []).map(file), css.id],
+                    dynamicallyImportedIds: (dynamic[n] ?? []).map(file),
+                    meta: {},
+                });
+            }
+            for (const m of graph.values())
+                for (const d of m.importedIds)
+                    graph.get(d)!.importers.length >= 0 &&
+                        !cssOf.has(d) &&
+                        graph.get(d)!.importers.push(m.id);
+            const emitted: Array<{ source: string }> = [];
+            plugin.buildStart!.call(
+                {},
+                { input: Object.fromEntries(entries.map((e) => [e, file(e)])) },
+            );
+            await plugin.buildEnd!.call({
+                resolve: async (s: string) => (graph.has(s) ? { id: s } : null),
+                // 발견 순서는 import 순서와 다를 수 있다 — 일부러 뒤집어 넘긴다.
+                getModuleIds: () => [...graph.keys()].reverse().values(),
+                getModuleInfo: (id: string) => graph.get(id) ?? null,
+                emitFile: (f: { source: string }) => emitted.push(f),
+                warn: () => {},
+            });
+            const out = emitted[0]!.source;
+            return [...cssOf.values()]
+                .map((n) => [n, out.indexOf(`.${n}_`)] as const)
+                .sort((a, b) => a[1] - b[1])
+                .map(([n]) => n);
+        }
+
+        it('a dependency before its importer', async () => {
+            expect(await order(['button'], { button: ['shared'] })).toEqual(['shared', 'button']);
+        });
+
+        it('siblings in import order', async () => {
+            expect(await order(['index'], { index: ['a', 'b'] })).toEqual(['a', 'b', 'index']);
+        });
+
+        it('a shared module at its first evaluation', async () => {
+            expect(await order(['index'], { index: ['a', 'b'], a: ['s'], b: ['s'] })).toEqual([
+                's',
+                'a',
+                'b',
+                'index',
+            ]);
+        });
+
+        it('entries in buildStart input order, shared modules once', async () => {
+            expect(await order(['x', 'y'], { x: ['s'], y: ['s', 't'] })).toEqual([
+                's',
+                'x',
+                't',
+                'y',
+            ]);
+        });
+
+        it('a cycle stops at the module already being evaluated', async () => {
+            expect(await order(['a'], { a: ['b'], b: ['a'] })).toEqual(['b', 'a']);
+        });
+
+        it('dynamic imports after all static code', async () => {
+            expect(await order(['index'], { index: ['a'] }, { index: ['lazy'] })).toEqual([
+                'a',
+                'index',
+                'lazy',
+            ]);
+        });
     });
 
-    it('extract: renderChunk does not emit per-module assets', () => {
-        const { render, cssA } = setup(true);
+    it('extract: { name } sets the file name', async () => {
+        expect((await setup({ name: 'styles.css' })).emitted[0]).toMatchObject({
+            name: 'styles.css',
+        });
+    });
+
+    it('extract: renderChunk does not emit per-module assets', async () => {
+        const { render, cssA } = await setup(true);
         expect(render(`import "${cssA.id}";\n`, [cssA.id])).toBeNull();
     });
 
-    it('extract: strips the per-module CSS imports from the output', () => {
-        const { generate, cssA } = setup(true);
+    it('extract: strips the per-module CSS imports from the output', async () => {
+        const { generate, cssA } = await setup(true);
         const bundle = generate({
             'a.mjs': {
                 type: 'chunk',
