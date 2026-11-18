@@ -3,6 +3,7 @@ import { parseSync } from 'oxc-parser';
 
 import { axisAliasName } from '~/models/axis-alias';
 import { type ClassNameMode, buildBlockClassName, dynamicVarName } from '~/models/class-name';
+import { reachesOwnSubtree } from '~/models/selector';
 import type { AnyProp, BuildError, DynamicRule, IRRule } from '~/models/types';
 import { propertyToTokenAxis } from '~/tokens';
 import { isUnitless } from '~/tokens/css-reference';
@@ -356,6 +357,7 @@ class Transformer {
         if (injectCtx.errors.length) return errorResult(source, injectCtx.errors);
         for (const h of injectCtx.helpers) this.#helpers.add(h);
         this.#ensureRuntimeImport();
+        this.#warnUnreachableSlots();
 
         const css = emitBlocks(this.#blocks, {
             mode: this.#mode,
@@ -530,7 +532,7 @@ class Transformer {
     #parseObject(node: AnyProp): ParseCallResult {
         let res = this.#parsed.get(node);
         if (!res) {
-            res = parseCallArg(node, this.opts.source);
+            res = parseCallArg(node, this.opts.source, this.#scope);
             this.#parsed.set(node, res);
             this.#errors.push(...res.errors);
         }
@@ -990,6 +992,36 @@ class Transformer {
         const line = `import ${jsSingleQuoted(specifier)};`;
         if (this.#lastImportEnd >= 0) this.#ms!.appendRight(this.#lastImportEnd, `\n${line}`);
         else this.#insertAtTop(line);
+    }
+
+    /**
+     * 형제 selector(`& + span`) 아래의 dynamic 값은 동작하지 않는다 — slot 은 element 의 inline
+     * style 이라 그 element 와 자손만 상속받는다. 빌드는 막지 않고, 모듈이 로드될 때 개발자 콘솔에
+     * 한 번 알린다. dev 빌드(readable class, `hash: false`)에만 넣는다 — 런타임 `process.env` 는
+     * 번들러마다 치환 여부가 달라 쓰지 않는다. 선언마다 한 번.
+     */
+    #warnUnreachableSlots() {
+        if (this.#mode === 'hashed') return;
+        const seen = new Set<number>();
+        const lines: string[] = [];
+        for (const block of this.#blocks) {
+            for (const r of block.rules) {
+                if (r.kind !== 'dynamic' || seen.has(r.start)) continue;
+                if (reachesOwnSubtree(r.context.selector)) continue;
+                seen.add(r.start);
+                const { line, column } = locAt(this.opts.source, r.start);
+                const where = `${this.opts.filename}:${line}:${column}`;
+                const sel = r.context.selector;
+                lines.push(
+                    `[@vapor-ui/style-macro] ${where} \`${r.property}: ${r.sourceExpr}\` under \`${sel}\` ` +
+                        `is never applied: a dynamic value is set on the element and only reaches the element ` +
+                        `and its descendants, not siblings. Use a static value, or put the css() on the sibling.`,
+                );
+            }
+        }
+        if (lines.length === 0) return;
+        const calls = lines.map((m) => `console.error(${JSON.stringify(m)});`).join(' ');
+        this.#ms!.append(`\n${calls}\n`);
     }
 
     #ensureRuntimeImport() {

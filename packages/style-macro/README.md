@@ -186,6 +186,8 @@ function C({ color }: { color: string }) {
 
 Runtime 에 `_resolveToken(property, value)` 호출 + inline `style={{ '--slot': ... }}` 자동 주입.
 
+slot 변수는 선언마다 고유하다(파일·선언 위치로 이름을 만든다). element 의 inline style 에 설정되므로 그 element 와 **자손**만 값을 받는다 — 형제 selector(`& + span`, `& ~ span`) 아래의 dynamic 값은 적용되지 않는다. 빌드는 통과하고, dev 빌드(`hash: false`)에서는 모듈이 로드될 때 콘솔에 에러를 한 번 낸다.
+
 ### 값 없음 (`null` / `undefined`)
 
 `null` / `undefined` 리터럴은 선언을 만들지 않는다.
@@ -322,7 +324,7 @@ webpack 계열은 `unplugin` 의 webpack transform loader 가 앞 loader 에서 
 | `src/compilers/jsx-inject.ts`  | Dynamic value JSX `style` prop 주입                                                       |
 | `src/models/*.ts`              | class name, selector, shorthand, token, value 모델                                        |
 | `src/plugins/*.ts`             | 번들러 adapter (unplugin + turbopack loader)                                              |
-| `src/models/sort.ts`           | at-rule 출력 순서 (작성 순 + width query 정렬)                                                    |
+| `src/models/sort.ts`           | at-rule 출력 순서 (작성 순 + width query 정렬)                                            |
 | `src/helpers/cx.ts`            | runtime `_cx` — class 이어붙이기·중복 제거 (`__runtime__`)                                |
 | `src/helpers/resolve-token.ts` | runtime `_resolveToken` helper (`__runtime__` subpath 로 노출)                            |
 

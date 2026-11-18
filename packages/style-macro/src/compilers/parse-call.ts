@@ -132,7 +132,10 @@ const hasPosition = (node: AnyProp): boolean =>
 /**
  * `css({...})` 호출 1개를 파싱해 IR + ternary + build error 로 분해.
  */
-export function createParser(source: string) {
+/**
+ * @param scope 파일 식별자 (root 기준 상대 경로). slot 이름의 입력이다.
+ */
+export function createParser(source: string, scope: string) {
     const rules: IRRule[] = [];
     const buildErrors: BuildError[] = [];
     const ternaries: TernarySite[] = [];
@@ -265,8 +268,12 @@ export function createParser(source: string) {
         }
 
         const sourceExpr = source.slice(value.start, value.end);
+        // slot 은 이 선언 하나의 변수다 (Vanilla Extract `createVar` 처럼 선언마다 고유). 파일과
+        // 선언 위치를 넣는다 — 식 텍스트만 쓰면 다른 컴포넌트의 같은 모양 식과 이름이 겹쳐, 자손
+        // selector(`& span`)가 중첩된 다른 컴포넌트의 값을 상속받는다. 같은 선언은 어디서 병합돼도
+        // 같은 노드라 이름이 하나다. 위치는 소스가 같으면 같으므로 결정적이다.
         const slotId = generateArbitraryValueSelector(
-            `${cssProperty}|${contextKey(context)}|${sourceExpr}`,
+            `${scope}|${value.start}|${cssProperty}|${contextKey(context)}`,
         );
 
         // 동적 shorthand 는 longhand 로 분해하지 않고 원 property 를 유지한다.
@@ -347,8 +354,8 @@ export function createParser(source: string) {
     };
 }
 
-export function parseCallArg(arg: AnyProp, source: string): ParseCallResult {
-    return createParser(source).parse(arg);
+export function parseCallArg(arg: AnyProp, source: string, scope: string): ParseCallResult {
+    return createParser(source, scope).parse(arg);
 }
 
 /* ----- errors ----- */

@@ -74,6 +74,27 @@ export function resolveSelector(selector: string, className: string): string {
     return replaceNesting(selector, `.${className}`);
 }
 
+/**
+ * 풀린 selector 가 맞추는 element 가 모두 블록 element(`&`) 자신이나 그 자손인지.
+ *
+ * dynamic slot 은 element 의 inline style 에 설정되는 custom property 라 그 element 와 자손만
+ * 상속받는다. 목록의 각 selector 에서 마지막 `&` 뒤 최상위 combinator 가 descendant(공백)·
+ * child(`>`) 뿐이면 대상은 `&` 의 자손이다. `+`·`~` 가 있으면 대상이 `&` 의 형제(또는 그 자손)라
+ * 값이 닿지 않는다. `&` 앞쪽(`.a + &`)이나 괄호 안(`:has(+ x)`)은 대상을 바꾸지 않는다.
+ */
+export function reachesOwnSubtree(selector: string): boolean {
+    return splitList(selector).every((sel) => {
+        const at = nestingPositions(sel);
+        const last = at[at.length - 1];
+        if (last === undefined) return false;
+        let sibling = false;
+        scan(sel.slice(last + 1), (c, _i, depth) => {
+            if (depth === 0 && (c === '+' || c === '~')) sibling = true;
+        });
+        return !sibling;
+    });
+}
+
 /* ----- selector 텍스트 스캔 ----- */
 
 /**
