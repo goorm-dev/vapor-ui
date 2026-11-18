@@ -10,6 +10,7 @@
  *   - GITHUB_RUN_ID: GitHub Actions 실행 ID
  *   - GITHUB_RUN_NUMBER: GitHub Actions 실행 번호
  *   - GITHUB_REF_NAME: 브랜치 이름
+ *   - WORKFLOW_TITLE: 알림 제목 (기본값: Figma 아이콘 동기화 워크플로우)
  */
 import process from 'node:process';
 
@@ -20,6 +21,7 @@ const {
     GITHUB_RUN_ID,
     GITHUB_RUN_NUMBER,
     GITHUB_REF_NAME,
+    WORKFLOW_TITLE = 'Figma 아이콘 동기화 워크플로우',
 } = process.env;
 
 if (!SLACK_GDS_ALARM_WEBHOOK_URL) {
@@ -41,11 +43,11 @@ const statusText = WORKFLOW_STATUS === 'success' ? '성공' : '실패';
 const statusColor = WORKFLOW_STATUS === 'success' ? '#36a64f' : '#ff0000';
 
 const message = {
-    text: `🤖 Figma 아이콘 동기화 워크플로우 ${statusText}`,
+    text: `🤖 ${WORKFLOW_TITLE} ${statusText}`,
     attachments: [
         {
             color: statusColor,
-            title: `🤖 Figma 아이콘 동기화 워크플로우 ${statusText}`,
+            title: `🤖 ${WORKFLOW_TITLE} ${statusText}`,
             title_link: `https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}`,
             fields: [
                 {

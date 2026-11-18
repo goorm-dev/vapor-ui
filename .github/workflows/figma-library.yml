@@ -65,21 +65,40 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   ENTRIES_OUTCOME: ${{ steps.entries.outcome }}
               run: |
+                  # entries writes what it could resolve before failing on an unpublished URL, so after a
+                  # failure the tree may hold incomplete entries and says nothing about drift either way.
+                  if [[ "$ENTRIES_OUTCOME" != success ]]; then
+                      echo "Regeneration failed; leaving the entries pull request as it is."
+                      exit 0
+                  fi
+
                   EXISTING_PR=$(gh pr list --head "$BRANCH_NAME" --base main --state open --json number,isCrossRepository --jq '[.[] | select(.isCrossRepository | not)][0].number // empty')
 
-                  if [[ -z $(git status --porcelain packages/*/figma-entries.json) ]]; then
-                      # A failed regeneration leaves the tree clean, which says nothing about drift.
-                      if [[ -n "$EXISTING_PR" && "$ENTRIES_OUTCOME" == success ]]; then
+                  CHANGED=$(git diff --name-only -- 'packages/*/figma-entries.json' | cut -d/ -f2)
+                  if [[ -z "$CHANGED" ]]; then
+                      if [[ -n "$EXISTING_PR" ]]; then
                           gh pr close "$EXISTING_PR" --comment "Closing: main's figma-entries.json already matches Figma."
                       fi
                       exit 0
                   fi
 
+                  # Every package ships its entries inside figma-blueprint/, so each changed one gets a patch.
+                  {
+                      echo '---'
+                      for pkg in $CHANGED; do echo "'$(jq -r .name "packages/$pkg/package.json")': patch"; done
+                      echo '---'
+                      echo
+                      echo 'Regenerate figma-entries.json from the published Figma libraries.'
+                  } > .changeset/figma-entries-sync.md
+
+                  # A PR pushed with GITHUB_TOKEN triggers no workflows, so quality.yml does not run on it.
+                  # That is safe here: regeneration succeeded, so every Code Connect URL resolved and only
+                  # Figma-side fields (name, key) changed, while missingEntries compares url, template and batch.
                   git config --local user.email "action@github.com"
                   git config --local user.name "GitHub Action"
                   git switch -C "$BRANCH_NAME"
-                  git add packages/*/figma-entries.json
-                  git commit --no-verify -m "chore(core): regenerate figma-entries from Figma
+                  git add packages/*/figma-entries.json .changeset/figma-entries-sync.md
+                  git commit --no-verify -m "chore: regenerate figma-entries from Figma
 
                   🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
@@ -90,7 +109,7 @@ jobs:
                   if [[ -n "$EXISTING_PR" ]]; then
                       gh pr edit "$EXISTING_PR" --body "$BODY"
                   else
-                      gh pr create --title "chore(core): regenerate figma-entries from Figma" \
+                      gh pr create --title "chore: regenerate figma-entries from Figma" \
                           --body "$BODY" --base main --head "$BRANCH_NAME"
                   fi
 
@@ -99,3 +118,25 @@ jobs:
               run: |
                   echo "library: ${{ steps.library.outcome }}, entries: ${{ steps.entries.outcome }}"
                   [[ "${{ steps.library.outcome }}" != failure && "${{ steps.entries.outcome }}" != failure ]]
+
+    notify:
+        name: Notify Slack
+        needs: [figma-library]
+        if: failure()
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout branch
+              uses: actions/checkout@v4
+
+            - name: Install
+              uses: ./.github/composite/install
+
+            - name: Notify Slack on Failure
+              run: WORKFLOW_STATUS=failure pnpm --filter @repo/icon-extractor notify:slack
+              env:
+                  WORKFLOW_TITLE: Figma 라이브러리 검사 워크플로우
+                  SLACK_GDS_ALARM_WEBHOOK_URL: ${{ secrets.SLACK_GDS_ALARM_WEBHOOK_URL }}
+                  GITHUB_REPOSITORY: ${{ github.repository }}
+                  GITHUB_RUN_ID: ${{ github.run_id }}
+                  GITHUB_RUN_NUMBER: ${{ github.run_number }}
+                  GITHUB_REF_NAME: ${{ github.ref_name }}
