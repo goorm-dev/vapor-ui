@@ -430,13 +430,7 @@ describe('rolldown() adapter — extract (single CSS file)', () => {
                 chunkCode,
                 { fileName: 'a.mjs', imports },
             ) as { code: string } | null;
-        const generate = (
-            bundle: Record<string, { type: string; code?: string; imports?: string[] }>,
-        ) => {
-            plugin.generateBundle!.call({}, {}, bundle);
-            return bundle;
-        };
-        return { code, cssA, cssB, emitted, render, generate };
+        return { code, cssA, cssB, emitted, render };
     }
 
     it('without extract: no single CSS file', () => {
@@ -583,24 +577,10 @@ describe('rolldown() adapter — extract (single CSS file)', () => {
         expect(render(`import "${cssA.id}";\n`, [cssA.id])).toBeNull();
     });
 
-    it('extract: strips the per-module CSS imports from the output', async () => {
-        const { generate, cssA } = await setup(true);
-        const bundle = generate({
-            'a.mjs': {
-                type: 'chunk',
-                code: `import "${cssA.id}";\nexport const a = 1;\n`,
-                imports: [cssA.id],
-            },
-            'a.cjs': {
-                type: 'chunk',
-                code: `require("${cssA.id}");\nexports.a = 1;\n`,
-                imports: [cssA.id],
-            },
-            'react.mjs': { type: 'chunk', code: `import "react";\n`, imports: ['react'] },
-        });
-        expect(bundle['a.mjs']!.code).toBe('export const a = 1;\n');
-        expect(bundle['a.cjs']!.code).toBe('exports.a = 1;\n');
-        expect(bundle['react.mjs']!.code).toBe('import "react";\n');
+    it('extract: module CSS resolves to a side-effect-free internal module (see rolldown.build.test.ts)', async () => {
+        const { cssA } = await setup(true);
+        expect(cssA).toMatchObject({ moduleSideEffects: false });
+        expect((cssA as { external?: boolean }).external).toBeUndefined();
     });
 });
 

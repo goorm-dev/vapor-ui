@@ -42,12 +42,6 @@ interface BuildEndContext {
     warn(message: string): void;
 }
 
-interface OutputChunkLike {
-    type: 'chunk' | 'asset';
-    code?: string;
-    imports?: string[];
-}
-
 interface RenderChunkContext {
     getModuleInfo(id: string): { meta?: { css?: string } } | null;
     emitFile(file: {
@@ -88,8 +82,6 @@ export function vaporRolldownPlugin(opts: VaporRolldownOptions = {}) {
     const resolved = resolveOptions(pluginOpts);
     const extractName =
         extract === false ? null : ((extract === true ? undefined : extract.name) ?? 'index.css');
-    /** extract 모드에서 합친 모듈 CSS 의 id. 출력 JS 에서 이 import 를 지운다. */
-    let extractedIds = new Set<string>();
     /** 모듈 CSS 의 절대 경로 → CSS. `transform` 이 채우고 `resolveId` 가 meta 로 옮긴다. */
     const cssByPath = new Map<string, string>();
     /**
@@ -104,7 +96,6 @@ export function vaporRolldownPlugin(opts: VaporRolldownOptions = {}) {
 
         buildStart(options?: { input?: InputOption }) {
             cssByPath.clear();
-            extractedIds = new Set();
             const input = options?.input;
             inputs = !input ? [] : typeof input === 'string' ? [input] : Object.values(input);
         },
@@ -126,12 +117,19 @@ export function vaporRolldownPlugin(opts: VaporRolldownOptions = {}) {
             const path = resolve(dirname(importer.split('?')[0]!), source);
             const css = cssByPath.get(path);
             if (css === undefined) return null;
-            return {
-                id: toPosix(relative(resolved.root, path)),
-                external: true,
-                moduleSideEffects: true,
-                meta: { css },
-            };
+            const id = toPosix(relative(resolved.root, path));
+            // extract: CSS 는 한 파일로 나가므로 출력 JS 가 모듈 CSS 를 참조할 일이 없다. 부작용 없는
+            // 빈 내부 모듈로 두면 번들러가 import 를 스스로 지운다 (출력 텍스트를 고치지 않는다).
+            // 모듈은 그래프에 남아 `buildEnd` 가 평가 순서와 meta.css 를 읽는다.
+            if (extractName) {
+                return { id: `${EXTRACTED_PREFIX}${id}`, moduleSideEffects: false, meta: { css } };
+            }
+            return { id, external: true, moduleSideEffects: true, meta: { css } };
+        },
+
+        load(id: string) {
+            // id 가 `.css` 로 끝나도 내용은 빈 JS 다 (rolldown 은 확장자로 CSS 모듈로 본다).
+            return id.startsWith(EXTRACTED_PREFIX) ? { code: '', moduleType: 'js' } : null;
         },
 
         renderChunk(
@@ -174,7 +172,6 @@ export function vaporRolldownPlugin(opts: VaporRolldownOptions = {}) {
                 const ordered = evaluationOrder(this, entries).filter(
                     (id) => this.getModuleInfo(id)?.meta?.css !== undefined,
                 );
-                extractedIds = new Set(ordered);
                 this.emitFile({
                     type: 'asset',
                     name: extractName,
@@ -182,24 +179,12 @@ export function vaporRolldownPlugin(opts: VaporRolldownOptions = {}) {
                     source: ordered.map((id) => this.getModuleInfo(id)!.meta!.css!).join('\n'),
                 });
             },
-
-            /** 합친 파일로 대체된 모듈 CSS 의 side-effect import / require 를 지운다. */
-            generateBundle(_options: unknown, bundle: Record<string, OutputChunkLike>) {
-                const extracted = extractedIds;
-                const strip = (match: string, esm?: string, cjs?: string) =>
-                    extracted.has((esm ?? cjs)!) ? '' : match;
-                for (const chunk of Object.values(bundle)) {
-                    if (chunk.type !== 'chunk' || chunk.code === undefined) continue;
-                    if (!chunk.imports?.some((i) => extracted.has(i))) continue;
-                    chunk.code = chunk.code.replace(SIDE_EFFECT_IMPORT_RE, strip);
-                }
-            },
         }),
     };
 }
 
-const SIDE_EFFECT_IMPORT_RE =
-    /^\s*(?:import\s+['"]([^'"]+)['"]|require\s*\(\s*['"]([^'"]+)['"]\s*\))\s*;?[ \t]*\n?/gm;
+/** extract 모드의 모듈 CSS id 접두. `\0` 은 파일이 아닌 가상 모듈이라는 Rollup 관례다. */
+const EXTRACTED_PREFIX = '\0vapor-css:';
 
 /**
  * 모듈들이 ES 모듈 평가 순서로 실행되는 순서 — 브라우저가 모듈 CSS 를 적용하는 순서이기도 하다.
