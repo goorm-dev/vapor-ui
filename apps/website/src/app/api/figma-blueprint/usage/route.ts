@@ -3,8 +3,14 @@ import { z } from 'zod';
 
 const run = {
     fileKey: z.string().regex(/^[A-Za-z0-9]{22,128}$/),
-    nodeId: z.string().regex(/^(\d+:\d+)?$/),
-    version: z.string().regex(/^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$/),
+    nodeId: z
+        .string()
+        .max(64)
+        .regex(/^(\d+:\d+)?$/),
+    version: z
+        .string()
+        .max(64)
+        .regex(/^\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?$/),
 };
 
 const body = z.discriminatedUnion('outcome', [
