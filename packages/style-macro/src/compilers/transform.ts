@@ -659,6 +659,7 @@ class Transformer {
      */
     #capture(pieces: Piece[], top: TopLevelConst): Piece[] {
         const inPlace = top.init.type === 'ObjectExpression';
+        const shorthandKeys = inPlace ? shorthandValueKeys(top.init) : new Map<number, string>();
         const take = (expr: string, start: number, end: number): string => {
             if (start < top.init.start || end > top.init.end) return expr;
             const key = `${start}:${end}`;
@@ -672,7 +673,12 @@ class Transformer {
                 top.split = null;
             }
             this.#ms!.appendLeft(top.insertAt, `const ${name} = (${expr});\n`);
-            if (inPlace) this.#ms!.overwrite(start, end, name);
+            // 정의 자리의 식을 이름으로 바꾼다. shorthand property(`{ width }`)는 key 와 value 가
+            // 같은 소스 범위라, 그대로 바꾸면 key 까지 바뀐다 — `width: <name>` 으로 풀어 쓴다.
+            if (inPlace) {
+                const shorthandKey = shorthandKeys.get(start);
+                this.#ms!.overwrite(start, end, shorthandKey ? `${shorthandKey}: ${name}` : name);
+            }
             return name;
         };
         const walkPieces = (ps: Piece[]): Piece[] =>
@@ -1010,6 +1016,20 @@ interface TopLevelConst {
      * 문장을 나눈다. 한 번 나누면 `null`.
      */
     split: { from: number; to: number; keyword: string } | null;
+}
+
+/** object 리터럴(중첩 포함) 안 shorthand property 의 value 시작 위치 → key 이름. */
+function shorthandValueKeys(obj: AnyProp): Map<number, string> {
+    const out = new Map<number, string>();
+    const visit = (o: AnyProp) => {
+        for (const p of o.properties ?? []) {
+            if (p.type !== 'Property') continue;
+            if (p.shorthand && p.value?.type === 'Identifier') out.set(p.value.start, p.value.name);
+            if (p.value?.type === 'ObjectExpression') visit(p.value);
+        }
+    };
+    visit(obj);
+    return out;
 }
 
 /** directive prologue 마지막 문의 끝. prologue 가 없으면 0. */

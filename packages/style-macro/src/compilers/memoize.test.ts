@@ -175,6 +175,21 @@ describe('a condition shared by className and style is evaluated once', () => {
         });
     });
 
+    it.each([
+        ['top-level', `let width = '12px';\nexport const base = { width };`],
+        [
+            'nested',
+            `let color = 'red';\nexport const base = { width: '1px', ':hover': { color } };`,
+        ],
+    ])('capturing a shorthand property keeps its key (%s)', async (_, decl) => {
+        const { exports } = await run(
+            `${decl}\nexport const C = () => <div className={css(base)} />;`,
+        );
+        const base = exports.base as Record<string, unknown>;
+        expect(JSON.stringify(base)).not.toContain('__vapor');
+        expect(Object.keys(base)).not.toContain('__vaporCapture_0');
+    });
+
     it('module-level element', async () => {
         const next = counter(true);
         const { rendered } = await run(
