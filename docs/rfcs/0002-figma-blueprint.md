@@ -3,7 +3,7 @@
 - **상태**: Draft
 - **제안자**: @MaxLee-dev
 - **댓글 마감**: 2026-11-16
-- **관련 이슈**: VAPOR-318
+- **관련 이슈**: VAPOR-318, VAPOR-342
 
 ## Summary
 
@@ -221,6 +221,39 @@ core, composites, icons는 각각 아래처럼 바뀝니다.
 | `size`               | 채점하는 프레임의 크기. 시각 점수의 viewport와 위치 정규화에 쓴다. 트리에 박스가 없으면 빠진다                                                                                                                          |
 | `*.box`              | 노드, `excluded`, `unscorable`의 박스. 템플릿 하나가 쓴 요소는 인스턴스의 박스를 함께 쓴다                                                                                                                              |
 | `texts[]`            | 텍스트 줄. `id`, `text`, `box`                                                                                                                                                                                          |
+
+### 사용 기록
+
+사내에서 어떤 시안에 figma-blueprint를 돌리는지 모으려고, `@goorm.io` Figma 계정이 쓸 때만 실행마다 사용 기록 하나를 서버에 보냅니다. 이 패키지는 공개 npm 패키지라 README에 "내부 용도"라고 적어도 외부 사용자의 PC에서 실행됩니다. 그래서 외부 사용자에게서는 아무것도 나가지 않게 합니다.
+
+**보내는 조건.** 아래를 모두 만족할 때만 보냅니다.
+
+- 메인 명령에 Figma URL을 넘기고 `--repo`를 쓰지 않았습니다(`fromInstalled` 경로). tree.json 입력, `--repo`, `entries`, `library`, `ship`은 보내지 않습니다.
+- `DO_NOT_TRACK=1`이 아닙니다. `run()`이 `.env`를 먼저 읽으므로 `.env`에 적어도 꺼집니다.
+- `FIGMA_ACCESS_TOKEN`이 있고 같은 토큰으로 `GET https://api.figma.com/v1/me`를 불러 받은 `email`이 `@goorm.io`로 끝납니다. 대소문자는 구분하지 않습니다. 이메일은 판별에만 쓰고 보내지 않습니다.
+- 토큰이 없거나, `/v1/me`가 2xx로 답하지 않거나, URL에서 fileKey를 얻지 못하면 보내지 않습니다. 토큰에 `current_user:read` scope가 없으면 `/v1/me`가 403을 내므로 이 경우에 해당합니다.
+
+`/v1/me`를 쓰려면 토큰에 `file_content:read`와 `current_user:read` 두 scope가 필요합니다. setup 스킬은 이미 `/v1/me`로 토큰을 검사하므로, 토큰 재발급을 공지하지 않고 setup 안내와 `ai-skill.mdx`에 두 scope를 적습니다.
+
+**보내는 실행.** 조건을 만족하면 성공, unscorable(종료 코드 2), 에러 실행을 모두 보냅니다. `node-id`가 없는 URL은 nodeId를 빈 값으로 보냅니다.
+
+**보내는 값.** `https://vapor-ui.goorm.io/api/figma-blueprint/usage`에 POST로 아래 둘 중 하나를 보냅니다. 주소는 코드에 고정하고 환경 변수로 바꾸지 못합니다.
+
+```ts
+{ fileKey, nodeId, version, outcome: 'ok' | 'unscorable' }
+{ fileKey, nodeId, version, outcome: 'error', stage: 'catalog' | 'fetch' | 'blueprint', status?: number }
+```
+
+`version`은 이 패키지의 버전이고 `stage`는 실패한 단계입니다. `catalog`는 설치된 패키지를 읽을 때, `fetch`는 Figma에서 프레임을 읽을 때, `blueprint`는 `blueprint()`를 돌릴 때입니다. `status`는 실패가 Figma의 HTTP 오류일 때만 있고 403, 404 같은 그 status입니다. 에러 메시지 원문에는 로컬 경로가 섞일 수 있어서 보내지 않습니다. 시각도 보내지 않고 서버가 받은 때의 `created_at`을 씁니다.
+
+**CLI에 영향 주지 않기.** `/v1/me`는 카탈로그를 읽고 `fetchFrame`을 부르는 일과 나란히 시작하므로 실행 시간에 더해지지 않습니다. 실행이 끝나 출력을 낸 뒤에는, `/v1/me` 응답을 기다리는 시간과 POST를 합쳐 1.5초 deadline 하나로 끊습니다. 어떤 실패도 조용히 무시하므로 출력과 종료 코드는 그대로입니다. bin은 `main()`이 끝나자마자 종료하므로, 끝날 때 진행 중인 요청은 모두 abort해서 프로세스를 붙잡지 못하게 합니다.
+
+**서버.** 저장과 보호는 `apps/website`가 맡습니다.
+
+- 저장: Route Handler `POST /api/figma-blueprint/usage`가 Neon 테이블에 실행마다 한 행을 INSERT합니다. insert만 하는 테이블이라 고치거나 지우는 경로가 없습니다. 시안별 집계는 `GROUP BY`로 합니다.
+- 검증: 서버는 body를 엄격하게 검사하고 어긋나면 400으로 거절합니다. fileKey는 영숫자 22~128자, nodeId는 `^\d+:\d+$` 또는 빈 값, version은 semver, outcome과 stage는 위 enum, status는 정수여야 합니다.
+- 요청 수 제한: Vercel WAF rate limit으로 이 경로에 IP당 분당 60회를 둡니다. Vercel 대시보드에서 손으로 설정하므로 저장소에는 흔적이 없습니다. 그래서 여기에 적습니다. 사무실 IP 허용목록은 재택 사용 기록이 빠지므로 쓰지 않습니다.
+- 위조 요청: 사내 계정 판별이 클라이언트에만 있어서 서버는 보낸 사람이 사내인지 확인하지 못합니다. 위조 요청은 받아들이는 위험으로 두고 검증과 요청 수 제한으로 잘못 쌓이는 행의 양만 제한합니다.
 
 ### 검증
 
