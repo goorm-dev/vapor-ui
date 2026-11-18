@@ -1,10 +1,16 @@
+import { findTokenRefs } from '~/models/token-ref';
+
 type AxisTable = Readonly<Record<string, string>>;
 
 /**
- * `$` 접두 토큰 참조를 CSS var 로 해석. 토큰이 아니면 값 그대로 통과.
+ * `$token` 참조를 CSS var 로 해석. 토큰이 아니면 값 그대로 통과.
  *
- * - **문자열** 이면서 `$` 로 시작 → axis 테이블에서 조회해 `var(--vapor-…)` 로 치환.
- * - **문자열** 이지만 `$` 가 아님 → 사용자가 완전한 CSS 값을 넘긴 것으로 간주, 그대로.
+ * - **문자열** → 컴파일 타임과 같은 문법(`models/token-ref`)으로 `$token` 을 찾아 axis 테이블의
+ *   `var(--vapor-…)` 로 바꾼다. 값 component 하나여야 하고, CSS 문자열·`url()` 안의 `$` 는 글자다.
+ *   그래서 `'$space-100 $space-200'`, `'calc($space-100 * -1)'` 도 static 값과 같게 풀린다.
+ * - 모르는 토큰·다른 글자에 붙은 토큰은 고치지 않고 그대로 둔다. 컴파일 타임이면 빌드 에러지만
+ *   런타임에는 알릴 곳이 없다. `$` 를 떼어 내면 `$red` → `red` 처럼 다른 유효한 값이 되므로, 무효한
+ *   CSS 로 남겨 브라우저가 선언을 버리게 한다 (devtools 에 원문이 보인다).
  * - **숫자** 라면 unit 이 지정된 property 는 `${n}${unit}` (기본 `px`) 로,
  *   unitless property 는 그대로 숫자 → 문자열로. 리뷰 #5c (동적 숫자 값에
  *   단위 미부여) 를 compile/runtime 의 역할 분담으로 해결 — 컴파일러가
@@ -40,9 +46,15 @@ export function _resolveToken(axis: AxisTable, value: unknown, unit?: string): s
         return unit ? `${value}${unit}` : String(value);
     }
     if (typeof value !== 'string') return String(value);
-    if (!value.startsWith('$')) return value;
+    if (!value.includes('$')) return value;
 
-    const key = value.slice(1);
-    const resolved = axis[key];
-    return resolved !== undefined ? resolved : key;
+    let out = '';
+    let last = 0;
+    for (const ref of findTokenRefs(value)) {
+        const resolved = ref.glued ? undefined : axis[ref.name];
+        if (resolved === undefined) continue;
+        out += value.slice(last, ref.start) + resolved;
+        last = ref.end;
+    }
+    return out + value.slice(last);
 }
