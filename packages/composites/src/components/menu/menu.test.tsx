@@ -71,3 +71,32 @@ describe('Menu.Group', () => {
         { refInstanceof: HTMLDivElement },
     );
 });
+
+describe('Menu.SubmenuItem', () => {
+    afterEach(cleanup);
+
+    testConformance<HTMLDivElement>(
+        async ({ ref, id, className }) => {
+            const rendered = render(
+                <Menu.Root trigger={<button type="button">열기</button>}>
+                    <Menu.Root
+                        trigger={
+                            <Menu.SubmenuItem
+                                ref={ref}
+                                id={id}
+                                className={className}
+                                label="더보기"
+                            />
+                        }
+                    >
+                        <Menu.Item label="A" onClick={() => {}} />
+                    </Menu.Root>
+                </Menu.Root>,
+            );
+            await userEvent.click(rendered.getByText('열기'));
+
+            return { node: rendered.getByRole('menuitem', { name: /더보기/ }) };
+        },
+        { refInstanceof: HTMLDivElement },
+    );
+});

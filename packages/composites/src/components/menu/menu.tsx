@@ -24,10 +24,6 @@ const rootSlots = createSlots({
     trigger: MenuPrimitives.Trigger,
 });
 
-const submenuSlots = createSlots({
-    trigger: MenuPrimitives.SubmenuTrigger,
-});
-
 export const MenuRoot = forwardRef<HTMLDivElement, MenuRoot.Props>((props, ref) => {
     const { modal, ...componentProps } = props;
 
@@ -126,7 +122,8 @@ const Submenu = forwardRef<HTMLDivElement, SubmenuProps>((props, ref) => {
             onOpenChange={onOpenChange}
             actionsRef={actionsRef}
         >
-            <submenuSlots.trigger openOnHover render={trigger} />
+            {/* SubmenuItem이 SubmenuTrigger를 직접 렌더한다. slot으로 감싸면 trigger가 이중 등록된다. */}
+            {trigger}
 
             <MenuPrimitives.PortalPrimitive container={container}>
                 <MenuPrimitives.PositionerPrimitive side={side} sideOffset={8} align={align}>
@@ -139,7 +136,7 @@ const Submenu = forwardRef<HTMLDivElement, SubmenuProps>((props, ref) => {
     );
 });
 
-type RootSlots = SlotProps<typeof rootSlots | typeof submenuSlots>;
+type RootSlots = SlotProps<typeof rootSlots>;
 type RootProps = MenuPrimitives.Root.Props;
 type PositionerProps = MenuPrimitives.PositionerPrimitive.Props;
 type PortalProps = MenuPrimitives.PortalPrimitive.Props;
@@ -201,9 +198,10 @@ export interface MenuRootProps {
     /**
      * 메뉴를 여는 진입 요소.
      * - 최상위 `Menu.Root`에서는 `Trigger`로 렌더링된다.
-     * - 다른 `Menu.Root` 하위에서 사용되면 부모 메뉴의 아이템으로 동작하는 `SubmenuTrigger`로 렌더링된다.
+     * - 중첩된 `Menu.Root` 하위에서 `Menu.SubmenuItem`을 추가하여 중첩 메뉴를 열 수 있다.
      * @example
      * <Menu.Root trigger={<Button>메뉴 열기</Button>} />
+     * <Menu.Root trigger={<Menu.SubmenuItem label="더보기" />} />
      */
     trigger?: RootSlots['trigger'];
 
