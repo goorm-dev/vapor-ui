@@ -20,16 +20,18 @@ interface VitePluginShape {
     [k: string]: unknown;
 }
 
+/**
+ * FOUC guard 를 `<head>` 맨 앞에 넣는다. HTML 은 Vite 의 태그 주입(`injectTo: 'head-prepend'`)에
+ * 맡긴다 — Vite 가 HTML 을 파싱해 `<head>` 를 찾고, 없으면 만든다. 다른 head script 보다 먼저
+ * 실행돼야 첫 paint 전에 theme attribute 가 붙는다.
+ */
 function foucPlugin(injectColorScheme: ColorSchemeScriptOpts): VitePluginShape {
-    const scriptTag = `<script>${buildColorSchemeScript(injectColorScheme)}</script>`;
+    const children = buildColorSchemeScript(injectColorScheme);
     return {
         name: 'vapor-style-macro:fouc',
         enforce: 'pre',
-        transformIndexHtml(html: string): string {
-            if (/(<head[^>]*>)/i.test(html)) {
-                return html.replace(/(<head[^>]*>)/i, `$1${scriptTag}`);
-            }
-            return `${scriptTag}${html}`;
+        transformIndexHtml() {
+            return [{ tag: 'script', children, injectTo: 'head-prepend' }];
         },
     };
 }

@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { vaporNextPlugin } from './next';
 import { type VaporRolldownOptions, vaporRolldownPlugin } from './rolldown';
 import { vaporVitePlugin } from './vite';
-import { applyModuleCss, moduleCssRule, vaporWebpackPlugin } from './webpack';
+import { applyModuleCss, moduleCssRule, tapHtmlFouc, vaporWebpackPlugin } from './webpack';
 
 describe('vite adapter — FOUC plugin composition', () => {
     function foucOf(plugins: Array<{ name: string; transformIndexHtml?: unknown }>) {
@@ -29,14 +29,15 @@ describe('vite adapter — FOUC plugin composition', () => {
         expect(names).not.toContain('vapor-style-macro:fouc');
     });
 
-    it('FOUC plugin injects <script> guard right after <head>', () => {
+    it('FOUC plugin injects the guard script at the start of <head>', () => {
         const fouc = foucOf(vaporVitePlugin({ injectColorScheme: true }));
-        expect(fouc).toBeDefined();
-        const html = '<!doctype html><html><head><title>t</title></head><body></body></html>';
-        const out = fouc!.transformIndexHtml(html);
-        expect(out).toContain('<script>');
-        expect(out).toContain('data-vapor-theme');
-        expect(out).toMatch(/<head>\s*<script>/);
+        const [tag] = fouc!.transformIndexHtml('') as unknown as Array<{
+            tag: string;
+            injectTo: string;
+            children: string;
+        }>;
+        expect(tag).toMatchObject({ tag: 'script', injectTo: 'head-prepend' });
+        expect(tag!.children).toContain('data-vapor-theme');
     });
 
     it('FOUC plugin honors custom ColorScheme opts', () => {
@@ -49,11 +50,69 @@ describe('vite adapter — FOUC plugin composition', () => {
                 },
             }),
         );
-        const html = '<!doctype html><html><head></head><body></body></html>';
-        const out = fouc!.transformIndexHtml(html);
-        expect(out).toContain('"my-key"');
-        expect(out).toContain('"data-my-theme"');
-        expect(out).toContain('"dark"');
+        const out = JSON.stringify(fouc!.transformIndexHtml(''));
+        expect(out).toContain('my-key');
+        expect(out).toContain('data-my-theme');
+        expect(out).toContain('dark');
+    });
+});
+
+describe("webpack adapter — FOUC guard via the app's html-webpack-plugin", () => {
+    type Groups = { headTags: Array<{ tagName: string; innerHTML?: string }> };
+    function fakeHtmlPlugin() {
+        const taps: Array<(d: Groups) => Groups | void> = [];
+        class HtmlWebpackPlugin {
+            static getHooks() {
+                return {
+                    alterAssetTagGroups: {
+                        tap: (_: string, fn: (d: Groups) => Groups | void) => taps.push(fn),
+                    },
+                };
+            }
+        }
+        return { HtmlWebpackPlugin, taps };
+    }
+    function compilerWith(plugins: unknown[]) {
+        const compilations: Array<(c: unknown) => void> = [];
+        const compiler = {
+            options: { module: { rules: [] }, resolve: {}, plugins },
+            hooks: {
+                compilation: {
+                    tap: (_: string, fn: (c: unknown) => void) => compilations.push(fn),
+                },
+            },
+        };
+        return {
+            compiler,
+            compile: () => {
+                for (const f of compilations) f({});
+            },
+        };
+    }
+
+    it('prepends the guard to the head tags of the plugin instance in the app config', () => {
+        const { HtmlWebpackPlugin, taps } = fakeHtmlPlugin();
+        const { compiler, compile } = compilerWith([new HtmlWebpackPlugin()]);
+        tapHtmlFouc(compiler, {});
+        compile();
+        const out = taps[0]!({ headTags: [{ tagName: 'meta' }] }) as Groups;
+        expect(out.headTags.map((t) => t.tagName)).toEqual(['script', 'meta']);
+        expect(out.headTags[0]!.innerHTML).toContain('data-vapor-theme');
+    });
+
+    it('does nothing without html-webpack-plugin in the config', () => {
+        const { compiler } = compilerWith([{}]);
+        const tap = vi.spyOn(compiler.hooks.compilation, 'tap');
+        tapHtmlFouc(compiler, {});
+        expect(tap).not.toHaveBeenCalled();
+    });
+
+    it('does nothing when injectColorScheme is false', () => {
+        const { HtmlWebpackPlugin, taps } = fakeHtmlPlugin();
+        const { compiler, compile } = compilerWith([new HtmlWebpackPlugin()]);
+        tapHtmlFouc(compiler, false);
+        compile();
+        expect(taps).toHaveLength(0);
     });
 });
 

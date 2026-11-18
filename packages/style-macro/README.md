@@ -101,7 +101,7 @@ interface VaporPluginOptions {
 | `exclude`           | `[]`                                    | 제외 glob (`include` 와 같은 규칙). `include` 보다 우선                                                                                                                                                                                              |
 | `root`              | 번들러 프로젝트 루트                    | `include`/`exclude` glob 기준 경로. 경로 자체에 `(`·`[` 같은 glob 문자가 있어도 된다                                                                                                                                                                 |
 | `hash`              | `process.env.NODE_ENV === 'production'` | class name hash 모드 (readable vs hashed)                                                                                                                                                                                                            |
-| `injectColorScheme` | `true`                                  | Vite `transformIndexHtml` 로 FOUC guard script 자동 주입. object 로 커스텀 가능                                                                                                                                                                      |
+| `injectColorScheme` | `true`                                  | Vite HTML 태그 주입(`<head>` 맨 앞)으로 FOUC guard script 자동 주입. object 로 커스텀 가능                                                                                                                                                           |
 | `layer`             | `'vapor-utilities'`                     | `css()` 규칙을 담을 CSS cascade layer 이름 (`acme.ui` 같은 sub-layer 가능). CSS 진입점의 레이어 순서 선언에 포함돼야 한다 — 빠지면 브라우저가 맨 뒤 레이어로 취급해 앱 스타일까지 이긴다                                                             |
 
 ## 라이브러리 배포
@@ -243,7 +243,7 @@ pre-hydration 시점에 `<html>` 에 theme attribute 를 세팅해 light↔dark 
 `injectColorScheme` 옵션 (default `true`) 으로 번들러가 `<head>` 에 inline `<script>` 자동 삽입.
 
 - Vite — `transformIndexHtml` hook
-- Webpack — `html-webpack-plugin` 의 `beforeEmit` hook (미설치 시 no-op)
+- Webpack — 앱 설정에 있는 `html-webpack-plugin` 의 `alterAssetTagGroups` hook 으로 head 태그 맨 앞에 추가 (설정에 없으면 no-op)
 
 ### 수동 주입 (Next.js / 프레임워크 기본 HTML 사용 불가 환경)
 

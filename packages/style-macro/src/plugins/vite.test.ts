@@ -203,3 +203,44 @@ describe('vite adapter — included packages skip dependency pre-bundling', () =
         expect((plugin as { config?: () => unknown }).config?.() ?? null).toBeNull();
     });
 });
+
+describe('vite adapter — FOUC guard goes into <head> via Vite HTML tag injection', () => {
+    async function htmlOf(index: string) {
+        const { root, w } = fixture({ 'main.ts': 'export {};\n' });
+        w('index.html', index);
+        const outDir = join(root, 'dist');
+        await build({
+            root,
+            configFile: false,
+            logLevel: 'silent',
+            plugins: [vaporVitePlugin()],
+            build: { outDir, minify: false, modulePreload: { polyfill: false } },
+        });
+        return readFileSync(join(outDir, 'index.html'), 'utf8');
+    }
+    const script = '<script type="module" src="./main.ts"></script>';
+    const head = (html: string) => /<head[^>]*>([\s\S]*?)<\/head>/.exec(html)?.[1] ?? '';
+
+    it.each([
+        [
+            '<head>',
+            `<!doctype html><html><head><title>t</title></head><body>${script}</body></html>`,
+        ],
+        [
+            '<head> with attributes',
+            `<!doctype html><html><head lang="ko"><title>t</title></head><body>${script}</body></html>`,
+        ],
+        // `<head>` 없는 HTML 의 위치는 Vite 가 정한다 (Vite 7 의 head-prepend 정규식은 `<header>` 에도
+        // 맞는다). 플러그인은 위치를 직접 찾지 않는다.
+    ])('%s', async (_, index) => {
+        const html = await htmlOf(index);
+        expect(head(html)).toContain('data-vapor-theme');
+    });
+
+    it('runs before any other head script', async () => {
+        const html = await htmlOf(
+            `<!doctype html><html><head><script>window.first = 1</script></head><body>${script}</body></html>`,
+        );
+        expect(html.indexOf('data-vapor-theme')).toBeLessThan(html.indexOf('window.first'));
+    });
+});

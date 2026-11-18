@@ -16,55 +16,70 @@ interface WebpackPluginShape {
 
 interface MinimalCompiler {
     context?: string;
-    options: { module: { rules: unknown[] }; resolve: { alias?: unknown } };
+    options: {
+        module: { rules: unknown[] };
+        resolve: { alias?: unknown };
+        plugins?: unknown[];
+    };
     hooks: {
         compilation: { tap: (name: string, fn: (c: unknown) => void) => void };
     };
 }
 
-interface HtmlPluginData {
-    html: string;
+interface HtmlTag {
+    tagName: string;
+    voidTag: boolean;
+    attributes: Record<string, string | boolean>;
+    innerHTML?: string;
 }
 
-type HtmlWebpackPluginShape = {
-    getHooks?: (c: unknown) => {
-        beforeEmit: {
-            tapAsync: (
-                n: string,
-                fn: (d: HtmlPluginData, cb: (err: Error | null, d: HtmlPluginData) => void) => void,
-            ) => void;
+interface HtmlTagGroups {
+    headTags: HtmlTag[];
+}
+
+/** html-webpack-plugin 의 class (static `getHooks`). */
+interface HtmlWebpackPluginClass {
+    getHooks(compilation: unknown): {
+        alterAssetTagGroups: {
+            tap(name: string, fn: (data: HtmlTagGroups) => HtmlTagGroups | void): void;
         };
     };
-};
+}
 
 const TAP_NAME = 'vapor-style-macro';
 
-function tapHtmlFouc(compiler: unknown, injectColorScheme: false | ColorSchemeScriptOpts): void {
+/**
+ * FOUC guard 를 `<head>` 맨 앞 태그로 넣는다. HTML 은 html-webpack-plugin 의 태그 API
+ * (`alterAssetTagGroups` 의 `headTags`)에 맡긴다 — 위치를 정규식으로 찾지 않는다.
+ *
+ * 그 플러그인 class 는 앱 설정에 들어 있는 인스턴스의 constructor 를 쓴다. `getHooks` 는 class
+ * 마다 따로라, 이 패키지 위치에서 `require` 한 다른 복사본의 훅은 앱 빌드에서 불리지 않는다.
+ * 앱에 html-webpack-plugin 이 없으면 주입할 HTML 도 없다.
+ */
+export function tapHtmlFouc(
+    compiler: MinimalCompiler,
+    injectColorScheme: false | ColorSchemeScriptOpts,
+): void {
     if (injectColorScheme === false) return;
+    const HtmlWebpackPlugin = (compiler.options.plugins ?? [])
+        .map((p) => (p as { constructor?: unknown } | null)?.constructor)
+        .find(
+            (c): c is HtmlWebpackPluginClass =>
+                typeof (c as Partial<HtmlWebpackPluginClass> | undefined)?.getHooks ===
+                    'function' && (c as { name?: string }).name === 'HtmlWebpackPlugin',
+        );
+    if (!HtmlWebpackPlugin) return;
 
-    const scriptTag = `<script>${buildColorSchemeScript(injectColorScheme)}</script>`;
-    const injectIntoHead = (html: string): string =>
-        /(<head[^>]*>)/i.test(html)
-            ? html.replace(/(<head[^>]*>)/i, `$1${scriptTag}`)
-            : `${scriptTag}${html}`;
-
-    const require = createRequire(import.meta.url);
-
-    let HtmlWebpackPlugin: HtmlWebpackPluginShape | undefined;
-
-    try {
-        HtmlWebpackPlugin = require('html-webpack-plugin') as HtmlWebpackPluginShape;
-    } catch {
-        /* not installed */
-    }
-
-    if (!HtmlWebpackPlugin?.getHooks) return;
-
-    const plugin = HtmlWebpackPlugin;
-    (compiler as MinimalCompiler).hooks.compilation.tap(TAP_NAME, (compilation) => {
-        plugin.getHooks!(compilation).beforeEmit.tapAsync(TAP_NAME, (data, cb) => {
-            data.html = injectIntoHead(data.html);
-            cb(null, data);
+    const tag: HtmlTag = {
+        tagName: 'script',
+        voidTag: false,
+        attributes: {},
+        innerHTML: buildColorSchemeScript(injectColorScheme),
+    };
+    compiler.hooks.compilation.tap(TAP_NAME, (compilation) => {
+        HtmlWebpackPlugin.getHooks(compilation).alterAssetTagGroups.tap(TAP_NAME, (data) => {
+            data.headTags.unshift(tag);
+            return data;
         });
     });
 }
@@ -159,7 +174,7 @@ export function vaporWebpackPlugin(opts: VaporPluginOptions = {}): WebpackPlugin
         apply(compiler) {
             applyModuleCss(compiler as MinimalCompiler, opts);
             base.apply(compiler);
-            tapHtmlFouc(compiler, resolved.injectColorScheme);
+            tapHtmlFouc(compiler as MinimalCompiler, resolved.injectColorScheme);
         },
     };
 }
