@@ -270,6 +270,8 @@ class Transformer {
             AssignmentExpression: this.#onAssignment,
             UpdateExpression: this.#onUpdate,
             UnaryExpression: this.#onUnary,
+            ForInStatement: this.#onForInOf,
+            ForOfStatement: this.#onForInOf,
         });
         // 매크로 호출 판정(#macroCalls)이 끝난 뒤에 최상위 상수를 분류한다.
         this.#scanTopLevel(program);
@@ -446,7 +448,12 @@ class Transformer {
     };
 
     #onAssignment = (node: AnyProp, parents: AnyProp[]) =>
-        this.#recordMutation(node.left, node, parents);
+        this.#recordTargets(node.left, node, parents);
+    /** `for (x.a of …)` / `for (x.a in …)` 는 반복마다 left 에 대입한다. 선언(`const v`)은 제외. */
+    #onForInOf = (node: AnyProp, parents: AnyProp[]) => {
+        if (node.left?.type !== 'VariableDeclaration')
+            this.#recordTargets(node.left, node, parents);
+    };
     #onUpdate = (node: AnyProp, parents: AnyProp[]) =>
         this.#recordMutation(node.argument, node, parents);
     #onUnary = (node: AnyProp, parents: AnyProp[]) => {
@@ -468,6 +475,14 @@ class Transformer {
     #recordMutation(target: AnyProp, node: AnyProp, parents: AnyProp[]) {
         const name = rootName(target, false);
         if (name) this.#mutations.push({ name, node, parents: parents.slice() });
+    }
+
+    /**
+     * 대입 대상(assignment target)의 모든 참조에 대해 `#recordMutation`. 대상은 참조 하나이거나
+     * 구조분해 패턴이다 (ES 명세의 AssignmentPattern) — 패턴 안의 각 참조가 대입된다.
+     */
+    #recordTargets(target: AnyProp, node: AnyProp, parents: AnyProp[]) {
+        for (const ref of assignmentTargets(target)) this.#recordMutation(ref, node, parents);
     }
 
     /**
@@ -1142,6 +1157,25 @@ const MUTATING_BUILTINS: Record<string, Set<string>> = {
  * `x`, `x.a`, `x[k].b`, `x!.a` 의 루트 식별자. `allowBare` 가 false 면 멤버 접근일 때만
  * (이름 자체에 대한 할당은 제외) 반환한다.
  */
+/** 대입 대상 패턴(`a.b`, `[a.b, ...c]`, `{ k: a.b = 1 }`)이 실제로 대입하는 참조들. */
+function assignmentTargets(node: AnyProp): AnyProp[] {
+    const n = node?.type === 'ParenthesizedExpression' ? node.expression : node;
+    switch (n?.type) {
+        case 'ArrayPattern':
+            return (n.elements ?? []).flatMap((e: AnyProp) => (e ? assignmentTargets(e) : []));
+        case 'ObjectPattern':
+            return (n.properties ?? []).flatMap((p: AnyProp) =>
+                assignmentTargets(p.type === 'RestElement' ? p.argument : p.value),
+            );
+        case 'AssignmentPattern':
+            return assignmentTargets(n.left);
+        case 'RestElement':
+            return assignmentTargets(n.argument);
+        default:
+            return n ? [n] : [];
+    }
+}
+
 function rootName(node: AnyProp, allowBare: boolean): string | null {
     let n = unwrapTypeOnly(node);
     let member = false;

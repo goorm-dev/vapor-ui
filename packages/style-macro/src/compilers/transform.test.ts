@@ -1402,6 +1402,13 @@ describe('transform — mutation of merged object constants is a build error', (
         ],
         ['Reflect.set target', `Reflect.set(base, 'width', '96px');`],
         ['non-null wrapped', `base![':hover']!.color = 'red';`],
+        ['array destructuring target', `[base.color] = ['blue'];`],
+        ['object destructuring target', `({ c: base.color } = { c: 'blue' });`],
+        ['destructuring default target', `[base.color = 'x'] = [];`],
+        ['rest target', `[...base.list] = [];`],
+        ['nested pattern target', `({ a: [base.color] } = { a: ['blue'] });`],
+        ['for-of target', `for (base.color of ['blue']) {}`],
+        ['for-in target', `for (base.color in { blue: 1 }) {}`],
         ['mutation after use', null],
     ])('%s → mutated-constant error at the mutation line', (_label, stmt) => {
         const decl = `const base = { width: '24px', ':hover': { color: 'blue' } };`;
