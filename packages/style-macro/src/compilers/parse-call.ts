@@ -42,7 +42,9 @@ const IDENTIFIER_PROPS = new Set([
 
 /* ----- utils ----- */
 
-const kebabToCamel = (prop: string) => prop.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
+/** CSS 속성 이름 → 토큰·unit 표가 쓰는 camelCase. custom property(`--x`)는 이름 그대로다 — 대소문자를 구분하는 사용자 이름이다. */
+const kebabToCamel = (prop: string) =>
+    prop.startsWith('--') ? prop : prop.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
 
 const keyName = (prop: AnyProp): string | null => {
     if (prop.computed) return null;

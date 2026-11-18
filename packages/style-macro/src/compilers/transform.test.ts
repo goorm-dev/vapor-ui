@@ -1689,6 +1689,16 @@ describe('transform — literal values that can never be CSS', () => {
         expect(out.code).not.toContain('style=');
     });
 
+    it.each([
+        [`{ '--gap': 4 }`, '--gap: 4;'],
+        [`{ '--my-color': 0.5 }`, '--my-color: 0.5;'],
+        [`{ '--myColor': 4 }`, '--myColor: 4;'],
+    ])('a number on a custom property gets no unit, as with React style: %s', (style, decl) => {
+        const out = run(style);
+        expect(out.errors).toEqual([]);
+        expect(out.css).toContain(decl);
+    });
+
     it('only-null object emits no block and no class', () => {
         const out = run(`{ color: null }`);
         expect(out.errors).toEqual([]);
