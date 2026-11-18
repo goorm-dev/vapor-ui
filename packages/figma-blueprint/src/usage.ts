@@ -5,6 +5,7 @@ import { version } from '../package.json';
 const ENDPOINT = 'https://vapor-ui.goorm.io/api/figma-blueprint/usage';
 const INTERNAL_DOMAIN = '@goorm.io';
 const DEADLINE_MS = 1500;
+const FIGMA_HOSTS = ['figma.com', 'www.figma.com'];
 
 export type Stage = 'catalog' | 'fetch' | 'blueprint';
 
@@ -21,6 +22,8 @@ export function startUsage(url: string): UsageRun | undefined {
     const token = process.env.FIGMA_ACCESS_TOKEN;
     const optedOut = ['1', 'true'].includes(process.env.DO_NOT_TRACK?.toLowerCase() ?? '');
     if (optedOut || !token || !URL.canParse(url)) return;
+    // parseFigmaUrl reads only the path, so any host would yield a fileKey
+    if (!FIGMA_HOSTS.includes(new URL(url).hostname)) return;
     const { fileKey, nodeId } = parseFigmaUrl(url);
     if (!fileKey) return;
 

@@ -245,6 +245,15 @@ describe('the usage record of figma-blueprint <figma URL>', () => {
         expect(figma.calls(ENDPOINT)).toEqual([]);
     });
 
+    it('sends nothing for a URL on a host other than Figma', async () => {
+        const figma = stubFigma();
+
+        await go('https://example.com/design/XYZ/Lib?node-id=1-2');
+
+        expect(figma.calls(ME)).toEqual([]);
+        expect(figma.calls(ENDPOINT)).toEqual([]);
+    });
+
     it('sends nothing with --repo', async () => {
         const figma = stubFigma();
 
