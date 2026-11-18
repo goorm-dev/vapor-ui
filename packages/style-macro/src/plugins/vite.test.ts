@@ -10,7 +10,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { type ViteDevServer, build, createServer } from 'vite';
 
-import { vaporVitePlugin } from './vite';
+import { fsPathFromFsUrl, vaporVitePlugin } from './vite';
 
 const src = (name: string, gap: string) =>
     `import { css } from '@vapor-ui/style-macro';\nexport const ${name} = css({ gap: '${gap}' });\n`;
@@ -242,5 +242,15 @@ describe('vite adapter — FOUC guard goes into <head> via Vite HTML tag injecti
             `<!doctype html><html><head><script>window.first = 1</script></head><body>${script}</body></html>`,
         );
         expect(html.indexOf('data-vapor-theme')).toBeLessThan(html.indexOf('window.first'));
+    });
+});
+
+describe('fsPathFromFsUrl — same rule as Vite fsPathFromId', () => {
+    it.each([
+        ['/@fs/Users/a/x.tsx.vapor.css', '/Users/a/x.tsx.vapor.css'],
+        ['/@fs/C:/a/x.tsx.vapor.css', 'C:/a/x.tsx.vapor.css'],
+        ['/@fs/d:/a/x.tsx.vapor.css', 'd:/a/x.tsx.vapor.css'],
+    ])('%s → %s', (url, path) => {
+        expect(fsPathFromFsUrl(url)).toBe(path);
     });
 });

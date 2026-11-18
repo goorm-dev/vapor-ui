@@ -59,13 +59,25 @@ interface PluginContextLike {
  * root 밖 소스면 `/@fs/abs/x.tsx.vapor.css`)과 importer 기준 상대 경로를 모두 받는다.
  * 절대 경로는 캐시에 있거나 원본 소스가 실제로 있을 때만 그대로 쓴다 — 아니면 root 기준 URL.
  */
+const FS_PREFIX = '/@fs/';
+const VOLUME_RE = /^[A-Z]:/i;
+
+/**
+ * `/@fs/` URL → 파일 시스템 경로. Vite 의 `fsPathFromId` 와 같은 규칙: 접두를 떼고, 드라이브 문자
+ * (`C:`)로 시작하면 그대로, 아니면 `/` 를 붙인다.
+ */
+export function fsPathFromFsUrl(url: string): string {
+    const p = url.slice(FS_PREFIX.length);
+    return p.startsWith('/') || VOLUME_RE.test(p) ? p : `/${p}`;
+}
+
 function resolveModuleCss(
     path: string,
     importer: string | undefined,
     root: string,
     known: Map<string, string>,
 ): string {
-    if (path.startsWith('/@fs/')) return path.slice('/@fs'.length);
+    if (path.startsWith(FS_PREFIX)) return fsPathFromFsUrl(path);
     if (isAbsolute(path) && (known.has(toPosix(path)) || existsSync(sourceOfModuleCss(path)))) {
         return path;
     }
