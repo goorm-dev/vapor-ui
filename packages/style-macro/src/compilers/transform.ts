@@ -13,7 +13,6 @@ import {
     type InjectContext,
     type SlotTree,
     flushInjects,
-    hasSlots,
     injectJsxStyleForCall,
     locateJsx,
     slotsEvaluateFirst,
@@ -129,6 +128,43 @@ function project<T>(
     const t = project([...c.whenTrue, ...rest], head, leaf, fork);
     const f = project([...c.whenFalse, ...rest], head, leaf, fork);
     return fork(c, t, f);
+}
+
+/**
+ * 조각 목록을 펼친 분기 트리. className 식과 style(slot) 식은 모두 이 트리 하나를 렌더한다 —
+ * 어떤 분기에서 어떤 class 와 어떤 slot 이 함께 쓰이는지가 구조로 보장된다.
+ */
+type Decision =
+    | { kind: 'leaf'; rules: IRRule[] }
+    | { kind: 'fork'; cond: CondPiece; whenTrue: Decision; whenFalse: Decision };
+
+function decide(pieces: Piece[]): Decision {
+    return project<Decision>(
+        pieces,
+        [],
+        (rules) => ({ kind: 'leaf', rules }),
+        (cond, whenTrue, whenFalse) => ({ kind: 'fork', cond, whenTrue, whenFalse }),
+    );
+}
+
+/**
+ * 분기 트리를 한 출력(class 식 또는 slot 트리)으로 렌더한다. 두 분기의 출력이 같으면 조건을
+ * 접는다 — 단 `keep` 인 조건은 접지 않는다 (그 조건의 평가 자체가 원본 동작의 일부일 때).
+ */
+function renderDecision<T>(
+    d: Decision,
+    out: {
+        leaf: (rules: IRRule[]) => T;
+        same: (a: T, b: T) => boolean;
+        fork: (cond: CondPiece, whenTrue: T, whenFalse: T) => T;
+        keep: (cond: CondPiece) => boolean;
+    },
+): T {
+    if (d.kind === 'leaf') return out.leaf(d.rules);
+    const t = renderDecision(d.whenTrue, out);
+    const f = renderDecision(d.whenFalse, out);
+    if (!out.keep(d.cond) && out.same(t, f)) return t;
+    return out.fork(d.cond, t, f);
 }
 
 /** 호출 인자 하나. 로컬로 풀리면 `pieces`, 아니면 런타임 class 문자열(`external`). */
@@ -277,15 +313,18 @@ class Transformer {
                 continue;
             }
 
-            let classPieces = pieces;
-            if (hasSlots(this.#slotTree(pieces))) {
+            const decision = decide(pieces);
+            let classTest = (c: CondPiece) => c.test;
+            let classFirst = true;
+            if (this.#hasSlots(decision)) {
                 const found = locateJsx(this.opts.source, call.node, call.parents);
                 if ('error' in found) {
                     this.#errors.push(found.error);
                     continue;
                 }
-                const shared = this.#shareConditions(call, pieces, found);
-                classPieces = shared.classPieces;
+                const shared = this.#shareConditions(call, decision, found);
+                classTest = shared.classTest;
+                classFirst = shared.classFirst;
                 const outcome = injectJsxStyleForCall(
                     {
                         call: call.node,
@@ -304,7 +343,7 @@ class Transformer {
             this.#ms.overwrite(
                 call.node.start,
                 call.node.end,
-                this.#buildCallReplacement(call, classPieces),
+                this.#buildCallReplacement(call, decision, classTest, classFirst),
             );
         }
         this.#memo.flush(this.#ms, (line) => this.#insertAtTop(line));
@@ -731,66 +770,58 @@ class Transformer {
     // ── 출력 ───────────────────────────────────────────────────
 
     /**
-     * className 식과 style(slot) 식이 같은 조건을 읽을 때 조건을 한 번만 평가하게 한다.
+     * className 식과 style(slot) 식이 같은 분기 트리를 각자 렌더하고, 조건은 원본처럼 한 번만
+     * 평가되게 한다.
      *
-     * 두 식은 같은 분기 트리에서 나오지만 서로 다른 JSX 속성이라 조건을 각자 평가한다.
-     * 다시 읽어도 같은 조건(`isRereadable`)은 그대로 두고, 그 밖의 조건은 먼저 평가되는 쪽이
-     * 임시 변수에 담고(`(t = test)`) 나중 쪽이 그 변수를 읽는다. 어느 쪽이 먼저인지는 속성
-     * 순서로 정한다 (`slotsEvaluateFirst`).
-     *
-     * 나중 쪽이 읽는 모든 자리에서 먼저 쪽이 대입했어야 한다.
-     * - className 이 먼저: className 이 분기를 접는(두 분기 class 가 같은) 곳은 slot 도 같아 style
-     *   도 접는다. 그래서 style 이 읽는 곳은 className 이 항상 평가한 곳이다.
-     * - style 이 먼저: style 은 slot 이 같으면 분기를 접지만 class 는 다를 수 있다. 그래서 공유하는
-     *   조건에서는 style 이 분기를 접지 않는다.
-     * style 트리에 나오지 않는 조건은 className 만 평가하므로 공유하지 않는다.
+     * 두 식은 서로 다른 JSX 속성이라 먼저 평가되는 쪽(속성 순서, `slotsEvaluateFirst`)과 나중 쪽이
+     * 있다. 규칙은 하나다.
+     * - 먼저 쪽: 부작용이 있을 수 있는 조건(`!rereadable`)은 출력이 같아도 접지 않는다 — 원본도
+     *   그 조건을 항상 평가한다. 나중 쪽이 읽는 조건은 임시 변수에 대입한다(`(t = test)`).
+     * - 나중 쪽: 변수만 읽으므로 출력이 같으면 접는다.
+     * 나중 쪽의 경로는 먼저 쪽 경로에서 분기를 접은 것뿐이므로, 나중 쪽이 변수를 읽는 자리는
+     * 먼저 쪽이 이미 대입한 자리다.
      */
     #shareConditions(
         call: CallRecord,
-        pieces: Piece[],
+        decision: Decision,
         found: FoundJsx,
-    ): { classPieces: Piece[]; slots: SlotTree; guardTests: (() => string)[] } {
+    ): {
+        classTest: (c: CondPiece) => string;
+        classFirst: boolean;
+        slots: SlotTree;
+        guardTests: (() => string)[];
+    } {
         const ms = this.#ms!;
         const scope = memoScopeOf(call.parents, call.node);
-        const styleFirst = slotsEvaluateFirst(found);
+        const classFirst = !slotsEvaluateFirst(found);
+        const nameOf = (c: CondPiece) => this.#memo.nameFor(c.start, c.end, scope);
 
-        // style 트리(분기를 접은 상태)에 실제로 나오는 조건만 공유 대상이다.
-        const inStyle = new Set<CondPiece>();
-        this.#slotTree(
-            pieces,
-            () => false,
-            (c) => inStyle.add(c),
-        );
-        const shared = (c: CondPiece) => !c.rereadable && inStyle.has(c);
+        // 나중 쪽이 실제로 읽는 조건을 모은다. 먼저 쪽은 이 조건만 대입한다.
+        const read = new Set<string>();
+        const readTest = (c: CondPiece) => {
+            if (c.rereadable) return c.test;
+            read.add(nameOf(c));
+            return nameOf(c);
+        };
+        const firstTest = (c: CondPiece) =>
+            !c.rereadable && read.has(nameOf(c)) ? `(${nameOf(c)} = ${c.test})` : c.test;
 
-        const origin = new Map<CondPiece, CondPiece>();
-        const rewrite = (ps: Piece[], assign: boolean): Piece[] =>
-            ps.map((p) => {
-                if (p.kind === 'fixed') return p;
-                let test = p.test;
-                if (shared(p)) {
-                    const name = this.#memo.nameFor(p.start, p.end, scope);
-                    test = assign ? `(${name} = ${p.test})` : name;
-                }
-                const out: CondPiece = {
-                    ...p,
-                    test,
-                    whenTrue: rewrite(p.whenTrue, assign),
-                    whenFalse: rewrite(p.whenFalse, assign),
-                };
-                origin.set(out, p);
-                return out;
-            });
-
-        const classPieces = rewrite(pieces, !styleFirst);
-        const slots = styleFirst
-            ? this.#slotTree(rewrite(pieces, true), (c) => shared(origin.get(c)!))
-            : this.#slotTree(rewrite(pieces, false));
+        let slots: SlotTree;
+        let classTest: (c: CondPiece) => string;
+        if (classFirst) {
+            slots = this.#renderSlots(decision, readTest, false);
+            classTest = firstTest;
+        } else {
+            // class(나중)를 먼저 렌더해 읽는 조건을 모은 뒤 style(먼저)을 렌더한다.
+            this.#combine(decision, call.debugId, readTest, false);
+            slots = this.#renderSlots(decision, firstTest, true);
+            classTest = readTest;
+        }
 
         const guardTests = found.guards.map(({ test }) => {
             if (isRereadable(test)) return () => ms.slice(test.start, test.end);
             const name = this.#memo.nameFor(test.start, test.end, scope);
-            if (!styleFirst) {
+            if (classFirst) {
                 if (this.#memoWrapped.has(test)) return () => name;
                 this.#memoWrapped.add(test);
                 ms.appendLeft(test.start, `(${name} = `);
@@ -808,22 +839,23 @@ class Transformer {
             return () => name;
         });
 
-        return { classPieces, slots, guardTests };
+        return { classTest, classFirst, slots, guardTests };
+    }
+
+    /** 분기 트리에 slot(dynamic 값)이 하나라도 있는지. */
+    #hasSlots(d: Decision): boolean {
+        return d.kind === 'leaf'
+            ? d.rules.some((r) => r.kind === 'dynamic')
+            : this.#hasSlots(d.whenTrue) || this.#hasSlots(d.whenFalse);
     }
 
     /**
-     * className 과 같은 분기 트리를 따라 slot 트리를 만든다. leaf 의 slot 은 그 분기 블록의
-     * 정규화된 규칙에서 뽑으므로, 뒤 선언에 덮인 dynamic 값은 평가조차 하지 않는다.
+     * 분기 트리 → slot 트리. leaf 의 slot 은 그 분기 블록의 정규화된 규칙에서 뽑으므로, 뒤 선언에
+     * 덮인 dynamic 값은 평가조차 하지 않는다. `first` 면 부작용 있는 조건을 접지 않는다.
      */
-    #slotTree(
-        pieces: Piece[],
-        keep: (c: CondPiece) => boolean = () => false,
-        onCond: (c: CondPiece) => void = () => {},
-    ): SlotTree {
-        return project<SlotTree>(
-            pieces,
-            [],
-            (rules) => {
+    #renderSlots(d: Decision, test: (c: CondPiece) => string, first: boolean): SlotTree {
+        return renderDecision<SlotTree>(d, {
+            leaf: (rules) => {
                 const seen = new Set<string>();
                 const entries: string[] = [];
                 for (const r of normalizeRules(rules)) {
@@ -833,12 +865,13 @@ class Transformer {
                 }
                 return { kind: 'obj', entries };
             },
-            (c, whenTrue, whenFalse) => {
-                if (sameSlots(whenTrue, whenFalse) && !keep(c)) return whenTrue;
-                onCond(c);
-                return { kind: 'cond', test: () => c.test, whenTrue, whenFalse };
+            same: sameSlots,
+            fork: (c, whenTrue, whenFalse) => {
+                const t = test(c);
+                return { kind: 'cond', test: () => t, whenTrue, whenFalse };
             },
-        );
+            keep: (c) => first && !c.rereadable,
+        });
     }
 
     /**
@@ -886,14 +919,22 @@ class Transformer {
         return className;
     }
 
-    /** 조각 목록 → 분기마다 병합 블록을 만들고, 고르는 표현식(문자열 리터럴 또는 삼항)을 반환. */
-    #combine(pieces: Piece[], debugId: string | undefined): string {
-        return project<string>(
-            pieces,
-            [],
-            (rules) => jsSingleQuoted(this.#blockClass(rules, debugId)),
-            (c, t, f) => (t === f ? t : `(${c.test} ? ${t} : ${f})`),
-        );
+    /**
+     * 분기 트리 → 분기마다 병합 블록을 만들고, 고르는 표현식(문자열 리터럴 또는 삼항)을 반환.
+     * `first` 면 부작용 있는 조건을 접지 않는다 (원본처럼 항상 평가).
+     */
+    #combine(
+        d: Decision,
+        debugId: string | undefined,
+        test: (c: CondPiece) => string,
+        first: boolean,
+    ): string {
+        return renderDecision<string>(d, {
+            leaf: (rules) => jsSingleQuoted(this.#blockClass(rules, debugId)),
+            same: (a, b) => a === b,
+            fork: (c, t, f) => `(${test(c)} ? ${t} : ${f})`,
+            keep: (c) => first && !c.rereadable,
+        });
     }
 
     /**
@@ -902,9 +943,15 @@ class Transformer {
      *   병합한다 — 뒤 인자가 같은 선언 슬롯을 이긴다.
      * - 그 밖의 인자는 `_cx([...])` 로 이어붙인다. 승패는 CSS 로드 순서(import 순서)를 따른다.
      */
-    #buildCallReplacement(call: CallRecord, locals: Piece[]): string {
+    #buildCallReplacement(
+        call: CallRecord,
+        decision: Decision,
+        test: (c: CondPiece) => string,
+        first: boolean,
+    ): string {
         const firstLocal = call.args.findIndex((a) => a.kind === 'local');
-        const localExpr = firstLocal === -1 ? null : this.#combine(locals, call.debugId);
+        const localExpr =
+            firstLocal === -1 ? null : this.#combine(decision, call.debugId, test, first);
 
         const externals = call.args.filter((a) => a.kind === 'external');
         if (externals.length === 0) return localExpr ?? "''";

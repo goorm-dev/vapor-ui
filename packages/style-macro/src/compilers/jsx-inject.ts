@@ -15,12 +15,6 @@ export type SlotTree =
 
 export const EMPTY_SLOTS: SlotTree = { kind: 'obj', entries: [] };
 
-export function hasSlots(tree: SlotTree): boolean {
-    return tree.kind === 'obj'
-        ? tree.entries.length > 0
-        : hasSlots(tree.whenTrue) || hasSlots(tree.whenFalse);
-}
-
 export interface DynamicCallSite {
     /** call node (CallExpression). */
     call: AnyProp;

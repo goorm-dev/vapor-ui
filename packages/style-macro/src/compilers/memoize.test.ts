@@ -187,6 +187,47 @@ describe('a condition shared by className and style is evaluated once', () => {
         expect(next.calls).toBe(0);
     });
 
+    describe('a condition is evaluated exactly once, as in the source, even when its branches look alike', () => {
+        it('same class, different slot text (captured constant vs local)', async () => {
+            const f = counter(true);
+            const { exports, rendered } = await run(
+                `const w = '1px';\nconst a = { width: w };\nexport function F({ w }) { return <div className={css(a, f() && { width: w })} />; }`,
+                { f },
+            );
+            (exports.F as (p: Props) => void)({ w: '20px' });
+            expect(f.calls).toBe(1);
+            expect(color(rendered[0]!)).toBe('20px');
+        });
+
+        it('same class, style evaluated first', async () => {
+            const f = counter(true);
+            const { exports, rendered } = await run(
+                `const w = '1px';\nconst a = { width: w };\nexport function F({ w, ...r }) { return <div {...r} className={css(a, f() && { width: w })} />; }`,
+                { f },
+            );
+            (exports.F as (p: Props) => void)({ w: '20px' });
+            expect(f.calls).toBe(1);
+            expect(color(rendered[0]!)).toBe('20px');
+        });
+
+        it('no slot at all: the call still happens', async () => {
+            const f = counter(true);
+            const { exports } = await run(
+                `export const C = () => <div className={css(f() && {})} />;`,
+                { f },
+            );
+            (exports.C as () => void)();
+            expect(f.calls).toBe(1);
+        });
+
+        it('a re-readable condition with equal branches is still folded away', async () => {
+            const { code } = await run(
+                `export const C = ({ on }) => <div className={css(on && {})} />;`,
+            );
+            expect(code).not.toMatch(/on \?/);
+        });
+    });
+
     it('module-level element', async () => {
         const next = counter(true);
         const { rendered } = await run(
