@@ -544,6 +544,16 @@ describe('transform — token resolve (build error)', () => {
         });
 
         it.each([
+            [`'--currency': '$'`, '--currency: $;'],
+            [`'--p': '$5'`, '--p: $5;'],
+            [`content: '"$"'`, 'content: "$";'],
+        ])('keeps a `$` that is not a token: %s', (decl, expected) => {
+            const out = run(decl);
+            expect(out.errors).toEqual([]);
+            expect(out.css).toContain(expected);
+        });
+
+        it.each([
             `marginTop: '-$space-100'`,
             `paddingTop: 'x$space-100'`,
             `paddingTop: '$space-100%'`,
