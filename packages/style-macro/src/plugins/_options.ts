@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { dirname, isAbsolute, join, posix, relative, resolve, sep } from 'node:path';
+import { dirname, join, posix, relative, resolve, sep } from 'node:path';
 import picomatch from 'picomatch';
 
 import { DEFAULT_LAYER } from '~/compilers/emit-css';
@@ -106,31 +106,60 @@ export function toPosix(p: string): string {
 }
 
 /**
- * glob 하나 → 경로 판정 함수. `root` 는 glob 에 섞지 않는다 — 상대 glob 은 root 기준 상대 경로와,
- * 절대 glob 은 절대 경로와 맞춘다. 그래서 root 에 glob 문자(`(`, `[`, `{`, `*` …)가 있어도
- * 그대로 경로다. glob 문법은 사용자가 쓴 패턴에만 적용된다.
+ * include/exclude 판정. 모든 경로 연산을 posix 공간에서 한다 — 번들러마다 id 의 구분자가 다르다
+ * (Vite·Rollup 은 Windows 에서도 `C:/x/a.tsx`, webpack 은 `C:\\x\\a.tsx`). 그래서 id·root 를
+ * 먼저 `/` 로 맞추고, 이후에는 `path.posix` 만 쓴다. 플랫폼 `path` 와 섞지 않는다.
+ *
+ * - glob 은 `root` 를 섞지 않는다: 상대 glob 은 root 기준 상대 경로와, 절대 glob 은 절대 경로와
+ *   맞춘다. root 에 glob 문자(`(`, `[` …)가 있어도 그대로 경로다.
+ * - `node_modules` 안의 파일은 패키지 경로(마지막 `node_modules/` 뒤 — Node 모듈 해석이 패키지를
+ *   식별하는 방식)를 `root/node_modules/` 아래에 둔 경로로도 본다. 그래서
+ *   `node_modules/@acme/ui/**` 가 npm·yarn 의 hoist 경로, pnpm 의 store 실경로
+ *   (`.pnpm/@acme+ui@1.0.0/node_modules/@acme/ui/…`) 어디에서나 같은 패키지를 가리킨다.
  */
-function globMatcher(root: string, glob: string): (abs: string) => boolean {
-    if (isAbsolute(glob)) {
-        const m = picomatch(toPosix(glob), { dot: true });
-        return (abs) => m(abs);
-    }
-    const m = picomatch(posix.normalize(toPosix(glob)), { dot: true });
-    return (abs) => m(toPosix(relative(root, abs)));
+export function createIncludeFilter(
+    rootPath: string,
+    include: string[],
+    exclude: string[],
+): (id: string) => boolean {
+    const root = toSlash(rootPath);
+    const matcher = (glob: string) => {
+        const g = toSlash(glob);
+        const absolute = posix.isAbsolute(g) || DRIVE_RE.test(g);
+        const m = picomatch(absolute ? g : posix.normalize(g), {
+            dot: true,
+            nocase: DRIVE_RE.test(root),
+        });
+        return absolute ? m : (abs: string) => m(posix.relative(root, abs));
+    };
+    const includeMatchers = include.map(matcher);
+    const excludeMatchers = exclude.map(matcher);
+    const matches = (ms: ((abs: string) => boolean)[], paths: string[]) =>
+        ms.some((m) => paths.some((p) => m(p)));
+
+    return (id) => {
+        // `\0` 접두 id 는 다른 플러그인의 가상 모듈이다 (Rollup 관례). 파일이 아니다.
+        if (id.startsWith('\0')) return false;
+        const path = toSlash(id);
+        const abs = posix.isAbsolute(path) || DRIVE_RE.test(path) ? path : posix.join(root, path);
+        const i = abs.lastIndexOf('/node_modules/');
+        const paths = i === -1 ? [abs] : [abs, posix.join(root, abs.slice(i + 1))];
+        if (matches(excludeMatchers, paths)) return false;
+        if (matches(includeMatchers, paths)) return SOURCE_EXT_RE.test(abs);
+        return defaultInclude(abs);
+    };
 }
 
-const NODE_MODULES = `${sep}node_modules${sep}`;
+/** Windows 드라이브 문자로 시작하는 절대 경로 (`C:/…`). posix.isAbsolute 는 이를 모른다. */
+const DRIVE_RE = /^[A-Za-z]:\//;
 
 /**
- * 판정에 쓸 경로들. `node_modules` 안의 파일은 패키지 경로(마지막 `node_modules/` 뒤 —
- * Node 모듈 해석이 패키지를 식별하는 방식)를 `root/node_modules/` 아래에 둔 경로로도 본다.
- * 그래서 `node_modules/@acme/ui/**` 가 npm·yarn 의 hoist 경로, pnpm 의 store 실경로
- * (`.pnpm/@acme+ui@1.0.0/node_modules/@acme/ui/…`) 어디에서나 같은 패키지를 가리킨다.
+ * 구분자를 `/` 로 맞춘다 (플랫폼과 무관하게 `\` 도 구분자로 본다). Windows 드라이브 문자는
+ * 대소문자를 구분하지 않으므로 대문자로 맞춘다 (`c:/x` 와 `C:/x` 는 같은 경로).
  */
-function candidates(root: string, abs: string): string[] {
-    const i = abs.lastIndexOf(NODE_MODULES);
-    if (i === -1) return [abs];
-    return [abs, join(root, 'node_modules', abs.slice(i + NODE_MODULES.length))];
+function toSlash(p: string): string {
+    const s = p.replace(/\\/g, '/');
+    return DRIVE_RE.test(s) ? s[0]!.toUpperCase() + s.slice(1) : s;
 }
 
 const PACKAGE_IN_GLOB_RE = /^(?:\.\/)?node_modules\/((?:@[^/]+\/)?[^/]+)(?:\/|$)/;
@@ -163,20 +192,7 @@ export function resolveOptions(
     } = opts;
 
     const root = resolve(rawRoot ?? defaults.root ?? process.cwd());
-    const includeMatchers = include.map((g) => globMatcher(root, g));
-    const excludeMatchers = exclude.map((g) => globMatcher(root, g));
-    const matches = (matchers: ((abs: string) => boolean)[], paths: string[]) =>
-        matchers.some((m) => paths.some((p) => m(p)));
-
-    const includeFn = (id: string): boolean => {
-        // `\0` 접두 id 는 다른 플러그인의 가상 모듈이다 (Rollup 관례). 파일이 아니다.
-        if (id.startsWith('\0')) return false;
-        const abs = isAbsolute(id) ? id : resolve(root, id);
-        const paths = candidates(root, abs);
-        if (matches(excludeMatchers, paths)) return false;
-        if (matches(includeMatchers, paths)) return SOURCE_EXT_RE.test(abs);
-        return defaultInclude(toPosix(abs));
-    };
+    const includeFn = createIncludeFilter(root, include, exclude);
 
     return {
         include: includeFn,

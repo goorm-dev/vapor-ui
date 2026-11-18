@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { includedPackages, resolveOptions } from './_options';
+import { createIncludeFilter, includedPackages, resolveOptions } from './_options';
 
 const includeOf = (root: string, include: string[] = [], exclude: string[] = []) =>
     resolveOptions({ root, include, exclude }).include;
@@ -97,5 +97,30 @@ describe('includedPackages — package names named by `include`', () => {
         [['node_modules/lib/**', 'node_modules/lib/x/**'], ['lib']],
     ])('%j → %j', (include, expected) => {
         expect(includedPackages(include)).toEqual(expected);
+    });
+});
+
+describe('createIncludeFilter — separators do not matter (Windows ids from Vite use `/`, webpack uses `\\`)', () => {
+    const root = 'C:\\proj';
+    const pnpmFwd = 'C:/proj/node_modules/.pnpm/@acme+ui@1.0.0/node_modules/@acme/ui/dist/a.js';
+    const pnpmBack = pnpmFwd.replace(/\//g, '\\');
+
+    it.each([
+        ['Vite id (forward slashes)', pnpmFwd],
+        ['webpack resource (backslashes)', pnpmBack],
+    ])('pnpm store path is an included package: %s', (_, id) => {
+        expect(createIncludeFilter(root, ['node_modules/@acme/ui/dist/**'], [])(id)).toBe(true);
+    });
+
+    it.each([['C:/proj/src/a.tsx'], ['C:\\proj\\src\\a.tsx']])(
+        'default source include: %s',
+        (id) => {
+            expect(createIncludeFilter(root, [], [])(id)).toBe(true);
+            expect(createIncludeFilter(root, [], ['src/**'])(id)).toBe(false);
+        },
+    );
+
+    it('drive letter case is not significant', () => {
+        expect(createIncludeFilter('c:\\proj', [], ['src/**'])('C:/proj/src/a.tsx')).toBe(false);
     });
 });
