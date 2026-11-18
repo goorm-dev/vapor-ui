@@ -293,6 +293,17 @@ export default function Root({ children }) {
 | `mutated-constant`    | `css()` 에 병합된 object 상수를 변경함                                                  |
 | `parse-error`         | 매크로를 import 한 파일의 문법 오류                                                     |
 
+## Source map
+
+변환 결과에 원본 기준 source map 을 함께 넘긴다. 매크로가 넣은 import·캡처·임시 변수가 있어도 devtools 와 에러 stack 은 원본 줄을 가리킨다.
+
+| 번들러                             | 원본 줄 매핑          |
+| ---------------------------------- | --------------------- |
+| Vite · Rolldown · Next (Turbopack) | ✓                     |
+| webpack 5 · Next (webpack)         | ✗ — 변환 후 코드 기준 |
+
+webpack 계열은 `unplugin` 의 webpack transform loader 가 앞 loader 에서 받은 map 이 없으면 플러그인 map 을 버린다 (`unplugin@3.4.0`). 앞에 오는 loader 가 보통 없으므로 매크로를 쓰는 모듈의 줄 번호가 매크로가 추가한 줄 수만큼 밀린다. 동작·스타일에는 영향이 없다.
+
 ## 결정론
 
 같은 입력 (`source`, `scope`, `hash`, `layer`) → 같은 출력 (`code`, `css`).

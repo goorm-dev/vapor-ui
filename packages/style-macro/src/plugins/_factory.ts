@@ -60,6 +60,8 @@ export default createUnplugin<VaporPluginOptions | undefined>((rawOpts) => {
                 return null;
             }
             if (!compiled || compiled.code === code) return null;
+            // unplugin@3.4.0 webpack loader 는 앞 loader 의 map 이 없으면 이 map 을 버린다
+            // (`map == null ? map : res.map || map`). README "Source map" 참고.
             return { code: compiled.code, map: compiled.map };
         },
     };
