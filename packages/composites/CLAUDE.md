@@ -41,7 +41,7 @@
 ## 6. 테스트
 
 - 유닛 테스트는 `vitest`와 `@testing-library/react`로 작성한다. 각 컴포넌트 폴더 안에 함께 두고, core와 동일한 셋업을 사용한다.
-- `ref` / `id` / `className` DOM API를 노출하는 컴포넌트는 `~/utils/test-utils`의 `testConformance` 유틸로 검증한다. 유틸이 `describe('DOM API conformance')` 아래 `forwards ref` · `applies id` · `applies className` 세 가지 `it`을 등록한다. 소비자는 상위 `describe` + `afterEach(cleanup)`을 래핑하고, `render` 콜백과 `refInstanceof` 옵션만 넘긴다. 공개 서브컴포넌트가 추가될 때마다 인라인 테스트를 반복 작성하지 말고 유틸을 호출한다.
+- `ref` / `id` / `className` / `style` DOM API를 노출하는 컴포넌트는 `~/utils/test-utils`의 `testConformance` 유틸로 검증한다. 유틸이 `describe('DOM API conformance')` 아래 `forwards ref` · `applies id` · `applies className` · `applies style` 네 가지 `it`을 등록한다. 소비자는 상위 `describe` + `afterEach(cleanup)`을 래핑하고, `render` 콜백과 `refInstanceof` 옵션만 넘긴다. 공개 서브컴포넌트가 추가될 때마다 인라인 테스트를 반복 작성하지 말고 유틸을 호출한다.
 
     ```tsx
     import { testConformance } from '~/utils/test-utils';
@@ -50,12 +50,13 @@
         afterEach(cleanup);
 
         testConformance<HTMLDivElement>(
-            async ({ ref, id, className }) => {
+            async ({ ref, id, className, style }) => {
                 const rendered = render(
                     <Dialog.Root
                         ref={ref}
                         id={id}
                         className={className}
+                        style={style}
                         title="타이틀"
                         trigger={<button type="button">열기</button>}
                         ariaLabels={{ close: '닫기' }}
@@ -85,8 +86,9 @@
 ## 8. 하지 말아야 할 것
 
 - Flat Component 설계가 확정되기 전에는 `src/components/` 아래 구현 코드를 수정하지 않는다.
-- `style` 오버라이드 prop은 추가하지 않는다. 토큰 기반 디자인 결정을 보호한다. 컴포넌트 내부 스타일은 [`.claude/rules/composites.md §3`](../../.claude/rules/composites.md#3-스타일은-css-prop으로-작성한다)의 `$css` 규칙을 따른다.
-- `className`은 Popup DOM 노드와 공개 서브컴포넌트(`Dialog.Action`, `Menu.Item` 등)에 한해 노출한다(core 기본 클래스에 **덧붙여지는** 방식). Portal·Overlay·Positioner 등 중간 노드와 `trigger` slot에는 별도 prop을 추가하지 않는다. 자세한 규칙은 [`.claude/rules/composites.md §8`](../../.claude/rules/composites.md#8-refidclassname-기본-api).
+- 컴포넌트 내부 스타일은 [`.claude/rules/composites.md §3`](../../.claude/rules/composites.md#3-스타일은-css-prop으로-작성한다)의 `$css` 규칙을 따른다.
+- `style`은 `className`과 같은 범위로 노출하고 소비자의 인라인 지정용으로만 쓴다. 컴포넌트 내부 스타일을 `style`로 작성하지 않는다.
+- `className`은 Popup DOM 노드와 공개 서브컴포넌트(`Dialog.Action`, `Menu.Item` 등)에 한해 노출한다(core 기본 클래스에 **덧붙여지는** 방식). Portal·Overlay·Positioner 등 중간 노드와 `trigger` slot에는 별도 prop을 추가하지 않는다. 자세한 규칙은 [`.claude/rules/composites.md §7`](../../.claude/rules/composites.md#7-refidclassnamestyle-기본-api).
 - `ref`·`id`는 `className`과 같은 범위(Popup + 공개 서브컴포넌트)로만 노출한다.
 - `component.figma.tsx` (Code Connect) 파일을 손으로 작성하지 않는다. codegen 파이프라인이 생성한다.
 - Code Connect 템플릿은 서브 컴포넌트 보유 여부에 따라 batch(`<name>.figma.batch.json` + `<name>.figma.batch.ts`) 또는 단일 raw template(`<name>.figma.ts`) 중 하나로 작성한다. 상세 규칙은 [`.claude/rules/code-connect-composites.md`](../../.claude/rules/code-connect-composites.md)를 따른다.

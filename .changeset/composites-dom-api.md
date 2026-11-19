@@ -2,6 +2,6 @@
 '@vapor-ui/composites': minor
 ---
 
-add `ref`, `id`, `className` DOM API to `Dialog`, `AlertDialog`, `Menu` composites
+add `ref`, `id`, `className`, `style` DOM API to `Dialog`, `AlertDialog`, `Menu` composites
 
-Root composites now forward `ref`, `id`, and `className` to their Popup DOM node (`PopupPrimitive` / `SubmenuPopupPrimitive`). Publicly exposed sub-components — `Dialog.Action`, `Dialog.Assistive`, `AlertDialog.Action`, `AlertDialog.Cancel`, `Menu.Item`, `Menu.CheckItem`, `Menu.SubmenuItem`, `Menu.Group`, `Menu.CheckGroup` — now forward the same three props to their underlying primitive. `className` is **merged** onto the core base classes, not replaced. The `trigger` slot keeps its existing behavior; consumers pass `ref`/`id`/`className` through `render` as before.
+**Breaking:** `Dialog.Action`, `Dialog.Assistive`, `AlertDialog.Action`, and `AlertDialog.Cancel` no longer accept every `Button` prop. They expose only `id`, `className`, `style`, `isDisabled`, `closeOnClick`, `onClick`, and `children`, plus `ref`. Rename `disabled` to `isDisabled`.
