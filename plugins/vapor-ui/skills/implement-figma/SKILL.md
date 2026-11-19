@@ -11,10 +11,11 @@ Figma MCP 서버가 연결돼 있어야 한다. 없으면 설치를 안내하고
 
 1. URL에서 `fileKey`와 `nodeId`를 뽑는다. `node-id=1-234`는 `1:234`로 바꾼다.
 2. Figma MCP `get_design_context`로 노드 트리와 Code Connect 스니펫을, `get_screenshot`으로 이미지를 받는다.
-3. 라이브러리 인스턴스(💙로 시작하는 노드)는 vapor-ui 컴포넌트로 옮긴다. Code Connect 스니펫이 있으면 그 태그와 props를 그대로 쓰고, 그 인스턴스 안의 구성도 스니펫을 따른다. 없으면 `references/design-system-recognition.md`로 이름과 variant를 대응한다.
-4. props와 파트 구성이 확실하지 않으면 components 스킬로 설치된 버전의 props와 예제를 확인한다.
-5. 오토 레이아웃 프레임은 `references/figma-layout-mapping.md`대로 `VStack`·`HStack`·`Box`·`Grid`로 옮기고, 간격·반경·색은 `references/token-mapping.md`의 토큰으로 `$css`에 쓴다.
-6. 사용자가 정한 위치에 파일을 쓴다. 정하지 않았으면 레포 구조를 보고 고른 뒤 알린다.
+3. 받은 스니펫마다 `{/* contents */}`를 찾는다. 그 자리는 인스턴스 안의 하위 구성이 빠진 슬롯이다. 해당 인스턴스에 `get_metadata`를 호출해 `I<인스턴스 id>;…` 형태의 하위 id(보통 `…/SlotLayer`)를 찾고, 그 id로 `get_design_context`를 요청한다. 인스턴스 id로 다시 요청하면 같은 스니펫이 돌아온다. 새로 받은 스니펫에 `{/* contents */}`가 또 있으면, 남은 것이 없을 때까지 반복한다.
+4. 라이브러리 인스턴스(💙로 시작하는 노드)는 vapor-ui 컴포넌트로 옮긴다. Code Connect 스니펫이 있으면 그 태그와 props를 그대로 쓰고, 그 인스턴스 안의 구성도 스니펫을 따른다. 없으면 `references/design-system-recognition.md`로 이름과 variant를 대응한다.
+5. props와 파트 구성이 확실하지 않으면 components 스킬로 설치된 버전의 props와 예제를 확인한다.
+6. 오토 레이아웃 프레임은 `references/figma-layout-mapping.md`대로 `VStack`·`HStack`·`Box`·`Grid`로 옮기고, 간격·반경·색은 `references/token-mapping.md`의 토큰으로 `$css`에 쓴다.
+7. 사용자가 정한 위치에 파일을 쓴다. 정하지 않았으면 레포 구조를 보고 고른 뒤 알린다.
 
 ## 지킬 것
 
@@ -22,7 +23,7 @@ Figma MCP 서버가 연결돼 있어야 한다. 없으면 설치를 안내하고
 - 단, 부모 인스턴스의 스니펫에 없는 하위 인스턴스는 부모 컴포넌트가 스스로 그리는 것이다. composites `Dialog`의 닫기 버튼이 그렇다. 따로 쓰면 두 번 그려진다.
 - Code Connect 스니펫의 variant props(`size`, `colorPalette` 등)는 바꾸지 않는다.
 - `position: absolute`, 색 리터럴(hex·rgb·hsl), 토큰 눈금에 있는 px 값을 쓰지 않는다. 토큰으로 쓴다.
-- 텍스트 문구는 시안을 따른다.
+- 텍스트 문구는 시안을 따른다. `YYYY.MM.DD HH:MM`, `{모델명}`, `n건` 같은 자리표시자도 목 데이터로 바꾸지 않고 시안 문구 그대로 쓴다.
 
 ## 끝나면
 
