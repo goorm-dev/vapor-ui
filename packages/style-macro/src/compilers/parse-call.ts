@@ -14,6 +14,7 @@ import { normalizeValue } from '~/models/value';
 import { hyphenate } from '~/tokens/css-reference';
 
 import { type Loc, locOfNode } from './loc';
+import { unwrapTypeOnly } from './type-only';
 
 export interface TernarySite {
     consequentRuleIndexes: number[];
@@ -79,23 +80,9 @@ function extractStaticValue(node: AnyProp): string | number | null {
     return null;
 }
 
-/** 값에 영향 없는 래퍼(`as`, `satisfies`, `!`, 괄호)를 벗긴다. */
-function unwrapValue(node: AnyProp): AnyProp {
-    let n = node;
-    while (
-        n?.type === 'TSAsExpression' ||
-        n?.type === 'TSSatisfiesExpression' ||
-        n?.type === 'TSNonNullExpression' ||
-        n?.type === 'ParenthesizedExpression'
-    ) {
-        n = n.expression;
-    }
-    return n;
-}
-
 /** 값이 없음을 뜻하는 리터럴 (`null`, `undefined`). */
 function isAbsent(raw: AnyProp): boolean {
-    const node = unwrapValue(raw);
+    const node = unwrapTypeOnly(raw);
     if (node?.type === 'Identifier') return node.name === 'undefined';
     return node?.type === 'Literal' && node.value === null && !node.regex && node.raw === 'null';
 }
@@ -105,7 +92,7 @@ function isAbsent(raw: AnyProp): boolean {
  * 문자열로 바꾼 결과(`"true"`, `"/x/"`, `"1,2"`, 함수 본문)는 유효한 CSS 값이 아니다.
  */
 function invalidLiteralKind(raw: AnyProp): string | null {
-    const node = unwrapValue(raw);
+    const node = unwrapTypeOnly(raw);
     switch (node?.type) {
         case 'Literal':
             if (typeof node.value === 'boolean') return 'a boolean';
@@ -131,8 +118,7 @@ const hasPosition = (node: AnyProp): boolean =>
 
 /**
  * `css({...})` 호출 1개를 파싱해 IR + ternary + build error 로 분해.
- */
-/**
+ *
  * @param scope 파일 식별자 (root 기준 상대 경로). slot 이름의 입력이다.
  */
 export function createParser(source: string, scope: string) {

@@ -3,6 +3,7 @@ import type MagicString from 'magic-string';
 import type { AnyProp, BuildError } from '~/models/types';
 
 import { locOfNode } from './loc';
+import { TYPE_ONLY_WRAPPERS } from './type-only';
 
 /**
  * 한 css() 호출이 element `style` 에 넣을 slot 값. className 이 고르는 분기 트리와
@@ -54,10 +55,7 @@ const WRAPPER_TYPES = new Set([
     'ConditionalExpression',
     'LogicalExpression',
     'SequenceExpression',
-    'ParenthesizedExpression',
-    'TSAsExpression',
-    'TSNonNullExpression',
-    'TSSatisfiesExpression',
+    ...TYPE_ONLY_WRAPPERS,
     'TemplateLiteral',
     'TaggedTemplateExpression',
     'SpreadElement',

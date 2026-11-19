@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { orderAtRulePaths } from './sort';
+import { orderAtRulePaths } from './at-rule-order';
 
 /** 작성 순 path 목록 → 출력 순 (첫 unit 만 쓰는 1단계 path). */
 const order = (units: string[]) => orderAtRulePaths(units.map((u) => [u])).map((p) => p[0]);

@@ -324,7 +324,7 @@ webpack 계열은 `unplugin` 의 webpack transform loader 가 앞 loader 에서 
 | `src/compilers/jsx-inject.ts`  | Dynamic value JSX `style` prop 주입                                                       |
 | `src/models/*.ts`              | class name, selector, shorthand, token, value 모델                                        |
 | `src/plugins/*.ts`             | 번들러 adapter (unplugin + turbopack loader)                                              |
-| `src/models/sort.ts`           | at-rule 출력 순서 (작성 순 + width query 정렬)                                            |
+| `src/models/at-rule-order.ts`  | at-rule 출력 순서 (작성 순 + width query 정렬)                                            |
 | `src/helpers/cx.ts`            | runtime `_cx` — class 이어붙이기·중복 제거 (`__runtime__`)                                |
 | `src/helpers/resolve-token.ts` | runtime `_resolveToken` helper (`__runtime__` subpath 로 노출)                            |
 

@@ -23,6 +23,7 @@ import { MemoTemps, isRereadable, memoScopeOf } from './memo';
 import { walk } from './oxc-walk';
 import { type ParseCallResult, parseCallArg } from './parse-call';
 import { isShadowed } from './scope';
+import { unwrapTypeOnly } from './type-only';
 
 // ────────────────────────────────────────────────────────────────
 // Public API
@@ -487,11 +488,6 @@ class Transformer {
         for (const ref of assignmentTargets(target)) this.#recordMutation(ref, node, parents);
     }
 
-    /**
-     * 병합에 쓰인 object 상수가 변경되면 빌드 에러. 컴파일러는 소스에 적힌 값으로 병합하므로
-     * 변경은 반영되지 않는다 — 조용히 틀린 스타일을 내는 대신 알린다. 병합된 상수만 보므로
-     * 읽기·export·다른 곳에 값으로 넘기기는 영향이 없다. alias·함수 내부 변경은 잡지 않는다.
-     */
     /** 이 호출이 캡처된 최상위 `css()` 상수의 정의라면 그 캡처 조각. */
     #capturedDefinitionOf(node: AnyProp): Piece[] | null {
         for (const [name, top] of this.#topLevelStatic) {
@@ -500,6 +496,11 @@ class Transformer {
         return null;
     }
 
+    /**
+     * 병합에 쓰인 object 상수가 변경되면 빌드 에러. 컴파일러는 소스에 적힌 값으로 병합하므로
+     * 변경은 반영되지 않는다 — 조용히 틀린 스타일을 내는 대신 알린다. 병합된 상수만 보므로
+     * 읽기·export·다른 곳에 값으로 넘기기는 영향이 없다. alias·함수 내부 변경은 잡지 않는다.
+     */
     #checkMutations() {
         for (const { name, node, parents } of this.#mutations) {
             const top = this.#topLevelStatic.get(name);
@@ -571,7 +572,8 @@ class Transformer {
      * 중 스타일 객체(object 리터럴 또는 그 리터럴로 정의된 모듈 상수)가 있으면 그 노드.
      * 함수 인자 등 값 위치가 아닌 곳의 객체는 런타임 값이 아니므로 보지 않는다.
      */
-    #styleObjectValueOf(node: AnyProp, scope: AnyProp[]): AnyProp | null {
+    #styleObjectValueOf(raw: AnyProp, scope: AnyProp[]): AnyProp | null {
+        const node = unwrapTypeOnly(raw);
         switch (node?.type) {
             case 'ObjectExpression':
                 return node;
@@ -581,11 +583,6 @@ class Transformer {
                     ? node
                     : null;
             }
-            case 'ParenthesizedExpression':
-            case 'TSAsExpression':
-            case 'TSSatisfiesExpression':
-            case 'TSNonNullExpression':
-                return this.#styleObjectValueOf(node.expression, scope);
             case 'LogicalExpression':
                 return (
                     (node.operator === '&&' ? null : this.#styleObjectValueOf(node.left, scope)) ??
@@ -607,16 +604,12 @@ class Transformer {
      * 인자 표현식을 컴파일 시점 조각으로 푼다. 풀 수 없으면(props, import, 함수 호출 결과 등)
      * `null` — 그 인자는 런타임 class 문자열로 이어붙인다.
      */
-    #resolve(node: AnyProp, scope: AnyProp[], visiting: Set<string>): Piece[] | null {
+    #resolve(raw: AnyProp, scope: AnyProp[], visiting: Set<string>): Piece[] | null {
+        const node = unwrapTypeOnly(raw);
         if (!node) return null;
         switch (node.type) {
             case 'ObjectExpression':
                 return this.#objectPieces(node);
-            case 'ParenthesizedExpression':
-            case 'TSAsExpression':
-            case 'TSSatisfiesExpression':
-            case 'TSNonNullExpression':
-                return this.#resolve(node.expression, scope, visiting);
             case 'Literal':
                 return node.value === null || node.value === false ? [] : null;
             case 'Identifier': {
@@ -1105,21 +1098,6 @@ function sameSlots(a: SlotTree, b: SlotTree): boolean {
     return false;
 }
 
-/** 값에 영향 없는 TS 래퍼(`as`, `satisfies`, `!`, 괄호)를 벗긴다. */
-function unwrapTypeOnly(node: AnyProp): AnyProp {
-    let n = node;
-    while (
-        n &&
-        (n.type === 'TSAsExpression' ||
-            n.type === 'TSSatisfiesExpression' ||
-            n.type === 'TSNonNullExpression' ||
-            n.type === 'ParenthesizedExpression')
-    ) {
-        n = n.expression;
-    }
-    return n;
-}
-
 function contains(outer: AnyProp, inner: AnyProp): boolean {
     return outer.start <= inner.start && inner.end <= outer.end;
 }
@@ -1185,10 +1163,6 @@ const MUTATING_BUILTINS: Record<string, Set<string>> = {
     Reflect: new Set(['set', 'defineProperty', 'deleteProperty', 'setPrototypeOf']),
 };
 
-/**
- * `x`, `x.a`, `x[k].b`, `x!.a` 의 루트 식별자. `allowBare` 가 false 면 멤버 접근일 때만
- * (이름 자체에 대한 할당은 제외) 반환한다.
- */
 /** 대입 대상 패턴(`a.b`, `[a.b, ...c]`, `{ k: a.b = 1 }`)이 실제로 대입하는 참조들. */
 function assignmentTargets(node: AnyProp): AnyProp[] {
     const n = node?.type === 'ParenthesizedExpression' ? node.expression : node;
@@ -1208,6 +1182,10 @@ function assignmentTargets(node: AnyProp): AnyProp[] {
     }
 }
 
+/**
+ * `x`, `x.a`, `x[k].b`, `x!.a` 의 루트 식별자. `allowBare` 가 false 면 멤버 접근일 때만
+ * (이름 자체에 대한 할당은 제외) 반환한다.
+ */
 function rootName(node: AnyProp, allowBare: boolean): string | null {
     let n = unwrapTypeOnly(node);
     let member = false;

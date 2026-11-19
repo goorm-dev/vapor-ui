@@ -1,6 +1,6 @@
+import { orderAtRulePaths } from '~/models/at-rule-order';
 import { type ClassNameMode, dynamicVarName } from '~/models/class-name';
 import { contextKey, resolveSelector } from '~/models/selector';
-import { orderAtRulePaths } from '~/models/sort';
 import type { IRRule } from '~/models/types';
 
 export const DEFAULT_LAYER = 'vapor-utilities';

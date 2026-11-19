@@ -2,6 +2,8 @@ import type MagicString from 'magic-string';
 
 import type { AnyProp } from '~/models/types';
 
+import { TYPE_ONLY_WRAPPERS } from './type-only';
+
 /**
  * className 과 style 이 같은 조건을 각자 읽을 때, 조건을 한 번만 평가하게 하는 임시 변수.
  *
@@ -22,13 +24,6 @@ const FUNCTION_TYPES = new Set([
     'ArrowFunctionExpression',
 ]);
 
-const TS_WRAPPERS = new Set([
-    'ParenthesizedExpression',
-    'TSAsExpression',
-    'TSSatisfiesExpression',
-    'TSNonNullExpression',
-]);
-
 const PURE_UNARY = new Set(['!', '-', '+', '~', 'typeof', 'void']);
 
 /**
@@ -37,7 +32,7 @@ const PURE_UNARY = new Set(['!', '-', '+', '~', 'typeof', 'void']);
  */
 export function isRereadable(node: AnyProp): boolean {
     if (!node) return false;
-    if (TS_WRAPPERS.has(node.type)) return isRereadable(node.expression);
+    if (TYPE_ONLY_WRAPPERS.has(node.type)) return isRereadable(node.expression);
     switch (node.type) {
         case 'Identifier':
         case 'ThisExpression':

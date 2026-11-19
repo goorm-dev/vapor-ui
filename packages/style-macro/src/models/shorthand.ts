@@ -44,6 +44,17 @@ function twoSides(v: string): [string, string] {
     return [a, b];
 }
 
+/** `<name>` → `<name>-start`, `<name>-end` (이 순서). 값은 `twoSides` 규칙. */
+function startEnd(name: string): Expansion {
+    return (v) => {
+        const [s, e] = twoSides(v);
+        return [
+            { property: `${name}-start`, value: s },
+            { property: `${name}-end`, value: e },
+        ];
+    };
+}
+
 const TABLE: Record<string, Expansion> = {
     padding: (v) => {
         const [t, r, b, l] = fourSides(v);
@@ -63,34 +74,10 @@ const TABLE: Record<string, Expansion> = {
             { property: 'margin-left', value: l },
         ];
     },
-    'padding-inline': (v) => {
-        const [s, e] = twoSides(v);
-        return [
-            { property: 'padding-inline-start', value: s },
-            { property: 'padding-inline-end', value: e },
-        ];
-    },
-    'padding-block': (v) => {
-        const [s, e] = twoSides(v);
-        return [
-            { property: 'padding-block-start', value: s },
-            { property: 'padding-block-end', value: e },
-        ];
-    },
-    'margin-inline': (v) => {
-        const [s, e] = twoSides(v);
-        return [
-            { property: 'margin-inline-start', value: s },
-            { property: 'margin-inline-end', value: e },
-        ];
-    },
-    'margin-block': (v) => {
-        const [s, e] = twoSides(v);
-        return [
-            { property: 'margin-block-start', value: s },
-            { property: 'margin-block-end', value: e },
-        ];
-    },
+    'padding-inline': startEnd('padding-inline'),
+    'padding-block': startEnd('padding-block'),
+    'margin-inline': startEnd('margin-inline'),
+    'margin-block': startEnd('margin-block'),
     inset: (v) => {
         const [t, r, b, l] = fourSides(v);
         return [
@@ -100,20 +87,8 @@ const TABLE: Record<string, Expansion> = {
             { property: 'left', value: l },
         ];
     },
-    'inset-inline': (v) => {
-        const [s, e] = twoSides(v);
-        return [
-            { property: 'inset-inline-start', value: s },
-            { property: 'inset-inline-end', value: e },
-        ];
-    },
-    'inset-block': (v) => {
-        const [s, e] = twoSides(v);
-        return [
-            { property: 'inset-block-start', value: s },
-            { property: 'inset-block-end', value: e },
-        ];
-    },
+    'inset-inline': startEnd('inset-inline'),
+    'inset-block': startEnd('inset-block'),
     'border-radius': (v) => {
         // border-radius 는 축소형이 TL / TR / BR / BL 순서 (padding 과 대각선 방향 다름).
         const p = splitCssValue(v);
