@@ -18,14 +18,64 @@
                 "default": "./dist/index.cjs"
             }
         },
-        "./*": {
+        "./vite": {
             "import": {
-                "types": "./dist/plugins/*.d.mts",
-                "default": "./dist/plugins/*.mjs"
+                "types": "./dist/plugins/vite.d.mts",
+                "default": "./dist/plugins/vite.mjs"
             },
             "require": {
-                "types": "./dist/plugins/*.d.cts",
-                "default": "./dist/plugins/*.cjs"
+                "types": "./dist/plugins/vite.d.cts",
+                "default": "./dist/plugins/vite.cjs"
+            }
+        },
+        "./webpack": {
+            "import": {
+                "types": "./dist/plugins/webpack.d.mts",
+                "default": "./dist/plugins/webpack.mjs"
+            },
+            "require": {
+                "types": "./dist/plugins/webpack.d.cts",
+                "default": "./dist/plugins/webpack.cjs"
+            }
+        },
+        "./next": {
+            "import": {
+                "types": "./dist/plugins/next.d.mts",
+                "default": "./dist/plugins/next.mjs"
+            },
+            "require": {
+                "types": "./dist/plugins/next.d.cts",
+                "default": "./dist/plugins/next.cjs"
+            }
+        },
+        "./rolldown": {
+            "import": {
+                "types": "./dist/plugins/rolldown.d.mts",
+                "default": "./dist/plugins/rolldown.mjs"
+            },
+            "require": {
+                "types": "./dist/plugins/rolldown.d.cts",
+                "default": "./dist/plugins/rolldown.cjs"
+            }
+        },
+        "./turbopack": {
+            "import": {
+                "types": "./dist/plugins/turbopack.d.mts",
+                "default": "./dist/plugins/turbopack.mjs"
+            },
+            "require": {
+                "types": "./dist/plugins/turbopack.d.cts",
+                "default": "./dist/plugins/turbopack.cjs"
+            }
+        },
+        "./css-loader": {
+            "import": {
+                "types": "./dist/plugins/css-loader.d.mts",
+                "default": "./dist/plugins/css-loader.mjs"
+            },
+            "require": {
+                "types": "./dist/plugins/css-loader.d.cts",
+                "default": "./dist/plugins/css-loader.cjs"
             }
         },
         "./__runtime__": {

@@ -1,10 +1,7 @@
 import { basename } from 'node:path';
 
-import { compileModule } from './_module-css';
+import { VAPOR_CSS_QUERY, compileModule } from './_module-css';
 import { type VaporPluginOptions, resolveOptions } from './_options';
-
-/** Turbopack 쿼리. 이 쿼리가 붙은 소스 import 는 `css-loader` 규칙(`as: '*.css'`)을 탄다. */
-export const VAPOR_CSS_QUERY = 'vapor-css';
 
 export interface TurbopackLoaderContext {
     resourcePath: string;

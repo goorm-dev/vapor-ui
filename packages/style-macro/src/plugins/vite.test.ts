@@ -10,7 +10,8 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { type ViteDevServer, build, createServer } from 'vite';
 
-import { fsPathFromFsUrl, vaporVitePlugin } from './vite';
+import { fsPathFromFsUrl } from './_vite';
+import { vaporVitePlugin } from './vite';
 
 const src = (name: string, gap: string) =>
     `import { css } from '@vapor-ui/style-macro';\nexport const ${name} = css({ gap: '${gap}' });\n`;

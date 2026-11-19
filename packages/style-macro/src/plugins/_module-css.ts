@@ -14,6 +14,9 @@ export const MODULE_CSS_SUFFIX = '.vapor.css';
 /** webpack 모듈 CSS 쿼리 키. 값은 root 기준 모듈 CSS 경로(`src/a.tsx.vapor.css`, URI 인코딩). */
 export const VAPOR_SRC_QUERY = 'vapor-src';
 
+/** Turbopack 쿼리. 이 쿼리가 붙은 소스 import 는 `css-loader` 규칙(`as: '*.css'`)을 탄다. */
+export const VAPOR_CSS_QUERY = 'vapor-css';
+
 /**
  * webpack 모듈 CSS 자리표시 파일. 절대 경로 대신 패키지 specifier 로 넣어 빌드 캐시·출력이
  * 설치 경로에 묶이지 않게 한다 (소스가 `@vapor-ui/style-macro` 를 import 하므로 resolve 된다).

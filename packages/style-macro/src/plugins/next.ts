@@ -1,8 +1,9 @@
 import type { AnyProp } from '~/models/types';
 
+import { VAPOR_CSS_QUERY } from './_module-css';
 import type { VaporPluginOptions } from './_options';
-import { VAPOR_CSS_QUERY } from './turbopack';
-import { loaderOptions, resolveCssLoader, siblingModule, vaporWebpackPlugin } from './webpack';
+import { loaderOptions, resolveCssLoader, siblingModule } from './_webpack';
+import { vaporWebpackPlugin } from './webpack';
 
 export type NextMode = 'auto' | 'webpack' | 'turbopack';
 

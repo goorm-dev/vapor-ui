@@ -3,10 +3,11 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { applyModuleCss, moduleCssRule, tapHtmlFouc } from './_webpack';
 import { vaporNextPlugin } from './next';
 import { type VaporRolldownOptions, vaporRolldownPlugin } from './rolldown';
 import { vaporVitePlugin } from './vite';
-import { applyModuleCss, moduleCssRule, tapHtmlFouc, vaporWebpackPlugin } from './webpack';
+import { vaporWebpackPlugin } from './webpack';
 
 describe('vite adapter — FOUC plugin composition', () => {
     function foucOf(plugins: Array<{ name: string; transformIndexHtml?: unknown }>) {
@@ -177,10 +178,9 @@ describe('webpack() adapter — module CSS rule', () => {
         };
         applyModuleCss(compiler, {});
         expect(compiler.options.resolve.alias).toEqual({
-            '@vapor-ui/style-macro/module.vapor.css$': expect.stringMatching(
-                /style-macro[\\/]module\.vapor\.css$/,
-            ),
+            '@vapor-ui/style-macro/module.vapor.css$': join(here, '..', '..', 'module.vapor.css'),
         });
+        expect(existsSync(join(here, '..', '..', 'module.vapor.css'))).toBe(true);
         expect(compiler.options.module.rules).toHaveLength(1);
     });
 
