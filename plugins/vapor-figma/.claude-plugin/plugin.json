@@ -1,6 +1,6 @@
 {
     "name": "vapor-figma",
     "description": "Claude Code plugin for designers working with the Vapor UI Figma library",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "author": { "name": "Vapor Team", "email": "vapor.ui@goorm.io" }
 }
