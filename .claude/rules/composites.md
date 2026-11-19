@@ -17,8 +17,6 @@ paths:
 6. [서브 컴포넌트는 `index.parts.ts`로 분리한다](#6-서브-컴포넌트는-indexpartsts로-분리한다)
 7. [`ref`·`id`·`className`·`style` 기본 API](#7-refidclassnamestyle-기본-api)
 
-> Code Connect 템플릿(`*.figma.ts`, `*.figma.batch.{json,ts}`) 작성 규칙은 [`.claude/rules/code-connect-composites.md`](./code-connect-composites.md)에서 다룬다. 해당 파일은 `code-connects/` 경로를 touch할 때 자동 로드된다.
-
 ---
 
 ## 1. 슬롯은 `createSlots`로 만든다

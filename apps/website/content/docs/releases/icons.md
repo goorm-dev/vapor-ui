@@ -5,6 +5,8 @@ description: '@vapor-ui/icons 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/icons
 
+## 1.3.3
+
 ## 1.3.2
 
 ### Etc.

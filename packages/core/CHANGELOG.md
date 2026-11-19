@@ -1,5 +1,31 @@
 # @vapor-ui/core
 
+## 1.7.1
+
+### Button
+
+- Align `Button` with Figma: secondary and contrast `outline`/`ghost` labels now use `foreground.normal` and `foreground.contrast`, and icons are sized per `size` (sm/md 16px, lg 20px, xl 24px). An icon's own `size` prop no longer changes its size inside `Button`. ([#814](https://github.com/goorm-dev/vapor-ui/pull/814)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Core
+
+- fix `Checkbox.Root` `className`, `style`, and `render` callbacks not receiving Base UI state (`checked`, `disabled`, etc.) ([#778](https://github.com/goorm-dev/vapor-ui/pull/778)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+    fix `NavigationMenu.Link` callbacks receiving Base UI `active`, which `NavigationMenu.Link.State` does not declare (use `current`)
+
+### Sprinkles
+
+- fix `$css` side and axis border shorthands (`borderBottom`, `borderTop`, `borderInline`, etc.) overriding `borderColor` and drawing the border in `currentColor` ([#833](https://github.com/goorm-dev/vapor-ui/pull/833)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+    When a side or axis shorthand is set under the same condition as `borderColor`, `borderStyle`, `borderWidth`, or their axis forms (`borderBlockColor`, `borderInlineStyle`, and so on), the latter now wins, even if the shorthand also sets that value.
+
+### Website
+
+- Restore demo source code in the bundled `docs/**/*.md`. Since 1.7.0, pages showed a bare `<Demo file="..." />` tag instead of the example code. ([#806](https://github.com/goorm-dev/vapor-ui/pull/806)) - Thanks [@MaxLee-dev](https://github.com/MaxLee-dev)!
+
+### Updated Dependencies
+
+- @vapor-ui/icons@1.3.3
+
 ## 1.7.0
 
 ### Alert Dialog

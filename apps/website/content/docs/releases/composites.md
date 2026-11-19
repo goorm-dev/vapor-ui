@@ -5,6 +5,13 @@ description: '@vapor-ui/composites 패키지의 릴리즈 노트입니다.'
 
 # @vapor-ui/composites
 
+## 0.1.1
+
+### Updated Dependencies
+
+- @vapor-ui/core@1.7.1
+- @vapor-ui/icons@1.3.3
+
 ## 0.1.0
 
 ### Alert Dialog
