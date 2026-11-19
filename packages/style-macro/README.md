@@ -34,7 +34,7 @@ function Button() {
 
 번들러 config. 지원 번들러는 Vite·webpack·Next(webpack·Turbopack)이고, 라이브러리 빌드는 Rolldown 이다 ([라이브러리 배포](#라이브러리-배포)). 그 밖의 번들러(Parcel 등)는 지원하지 않는다.
 
-- **Vite (7·8)** — `css()` 를 쓰는 모듈마다 가상 CSS 모듈(`<file>.vapor.css`)을 만들고, 그 모듈이 자기 CSS 를 import 한다 (Vanilla Extract 와 같은 모델). import 되지 않는 모듈의 CSS 는 번들에 들어가지 않고, dev 에서는 수정한 모듈의 CSS 만 HMR 로 바뀐다. 레이어 순서를 고정하려면 앱 CSS 진입점에서 `@vapor-ui/core/layers.css` 를 **모든 `@vapor-ui/*` import 보다 먼저** import 한다.
+- **Vite (7·8)** — `css()` 를 쓰는 모듈마다 가상 CSS 모듈(`<file>.vapor.css`)을 만들고, 그 모듈이 자기 CSS 를 import 한다 (Vanilla Extract 와 같은 모델). import 되지 않는 모듈의 CSS 는 번들에 들어가지 않고, dev 에서는 수정한 모듈의 CSS 만 HMR 로 바뀐다. 레이어 순서를 고정하려면 앱 CSS 진입점에서 `@vapor-ui/core/layers.css` 를 **모든 `@vapor-ui/*` import 보다 먼저** import 한다. `include` 로 지목한 패키지는 `optimizeDeps.exclude` 와 `ssr.noExternal` 에 자동으로 추가되어 dev pre-bundling 과 SSR externalize 에서 제외된다.
 - **webpack 5** — 같은 모델. 모듈마다 `@vapor-ui/style-macro/module.vapor.css?vapor-src=<모듈 경로>` 를 import 하고, 플러그인이 등록한 loader 가 그 자리에 모듈 CSS 를 넣는다. 이 요청은 앱의 `.css` 규칙(css-loader + style-loader / mini-css-extract-plugin, 또는 `experiments.css`)으로 처리되므로 앱에 `.css` 규칙이 있어야 한다.
 - **Next (webpack · Turbopack)** — `vaporNextPlugin` 이 번들러를 감지해 배선한다. webpack 은 위와 같고, Turbopack 은 모듈마다 `./<file>?vapor-css` 를 import 하고 그 쿼리에 CSS loader 규칙(`as: '*.css'`)을 건다. 서버·클라이언트 컴포넌트 모두 라우트별 CSS 로 나뉘고 dev 에서 수정 즉시 반영된다. 레이어 순서는 루트 layout 이 import 하는 CSS 에서 `@vapor-ui/core/layers.css` 를 먼저 import 해 고정한다.
 
@@ -95,14 +95,30 @@ interface VaporPluginOptions {
 }
 ```
 
-| 옵션                | 기본값                                  | 설명                                                                                                                                                                                                                                                 |
-| ------------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `include`           | `[]`                                    | 추가 대상 glob (`root` 기준 상대 경로, picomatch). 기본 대상(JS/TS, `node_modules` 제외)에 **더해진다**. 패키지는 `node_modules/<이름>/…` 로 쓰면 설치 방식(npm hoist, pnpm store 실경로)과 무관하게 맞는다. 예: `['node_modules/@acme/ui/dist/**']` |
-| `exclude`           | `[]`                                    | 제외 glob (`include` 와 같은 규칙). `include` 보다 우선                                                                                                                                                                                              |
-| `root`              | 번들러 프로젝트 루트                    | `include`/`exclude` glob 기준 경로. 경로 자체에 `(`·`[` 같은 glob 문자가 있어도 된다                                                                                                                                                                 |
-| `hash`              | `process.env.NODE_ENV === 'production'` | class name hash 모드 (readable vs hashed)                                                                                                                                                                                                            |
-| `injectColorScheme` | `true`                                  | Vite HTML 태그 주입(`<head>` 맨 앞)으로 FOUC guard script 자동 주입. object 로 커스텀 가능                                                                                                                                                           |
-| `layer`             | `'vapor-utilities'`                     | `css()` 규칙을 담을 CSS cascade layer 이름 (`acme.ui` 같은 sub-layer 가능). CSS 진입점의 레이어 순서 선언에 포함돼야 한다 — 빠지면 브라우저가 맨 뒤 레이어로 취급해 앱 스타일까지 이긴다                                                             |
+| 옵션                | 기본값                                  | 설명                                                                                                                                                                                                                                                                                         |
+| ------------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `include`           | `[]`                                    | 추가 대상 glob. 상대 경로는 `root` 기준이며 `../` 와 절대 경로도 된다. 기본 대상(JS/TS, `node_modules` 제외)에 **더해진다**. 패키지는 `node_modules/<이름>/…` 로 쓰면 설치 방식(npm hoist, pnpm store 실경로)과 무관하게 맞는다. 예: `['node_modules/@acme/ui/dist/**', '../shared/src/**']` |
+| `exclude`           | `[]`                                    | 제외 glob (`root` 기준 상대 경로, `../`·절대 경로 가능). `include` 보다 우선                                                                                                                                                                                                                 |
+| `root`              | 번들러 프로젝트 루트                    | `include`/`exclude` glob 기준 경로. **기본값은 번들러가 주는 프로젝트 루트** (Vite `config.root`, webpack `compiler.context` / `loader.rootContext`, rolldown `cwd`). 번들러 루트가 없으면 필수 — 없으면 오류. 경로 자체에 `(`·`[` 같은 glob 문자가 있어도 된다                              |
+| `hash`              | `process.env.NODE_ENV === 'production'` | class name hash 모드 (readable vs hashed)                                                                                                                                                                                                                                                    |
+| `injectColorScheme` | `true`                                  | Vite(`transformIndexHtml`)와 webpack(`html-webpack-plugin`)에서 `<head>` 맨 앞에 FOUC guard script 자동 주입. object 로 커스텀 가능                                                                                                                                                          |
+| `layer`             | `'vapor-utilities'`                     | `css()` 규칙을 담을 CSS cascade layer 이름 (`acme.ui` 같은 sub-layer 가능). CSS 진입점의 레이어 순서 선언에 포함돼야 한다 — 빠지면 브라우저가 맨 뒤 레이어로 취급해 앱 스타일까지 이긴다                                                                                                     |
+
+## Next plugin 옵션
+
+`vaporNextPlugin` 은 `VaporPluginOptions` 외에 아래 옵션을 추가로 받는다.
+
+```ts
+interface WithVaporPluginOptions extends VaporPluginOptions {
+    mode?: 'auto' | 'webpack' | 'turbopack';
+    turbopackGlob?: string | string[];
+}
+```
+
+| 옵션            | 기본값                                   | 설명                                                                                                                                                                                                                                                     |
+| --------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `mode`          | `'auto'`                                 | 번들러 선택. `'auto'` = `process.env.TURBOPACK` 존재 여부로 자동 감지. `'webpack'` / `'turbopack'` 으로 고정할 수 있다                                                                                                                                   |
+| `turbopackGlob` | `'**/*.{tsx,jsx,ts,js,mts,mjs,cts,cjs}'` | Turbopack loader 를 붙일 소스 파일 glob (배열도 된다). `include`/`exclude` 필터는 loader 안에서 별도로 적용되므로, 이 glob 은 loader 가 받는 파일 범위만 정한다. `.js`·`.mjs`·`.cjs` 가 포함되는 것은 TypeScript 외부에서 `css()` 를 쓸 수 있기 때문이다 |
 
 ## 라이브러리 배포
 
@@ -310,7 +326,7 @@ webpack 계열은 `unplugin` 의 webpack transform loader 가 앞 loader 에서 
 
 같은 입력 (`source`, `scope`, `hash`, `layer`) → 같은 출력 (`code`, `css`).
 
-- Class name: hash = murmur2(`scope` + 블록 선언 직렬화). hashed `v<hash>`, readable `<변수·JSX 요소 이름>_<hash>`. `scope` 는 플러그인이 넘기는 root 기준 상대 경로라 빌드 머신과 무관하다. 같은 선언이라도 파일이 다르면 class 가 다르다.
+- Class name: hash = murmur2(`scope` + 블록 선언 직렬화). hashed `v<hash>`, readable `<변수·JSX 요소 이름>_<hash>`. `scope` 는 가장 가까운 `name` 있는 `package.json` 기준 `<이름>/<상대 경로>`. `name` 있는 `package.json` 이 없으면 root 기준 상대 경로. 빌드 머신·디렉터리와 무관하고, 다른 패키지의 같은 경로와 겹치지 않는다. 같은 선언이라도 파일이 다르면 class 가 다르다.
 - CSS: 블록은 소스 등장 순서, 블록 안은 selector 그룹 순서(위 참고).
 - Shorthand: 자식 property 전개 순서 고정
 
