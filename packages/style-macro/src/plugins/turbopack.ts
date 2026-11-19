@@ -1,16 +1,7 @@
 import { basename } from 'node:path';
 
+import { type LoaderContext, resolveLoaderOptions } from './_loader';
 import { VAPOR_CSS_QUERY, compileModule } from './_module-css';
-import { type VaporPluginOptions, resolveOptions } from './_options';
-
-export interface TurbopackLoaderContext {
-    resourcePath: string;
-    resourceQuery?: string;
-    rootContext?: string;
-    getOptions?: () => VaporPluginOptions;
-    /** webpack loader 규약 — 있으면 source map 을 함께 넘긴다. */
-    callback?: (err: Error | null, code?: string, map?: unknown) => void;
-}
 
 /**
  * Turbopack JS loader. `css()` 를 class 로 바꾸고, CSS 를 만든 모듈에
@@ -18,12 +9,10 @@ export interface TurbopackLoaderContext {
  * `css-loader` + `as: '*.css'` 규칙을 등록한다.
  */
 export default async function vaporStyleTurbopackLoader(
-    this: TurbopackLoaderContext,
+    this: LoaderContext,
     source: string,
 ): Promise<string | undefined> {
-    const opts = resolveOptions(this.getOptions ? this.getOptions() : {}, {
-        root: this.rootContext,
-    });
+    const opts = resolveLoaderOptions(this);
     const compiled = compileModule(
         source,
         this.resourcePath,

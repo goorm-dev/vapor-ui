@@ -55,8 +55,9 @@ export function vaporNextPlugin(
 ): <T extends object = object>(nextConfig?: T) => T {
     const { mode = 'auto', turbopackGlob = DEFAULT_TURBOPACK_GLOB, ...unpluginOpts } = opts;
 
-    const useTurbo = mode === 'turbopack' || (mode === 'auto' && detectTurbopack());
-    const useWebpack = mode === 'webpack' || (mode === 'auto' && !detectTurbopack());
+    const turbopackDetected = mode === 'auto' && detectTurbopack();
+    const useTurbo = mode === 'turbopack' || turbopackDetected;
+    const useWebpack = mode === 'webpack' || (mode === 'auto' && !turbopackDetected);
 
     return <T extends object = object>(nextConfig: T = {} as T): T => {
         const merged = { ...(nextConfig as NextConfigMutable) } as NextConfigMutable;

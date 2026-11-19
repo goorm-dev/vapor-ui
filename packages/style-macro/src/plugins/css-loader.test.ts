@@ -2,12 +2,13 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import vaporCssLoader, { type CssLoaderContext } from './css-loader';
+import type { LoaderContext } from './_loader';
+import vaporCssLoader from './css-loader';
 import vaporStyleTurbopackLoader from './turbopack';
 
 const SRC = `import { css } from '@vapor-ui/style-macro';\nexport const cls = css({ gap: '0' });\n`;
 
-function ctx(resourcePath: string, opts: Record<string, unknown> = {}): CssLoaderContext {
+function ctx(resourcePath: string, opts: Record<string, unknown> = {}): LoaderContext {
     return {
         resourcePath,
         getOptions: () => opts,

@@ -1,11 +1,12 @@
 import { relative } from 'node:path';
 import { createUnplugin } from 'unplugin';
 
+import { stripQuery } from './_id';
 import {
     MODULE_CSS_PLACEHOLDER,
     MODULE_CSS_SUFFIX,
     VAPOR_SRC_QUERY,
-    compileModule,
+    compileOrError,
 } from './_module-css';
 import { type ResolvedOptions, type VaporPluginOptions, resolveOptions, toPosix } from './_options';
 
@@ -40,25 +41,20 @@ export default createUnplugin<VaporPluginOptions | undefined>((rawOpts) => {
         },
 
         transformInclude(id) {
-            return opts().include(id.split('?')[0]!);
+            return opts().include(stripQuery(id));
         },
 
         transform(code, id) {
-            let compiled;
-            try {
-                compiled = compileModule(
-                    code,
-                    id,
-                    opts(),
-                    (_cssName, filename) =>
-                        `${MODULE_CSS_PLACEHOLDER}?${VAPOR_SRC_QUERY}=${encodeURIComponent(
-                            toPosix(relative(opts().root, filename)),
-                        )}${MODULE_CSS_SUFFIX}`,
-                );
-            } catch (e) {
-                this.error((e as Error).message);
-                return null;
-            }
+            const compiled = compileOrError(
+                this,
+                code,
+                id,
+                opts(),
+                (_cssName, filename) =>
+                    `${MODULE_CSS_PLACEHOLDER}?${VAPOR_SRC_QUERY}=${encodeURIComponent(
+                        toPosix(relative(opts().root, filename)),
+                    )}${MODULE_CSS_SUFFIX}`,
+            );
             if (!compiled || compiled.code === code) return null;
             // unplugin@3.4.0 webpack loader 는 앞 loader 의 map 이 없으면 이 map 을 버린다
             // (`map == null ? map : res.map || map`). README "Source map" 참고.

@@ -1,14 +1,15 @@
+import type { LoaderContext } from './_loader';
 import type { VaporPluginOptions } from './_options';
-import vaporStyleTurbopackLoader, { type TurbopackLoaderContext } from './turbopack';
+import vaporStyleTurbopackLoader from './turbopack';
 
-function mkCtx(resourcePath: string, opts: VaporPluginOptions = {}): TurbopackLoaderContext {
+function mkCtx(resourcePath: string, opts: VaporPluginOptions = {}): LoaderContext {
     return {
         resourcePath,
         getOptions: () => opts,
     };
 }
 
-async function run(ctx: TurbopackLoaderContext, source: string) {
+async function run(ctx: LoaderContext, source: string) {
     return vaporStyleTurbopackLoader.call(ctx, source);
 }
 

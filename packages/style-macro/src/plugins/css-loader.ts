@@ -1,17 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { isAbsolute, resolve } from 'node:path';
 
+import { type LoaderContext, resolveLoaderOptions } from './_loader';
 import { VAPOR_SRC_QUERY, compileModule, isModuleCss, sourceOfModuleCss } from './_module-css';
-import { type VaporPluginOptions, resolveOptions } from './_options';
-
-/** webpack / Turbopack 공용 loader 컨텍스트 (사용하는 멤버만). */
-export interface CssLoaderContext {
-    resourcePath: string;
-    resourceQuery?: string;
-    rootContext?: string;
-    getOptions?: () => VaporPluginOptions;
-    addDependency?(file: string): void;
-}
 
 /**
  * 원본 소스 모듈을 받아 그 모듈의 CSS 를 돌려주는 loader. JS 쪽 변환이 넣은 import 가
@@ -23,10 +14,8 @@ export interface CssLoaderContext {
  *
  * JS 변환과 같은 옵션·해시로 컴파일하므로 class 이름이 일치한다. 규칙이 없으면 빈 시트.
  */
-export default function vaporCssLoader(this: CssLoaderContext, source: string): string {
-    const opts = resolveOptions(this.getOptions ? this.getOptions() : {}, {
-        root: this.rootContext,
-    });
+export default function vaporCssLoader(this: LoaderContext, source: string): string {
+    const opts = resolveLoaderOptions(this);
     const src = new URLSearchParams(this.resourceQuery?.slice(1) ?? '').get(VAPOR_SRC_QUERY);
     if (src === null) return compileModule(source, this.resourcePath, opts)?.css ?? '';
 

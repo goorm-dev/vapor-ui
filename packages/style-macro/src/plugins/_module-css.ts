@@ -3,6 +3,7 @@ import { basename, dirname, join } from 'node:path';
 import { formatBuildError } from '~/compilers/code-frame';
 import { type SourceMapV3, transform } from '~/compilers/transform';
 
+import { stripQuery } from './_id';
 import { type ResolvedOptions, scopeOf } from './_options';
 
 /**
@@ -31,12 +32,12 @@ export function moduleCssName(filename: string): string {
 }
 
 export function isModuleCss(id: string): boolean {
-    return id.split('?')[0]!.endsWith(MODULE_CSS_SUFFIX);
+    return stripQuery(id).endsWith(MODULE_CSS_SUFFIX);
 }
 
 /** `/x/button.tsx.vapor.css` → `/x/button.tsx`. */
 export function sourceOfModuleCss(id: string): string {
-    return id.split('?')[0]!.slice(0, -MODULE_CSS_SUFFIX.length);
+    return stripQuery(id).slice(0, -MODULE_CSS_SUFFIX.length);
 }
 
 /**
@@ -60,11 +61,6 @@ export interface CompiledModule {
 }
 
 /**
- * 한 소스 모듈의 `css()` 를 class 로 바꾸고 모듈 CSS 를 만든다. 번들러 어댑터(Vite·rolldown)가
- * 공유한다. `include` 밖이거나 매크로 import 가 없으면 `null`. 컴파일 오류는 code frame 을
- * 붙인 메시지로 throw 한다.
- */
-/**
  * 소스 파일을 JS 모듈이 아니라 자산으로 가져오는 쿼리 (`?raw` 텍스트, `?url` 주소). 이런 요청의
  * 모듈은 소스가 아니므로 매크로 대상이 아니다 — 컴파일하면 그 소스의 모듈 CSS 를 이 (CSS 없는)
  * 결과로 덮는다. Vite 의 `SPECIAL_QUERY_RE` 에서 소스를 JS 로 실행하는 worker 를 뺀 것이다
@@ -72,6 +68,11 @@ export interface CompiledModule {
  */
 const ASSET_QUERY_RE = /[?&](?:raw|url)(?:&|=|$)/;
 
+/**
+ * 한 소스 모듈의 `css()` 를 class 로 바꾸고 모듈 CSS 를 만든다. 번들러 어댑터(Vite·rolldown)가
+ * 공유한다. `include` 밖이거나 매크로 import 가 없으면 `null`. 컴파일 오류는 code frame 을
+ * 붙인 메시지로 throw 한다.
+ */
 export function compileModule(
     code: string,
     id: string,
@@ -100,4 +101,20 @@ export function compileModule(
         css: result.css ? result.css.replace(LAYER_STATEMENT_RE, '') : null,
         cssPath: join(dirname(filename), cssName),
     };
+}
+
+/**
+ * `compileModule` 의 컴파일 오류를 번들러 플러그인 컨텍스트의 `error` 로 넘긴다. `error` 가
+ * throw 하지 않는 번들러(unplugin webpack)에서는 `null` 을 돌려준다.
+ */
+export function compileOrError(
+    ctx: { error(message: string): unknown },
+    ...args: Parameters<typeof compileModule>
+): CompiledModule | null {
+    try {
+        return compileModule(...args);
+    } catch (e) {
+        ctx.error((e as Error).message);
+        return null;
+    }
 }

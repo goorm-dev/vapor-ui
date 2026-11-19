@@ -1,6 +1,7 @@
 import { dirname, posix, relative, resolve } from 'node:path';
 
-import { compileModule, isModuleCss } from './_module-css';
+import { stripQuery } from './_id';
+import { compileOrError, isModuleCss } from './_module-css';
 import { type VaporPluginOptions, resolveOptions, toPosix } from './_options';
 
 export type { VaporPluginOptions };
@@ -101,12 +102,7 @@ export function vaporRolldownPlugin(opts: VaporRolldownOptions = {}) {
         },
 
         transform(this: TransformContext, code: string, id: string) {
-            let compiled;
-            try {
-                compiled = compileModule(code, id, resolved);
-            } catch (e) {
-                this.error((e as Error).message);
-            }
+            const compiled = compileOrError(this, code, id, resolved);
             if (!compiled) return null;
             if (compiled.css) cssByPath.set(compiled.cssPath, compiled.css);
             return compiled.code === code ? null : { code: compiled.code, map: compiled.map };
@@ -114,7 +110,7 @@ export function vaporRolldownPlugin(opts: VaporRolldownOptions = {}) {
 
         resolveId(source: string, importer: string | undefined) {
             if (!importer || !isModuleCss(source)) return null;
-            const path = resolve(dirname(importer.split('?')[0]!), source);
+            const path = resolve(dirname(stripQuery(importer)), source);
             const css = cssByPath.get(path);
             if (css === undefined) return null;
             const id = toPosix(relative(resolved.root, path));

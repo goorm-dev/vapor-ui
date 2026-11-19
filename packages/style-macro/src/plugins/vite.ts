@@ -3,7 +3,8 @@ import { dirname, isAbsolute, join, resolve } from 'node:path';
 
 import { type ColorSchemeScriptOpts, buildColorSchemeScript } from '~/helpers/fouc-script';
 
-import { compileModule, isModuleCss, sourceOfModuleCss } from './_module-css';
+import { splitQuery, stripQuery } from './_id';
+import { compileOrError, isModuleCss, sourceOfModuleCss } from './_module-css';
 import {
     type ResolvedOptions,
     type VaporPluginOptions,
@@ -71,7 +72,7 @@ function resolveModuleCss(
         return path;
     }
     if (path.startsWith('/')) return join(root, path);
-    if (importer) return resolve(dirname(splitQuery(importer)[0]), path);
+    if (importer) return resolve(dirname(stripQuery(importer)), path);
     return join(root, path);
 }
 
@@ -85,12 +86,6 @@ function reload(server: ViteServerLike, cssId: string): void {
             `[@vapor-ui/style-macro] Failed to hot-reload ${cssId}: ${(e as Error)?.message ?? e}`,
         );
     });
-}
-
-/** `a?b` → `['a', '?b']`. */
-function splitQuery(id: string): [string, string] {
-    const i = id.indexOf('?');
-    return i < 0 ? [id, ''] : [id.slice(0, i), id.slice(i)];
 }
 
 /**
@@ -109,14 +104,6 @@ function moduleCssPlugin(rawOpts: VaporPluginOptions): VitePluginShape {
     let server: ViteServerLike | undefined;
     /** 모듈 CSS 절대 posix 경로(= Vite 모듈 id) → CSS. 규칙이 없으면 `''`. */
     const cssByPath = new Map<string, string>();
-
-    function compile(ctx: PluginContextLike, code: string, id: string) {
-        try {
-            return compileModule(code, id, opts);
-        } catch (e) {
-            return ctx.error((e as Error).message);
-        }
-    }
 
     return {
         name: 'vapor-style-macro',
@@ -146,7 +133,7 @@ function moduleCssPlugin(rawOpts: VaporPluginOptions): VitePluginShape {
 
         transform(this: PluginContextLike, code: string, id: string) {
             if (isModuleCss(id)) return null;
-            const compiled = compile(this, code, id);
+            const compiled = compileOrError(this, code, id, opts);
             if (!compiled) return null;
 
             const cssId = toPosix(compiled.cssPath);
@@ -166,7 +153,7 @@ function moduleCssPlugin(rawOpts: VaporPluginOptions): VitePluginShape {
 
         load(this: PluginContextLike, id: string) {
             if (!isModuleCss(id)) return null;
-            const path = toPosix(id.split('?')[0]!);
+            const path = toPosix(stripQuery(id));
             const cached = cssByPath.get(path);
             if (cached !== undefined) return cached;
 
@@ -178,7 +165,7 @@ function moduleCssPlugin(rawOpts: VaporPluginOptions): VitePluginShape {
                 return null;
             }
             this.addWatchFile(sourcePath);
-            const css = compile(this, source, sourcePath)?.css ?? '';
+            const css = compileOrError(this, source, sourcePath, opts)?.css ?? '';
             cssByPath.set(path, css);
             return css;
         },

@@ -5,6 +5,8 @@ import picomatch from 'picomatch';
 import { DEFAULT_LAYER } from '~/compilers/emit-css';
 import type { ColorSchemeScriptOpts } from '~/helpers/fouc-script';
 
+import { stripQuery } from './_id';
+
 export interface VaporPluginOptions {
     /**
      * 추가 변환 대상 glob. 상대 경로는 `root` 기준이며 `../` 와 절대 경로도 된다.
@@ -95,7 +97,7 @@ function owningPackage(dir: string): { dir: string; name: string } | null {
  * class 이름이 일치한다.
  */
 export function scopeOf(root: string, file: string): string {
-    const path = file.split('?')[0]!;
+    const path = stripQuery(file);
     const pkg = owningPackage(dirname(path));
     if (!pkg) return toPosix(relative(root, path));
     return `${pkg.name}/${toPosix(relative(pkg.dir, path))}`;
