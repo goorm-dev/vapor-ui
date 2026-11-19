@@ -55,6 +55,7 @@ const ParentMenu = forwardRef<HTMLDivElement, ParentMenuProps>((props, ref) => {
         // DOM
         id,
         className,
+        style,
 
         // variants
         side,
@@ -81,6 +82,7 @@ const ParentMenu = forwardRef<HTMLDivElement, ParentMenuProps>((props, ref) => {
                         ref={ref}
                         {...(id && { id })}
                         className={className}
+                        style={style}
                     >
                         {children}
                     </MenuPrimitives.PopupPrimitive>
@@ -104,6 +106,7 @@ const Submenu = forwardRef<HTMLDivElement, SubmenuProps>((props, ref) => {
         // DOM
         id,
         className,
+        style,
 
         // variants
         side = 'right',
@@ -130,6 +133,7 @@ const Submenu = forwardRef<HTMLDivElement, SubmenuProps>((props, ref) => {
                         ref={ref}
                         {...(id && { id })}
                         className={className}
+                        style={style}
                     >
                         {children}
                     </MenuPrimitives.SubmenuPopupPrimitive>
@@ -222,6 +226,11 @@ export interface MenuRootProps {
      * Popup DOM 노드에 추가할 className.
      */
     className?: PopupProps['className'];
+
+    /**
+     * Popup DOM 노드에 적용할 인라인 style.
+     */
+    style?: PopupProps['style'];
 }
 
 export namespace MenuRoot {
@@ -236,13 +245,13 @@ const groupSlots = createSlots({
 });
 
 export const MenuGroup = forwardRef<HTMLDivElement, MenuGroup.Props>((props, ref) => {
-    const { label, id, className, children } = props;
+    const { label, id, className, style, children } = props;
 
     return (
         <>
             <Separator />
 
-            <MenuPrimitives.Group ref={ref} {...(id && { id })} className={className}>
+            <MenuPrimitives.Group ref={ref} {...(id && { id })} className={className} style={style}>
                 <groupSlots.label render={label} />
                 {children}
             </MenuPrimitives.Group>
@@ -276,6 +285,11 @@ export interface MenuGroupProps {
      * 그룹 DOM 노드에 추가할 className.
      */
     className?: GroupProps['className'];
+
+    /**
+     * 그룹 DOM 노드에 적용할 인라인 style.
+     */
+    style?: GroupProps['style'];
 }
 
 export namespace MenuGroup {
@@ -323,7 +337,16 @@ export const MenuCheckGroup = forwardRef<HTMLDivElement, MenuCheckGroup.Props>((
 MenuCheckGroup.displayName = 'Menu.CheckGroup';
 
 const SingleCheckGroup = forwardRef<HTMLDivElement, MenuSingleCheckGroupProps>((props, ref) => {
-    const { value: valueProp, defaultValue, onValueChange, label, id, className, children } = props;
+    const {
+        value: valueProp,
+        defaultValue,
+        onValueChange,
+        label,
+        id,
+        className,
+        style,
+        children,
+    } = props;
 
     const [value, setValueState] = useControlled<string | undefined>({
         name: 'MenuCheckGroup',
@@ -351,6 +374,7 @@ const SingleCheckGroup = forwardRef<HTMLDivElement, MenuSingleCheckGroupProps>((
                 ref={ref}
                 {...(id && { id })}
                 className={className}
+                style={style}
                 value={value}
                 onValueChange={handleValueChange}
             >
@@ -364,7 +388,16 @@ const SingleCheckGroup = forwardRef<HTMLDivElement, MenuSingleCheckGroupProps>((
 });
 
 const MultipleCheckGroup = forwardRef<HTMLDivElement, MenuMultipleCheckGroupProps>((props, ref) => {
-    const { value: valueProp, defaultValue, onValueChange, label, id, className, children } = props;
+    const {
+        value: valueProp,
+        defaultValue,
+        onValueChange,
+        label,
+        id,
+        className,
+        style,
+        children,
+    } = props;
 
     const [value, setValueState] = useControlled<string[]>({
         name: 'MenuCheckGroup',
@@ -392,7 +425,7 @@ const MultipleCheckGroup = forwardRef<HTMLDivElement, MenuMultipleCheckGroupProp
         <MenuCheckGroupContext.Provider value={context}>
             <Separator />
 
-            <MenuPrimitives.Group ref={ref} {...(id && { id })} className={className}>
+            <MenuPrimitives.Group ref={ref} {...(id && { id })} className={className} style={style}>
                 <checkGroupSlots.label render={label} />
                 {children}
             </MenuPrimitives.Group>
@@ -441,6 +474,11 @@ export interface MenuSingleCheckGroupProps {
     className?: RadioGroupProps['className'];
 
     /**
+     * 단일 선택 그룹 DOM 노드에 적용할 인라인 style.
+     */
+    style?: RadioGroupProps['style'];
+
+    /**
      * 그룹 상단에 표시되는 라벨. 스크린리더가 그룹 이름으로 낭독한다.
      */
     label: CheckGroupSlots['label'];
@@ -486,6 +524,11 @@ export interface MenuMultipleCheckGroupProps {
     className?: CheckGroupMultipleProps['className'];
 
     /**
+     * 다중 선택 그룹 DOM 노드에 적용할 인라인 style.
+     */
+    style?: CheckGroupMultipleProps['style'];
+
+    /**
      * 그룹 상단에 표시되는 라벨. 스크린리더가 그룹 이름으로 낭독한다.
      */
     label: CheckGroupSlots['label'];
@@ -504,14 +547,25 @@ export namespace MenuCheckGroup {
 /* -----------------------------------------------------------------------------------------------*/
 
 export const MenuItem = forwardRef<HTMLDivElement, MenuItem.Props>((props, ref) => {
-    const { isDisabled, variant, label, description, leading, trailing, onClick, id, className } =
-        props;
+    const {
+        isDisabled,
+        variant,
+        label,
+        description,
+        leading,
+        trailing,
+        onClick,
+        id,
+        className,
+        style,
+    } = props;
 
     return (
         <MenuPrimitives.Item
             ref={ref}
             {...(id && { id })}
             className={className}
+            style={style}
             disabled={isDisabled}
             onClick={onClick}
             $css={{
@@ -544,6 +598,11 @@ export interface MenuItemProps {
      * 메뉴 아이템 DOM 노드에 추가할 className.
      */
     className?: ItemProps['className'];
+
+    /**
+     * 메뉴 아이템 DOM 노드에 적용할 인라인 style.
+     */
+    style?: ItemProps['style'];
 
     /**
      * 항목 클릭 시 호출되는 이벤트 핸들러.
@@ -602,6 +661,7 @@ export const MenuCheckItem = forwardRef<HTMLDivElement, MenuCheckItem.Props>((pr
         trailing,
         id,
         className,
+        style,
     } = props;
 
     const context = useMenuCheckGroupContext();
@@ -618,6 +678,7 @@ export const MenuCheckItem = forwardRef<HTMLDivElement, MenuCheckItem.Props>((pr
                 ref={ref}
                 {...(id && { id })}
                 className={className}
+                style={style}
                 closeOnClick
                 disabled={isDisabled}
                 value={valueProp}
@@ -649,6 +710,7 @@ export const MenuCheckItem = forwardRef<HTMLDivElement, MenuCheckItem.Props>((pr
             ref={ref}
             {...(id && { id })}
             className={className}
+            style={style}
             disabled={isDisabled}
             checked={checked}
             onCheckedChange={handleCheckedChange}
@@ -681,6 +743,11 @@ export interface MenuCheckItemProps {
      * 체크 아이템 DOM 노드에 추가할 className.
      */
     className?: RadioItemProps['className'] | CheckboxItemProps['className'];
+
+    /**
+     * 체크 아이템 DOM 노드에 적용할 인라인 style.
+     */
+    style?: RadioItemProps['style'] | CheckboxItemProps['style'];
 
     /**
      * 항목이 대표하는 값. 그룹의 선택 상태 키로 사용된다.
@@ -728,7 +795,7 @@ export namespace MenuCheckItem {
 /* -----------------------------------------------------------------------------------------------*/
 
 export const MenuSubmenuItem = forwardRef<HTMLDivElement, MenuSubmenuItem.Props>((props, ref) => {
-    const { isDisabled, leading, description, label, trailing, id, className } = props;
+    const { isDisabled, leading, description, label, trailing, id, className, style } = props;
 
     const itemLayout = getItemLayout({
         hasLeading: !!leading,
@@ -741,6 +808,7 @@ export const MenuSubmenuItem = forwardRef<HTMLDivElement, MenuSubmenuItem.Props>
             ref={ref}
             {...(id && { id })}
             className={className}
+            style={style}
             disabled={isDisabled}
             $css={{ display: 'grid', gap: '$000', ...itemLayout }}
         >
@@ -772,6 +840,11 @@ export interface MenuSubmenuItemProps {
      * SubmenuTrigger DOM 노드에 추가할 className.
      */
     className?: SubmenuItemProps['className'];
+
+    /**
+     * SubmenuTrigger DOM 노드에 적용할 인라인 style.
+     */
+    style?: SubmenuItemProps['style'];
 
     /**
      * 아이템을 비활성화한다. 비활성화된 트리거는 메뉴를 열 수 없다.

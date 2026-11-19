@@ -9,7 +9,7 @@ describe('AlertDialog.Root', () => {
     afterEach(cleanup);
 
     testConformance<HTMLDivElement>(
-        async ({ ref, id, className }) => {
+        async ({ ref, id, className, style }) => {
             const rendered = render(
                 <AlertDialog.Root
                     type="critical"
@@ -21,6 +21,7 @@ describe('AlertDialog.Root', () => {
                     ref={ref}
                     id={id}
                     className={className}
+                    style={style}
                 >
                     바디
                 </AlertDialog.Root>,
@@ -37,7 +38,7 @@ describe('AlertDialog.Action', () => {
     afterEach(cleanup);
 
     testConformance<HTMLButtonElement>(
-        async ({ ref, id, className }) => {
+        async ({ ref, id, className, style }) => {
             const rendered = render(
                 <AlertDialog.Root
                     type="critical"
@@ -46,7 +47,7 @@ describe('AlertDialog.Action', () => {
                     trigger={<button type="button">열기</button>}
                     cancel={<AlertDialog.Cancel>취소</AlertDialog.Cancel>}
                     action={
-                        <AlertDialog.Action ref={ref} id={id} className={className}>
+                        <AlertDialog.Action ref={ref} id={id} className={className} style={style}>
                             확인
                         </AlertDialog.Action>
                     }
@@ -66,7 +67,7 @@ describe('AlertDialog.Cancel', () => {
     afterEach(cleanup);
 
     testConformance<HTMLButtonElement>(
-        async ({ ref, id, className }) => {
+        async ({ ref, id, className, style }) => {
             const rendered = render(
                 <AlertDialog.Root
                     type="critical"
@@ -75,7 +76,7 @@ describe('AlertDialog.Cancel', () => {
                     trigger={<button type="button">열기</button>}
                     action={<AlertDialog.Action>확인</AlertDialog.Action>}
                     cancel={
-                        <AlertDialog.Cancel ref={ref} id={id} className={className}>
+                        <AlertDialog.Cancel ref={ref} id={id} className={className} style={style}>
                             취소
                         </AlertDialog.Cancel>
                     }

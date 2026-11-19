@@ -46,6 +46,7 @@ export const AlertDialogRoot = forwardRef<HTMLDivElement, AlertDialogRoot.Props>
         // DOM
         id,
         className,
+        style,
 
         // variants
         type,
@@ -84,6 +85,7 @@ export const AlertDialogRoot = forwardRef<HTMLDivElement, AlertDialogRoot.Props>
                         ref={ref}
                         {...(id && { id })}
                         className={className}
+                        style={style}
                     >
                         <Header title={title} description={description} />
                         <Body>{children}</Body>
@@ -165,6 +167,11 @@ export interface AlertDialogProps {
      * Popup DOM 노드의 className.
      */
     className?: PopupProps['className'];
+
+    /**
+     * Popup DOM 노드에 적용할 인라인 style.
+     */
+    style?: PopupProps['style'];
 
     /**
      * 다이얼로그의 목적을 한 문장으로 전달한다.
@@ -257,7 +264,7 @@ const Footer = ({ action, cancel }: FooterProps) => {
 /* -----------------------------------------------------------------------------------------------*/
 
 export const AlertDialogAction = forwardRef<HTMLElement, AlertDialogAction.Props>((props, ref) => {
-    const { id, isDisabled, closeOnClick = true, className, onClick, children } = props;
+    const { id, isDisabled, closeOnClick = true, className, style, onClick, children } = props;
 
     const { close, type } = useAlertDialogContext();
     const handleClick = (event: Parameters<NonNullable<ButtonProps['onClick']>>[0]) => {
@@ -276,6 +283,7 @@ export const AlertDialogAction = forwardRef<HTMLElement, AlertDialogAction.Props
             colorPalette={type === 'critical' ? 'danger' : 'primary'}
             disabled={isDisabled}
             className={className}
+            style={style}
             onClick={handleClick}
         >
             {children}
@@ -308,6 +316,11 @@ interface AlertDialogActionProps {
     className?: ButtonProps['className'];
 
     /**
+     * Action DOM 노드에 적용할 인라인 style.
+     */
+    style?: ButtonProps['style'];
+
+    /**
      * 버튼 클릭 시 호출되는 이벤트 핸들러.
      * @example
      * <AlertDialog.Action onClick={handleDelete}>삭제</AlertDialog.Action>
@@ -327,7 +340,7 @@ export namespace AlertDialogAction {
 /* -----------------------------------------------------------------------------------------------*/
 
 export const AlertDialogCancel = forwardRef<HTMLElement, AlertDialogCancel.Props>((props, ref) => {
-    const { id, isDisabled, closeOnClick = true, className, onClick, children } = props;
+    const { id, isDisabled, closeOnClick = true, className, style, onClick, children } = props;
 
     const { close } = useAlertDialogContext();
     const handleClick = useCallback(
@@ -349,6 +362,7 @@ export const AlertDialogCancel = forwardRef<HTMLElement, AlertDialogCancel.Props
             colorPalette="secondary"
             disabled={isDisabled}
             className={className}
+            style={style}
             onClick={handleClick}
         >
             {children}
@@ -379,6 +393,11 @@ interface AlertDialogCancelProps {
      * Cancel DOM 노드에 추가할 className.
      */
     className?: ButtonProps['className'];
+
+    /**
+     * Cancel DOM 노드에 적용할 인라인 style.
+     */
+    style?: ButtonProps['style'];
 
     /**
      * 버튼 클릭 시 호출되는 이벤트 핸들러.

@@ -9,7 +9,7 @@ describe('Dialog.Root', () => {
     afterEach(cleanup);
 
     testConformance<HTMLDivElement>(
-        async ({ ref, id, className }) => {
+        async ({ ref, id, className, style }) => {
             const rendered = render(
                 <Dialog.Root
                     ref={ref}
@@ -19,6 +19,7 @@ describe('Dialog.Root', () => {
                     description="본문"
                     trigger={<button type="button">열기</button>}
                     className={className}
+                    style={style}
                 >
                     바디
                 </Dialog.Root>,
@@ -35,7 +36,7 @@ describe('Dialog.Action', () => {
     afterEach(cleanup);
 
     testConformance<HTMLButtonElement>(
-        async ({ ref, id, className }) => {
+        async ({ ref, id, className, style }) => {
             const rendered = render(
                 <Dialog.Root
                     title="타이틀"
@@ -43,7 +44,7 @@ describe('Dialog.Action', () => {
                     trigger={<button type="button">열기</button>}
                     ariaLabels={{ close: '닫기' }}
                     action={
-                        <Dialog.Action ref={ref} id={id} className={className}>
+                        <Dialog.Action ref={ref} id={id} className={className} style={style}>
                             확인
                         </Dialog.Action>
                     }
@@ -63,7 +64,7 @@ describe('Dialog.Assistive', () => {
     afterEach(cleanup);
 
     testConformance<HTMLButtonElement>(
-        async ({ ref, id, className }) => {
+        async ({ ref, id, className, style }) => {
             const rendered = render(
                 <Dialog.Root
                     title="타이틀"
@@ -71,7 +72,7 @@ describe('Dialog.Assistive', () => {
                     trigger={<button type="button">열기</button>}
                     ariaLabels={{ close: '닫기' }}
                     assistive={
-                        <Dialog.Assistive ref={ref} id={id} className={className}>
+                        <Dialog.Assistive ref={ref} id={id} className={className} style={style}>
                             취소
                         </Dialog.Assistive>
                     }

@@ -60,6 +60,7 @@ export const DialogRoot = forwardRef<HTMLDivElement, DialogRoot.Props>((props, r
         // DOM
         id,
         className,
+        style,
 
         // variants
         size,
@@ -97,6 +98,7 @@ export const DialogRoot = forwardRef<HTMLDivElement, DialogRoot.Props>((props, r
                         ref={ref}
                         {...(id && { id })}
                         className={className}
+                        style={style}
                     >
                         <Header title={title} description={description} />
                         <Body>{children}</Body>
@@ -188,6 +190,11 @@ export interface DialogProps {
     className?: PopupProps['className'];
 
     /**
+     * Popup DOM 노드에 적용할 인라인 style.
+     */
+    style?: PopupProps['style'];
+
+    /**
      * 다이얼로그의 목적을 한 문장으로 전달한다.
      */
     title: Slots['title'];
@@ -267,7 +274,9 @@ const CloseButton = () => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Props) => {
+interface BodyProps extends Pick<DialogPrimitives.Body.Props, 'children'> {}
+
+const Body = ({ children, ...props }: BodyProps) => {
     const bodyRef = useRef<HTMLDivElement>(null);
     const [overflowed, setOverflowed] = useState(false);
 
@@ -281,8 +290,7 @@ const Body = ({ $css: $cssProp, children, ...props }: DialogPrimitives.Body.Prop
     const $css = {
         maskImage: overflowed ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
         paddingBottom: overflowed ? '$250' : '$000',
-        ...$cssProp,
-    } satisfies typeof $cssProp;
+    };
 
     if (!children) return null;
 
@@ -320,7 +328,7 @@ const Footer = ({ action, assistive }: FooterProps) => {
 /* -----------------------------------------------------------------------------------------------*/
 
 export const DialogAction = forwardRef<HTMLElement, DialogAction.Props>((props, ref) => {
-    const { id, isDisabled, closeOnClick = true, className, onClick, children } = props;
+    const { id, isDisabled, closeOnClick = true, className, style, onClick, children } = props;
 
     const { close } = useDialogContext();
     const handleClick = (event: Parameters<NonNullable<Button.Props['onClick']>>[0]) => {
@@ -339,6 +347,7 @@ export const DialogAction = forwardRef<HTMLElement, DialogAction.Props>((props, 
             colorPalette="primary"
             disabled={isDisabled}
             className={className}
+            style={style}
             onClick={handleClick}
         >
             {children}
@@ -371,6 +380,11 @@ interface DialogActionProps {
     className?: ButtonProps['className'];
 
     /**
+     * Action DOM 노드에 적용할 인라인 style.
+     */
+    style?: ButtonProps['style'];
+
+    /**
      * 버튼 클릭 시 호출되는 이벤트 핸들러.
      * @example
      * <Dialog.Action onClick={handleConfirm}>확인</Dialog.Action>
@@ -390,7 +404,7 @@ export namespace DialogAction {
 /* -----------------------------------------------------------------------------------------------*/
 
 export const DialogAssistive = forwardRef<HTMLElement, DialogAssistive.Props>((props, ref) => {
-    const { id, isDisabled, closeOnClick = true, className, onClick, children } = props;
+    const { id, isDisabled, closeOnClick = true, className, style, onClick, children } = props;
 
     const { close } = useDialogContext();
     const handleClick = (event: Parameters<NonNullable<Button.Props['onClick']>>[0]) => {
@@ -410,6 +424,7 @@ export const DialogAssistive = forwardRef<HTMLElement, DialogAssistive.Props>((p
             variant="outline"
             disabled={isDisabled}
             className={className}
+            style={style}
             onClick={handleClick}
         >
             {children}
@@ -440,6 +455,11 @@ interface DialogAssistiveProps {
      * Assistive DOM 노드에 추가할 className.
      */
     className?: ButtonProps['className'];
+
+    /**
+     * Assistive DOM 노드에 적용할 인라인 style.
+     */
+    style?: ButtonProps['style'];
 
     /**
      * 버튼 클릭 시 호출되는 이벤트 핸들러.
