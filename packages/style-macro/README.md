@@ -1,0 +1,351 @@
+# @vapor-ui/style-macro
+
+빌드 타임에 동작하는 zero-runtime CSS-in-JS. `css({...})` 호출 1개를 **class 1개 + CSS 블록 1개** 로 컴파일한다 (Vanilla Extract 와 같은 모델). `css()` 를 쓰는 모듈은 자기 CSS 만 import 하므로, 앱이 import 하지 않는 컴포넌트의 CSS 는 번들에 들어가지 않는다.
+
+- 반환값은 순수 `string` — Server Component 에서 만들어 Client Component 로 넘겨도 된다.
+- 블록 안 선언 순서는 작성 순서 그대로다. 같은 selector·property 는 뒤에 쓴 것이 이긴다. selector 그룹은 base → 중첩 selector(작성 순) → at-rule(작성 순) 순으로 나온다. 단 같은 형태의 width media query 끼리는 `min-width` 오름 / `max-width` 내림으로 정렬한다(다른 at-rule 과는 섞지 않는다).
+- `css(a, b)` 합성:
+    - 같은 파일에서 정적으로 풀리는 인자(object 리터럴, 모듈 최상위 `const x = css(...)` / `const x = { ... }` 상수, 그 사이의 `&&` / `?:`)는 compile-time 에 **한 블록으로 병합**한다. 뒤 인자가 이기고, 조건부 조합은 분기마다 병합 블록을 미리 만든다(최대 16 조합).
+    - 그 밖의 인자(import, props, 함수 결과)는 `_cx([...])` 로 이어붙인다. 같은 속성을 가진 두 class 의 승패는 CSS 로드 순서(import 순서)를 따른다.
+    - 정적으로 풀리지 않는 인자 안에 스타일 객체가 값으로 올 수 있으면(`css(c || { ... })`, 한쪽 분기만 정적인 삼항) 빌드 에러다. 런타임에는 class 문자열만 있다. `css(c, !c && { ... })` 처럼 나눠 쓴다.
+
+## 사용
+
+소비자 코드:
+
+```tsx
+import { css } from '@vapor-ui/style-macro';
+
+function Button() {
+    return (
+        <button
+            className={css({
+                padding: '$space-200',
+                color: '$fg-primary',
+                backgroundColor: '$bg-primary',
+                ':hover': { backgroundColor: '$bg-secondary' },
+            })}
+        >
+            Click
+        </button>
+    );
+}
+```
+
+번들러 config. 지원 번들러는 Vite·webpack·Next(webpack·Turbopack)이고, 라이브러리 빌드는 Rolldown 이다 ([라이브러리 배포](#라이브러리-배포)). 그 밖의 번들러(Parcel 등)는 지원하지 않는다.
+
+- **Vite (7·8)** — `css()` 를 쓰는 모듈마다 가상 CSS 모듈(`<file>.vapor.css`)을 만들고, 그 모듈이 자기 CSS 를 import 한다 (Vanilla Extract 와 같은 모델). import 되지 않는 모듈의 CSS 는 번들에 들어가지 않고, dev 에서는 수정한 모듈의 CSS 만 HMR 로 바뀐다. 레이어 순서를 고정하려면 앱 CSS 진입점에서 `@vapor-ui/core/layers.css` 를 **모든 `@vapor-ui/*` import 보다 먼저** import 한다. `include` 로 지목한 패키지는 `optimizeDeps.exclude` 와 `ssr.noExternal` 에 자동으로 추가되어 dev pre-bundling 과 SSR externalize 에서 제외된다.
+- **webpack 5** — 같은 모델. 모듈마다 `@vapor-ui/style-macro/module.vapor.css?vapor-src=<모듈 경로>` 를 import 하고, 플러그인이 등록한 loader 가 그 자리에 모듈 CSS 를 넣는다. 이 요청은 앱의 `.css` 규칙(css-loader + style-loader / mini-css-extract-plugin, 또는 `experiments.css`)으로 처리되므로 앱에 `.css` 규칙이 있어야 한다.
+- **Next (webpack · Turbopack)** — `vaporNextPlugin` 이 번들러를 감지해 배선한다. webpack 은 위와 같고, Turbopack 은 모듈마다 `./<file>?vapor-css` 를 import 하고 그 쿼리에 CSS loader 규칙(`as: '*.css'`)을 건다. 서버·클라이언트 컴포넌트 모두 라우트별 CSS 로 나뉘고 dev 에서 수정 즉시 반영된다. 레이어 순서는 루트 layout 이 import 하는 CSS 에서 `@vapor-ui/core/layers.css` 를 먼저 import 해 고정한다.
+
+같은 레이어 안에서 서로 다른 모듈의 규칙끼리는 CSS 로드 순서가 승자를 정한다. 한 모듈 안의 `css()` 는 그 모듈이 import 한 라이브러리 CSS 뒤에 오므로 라이브러리 컴포넌트에 넘긴 override 가 이긴다. override 를 다른 모듈(공용 styles 파일, 다른 청크)에 두면 순서가 보장되지 않는다 — 라이브러리는 앱보다 앞선 레이어를 써야 한다 ([라이브러리 배포](#라이브러리-배포)).
+
+```css
+/* src/styles.css */
+@import '@vapor-ui/core/layers.css'; /* 레이어 순서 — 모든 @vapor-ui/* import 보다 먼저 */
+@import '@vapor-ui/core/styles.css';
+```
+
+```ts
+// vite.config.ts
+import { vaporVitePlugin } from '@vapor-ui/style-macro/vite';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+
+// https://vite.dev/config/
+export default defineConfig({
+    plugins: [vaporVitePlugin(), react()],
+});
+```
+
+```ts
+// next.config.ts
+import { vaporNextPlugin } from '@vapor-ui/style-macro/next';
+import type { NextConfig } from 'next';
+
+const withVapor = vaporNextPlugin();
+const nextConfig: NextConfig = {/* config options here */};
+
+export default withVapor(nextConfig);
+```
+
+## Entry points
+
+| Subpath                             | 용도                                                                                               |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `@vapor-ui/style-macro`             | 소비자용 `css()` + `buildColorSchemeScript()` + 타입                                               |
+| `@vapor-ui/style-macro/vite`        | Vite plugin                                                                                        |
+| `@vapor-ui/style-macro/webpack`     | Webpack plugin                                                                                     |
+| `@vapor-ui/style-macro/next`        | Next.js plugin (webpack / turbopack 자동 감지)                                                     |
+| `@vapor-ui/style-macro/rolldown`    | Rolldown plugin — 라이브러리 빌드. 컴포넌트별 CSS 를 배포 ([라이브러리 배포](#라이브러리-배포))    |
+| `@vapor-ui/style-macro/turbopack`   | Turbopack loader (next plugin 이 내부 사용)                                                        |
+| `@vapor-ui/style-macro/css-loader`  | webpack / Turbopack CSS loader — 소스 모듈을 모듈 CSS 로 컴파일 (webpack·next plugin 이 내부 사용) |
+| `@vapor-ui/style-macro/__runtime__` | **내부용** — plugin 이 소비자 코드에 자동 inject. 직접 import 금지                                 |
+
+## Plugin 옵션
+
+```ts
+interface VaporPluginOptions {
+    include?: string[];
+    exclude?: string[];
+    root?: string;
+    hash?: boolean;
+    injectColorScheme?: boolean | ColorSchemeScriptOpts;
+    layer?: string;
+}
+```
+
+| 옵션                | 기본값                                  | 설명                                                                                                                                                                                                                                                                                         |
+| ------------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `include`           | `[]`                                    | 추가 대상 glob. 상대 경로는 `root` 기준이며 `../` 와 절대 경로도 된다. 기본 대상(JS/TS, `node_modules` 제외)에 **더해진다**. 패키지는 `node_modules/<이름>/…` 로 쓰면 설치 방식(npm hoist, pnpm store 실경로)과 무관하게 맞는다. 예: `['node_modules/@acme/ui/dist/**', '../shared/src/**']` |
+| `exclude`           | `[]`                                    | 제외 glob (`root` 기준 상대 경로, `../`·절대 경로 가능). `include` 보다 우선                                                                                                                                                                                                                 |
+| `root`              | 번들러 프로젝트 루트                    | `include`/`exclude` glob 기준 경로. **기본값은 번들러가 주는 프로젝트 루트** (Vite `config.root`, webpack `compiler.context` / `loader.rootContext`, rolldown `cwd`). 번들러 루트가 없으면 필수 — 없으면 오류. 경로 자체에 `(`·`[` 같은 glob 문자가 있어도 된다                              |
+| `hash`              | `process.env.NODE_ENV === 'production'` | class name hash 모드 (readable vs hashed)                                                                                                                                                                                                                                                    |
+| `injectColorScheme` | `true`                                  | Vite(`transformIndexHtml`)와 webpack(`html-webpack-plugin`)에서 `<head>` 맨 앞에 FOUC guard script 자동 주입. object 로 커스텀 가능                                                                                                                                                          |
+| `layer`             | `'vapor-utilities'`                     | `css()` 규칙을 담을 CSS cascade layer 이름 (`acme.ui` 같은 sub-layer 가능). CSS 진입점의 레이어 순서 선언에 포함돼야 한다 — 빠지면 브라우저가 맨 뒤 레이어로 취급해 앱 스타일까지 이긴다                                                                                                     |
+
+## Next plugin 옵션
+
+`vaporNextPlugin` 은 `VaporPluginOptions` 외에 아래 옵션을 추가로 받는다.
+
+```ts
+interface WithVaporPluginOptions extends VaporPluginOptions {
+    mode?: 'auto' | 'webpack' | 'turbopack';
+    turbopackGlob?: string | string[];
+}
+```
+
+| 옵션            | 기본값                                   | 설명                                                                                                                                                                                                                                                     |
+| --------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `mode`          | `'auto'`                                 | 번들러 선택. `'auto'` = `process.env.TURBOPACK` 존재 여부로 자동 감지. `'webpack'` / `'turbopack'` 으로 고정할 수 있다                                                                                                                                   |
+| `turbopackGlob` | `'**/*.{tsx,jsx,ts,js,mts,mjs,cts,cjs}'` | Turbopack loader 를 붙일 소스 파일 glob (배열도 된다). `include`/`exclude` 필터는 loader 안에서 별도로 적용되므로, 이 glob 은 loader 가 받는 파일 범위만 정한다. `.js`·`.mjs`·`.cjs` 가 포함되는 것은 TypeScript 외부에서 `css()` 를 쓸 수 있기 때문이다 |
+
+## 라이브러리 배포
+
+`css()` 를 쓰는 라이브러리는 빌드 시점에 매크로를 컴파일해 배포한다. 소비자는 플러그인도, 별도 CSS import 도 필요 없다 — 컴포넌트를 import 하면 그 컴포넌트의 CSS 가 함께 들어간다.
+
+```ts
+// rolldown.config.ts
+import { vaporRolldownPlugin } from '@vapor-ui/style-macro/rolldown';
+
+export default {
+    input: { 'button/button': 'src/button/button.tsx' /* ... */ },
+    plugins: [vaporRolldownPlugin({ hash: true, layer: 'acme-ui' })],
+    output: { dir: 'dist', preserveModules: true, preserveModulesRoot: 'src' },
+};
+```
+
+```jsonc
+// package.json
+{ "sideEffects": ["**/*.css"] }
+```
+
+- `css()` 를 쓰는 모듈마다 `<file>.vapor.css` (`<file>` 은 확장자 포함, 예: `button.tsx.vapor.css`)를 만들고, 그 모듈의 출력 파일이 import 하게 한다 (ESM `import`, CJS `require`). Vanilla Extract rollup plugin 과 같은 구조라 `preserveModules` 출력이 필요하다.
+- 레이어 순서 선언(`@layer x;`)은 넣지 않는다. 순서는 소비자의 CSS 엔트리(`@vapor-ui/core/layers.css` 등)가 정한다.
+- class 이름 해시에는 가장 가까운 `package.json` 의 `name` 과 그 패키지 기준 상대 경로가 들어간다. 다른 패키지와 class 가 겹치지 않는다.
+- CJS 소비자는 서브패스(`acme-ui/button`)로 가져와야 컴포넌트 단위로 CSS 가 들어간다. CJS 루트 진입점은 모든 컴포넌트를 `require` 해 번들러가 걸러내지 못한다.
+- `extract: true`(또는 `{ name: 'styles.css' }`)면 모듈별 CSS 대신 모든 CSS 를 모듈 평가 순서(의존 모듈 먼저, import 순, dynamic import 는 뒤)로 합친 파일 하나(기본 `index.css`)를 내보내고, 모듈 CSS 를 부작용 없는 빈 모듈로 해석해 출력 JS 에 CSS import 가 남지 않는다 (minify 와 무관). 소비자가 그 파일을 직접 import 한다. `@vanilla-extract/rollup-plugin` 의 `extract` 와 같다.
+- 각 모듈 CSS 는 external 모듈의 `meta.css` 에 실린다. 다른 rolldown 플러그인이 `this.getModuleInfo(id).meta.css` 로 읽어 후처리할 수 있다.
+- 라이브러리는 앱과 다른 `layer` 를 주는 것을 권장한다. 같은 레이어를 쓰면 소비자가 라이브러리 컴포넌트에 넘긴 `className` override 의 성패가 CSS 로드 순서에 좌우된다. 라이브러리 레이어를 앱 레이어보다 앞에 선언하면 로드 순서와 무관하게 앱이 이긴다. `@vapor-ui/composites` 는 `vapor-composites` 레이어를 쓰고, `@vapor-ui/core/layers.css` 가 이를 `vapor-components` 와 `vapor-utilities` 사이에 선언한다.
+- `hash: true` 로 고정한다. 기본값은 빌드 시점 `NODE_ENV` 를 따르므로, 고정하지 않으면 배포물의 class 이름이 빌드 환경에 따라 달라진다.
+
+## 지원하는 값
+
+### 토큰 참조
+
+```ts
+css({ color: '$fg-primary' }); // ✓ axis 매치
+css({ backgroundColor: '$bg-primary' }); // ✓ axis 매치
+css({ padding: '$space-200' }); // ✓ shorthand expansion
+```
+
+`$token` 은 값 component 하나다. 앞뒤가 값의 끝·공백·`(`·`)`·`,`·`/` 여야 한다. CSS 문자열(`"…"`)과 `url(…)` 안의 `$` 는 토큰이 아니라 글자 그대로다.
+
+```ts
+css({ padding: '$space-100 $space-200' }); // ✓ component 여러 개
+css({ marginTop: 'calc($space-100 * -1)' }); // ✓
+css({ content: '"Price $USD"' }); // ✓ 문자열 안 — 토큰 아님
+css({ marginTop: '-$space-100' }); // ✗ invalid-input-shape (다른 글자에 붙음)
+```
+
+### 중첩 selector
+
+```ts
+css({
+    color: '$fg-primary',
+    ':hover': { color: '$fg-secondary' },
+    '::before': { content: '"→"' },
+    '@media (min-width: 768px)': { padding: '$space-400' },
+    '&.selected': { backgroundColor: '$bg-primary' },
+    '[data-active="true"]': { opacity: 1 },
+});
+```
+
+### Entry-level 삼항
+
+```ts
+css({
+    color: isActive ? '$fg-primary' : '$fg-secondary',
+    padding: compact ? '$space-100' : '$space-400',
+});
+```
+
+양 분기 모두 리터럴/토큰이어야 함. 다중 삼항 지원.
+
+### Dynamic value
+
+```ts
+function C({ color }: { color: string }) {
+    return <div className={css({ color })} />;
+}
+```
+
+Runtime 에 `_resolveToken(property, value)` 호출 + inline `style={{ '--slot': ... }}` 자동 주입.
+
+slot 변수는 선언마다 고유하다(파일·선언 위치로 이름을 만든다). element 의 inline style 에 설정되므로 그 element 와 **자손**만 값을 받는다 — 형제 selector(`& + span`, `& ~ span`) 아래의 dynamic 값은 적용되지 않는다. 빌드는 통과하고, dev 빌드(`hash: false`)에서는 모듈이 로드될 때 콘솔에 에러를 한 번 낸다.
+
+값이 `undefined` / `null` 이면 CSS `var()` 스펙 그대로 그 선언은 invalid-at-computed-value-time 이 되어 `unset` 으로 동작한다 — 비상속 property(`background-color` 등)는 initial(투명 등), 상속 property(`color` 등)는 부모 값. 컴포넌트 기본 스타일로 돌아가지 않는다(Compiled, StyleX 와 같다). 기본값이 필요하면 직접 넘긴다: `css({ backgroundColor: bg ?? '$bg-primary' })`.
+
+### 값 없음 (`null` / `undefined`)
+
+`null` / `undefined` 리터럴은 선언을 만들지 않는다.
+
+```ts
+css({ color: undefined, width: '1px' }); // width 만
+```
+
+### 속성 이름 검사
+
+컴파일러는 속성 이름을 검사하지 않는다(Compiled · React Spectrum style macro 와 같다). 오타는 TypeScript 가 `StyleObject` 타입으로 잡는다. 인라인 리터럴은 자동으로 검사되지만, 상수로 선언한 object 는 타입을 붙여야 검사된다.
+
+```ts
+import { css, type StyleObject } from '@vapor-ui/style-macro';
+
+css({ colr: 'red' }); // ✗ TS: 'colr' does not exist in type 'StyleObject'
+
+const base = { colr: 'red' }; // 타입 없음 → 검사 안 됨
+const base = { colr: 'red' } satisfies StyleObject; // ✗ TS 에러
+```
+
+## 지원 안 하는 값
+
+### Shorthand property + 토큰
+
+shorthand 속성은 token scope가 없음.
+
+```ts
+css({ background: '$bg-primary' }); // ✗ unknown-property
+css({ border: '1px solid $basic-black' }); // ✗ unknown-property
+```
+
+→ 전용 sub-property로 작성할 것:
+
+```ts
+css({ backgroundColor: '$bg-primary' });
+css({ borderWidth: '1px', borderStyle: 'solid', borderColor: '$basic-black' });
+```
+
+### 기타 금지
+
+- Spread elements (`...rest`)
+- 중첩 selector·at-rule key 에 object 리터럴이 아닌 값 (`{ ':hover': hoverStyle }`). 조건부 블록은 `cond && { ... }` 를 별도 인자로 (`invalid-input-shape`)
+- Computed keys (`[key]`)
+- Identifier property 의 dynamic value (`animation-name`, `content` 등)
+- 삼항 분기 안 dynamic value (`cond ? var1 : '$a'` X)
+- CSS 값이 될 수 없는 리터럴: boolean, 정규식, BigInt, 배열, 함수, 클래스 (`invalid-value`)
+
+## FOUC guard
+
+pre-hydration 시점에 `<html>` 에 theme attribute 를 세팅해 light↔dark flash 를 차단.
+
+### 자동 주입 (Vite / Webpack)
+
+`injectColorScheme` 옵션 (default `true`) 으로 번들러가 `<head>` 에 inline `<script>` 자동 삽입.
+
+- Vite — `transformIndexHtml` hook
+- Webpack — 앱 설정에 있는 `html-webpack-plugin` 의 `alterAssetTagGroups` hook 으로 플러그인이 넣는 head 태그 중 맨 앞(번들 script 앞)에 추가. 템플릿에 직접 쓴 head 내용 뒤에 온다 (설정에 없으면 no-op)
+
+### 수동 주입 (Next.js / 프레임워크 기본 HTML 사용 불가 환경)
+
+Next.js App Router 는 `<html>` 를 번들러가 아닌 React 가 렌더링하기 때문에 자동 주입이 불가능. layout 에서 직접 삽입.
+
+```tsx
+// app/layout.tsx
+import { buildColorSchemeScript } from '@vapor-ui/style-macro';
+
+const SCRIPT = buildColorSchemeScript({ defaultTheme: 'system' });
+
+export default function Root({ children }) {
+    return (
+        <html suppressHydrationWarning>
+            <head>
+                <script dangerouslySetInnerHTML={{ __html: SCRIPT }} />
+            </head>
+            <body>{children}</body>
+        </html>
+    );
+}
+```
+
+`suppressHydrationWarning` 는 반드시 `<html>` 에만 지정. inline script 가 `<html>` 에 `data-vapor-theme` attribute 를 추가하면 server markup (attribute 없음) 과 client DOM (attribute 있음) 이 달라져 React 가 hydration warning 을 띄움. 이 flag 는 해당 element **한 depth** 의 attribute mismatch 만 억제하고 children 에는 전파하지 않아 안전.
+
+### `buildColorSchemeScript` option
+
+| 옵션           | 기본값               | 설명                              |
+| -------------- | -------------------- | --------------------------------- |
+| `storageKey`   | `'vapor-ui-theme'`   | localStorage key                  |
+| `attribute`    | `'data-vapor-theme'` | `<html>` attribute 이름           |
+| `defaultTheme` | `'system'`           | `'light'` / `'dark'` / `'system'` |
+
+옵션 값은 앱의 `ThemeProvider` 와 같아야 한다. 기본값은 `ThemeProvider` 기본값과 같다. `ThemeProvider` 에 다른 `storageKey` / `defaultTheme` 을 넘겼다면 스크립트에도 같은 값을 넘긴다. 예: light 고정 앱이 `defaultTheme: 'light'` 를 빠뜨리면, 저장값이 없는 사용자의 OS 가 dark 일 때 dark theme 가 적용된다. 자동 주입(Vite, webpack)은 `injectColorScheme` 에 객체로 같은 옵션을 넘긴다.
+
+## Error 코드
+
+| Code                  | 상황                                                                                    |
+| --------------------- | --------------------------------------------------------------------------------------- |
+| `unknown-token`       | 토큰 이름이 해당 axis 에 없음                                                           |
+| `scope-mismatch`      | 토큰이 다른 axis 소속                                                                   |
+| `unknown-property`    | property 가 token scope 미지원 (shorthand 등)                                           |
+| `invalid-input-shape` | 입력 shape 오류 (다른 글자에 붙은 `$token`, 비정상 노드, 런타임에 도달하는 스타일 객체) |
+| `dynamic-value`       | 식별자 property 에 dynamic 값, 삼항 분기에 dynamic 값                                   |
+| `computed-key`        | computed key 사용                                                                       |
+| `spread`              | spread element 사용                                                                     |
+| `invalid-selector`    | nested selector 가 `:`/`::`/`@`/`[`/`&` 로 시작 안 함                                   |
+| `invalid-value`       | boolean · 정규식 · BigInt · 배열 · 함수 · 클래스 리터럴 값                              |
+| `mutated-constant`    | `css()` 에 병합된 object 상수를 변경함                                                  |
+| `parse-error`         | 매크로를 import 한 파일의 문법 오류                                                     |
+
+## Source map
+
+변환 결과에 원본 기준 source map 을 함께 넘긴다. 매크로가 넣은 import·캡처·임시 변수가 있어도 devtools 와 에러 stack 은 원본 줄을 가리킨다.
+
+| 번들러                             | 원본 줄 매핑          |
+| ---------------------------------- | --------------------- |
+| Vite · Rolldown · Next (Turbopack) | ✓                     |
+| webpack 5 · Next (webpack)         | ✗ — 변환 후 코드 기준 |
+
+webpack 계열은 `unplugin` 의 webpack transform loader 가 앞 loader 에서 받은 map 이 없으면 플러그인 map 을 버린다 (`unplugin@3.4.0`). 앞에 오는 loader 가 보통 없으므로 매크로를 쓰는 모듈의 줄 번호가 매크로가 추가한 줄 수만큼 밀린다. 동작·스타일에는 영향이 없다.
+
+## 결정론
+
+같은 입력 (`source`, `scope`, `hash`, `layer`) → 같은 출력 (`code`, `css`).
+
+- Class name: hash = murmur2(`scope` + 블록 선언 직렬화). hashed `v<hash>`, readable `<변수·JSX 요소 이름>_<hash>`. `scope` 는 가장 가까운 `name` 있는 `package.json` 기준 `<이름>/<상대 경로>`. `name` 있는 `package.json` 이 없으면 root 기준 상대 경로. 빌드 머신·디렉터리와 무관하고, 다른 패키지의 같은 경로와 겹치지 않는다. 같은 선언이라도 파일이 다르면 class 가 다르다.
+- CSS: 블록은 소스 등장 순서, 블록 안은 selector 그룹 순서(위 참고).
+- Shorthand: 자식 property 전개 순서 고정
+
+## 내부 구조
+
+| 모듈                           | 역할                                                                                      |
+| ------------------------------ | ----------------------------------------------------------------------------------------- |
+| `src/compilers/transform.ts`   | AST 파싱, call site 수집, rule emit, 코드 재작성 (import 는 directive prologue 뒤에 삽입) |
+| `src/compilers/parse-call.ts`  | 단일 `css({...})` 호출 파싱, IR rule 생성                                                 |
+| `src/compilers/emit-css.ts`    | 블록(class + IR rule) → 모듈 CSS                                                          |
+| `src/compilers/jsx-inject.ts`  | Dynamic value JSX `style` prop 주입                                                       |
+| `src/models/*.ts`              | class name, selector, shorthand, token, value 모델                                        |
+| `src/plugins/*.ts`             | 번들러 adapter (unplugin + turbopack loader)                                              |
+| `src/models/at-rule-order.ts`  | at-rule 출력 순서 (작성 순 + width query 정렬)                                            |
+| `src/helpers/cx.ts`            | runtime `_cx` — class 이어붙이기·중복 제거 (`__runtime__`)                                |
+| `src/helpers/resolve-token.ts` | runtime `_resolveToken` helper (`__runtime__` subpath 로 노출)                            |
+
+`transform(source, opts)` 는 public API 아님 — plugin 내부 전용.

@@ -1,0 +1,14 @@
+{
+    "extends": "@repo/typescript-config/base",
+    "compilerOptions": {
+        "outDir": "dist",
+        "rootDir": "src",
+        "target": "ES2022",
+        "lib": ["ES2022"],
+        "types": ["node", "vitest/globals"],
+        "declarationMap": false,
+        "paths": { "~/*": ["./src/*"] }
+    },
+    "include": ["src/**/*"],
+    "exclude": ["src/**/*.stories.tsx", "src/**/*.stories.ts"]
+}

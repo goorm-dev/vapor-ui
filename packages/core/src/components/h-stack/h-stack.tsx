@@ -1,30 +1,26 @@
 import { forwardRef } from 'react';
 
+import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
+import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 
 import { Flex } from '../flex';
-
-type HStackVariants = {
-    /**
-     * Reverses the order of the children, setting `flex-direction` to `row-reverse`.
-     */
-    reverse?: boolean;
-};
+import type { RootVariants } from './h-stack.css';
+import * as styles from './h-stack.css';
 
 /**
  * Flex container that arranges its children horizontally in a row. Renders a `<div>` element.
  */
 export const HStack = forwardRef<HTMLDivElement, HStack.Props>((props, ref) => {
-    const [{ reverse }, otherProps] = createSplitProps<HStackVariants>()(props, ['reverse']);
+    const { className, ...componentProps } = resolveStyles(props);
+    const [{ reverse }, otherProps] = createSplitProps<RootVariants>()(componentProps, ['reverse']);
 
-    return (
-        <Flex ref={ref} $css={{ flexDirection: reverse ? 'row-reverse' : 'row' }} {...otherProps} />
-    );
+    return <Flex ref={ref} className={cn(styles.root({ reverse }), className)} {...otherProps} />;
 });
 HStack.displayName = 'HStack';
 
 export namespace HStack {
     export type State = {};
-    export type Props = VaporUIComponentProps<typeof Flex, State> & HStackVariants;
+    export type Props = VaporUIComponentProps<typeof Flex, State> & RootVariants;
 }

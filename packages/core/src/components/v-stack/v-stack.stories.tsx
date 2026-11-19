@@ -55,8 +55,8 @@ export const TestBed: StoryObj<typeof VStack> = {
 const CustomBox = ({ size = 50, ...props }: ComponentProps<typeof Box> & { size?: number }) => {
     return (
         <Box
-            $css={{
-                backgroundColor: '$bg-primary',
+            style={{
+                backgroundColor: 'var(--vapor-color-background-primary)',
                 width: `${size}px`,
                 height: `${size}px`,
                 border: '1px solid white',

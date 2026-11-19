@@ -1,4 +1,4 @@
-@layer tw-theme, tw-base, base, vapor, tw-utilities;
+@layer tw-theme, vapor-theme, tw-base, base, vapor-reset, vapor-components, vapor-composites, vapor-utilities, tw-utilities;
 
 @import url(https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css);
 
@@ -6,6 +6,7 @@
 @import 'tailwindcss/theme' layer(tw-theme);
 @import 'tailwindcss/utilities' layer(tw-utilities);
 
+@import '@vapor-ui/core/styles.css';
 @import '@vapor-ui/core/tailwind.css';
 
 @import 'fumadocs-ui/css/neutral.css';

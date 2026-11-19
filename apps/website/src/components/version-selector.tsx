@@ -22,9 +22,7 @@ export const VersionSelector = () => {
                 }}
                 className="text-v-hint-100 hover:text-v-gray-400 transition-colors"
             >
-                <Text color="inherit" typography="subtitle1">
-                    {items.at(0)?.value}
-                </Text>
+                <Text typography="subtitle1">{items.at(0)?.value}</Text>
                 <ChevronDownOutlineIcon className="group-hover:text-v-gray-400 transition-colors" />
             </Menu.Trigger>
 

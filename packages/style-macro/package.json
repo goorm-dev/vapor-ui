@@ -1,0 +1,155 @@
+{
+    "name": "@vapor-ui/style-macro",
+    "version": "0.0.0",
+    "description": "Build-time atomic CSS-in-JS macro.",
+    "license": "MIT",
+    "sideEffects": [
+        "./module.vapor.css"
+    ],
+    "type": "module",
+    "exports": {
+        ".": {
+            "import": {
+                "types": "./dist/index.d.mts",
+                "default": "./dist/index.mjs"
+            },
+            "require": {
+                "types": "./dist/index.d.cts",
+                "default": "./dist/index.cjs"
+            }
+        },
+        "./vite": {
+            "import": {
+                "types": "./dist/plugins/vite.d.mts",
+                "default": "./dist/plugins/vite.mjs"
+            },
+            "require": {
+                "types": "./dist/plugins/vite.d.cts",
+                "default": "./dist/plugins/vite.cjs"
+            }
+        },
+        "./webpack": {
+            "import": {
+                "types": "./dist/plugins/webpack.d.mts",
+                "default": "./dist/plugins/webpack.mjs"
+            },
+            "require": {
+                "types": "./dist/plugins/webpack.d.cts",
+                "default": "./dist/plugins/webpack.cjs"
+            }
+        },
+        "./next": {
+            "import": {
+                "types": "./dist/plugins/next.d.mts",
+                "default": "./dist/plugins/next.mjs"
+            },
+            "require": {
+                "types": "./dist/plugins/next.d.cts",
+                "default": "./dist/plugins/next.cjs"
+            }
+        },
+        "./rolldown": {
+            "import": {
+                "types": "./dist/plugins/rolldown.d.mts",
+                "default": "./dist/plugins/rolldown.mjs"
+            },
+            "require": {
+                "types": "./dist/plugins/rolldown.d.cts",
+                "default": "./dist/plugins/rolldown.cjs"
+            }
+        },
+        "./turbopack": {
+            "import": {
+                "types": "./dist/plugins/turbopack.d.mts",
+                "default": "./dist/plugins/turbopack.mjs"
+            },
+            "require": {
+                "types": "./dist/plugins/turbopack.d.cts",
+                "default": "./dist/plugins/turbopack.cjs"
+            }
+        },
+        "./css-loader": {
+            "import": {
+                "types": "./dist/plugins/css-loader.d.mts",
+                "default": "./dist/plugins/css-loader.mjs"
+            },
+            "require": {
+                "types": "./dist/plugins/css-loader.d.cts",
+                "default": "./dist/plugins/css-loader.cjs"
+            }
+        },
+        "./__runtime__": {
+            "import": {
+                "types": "./dist/runtime.d.mts",
+                "default": "./dist/runtime.mjs"
+            },
+            "require": {
+                "types": "./dist/runtime.d.cts",
+                "default": "./dist/runtime.cjs"
+            }
+        },
+        "./module.vapor.css": "./module.vapor.css",
+        "./package.json": "./package.json"
+    },
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.cts",
+    "files": [
+        "dist",
+        "module.vapor.css"
+    ],
+    "scripts": {
+        "bench": "vitest bench --run",
+        "build": "tsdown",
+        "clean": "rimraf dist node_modules .turbo",
+        "lint": "eslint ./src",
+        "test": "vitest --run",
+        "test:watch": "vitest",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@babel/code-frame": "^7.29.7",
+        "csstype": "^3.2.3",
+        "magic-string": "^0.30.21",
+        "oxc-parser": "^0.138.0",
+        "picomatch": "^4.0.7",
+        "unplugin": "^3.4.0"
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@types/babel__code-frame": "^7.27.0",
+        "@types/node": "^20.19.43",
+        "@types/picomatch": "^4.0.2",
+        "eslint": "catalog:",
+        "postcss": "^8.5.31",
+        "rimraf": "^6.1.3",
+        "tsdown": "^0.22.8",
+        "typescript": "catalog:",
+        "vite": "^7.3.6",
+        "vitest": "^3.2.6"
+    },
+    "peerDependencies": {
+        "next": "^15 || ^16",
+        "rolldown": "^1.2",
+        "vite": "^7 || ^8",
+        "webpack": "^5"
+    },
+    "peerDependenciesMeta": {
+        "next": {
+            "optional": true
+        },
+        "rolldown": {
+            "optional": true
+        },
+        "vite": {
+            "optional": true
+        },
+        "webpack": {
+            "optional": true
+        }
+    },
+    "publishConfig": {
+        "access": "public"
+    }
+}

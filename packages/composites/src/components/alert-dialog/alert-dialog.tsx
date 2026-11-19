@@ -1,7 +1,10 @@
+'use client';
+
 import { createContext, useCallback, useContext, useMemo, useRef } from 'react';
 import type { ReactNode } from 'react';
 
 import { AlertDialog as AlertDialogPrimitives, Button, VStack } from '@vapor-ui/core';
+import { css } from '@vapor-ui/style-macro';
 
 import type { SlotProps } from '~/utils/create-slots';
 import { createSlots } from '~/utils/create-slots';
@@ -191,8 +194,8 @@ interface HeaderProps extends Pick<AlertDialogRoot.Props, 'title' | 'description
 
 const Header = ({ title, description }: HeaderProps) => {
     return (
-        <AlertDialogPrimitives.Header render={<VStack />} $css={{ gap: '$200' }}>
-            <VStack $css={{ gap: '$075' }}>
+        <AlertDialogPrimitives.Header render={<VStack />} className={css({ gap: '$space-200' })}>
+            <VStack className={css({ gap: '$space-075' })}>
                 <slots.title render={title} />
                 <slots.description render={description} />
             </VStack>
@@ -218,14 +221,14 @@ interface FooterProps extends Pick<AlertDialogRoot.Props, 'action' | 'cancel'> {
 const Footer = ({ action, cancel }: FooterProps) => {
     return (
         <AlertDialogPrimitives.Footer
-            $css={{
+            className={css({
                 display: 'grid',
-                gap: '$100',
+                gap: '$space-100',
                 gridTemplateAreas: '"cancel action"',
-            }}
+            })}
         >
-            <slots.cancel render={cancel} $css={{ gridArea: 'cancel' }} />
-            <slots.action render={action} $css={{ gridArea: 'action' }} />
+            <slots.cancel render={cancel} className={css({ gridArea: 'cancel' })} />
+            <slots.action render={action} className={css({ gridArea: 'action' })} />
         </AlertDialogPrimitives.Footer>
     );
 };
@@ -235,6 +238,7 @@ const Footer = ({ action, cancel }: FooterProps) => {
 export const AlertDialogAction = ({
     closeOnClick = true,
     onClick,
+    className,
     children,
     ...props
 }: AlertDialogAction.Props) => {
@@ -252,6 +256,7 @@ export const AlertDialogAction = ({
             size="lg"
             colorPalette={type === 'critical' ? 'danger' : 'primary'}
             onClick={handleClick}
+            className={className}
             {...props}
         >
             {children}

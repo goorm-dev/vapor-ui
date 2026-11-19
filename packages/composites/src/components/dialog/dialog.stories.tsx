@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Button, HStack, Text, TextInput, VStack } from '@vapor-ui/core';
+import { css } from '@vapor-ui/style-macro';
 
 import { Regression } from '~/utils/regressions';
 
@@ -35,11 +36,11 @@ export const Default: Story = {
                     assistive={<Dialog.Assistive>보조</Dialog.Assistive>}
                     {...args}
                 >
-                    <HStack $css={{ gap: '$150' }}>
+                    <HStack className={css({ gap: '$space-150' })}>
                         <TextInput
                             placeholder="이메일 또는 이름을 입력하세요"
                             size="lg"
-                            $css={{ width: '100%' }}
+                            className={css({ width: '100%' })}
                         />
                         <Button size="lg" colorPalette="contrast">
                             초대하기
@@ -63,11 +64,11 @@ export const Default: Story = {
                 </Dialog.Root>
 
                 <Dialog.Root trigger={<Button>Non-Footer</Button>} {...args}>
-                    <HStack $css={{ gap: '$150' }}>
+                    <HStack className={css({ gap: '$space-150' })}>
                         <TextInput
                             placeholder="이메일 또는 이름을 입력하세요"
                             size="lg"
-                            $css={{ width: '100%' }}
+                            className={css({ width: '100%' })}
                         />
                         <Button size="lg" colorPalette="contrast">
                             초대하기
@@ -161,7 +162,7 @@ export const AsyncAction: Story = {
                 }
                 {...args}
             >
-                <VStack $css={{ gap: '$150', alignItems: 'flex-start' }}>
+                <VStack className={css({ gap: '$space-150', alignItems: 'flex-start' })}>
                     <Button
                         size="sm"
                         colorPalette={failing ? 'danger' : 'secondary'}
@@ -249,7 +250,7 @@ const TestBedRender = () => {
                         }
                         size={row.size}
                     >
-                        <HStack $css={{ flexDirection: 'column' }}>
+                        <HStack className={css({ flexDirection: 'column' })}>
                             {Array.from({ length: row.hasScroll ? 10 : 2 }, (_, index) => (
                                 <Text key={index} typography="heading5">
                                     {index + 1}. 내용물입니다.

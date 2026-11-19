@@ -46,7 +46,7 @@ export default function Collapsed() {
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => column.toggleCollapsed()}
-                                color="secondary"
+                                colorPalette="secondary"
                             >
                                 <IconElement />
                             </IconButton>
@@ -84,7 +84,7 @@ export default function Collapsed() {
 
                     return (
                         <Box>
-                            <Badge color={activeness[status]} shape="pill">
+                            <Badge colorPalette={activeness[status]} shape="pill">
                                 {status.toUpperCase()}
                             </Badge>
                         </Box>
@@ -210,7 +210,7 @@ const getCommonPinningStyles = (column: Column<Data>): CSSProperties => {
     };
 };
 
-const activeness: Record<string, Badge.Props['color']> = {
+const activeness: Record<string, Badge.Props['colorPalette']> = {
     active: 'success',
     inactive: 'hint',
 };

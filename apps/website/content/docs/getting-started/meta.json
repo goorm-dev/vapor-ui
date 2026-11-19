@@ -13,6 +13,7 @@
         "(handbook)/(tokens)",
         "(handbook)/styling",
         "(handbook)/theming",
+        "(handbook)/css-layers",
         "(handbook)/tailwindcss-v4",
         "(handbook)/composition",
 
@@ -20,6 +21,7 @@
         "(tools)/ai-skill",
         "(tools)/llms-txt",
         "(tools)/eslint",
-        "(tools)/codemod"
+        "(tools)/codemod",
+        "(tools)/style-macro"
     ]
 }
