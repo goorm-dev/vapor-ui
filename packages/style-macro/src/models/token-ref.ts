@@ -20,7 +20,8 @@ export interface TokenRef {
     glued: boolean;
 }
 
-const NAME_START = /[a-zA-Z]/;
+// 음수 키(`-space-100`)를 위해 `-` 하나 + 영문자로도 시작할 수 있다.
+const NAME_START = /^-?[a-zA-Z]/;
 const NAME_CHAR = /[a-zA-Z0-9_-]/;
 const BOUNDARY = /[\s(),/]/;
 
@@ -43,8 +44,8 @@ export function findTokenRefs(value: string): TokenRef[] {
             i = skipUrl(value, i + 4);
             continue;
         }
-        if (c === '$' && NAME_START.test(value[i + 1] ?? '')) {
-            let end = i + 2;
+        if (c === '$' && NAME_START.test(value.slice(i + 1, i + 3))) {
+            let end = value[i + 1] === '-' ? i + 3 : i + 2;
             while (end < value.length && NAME_CHAR.test(value[end]!)) end++;
             refs.push({
                 start: i,

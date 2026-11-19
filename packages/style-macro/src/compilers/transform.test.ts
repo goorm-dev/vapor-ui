@@ -18,6 +18,16 @@ describe('transform — static syntax', () => {
         expect(out.code).not.toContain('__runtime__');
     });
 
+    it('resolves a negative token key ($-space-*) on margin', () => {
+        const out = transform({
+            source: src(`const cls = css({ marginTop: '$-space-100' });`),
+            filename: '/Neg.tsx',
+        });
+        expect(out.errors).toEqual([]);
+        expect(out.css).toMatch(/margin-top:\s*[^;$]+;/);
+        expect(out.css).not.toContain('$-space-100');
+    });
+
     it('supports nested :hover selector', () => {
         const out = transform({
             source: src(

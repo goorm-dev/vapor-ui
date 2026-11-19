@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { margin } from '~/tokens/margin';
 import { space } from '~/tokens/space';
 
 import { _resolveToken } from './resolve-token';
@@ -30,6 +31,13 @@ describe('_resolveToken — same `$token` grammar as compile time (models/token-
             expect(_resolveToken(space, input)).toBe(input);
         },
     );
+
+    it('resolves negative keys (`$-space-*` on margin)', () => {
+        const neg = margin['-space-100' as keyof typeof margin];
+        expect(neg).toBeDefined();
+        expect(_resolveToken(margin, '$-space-100')).toBe(neg);
+        expect(_resolveToken(margin, '0 $-space-100')).toBe(`0 ${neg}`);
+    });
 
     it('numbers and nullish values are unchanged', () => {
         expect(_resolveToken(space, 4, 'px')).toBe('4px');

@@ -15,6 +15,13 @@ describe('findTokenRefs', () => {
         ['$', []],
         ['$5', []],
         ['10px', []],
+        // 음수 키 (`tokens/margin.ts` 의 `-space-*`)
+        ['$-space-100', ['-space-100']],
+        ['$-space-100 $a', ['-space-100', 'a']],
+        ['calc($-space-100 * 2)', ['-space-100']],
+        ['$-', []],
+        ['$-5', []],
+        ['$--a', []],
     ])('%j → %j', (value, expected) => {
         expect(names(value)).toEqual(expected);
     });
@@ -36,6 +43,7 @@ describe('findTokenRefs', () => {
 
     it.each([
         ['-$a', ['~a']],
+        ['-$-space-100', ['~-space-100']],
         ['x$a', ['~a']],
         ['$a%', ['~a']],
         ['$a!important', ['~a']],
