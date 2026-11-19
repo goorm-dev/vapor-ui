@@ -1394,6 +1394,22 @@ describe('transform — nested selectors read the element slot (PR #752 review)'
     });
 });
 
+// nullish 동적 값은 CSS `var()` 스펙대로 unset 이 된다 (Compiled 와 같음) — 규칙에 fallback 을 두지 않는다.
+describe('transform — nullish dynamic value follows CSS var() semantics', () => {
+    it('slot is self-referenced when nullish and the rule has no fallback', () => {
+        const out = transform({
+            source: src(
+                `export const A = ({ bg }) => <div className={css({ backgroundColor: bg })} />;`,
+            ),
+            filename: '/F.tsx',
+        });
+        expect(out.errors).toEqual([]);
+        const slot = out.css?.match(/background-color: var\((--vapor-_\w+)\);/)?.[1];
+        expect(slot).toBeDefined();
+        expect(out.code).toContain(`?? 'var(${slot},)'`);
+    });
+});
+
 describe('transform — mutation of merged object constants is a build error', () => {
     const run = (body: string) => transform({ source: src(body), filename: '/M.tsx' });
     const use = `export const A = () => <div className={css(base)} />;`;

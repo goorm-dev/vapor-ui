@@ -233,6 +233,14 @@ function Swatch({ color }: { color: string }) {
 }
 ```
 
+값이 `undefined`나 `null`이면 CSS `var()` 스펙대로 해당 속성은 `unset`으로 동작합니다. `background-color`처럼 상속되지 않는 속성은 초기값(투명 등)이 되고, 컴포넌트의 기본 스타일로 돌아가지 않습니다. 기본값이 필요하면 직접 지정하세요.
+
+```tsx
+function ActionButton({ bg }: { bg?: string }) {
+    return <Button className={css({ backgroundColor: bg ?? '$bg-primary' })}>저장</Button>;
+}
+```
+
 ### 스타일 합성
 
 여러 스타일을 합칠 때는 `css(a, b)`처럼 인자로 넘깁니다. 같은 속성은 뒤에 오는 인자가 이깁니다.

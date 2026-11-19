@@ -898,9 +898,10 @@ class Transformer {
      *   axis 가 없으면 token lookup 이 의미 없으므로 숫자-unit 전용 helper `_ix` 로 분기 —
      *   axis 없는 slot 만 쓰는 번들은 `_resolveToken` 과 토큰 테이블을 tree-shake 할 수 있다.
      *
-     *   `?? 'var(<varName>,)'` sentinel fallback: 사용자가 undefined 를 넘겨도 slot 변수가
-     *   "선언만 유지, 값은 비어있음" 상태로 남아 CSS 가 invalid-at-computed-value-time →
-     *   `unset` 으로 떨어져 부모 상속 체인이 끊기지 않는다 (리뷰 #6c sentinel 후속).
+     *   `?? 'var(<varName>,)'` sentinel: 값이 nullish 면 slot 을 자기 참조(cycle)로 두어
+     *   guaranteed-invalid 로 만든다. 같은 class 를 가진 조상의 값이 상속되어 새지 않고,
+     *   CSS 규칙 `var(<varName>)` 은 CSS 스펙대로 invalid-at-computed-value-time → `unset`
+     *   이 된다 (Compiled `ix()` 와 같은 동작).
      */
     #slotEntry(r: DynamicRule): string {
         const varName = dynamicVarName(r.slotId, this.#mode === 'hashed' ? 'prod' : 'dev');
