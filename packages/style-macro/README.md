@@ -295,6 +295,8 @@ export default function Root({ children }) {
 | `attribute`    | `'data-vapor-theme'` | `<html>` attribute 이름           |
 | `defaultTheme` | `'system'`           | `'light'` / `'dark'` / `'system'` |
 
+옵션 값은 앱의 `ThemeProvider` 와 같아야 한다. 기본값은 `ThemeProvider` 기본값과 같다. `ThemeProvider` 에 다른 `storageKey` / `defaultTheme` 을 넘겼다면 스크립트에도 같은 값을 넘긴다. 예: light 고정 앱이 `defaultTheme: 'light'` 를 빠뜨리면, 저장값이 없는 사용자의 OS 가 dark 일 때 dark theme 가 적용된다. 자동 주입(Vite, webpack)은 `injectColorScheme` 에 객체로 같은 옵션을 넘긴다.
+
 ## Error 코드
 
 | Code                  | 상황                                                                                    |

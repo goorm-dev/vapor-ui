@@ -21,6 +21,9 @@ const DEFAULTS = {
 /**
  * `<html>`에 theme attribute를 즉시 세팅하는 스크립트를 반환한다.
  *
+ * 옵션은 앱의 `ThemeProvider`와 같은 값을 넘긴다. 기본값은 `ThemeProvider` 기본값과 같다.
+ * light 고정 앱이 `defaultTheme: 'light'`를 빠뜨리면 저장값이 없을 때 OS 테마(dark일 수 있음)가 적용된다.
+ *
  * @example
  * // Next.js layout.tsx (server component)
  * import { buildColorSchemeScript } from '@vapor-ui/style-macro';
