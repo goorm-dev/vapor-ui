@@ -62,9 +62,21 @@ const DEPRECATED_CSS_PROPS = new Set([
     'textAlign',
 ]);
 
-function isDocumented(prop: ParsedProp): boolean {
+export interface PolicyOptions {
+    onlyUnderPath?: string;
+}
+
+function isLocallyDeclared(prop: ParsedProp, onlyUnderPath: string): boolean {
+    const normalized = onlyUnderPath.replace(/\\/g, '/').replace(/\/+$/, '') + '/';
+    return prop.declarationPaths.some((filePath) =>
+        filePath.replace(/\\/g, '/').startsWith(normalized),
+    );
+}
+
+function isDocumented(prop: ParsedProp, options: PolicyOptions): boolean {
     const { name, source } = prop;
 
+    if (options.onlyUnderPath && !isLocallyDeclared(prop, options.onlyUnderPath)) return false;
     if (DOCUMENTED_HTML_PROPS.has(name)) return true;
     if (prop.isIgnored) return false;
     if (source === 'react' || source === 'dom' || source === 'external') return false;
@@ -169,10 +181,10 @@ function pickTypeRefs(
     return refs.length > 0 ? Object.fromEntries(refs) : undefined;
 }
 
-export function policy(components: ParsedComponent[]): ComponentDoc[] {
+export function policy(components: ParsedComponent[], options: PolicyOptions = {}): ComponentDoc[] {
     return components.map((component) => {
         const documented = component.props
-            .filter(isDocumented)
+            .filter((prop) => isDocumented(prop, options))
             .sort((a, b) => categoryOrder(a) - categoryOrder(b) || a.name.localeCompare(b.name));
         const typeRefs = pickTypeRefs(component.typeRefs ?? {}, documented);
 

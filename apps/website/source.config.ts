@@ -5,13 +5,17 @@ import { z } from 'zod';
 
 import { remarkDemoSource } from './src/lib/remark-demo-source';
 
+const docsFrontmatterSchema = frontmatterSchema.extend({
+    subpage: z.boolean().optional(),
+    site_name: z.string().optional(),
+    fumadocs_markdown: z.boolean().optional(),
+});
+
 export const docs = defineDocs({
     dir: 'content/docs',
     docs: {
         async: true,
-        schema: frontmatterSchema.extend({
-            fumadocsMarkdown: z.boolean().optional(),
-        }),
+        schema: docsFrontmatterSchema,
     },
     // Only meta.json configures the sidebar; api/{en,ko}/*.json next to a page is props data.
     meta: {

@@ -17,6 +17,7 @@ function prop(name: string, overrides: Partial<ParsedProp> = {}): ParsedProp {
         typeRefs: [],
         isOptional: true,
         source: 'project',
+        declarationPaths: [],
         ...overrides,
     };
 }
@@ -322,6 +323,56 @@ describe('policy', () => {
             policy([input]);
 
             expect(input.props.map((p) => p.name)).toEqual(['zIndex', 'className']);
+        });
+    });
+
+    describe('onlyUnderPath (--only-local-jsdoc)', () => {
+        it('declaration이 지정 경로 하위에 있는 prop만 남긴다', () => {
+            const result = policy(
+                [
+                    component([
+                        prop('closeOnClick', {
+                            declarationPaths: ['/repo/packages/composites/src/dialog.tsx'],
+                        }),
+                        prop('onClick', {
+                            declarationPaths: ['/repo/packages/core/src/button.tsx'],
+                        }),
+                    ]),
+                ],
+                { onlyUnderPath: '/repo/packages/composites' },
+            );
+
+            expect(result[0].props.map((p) => p.name)).toEqual(['closeOnClick']);
+        });
+
+        it('여러 declaration 중 하나라도 지정 경로 하위면 남긴다', () => {
+            const result = policy(
+                [
+                    component([
+                        prop('size', {
+                            declarationPaths: [
+                                '/repo/packages/core/src/button.tsx',
+                                '/repo/packages/composites/src/dialog.tsx',
+                            ],
+                        }),
+                    ]),
+                ],
+                { onlyUnderPath: '/repo/packages/composites' },
+            );
+
+            expect(result[0].props.map((p) => p.name)).toEqual(['size']);
+        });
+
+        it('옵션 없으면 declarationPaths를 무시한다', () => {
+            const result = policy([
+                component([
+                    prop('onClick', {
+                        declarationPaths: ['/repo/packages/core/src/button.tsx'],
+                    }),
+                ]),
+            ]);
+
+            expect(result[0].props.map((p) => p.name)).toEqual(['onClick']);
         });
     });
 });

@@ -82,6 +82,16 @@ function getPropDescription(symbol: TsSymbol): string | undefined {
         .find(Boolean);
 }
 
+function getDeclarationPaths(symbol: TsSymbol): string[] {
+    return [
+        ...new Set(
+            symbol
+                .getDeclarations()
+                .map((declaration) => declaration.getSourceFile().getFilePath()),
+        ),
+    ];
+}
+
 function extractParsedProp(
     symbol: TsSymbol,
     declNode: Node,
@@ -96,6 +106,7 @@ function extractParsedProp(
         isOptional: symbol.isOptional(),
         isIgnored: isIgnored(symbol),
         source: classifyPropSource(symbol),
+        declarationPaths: getDeclarationPaths(symbol),
         description: getPropDescription(symbol),
         defaultValue: readDefault(symbol),
     };
