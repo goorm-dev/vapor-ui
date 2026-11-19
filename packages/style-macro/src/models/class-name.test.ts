@@ -40,6 +40,25 @@ describe('buildBlockClassName — hashed (prod)', () => {
         expect(a).not.toBe(b);
     });
 
+    // Regression: 문자 하위 바이트만 읽던 hash 가 non-Latin1 값끼리 충돌했다.
+    it('separates non-Latin1 values that share low bytes ("공지" vs "답변")', () => {
+        const a = block({ signature: 'base|::before|content:"공지"' });
+        const b = block({ signature: 'base|::before|content:"답변"' });
+        expect(a).not.toBe(b);
+    });
+
+    it('separates emoji (surrogate pair) values', () => {
+        const a = block({ signature: 'base|content:"😀"' });
+        const b = block({ signature: 'base|content:"😁"' });
+        expect(a).not.toBe(b);
+    });
+
+    // ASCII 는 UTF-8 바이트 == code unit 이라 기존 class 이름이 유지된다.
+    it('keeps ASCII hashes stable', () => {
+        expect(block()).toBe('vKP4KBe');
+        expect(generateArbitraryValueSelector('padding|base')).toBe('3Os00');
+    });
+
     it('ignores debugId', () => {
         expect(block({ debugId: 'Header' })).toBe(block());
     });

@@ -7,20 +7,21 @@
 // bounded design-token set but not for user-supplied CSS values.
 export type ClassNameMode = 'readable' | 'hashed';
 
-// murmur2 32-bit (little-endian), seed 0. Reference:
+// murmur2 32-bit (little-endian), seed 0, over the UTF-8 bytes of `v`. Reference:
 // https://github.com/aappleby/smhasher/blob/master/src/MurmurHash2.cpp
+// UTF-8 로 바꿔 읽는다 — code unit 의 하위 바이트만 읽으면 한글·기호 값끼리 충돌한다.
+// ASCII 는 UTF-8 바이트 == code unit 이라 기존 hash 가 그대로다.
+const utf8 = new TextEncoder();
+
 function murmur2(v: string): number {
     const M = 0x5bd1e995;
     const R = 24;
-    let len = v.length;
+    const b = utf8.encode(v);
+    let len = b.length;
     let h = len >>> 0;
     let i = 0;
     while (len >= 4) {
-        let k =
-            (v.charCodeAt(i) & 0xff) |
-            ((v.charCodeAt(i + 1) & 0xff) << 8) |
-            ((v.charCodeAt(i + 2) & 0xff) << 16) |
-            ((v.charCodeAt(i + 3) & 0xff) << 24);
+        let k = b[i]! | (b[i + 1]! << 8) | (b[i + 2]! << 16) | (b[i + 3]! << 24);
         k = Math.imul(k, M) >>> 0;
         k = (k ^ (k >>> R)) >>> 0;
         k = Math.imul(k, M) >>> 0;
@@ -29,10 +30,10 @@ function murmur2(v: string): number {
         i += 4;
         len -= 4;
     }
-    if (len >= 3) h = (h ^ ((v.charCodeAt(i + 2) & 0xff) << 16)) >>> 0;
-    if (len >= 2) h = (h ^ ((v.charCodeAt(i + 1) & 0xff) << 8)) >>> 0;
+    if (len >= 3) h = (h ^ (b[i + 2]! << 16)) >>> 0;
+    if (len >= 2) h = (h ^ (b[i + 1]! << 8)) >>> 0;
     if (len >= 1) {
-        h = (h ^ (v.charCodeAt(i) & 0xff)) >>> 0;
+        h = (h ^ b[i]!) >>> 0;
         h = Math.imul(h, M) >>> 0;
     }
     h = (h ^ (h >>> 13)) >>> 0;
