@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { compileModule } from './_module-css';
 import { createIncludeFilter, includedPackages, resolveOptions } from './_options';
 
 const includeOf = (root: string, include: string[] = [], exclude: string[] = []) =>
@@ -82,6 +83,47 @@ describe('resolveOptions — include / exclude', () => {
 
     it('rejects virtual module ids', () => {
         expect(includeOf('/repo')('\0virtual:x.tsx')).toBe(false);
+    });
+});
+
+describe('resolveOptions — root comes from the bundler as given', () => {
+    // 테스트 프로세스의 cwd 와 다른 경로. 플러그인이 cwd 를 끼워 넣으면 아래 기대가 깨진다.
+    const bundlerRoot = '/bundler/app';
+    const css = `import { css } from '@vapor-ui/style-macro';\nexport const a = css({ gap: 0 });\n`;
+    const classOf = (opts: ReturnType<typeof resolveOptions>, file: string) =>
+        /a = '(\w+)'/.exec(compileModule(css, file, opts)!.code)![1];
+
+    it('uses the bundler root when `root` is not given', () => {
+        expect(process.cwd()).not.toBe(bundlerRoot);
+        const opts = resolveOptions({ exclude: ['src/skip/**'] }, { root: bundlerRoot });
+        expect(opts.root).toBe(bundlerRoot);
+        expect(opts.include(`${bundlerRoot}/src/skip/a.tsx`)).toBe(false);
+        expect(opts.include(`${bundlerRoot}/src/a.tsx`)).toBe(true);
+        expect(opts.include(`${process.cwd()}/src/skip/a.tsx`)).toBe(true);
+    });
+
+    it('scopes the class hash by the bundler root', () => {
+        const file = `${bundlerRoot}/src/a.tsx`;
+        const viaBundler = resolveOptions({ hash: true }, { root: bundlerRoot });
+        const viaOption = resolveOptions({ hash: true, root: bundlerRoot });
+        const elsewhere = resolveOptions({ hash: true, root: '/other' });
+        expect(classOf(viaBundler, file)).toBe(classOf(viaOption, file));
+        expect(classOf(viaBundler, file)).not.toBe(classOf(elsewhere, file));
+    });
+
+    it('an explicit `root` wins over the bundler root', () => {
+        const opts = resolveOptions(
+            { root: '/explicit', exclude: ['src/**'] },
+            { root: bundlerRoot },
+        );
+        expect(opts.root).toBe('/explicit');
+        expect(opts.include('/explicit/src/a.tsx')).toBe(false);
+        expect(opts.include(`${bundlerRoot}/src/a.tsx`)).toBe(true);
+    });
+
+    it('throws when neither the option nor the bundler gives a root', () => {
+        expect(() => resolveOptions({})).toThrow(/No project root.*`root` option/);
+        expect(() => resolveOptions({}, { root: undefined })).toThrow(/No project root/);
     });
 });
 

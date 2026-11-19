@@ -9,6 +9,7 @@ import {
     type ResolvedOptions,
     type VaporPluginOptions,
     includedPackages,
+    resolveColorScheme,
     resolveOptions,
     toPosix,
 } from './_options';
@@ -100,7 +101,10 @@ function reload(server: ViteServerLike, cssId: string): void {
  * - dev 에서 소스 수정으로 CSS 가 바뀌면 그 CSS 모듈만 `reloadModule` 한다.
  */
 function moduleCssPlugin(rawOpts: VaporPluginOptions): VitePluginShape {
-    let opts: ResolvedOptions = resolveOptions(rawOpts);
+    // root 는 Vite 가 `configResolved` 에서 확정한 `config.root` 를 그대로 쓴다. 그 전에는 해석하지
+    // 않는다 — 이후 훅(transform·resolveId·load)은 모두 configResolved 뒤에 불린다.
+    let resolved: ResolvedOptions | null = null;
+    const opts = (): ResolvedOptions => (resolved ??= resolveOptions(rawOpts));
     let server: ViteServerLike | undefined;
     /** 모듈 CSS 절대 posix 경로(= Vite 모듈 id) → CSS. 규칙이 없으면 `''`. */
     const cssByPath = new Map<string, string>();
@@ -113,6 +117,7 @@ function moduleCssPlugin(rawOpts: VaporPluginOptions): VitePluginShape {
         // node_modules 의존성을 두 곳에서 우회한다 — dev 의 dependency pre-bundling(esbuild)과 SSR
         // 의 externalize(Node 가 직접 import). 둘 다에서 빼는 것이 Vite 가 정한 방법이다
         // (`optimizeDeps.exclude`, `ssr.noExternal`; 소스 상태로 배포되는 패키지와 같은 취급).
+        // 패키지 이름만 glob 에서 읽으므로 root 가 필요 없다.
         config() {
             const packages = includedPackages(rawOpts.include ?? []);
             if (!packages.length) return null;
@@ -120,7 +125,7 @@ function moduleCssPlugin(rawOpts: VaporPluginOptions): VitePluginShape {
         },
 
         configResolved(config: { root: string }) {
-            opts = resolveOptions(rawOpts, { root: config.root });
+            resolved = resolveOptions(rawOpts, { root: config.root });
         },
 
         configureServer(s: ViteServerLike) {
@@ -133,7 +138,7 @@ function moduleCssPlugin(rawOpts: VaporPluginOptions): VitePluginShape {
 
         transform(this: PluginContextLike, code: string, id: string) {
             if (isModuleCss(id)) return null;
-            const compiled = compileOrError(this, code, id, opts);
+            const compiled = compileOrError(this, code, id, opts());
             if (!compiled) return null;
 
             const cssId = toPosix(compiled.cssPath);
@@ -148,7 +153,7 @@ function moduleCssPlugin(rawOpts: VaporPluginOptions): VitePluginShape {
         resolveId(source: string, importer: string | undefined) {
             if (!isModuleCss(source)) return null;
             const [path, query] = splitQuery(source);
-            return toPosix(resolveModuleCss(path, importer, opts.root, cssByPath)) + query;
+            return toPosix(resolveModuleCss(path, importer, opts().root, cssByPath)) + query;
         },
 
         load(this: PluginContextLike, id: string) {
@@ -165,7 +170,7 @@ function moduleCssPlugin(rawOpts: VaporPluginOptions): VitePluginShape {
                 return null;
             }
             this.addWatchFile(sourcePath);
-            const css = compileOrError(this, source, sourcePath, opts)?.css ?? '';
+            const css = compileOrError(this, source, sourcePath, opts())?.css ?? '';
             cssByPath.set(path, css);
             return css;
         },
@@ -183,8 +188,8 @@ function moduleCssPlugin(rawOpts: VaporPluginOptions): VitePluginShape {
  * 진입점에서 모든 `@vapor-ui/*` import 보다 먼저 import 해야 한다.
  */
 export function vaporVitePlugin(opts: VaporPluginOptions = {}): VitePluginShape[] {
-    const resolved = resolveOptions(opts);
+    const injectColorScheme = resolveColorScheme(opts.injectColorScheme);
     const plugins = [moduleCssPlugin(opts)];
-    if (resolved.injectColorScheme !== false) plugins.push(foucPlugin(resolved.injectColorScheme));
+    if (injectColorScheme !== false) plugins.push(foucPlugin(injectColorScheme));
     return plugins;
 }

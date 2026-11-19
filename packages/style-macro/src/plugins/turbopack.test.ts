@@ -5,6 +5,7 @@ import vaporStyleTurbopackLoader from './turbopack';
 function mkCtx(resourcePath: string, opts: VaporPluginOptions = {}): LoaderContext {
     return {
         resourcePath,
+        rootContext: '/',
         getOptions: () => opts,
     };
 }
@@ -61,7 +62,7 @@ describe('turbopack — source map', () => {
         const src = `import { css } from '@vapor-ui/style-macro';\nconst cls = css({ gap: 0 });\n`;
         const callback = vi.fn();
         const out = await vaporStyleTurbopackLoader.call(
-            { resourcePath: '/src/M.tsx', getOptions: () => ({}), callback },
+            { resourcePath: '/src/M.tsx', rootContext: '/', getOptions: () => ({}), callback },
             src,
         );
         expect(out).toBeUndefined();

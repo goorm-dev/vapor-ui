@@ -1,5 +1,5 @@
 import unplugin from './_factory';
-import { type VaporPluginOptions, resolveOptions } from './_options';
+import { type VaporPluginOptions, resolveColorScheme } from './_options';
 import { type MinimalCompiler, applyModuleCss, tapHtmlFouc } from './_webpack';
 
 export type { VaporPluginOptions };
@@ -21,14 +21,14 @@ interface WebpackPluginShape {
  *     module.exports = { plugins: [vaporWebpackPlugin()] };
  */
 export function vaporWebpackPlugin(opts: VaporPluginOptions = {}): WebpackPluginShape {
-    const resolved = resolveOptions(opts);
+    const injectColorScheme = resolveColorScheme(opts.injectColorScheme);
     const base = unplugin.webpack(opts) as WebpackPluginShape;
 
     return {
         apply(compiler) {
             applyModuleCss(compiler as MinimalCompiler, opts);
             base.apply(compiler);
-            tapHtmlFouc(compiler as MinimalCompiler, resolved.injectColorScheme);
+            tapHtmlFouc(compiler as MinimalCompiler, injectColorScheme);
         },
     };
 }

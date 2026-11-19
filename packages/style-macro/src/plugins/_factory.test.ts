@@ -15,8 +15,13 @@ function makeCtx() {
     };
 }
 
+function rawHooks(opts: VaporPluginOptions): AnyProp {
+    return (plugin.raw as AnyProp)(opts, { framework: 'webpack', versions: {} });
+}
+
+/** 번들러 루트 없이 호출하는 단위 테스트라 `root` 를 직접 준다. */
 function getHooks(opts: VaporPluginOptions = {}): AnyProp {
-    return (plugin.raw as AnyProp)(opts, { framework: 'rollup', versions: {} });
+    return rawHooks({ root: '/', ...opts });
 }
 
 function callHook(hook: AnyProp, ctx: AnyProp, ...args: AnyProp[]): AnyProp {
@@ -119,6 +124,40 @@ describe('unplugin — JS transform only', () => {
             ].join('\n');
             expect(() => callHook(hooks.transform, ctx, src, '/src/err.tsx')).toThrow();
             expect(ctx.error).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('root comes from webpack `compiler.context` as given', () => {
+        const SRC = `import { css } from '@vapor-ui/style-macro';\nconst cls = css({ gap: 0 });\n`;
+        const srcQuery = (out: AnyProp) =>
+            /vapor-src=([^']+)\.vapor\.css'/.exec(out.code)?.[1] ?? null;
+
+        it('include/exclude and the CSS source path follow compiler.context, not cwd', () => {
+            const hooks = rawHooks({ exclude: ['src/skip/**'] });
+            hooks.webpack({ context: '/ctx/app' });
+            const ctx = makeCtx();
+            expect(process.cwd()).not.toBe('/ctx/app');
+            expect(callHook(hooks.transformInclude, ctx, '/ctx/app/src/skip/A.tsx')).toBe(false);
+            expect(callHook(hooks.transformInclude, ctx, `${process.cwd()}/src/skip/A.tsx`)).toBe(
+                true,
+            );
+            const out = callHook(hooks.transform, ctx, SRC, '/ctx/app/src/A.tsx');
+            expect(srcQuery(out)).toBe('src%2FA.tsx');
+        });
+
+        it('explicit `root` wins over compiler.context', () => {
+            const hooks = rawHooks({ root: '/explicit' });
+            hooks.webpack({ context: '/ctx/app' });
+            const out = callHook(hooks.transform, makeCtx(), SRC, '/explicit/src/A.tsx');
+            expect(srcQuery(out)).toBe('src%2FA.tsx');
+        });
+
+        it('throws when neither `root` nor compiler.context exists', () => {
+            expect(() => rawHooks({}).webpack({})).toThrow(/No project root/);
+            const hooks = rawHooks({});
+            expect(() => callHook(hooks.transformInclude, makeCtx(), '/src/A.tsx')).toThrow(
+                /No project root/,
+            );
         });
     });
 });

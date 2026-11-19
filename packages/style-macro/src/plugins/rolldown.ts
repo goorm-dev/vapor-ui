@@ -2,7 +2,7 @@ import { dirname, posix, relative, resolve } from 'node:path';
 
 import { stripQuery } from './_id';
 import { compileOrError, isModuleCss } from './_module-css';
-import { type VaporPluginOptions, resolveOptions, toPosix } from './_options';
+import { type ResolvedOptions, type VaporPluginOptions, resolveOptions, toPosix } from './_options';
 
 export type { VaporPluginOptions };
 
@@ -80,7 +80,9 @@ interface RenderChunkContext {
  */
 export function vaporRolldownPlugin(opts: VaporRolldownOptions = {}) {
     const { extract = false, ...pluginOpts } = opts;
-    const resolved = resolveOptions(pluginOpts);
+    // root 는 rolldown 이 `buildStart` 에 주는 `cwd` 를 그대로 쓴다 (사용자 `root` 가 우선).
+    let resolved: ResolvedOptions | null = null;
+    const current = (): ResolvedOptions => (resolved ??= resolveOptions(pluginOpts));
     const extractName =
         extract === false ? null : ((extract === true ? undefined : extract.name) ?? 'index.css');
     /** 모듈 CSS 의 절대 경로 → CSS. `transform` 이 채우고 `resolveId` 가 meta 로 옮긴다. */
@@ -95,14 +97,15 @@ export function vaporRolldownPlugin(opts: VaporRolldownOptions = {}) {
     return {
         name: 'vapor-style-macro:rolldown',
 
-        buildStart(options?: { input?: InputOption }) {
+        buildStart(options?: { input?: InputOption; cwd?: string }) {
+            resolved = resolveOptions(pluginOpts, { root: options?.cwd });
             cssByPath.clear();
             const input = options?.input;
             inputs = !input ? [] : typeof input === 'string' ? [input] : Object.values(input);
         },
 
         transform(this: TransformContext, code: string, id: string) {
-            const compiled = compileOrError(this, code, id, resolved);
+            const compiled = compileOrError(this, code, id, current());
             if (!compiled) return null;
             if (compiled.css) cssByPath.set(compiled.cssPath, compiled.css);
             return compiled.code === code ? null : { code: compiled.code, map: compiled.map };
@@ -113,7 +116,7 @@ export function vaporRolldownPlugin(opts: VaporRolldownOptions = {}) {
             const path = resolve(dirname(stripQuery(importer)), source);
             const css = cssByPath.get(path);
             if (css === undefined) return null;
-            const id = toPosix(relative(resolved.root, path));
+            const id = toPosix(relative(current().root, path));
             // extract: CSS 는 한 파일로 나가므로 출력 JS 가 모듈 CSS 를 참조할 일이 없다. 부작용 없는
             // 빈 내부 모듈로 두면 번들러가 import 를 스스로 지운다 (출력 텍스트를 고치지 않는다).
             // 모듈은 그래프에 남아 `buildEnd` 가 평가 순서와 meta.css 를 읽는다.

@@ -255,6 +255,49 @@ describe('vite adapter — included packages skip dependency pre-bundling', () =
     });
 });
 
+describe('vite adapter — root is Vite `config.root` as given', () => {
+    type Hooks = {
+        configResolved(c: { root: string }): void;
+        transform(this: unknown, code: string, id: string): { code: string } | null;
+        resolveId(source: string, importer?: string): string | null;
+    };
+    const ctx = {
+        error(m: string): never {
+            throw new Error(m);
+        },
+        addWatchFile() {},
+    };
+    const SRC = src('a', '1px');
+    const hooksOf = (opts = {}) =>
+        vaporVitePlugin({ hash: true, injectColorScheme: false, ...opts })[0] as unknown as Hooks;
+    const classIn = (out: { code: string } | null) => (out ? classOf(out.code, 'a') : undefined);
+
+    it('include/exclude, class hash and root-relative URLs follow config.root, not cwd', () => {
+        const viteRoot = '/vite/app';
+        expect(process.cwd()).not.toBe(viteRoot);
+        const hooks = hooksOf({ exclude: ['skip/**'] });
+        hooks.configResolved({ root: viteRoot });
+        expect(hooks.transform.call(ctx, SRC, `${viteRoot}/skip/a.tsx`)).toBeNull();
+        const out = hooks.transform.call(ctx, SRC, `${viteRoot}/a.tsx`);
+        const explicit = hooksOf({ root: viteRoot });
+        explicit.configResolved({ root: '/unused' });
+        expect(classIn(out)).toBe(classIn(explicit.transform.call(ctx, SRC, `${viteRoot}/a.tsx`)));
+        expect(hooks.resolveId('/a.tsx.vapor.css')).toBe(`${viteRoot}/a.tsx.vapor.css`);
+    });
+
+    it('an explicit `root` wins over config.root', () => {
+        const hooks = hooksOf({ root: '/explicit', exclude: ['skip/**'] });
+        hooks.configResolved({ root: '/vite/app' });
+        expect(hooks.transform.call(ctx, SRC, '/explicit/skip/a.tsx')).toBeNull();
+        expect(hooks.transform.call(ctx, SRC, '/vite/app/skip/a.tsx')).not.toBeNull();
+    });
+
+    it('does not resolve options before configResolved (no cwd default)', () => {
+        const hooks = hooksOf();
+        expect(() => hooks.transform.call(ctx, SRC, '/x/a.tsx')).toThrow(/No project root/);
+    });
+});
+
 describe('vite adapter — FOUC guard goes into <head> via Vite HTML tag injection', () => {
     async function htmlOf(index: string) {
         const { root, w } = fixture({ 'main.ts': 'export {};\n' });

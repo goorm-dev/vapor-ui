@@ -298,6 +298,27 @@ describe('rolldown() adapter — per-module CSS (library build)', () => {
         expect(resolveId('./other.css')).toBeNull();
     });
 
+    it('without `root`, uses the `cwd` rolldown gives buildStart; explicit `root` wins', () => {
+        const { root, file } = setup();
+        const idWith = (opts: Parameters<typeof vaporRolldownPlugin>[0], cwd?: string) => {
+            const p = vaporRolldownPlugin({ hash: true, ...opts }) as unknown as Record<
+                string,
+                Hook
+            >;
+            const c = {
+                error: (m: string) => {
+                    throw new Error(m);
+                },
+            };
+            p.buildStart!.call({}, { input: [], cwd });
+            p.transform!.call(c, SRC, file);
+            return (p.resolveId!.call(c, './button.tsx.vapor.css', file) as Resolved).id;
+        };
+        expect(idWith({}, join(root, 'src'))).toBe('button/button.tsx.vapor.css');
+        expect(idWith({ root }, join(root, 'src'))).toBe('src/button/button.tsx.vapor.css');
+        expect(() => idWith({})).toThrow(/No project root/);
+    });
+
     it('drops the per-file layer order statement (layers.css owns the order)', () => {
         const { transform, resolveId } = setup({ layer: 'vapor-composites' });
         transform(SRC);

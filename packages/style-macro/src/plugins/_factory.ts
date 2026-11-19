@@ -23,7 +23,8 @@ export type { VaporPluginOptions };
  * 모듈이 따로 생기고, `vaporWebpackPlugin` 의 `enforce: 'pre'` 규칙(`css-loader`)이 쿼리가
  * 가리키는 소스를 CSS 로 컴파일한다. 소스 경로는 root 기준 상대 경로라 빌드 머신과 무관하다.
  *
- * `root` 는 webpack `compiler.context` 로 늦게 확정되므로 옵션 해석을 첫 사용 시점까지 미룬다.
+ * `root` 는 번들러가 주는 webpack `compiler.context` 를 그대로 쓴다. 그 값은 `webpack` 훅에서야
+ * 오므로 옵션 해석을 그때(또는 첫 사용 시점)까지 미룬다. 번들러 루트가 없으면 사용자 `root` 가 필수다.
  */
 export default createUnplugin<VaporPluginOptions | undefined>((rawOpts) => {
     const raw = rawOpts ?? {};
@@ -35,9 +36,7 @@ export default createUnplugin<VaporPluginOptions | undefined>((rawOpts) => {
         enforce: 'pre',
 
         webpack(compiler: { context?: string }) {
-            if (!resolved && compiler.context) {
-                resolved = resolveOptions(raw, { root: compiler.context });
-            }
+            resolved = resolveOptions(raw, { root: compiler.context });
         },
 
         transformInclude(id) {

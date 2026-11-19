@@ -18,8 +18,9 @@ export interface VaporPluginOptions {
     /** 제외 glob (`root` 기준, `../`·절대 경로 가능). `include` 보다 우선한다. */
     exclude?: string[];
     /**
-     * `include`/`exclude` glob 기준 경로. 기본값은 번들러가 아는 프로젝트 루트
-     * (Vite `root`, webpack `compiler.context`, Next 프로젝트 디렉터리), 없으면 `process.cwd()`.
+     * `include`/`exclude` glob 기준 경로. 기본값은 번들러가 주는 프로젝트 루트 그대로
+     * (Vite `config.root`, webpack `compiler.context`, loader `rootContext`, rolldown `cwd`).
+     * 플러그인이 계산하지 않는다 — 번들러 루트가 없는 곳에서 쓰면 이 옵션이 필수다.
      */
     root?: string;
     hash?: boolean;
@@ -34,7 +35,7 @@ export interface VaporPluginOptions {
 }
 
 export interface ResolveDefaults {
-    /** 번들러 컨텍스트가 제공하는 프로젝트 루트. 사용자 `root` 가 없을 때 쓴다. */
+    /** 번들러가 주는 프로젝트 루트 (없으면 `undefined` 그대로). 사용자 `root` 가 없을 때 쓴다. */
     root?: string;
 }
 
@@ -193,19 +194,29 @@ export function resolveOptions(
         layer = DEFAULT_LAYER,
     } = opts;
 
-    const root = resolve(rawRoot ?? defaults.root ?? process.cwd());
+    const given = rawRoot ?? defaults.root;
+    if (given === undefined) {
+        throw new Error(
+            '[@vapor-ui/style-macro] No project root: the bundler provided none. ' +
+                'Pass the `root` option (base path of `include`/`exclude`).',
+        );
+    }
+    const root = resolve(given);
     const includeFn = createIncludeFilter(root, include, exclude);
 
     return {
         include: includeFn,
         root,
         hash,
-        injectColorScheme:
-            injectColorScheme === false
-                ? false
-                : injectColorScheme === true
-                  ? {}
-                  : injectColorScheme,
+        injectColorScheme: resolveColorScheme(injectColorScheme),
         layer: validateLayer(layer),
     };
+}
+
+/** `injectColorScheme` 옵션 → FOUC script 옵션. root 와 무관해 플러그인 생성 시점에 쓴다. */
+export function resolveColorScheme(
+    injectColorScheme: VaporPluginOptions['injectColorScheme'] = true,
+): false | ColorSchemeScriptOpts {
+    if (injectColorScheme === false) return false;
+    return injectColorScheme === true ? {} : injectColorScheme;
 }
