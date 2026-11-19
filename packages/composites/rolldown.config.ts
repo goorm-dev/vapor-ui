@@ -9,7 +9,7 @@ import { defineConfig } from 'rolldown';
 const inputs = generateInputs([
     'src/index.ts',
     'src/components/**/*.{ts,tsx}',
-    '!src/components/**/*.{figma,stories,test,spec}.*',
+    '!src/components/**/*.{stories,test,spec}.*',
 ]);
 
 /**

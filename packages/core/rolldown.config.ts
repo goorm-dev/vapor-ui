@@ -14,7 +14,7 @@ const inputs = generateInputs([
     'src/index.ts',
     'src/styles/tailwind-preset.css.ts',
     'src/components/**/*.{ts,tsx}',
-    '!src/components/**/*.{figma,stories,test,spec}.*',
+    '!src/components/**/*.{stories,test,spec}.*',
 ]);
 
 const resolve = {
