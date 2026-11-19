@@ -14,7 +14,6 @@ import pLimit from 'p-limit';
 
 import { ICON_TYPE_NAMES, colorFrameIds, figma, iconTypes, isIconType } from '~/config';
 import { downloadSvg, fetchIconNodes, resolveSvgUrls } from '~/downloader/svg-downloader';
-import { writeCodeConnectBatch } from '~/generator/code-connect-generator';
 import type { WriteResult } from '~/generator/component-generator';
 import { removeStaleIcons, writeIcon, writeIconsIndex } from '~/generator/component-generator';
 import { writeSyncSummary } from '~/summary/sync-summary';
@@ -82,9 +81,6 @@ const deleted = await removeStaleIcons(targetDir, iconNames);
 for (const name of deleted) log.warn(`🗑️  Deleted: ${name}`);
 
 await writeIconsIndex(targetDir, iconNames);
-
-// Same node list the components came from, so the Code Connect node ids cannot drift.
-log.info(`Code Connect mapping written to ${await writeCodeConnectBatch(type, iconType, nodes)}`);
 
 log.info(`Sync complete for ${type} icons`);
 
