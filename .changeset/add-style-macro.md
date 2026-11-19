@@ -1,7 +1,7 @@
 ---
 '@vapor-ui/style-macro': patch
-'@vapor-ui/core': patch
-'@vapor-ui/composites': patch
+'@vapor-ui/core': minor
+'@vapor-ui/composites': minor
 ---
 
 Add `@vapor-ui/style-macro`, a zero-runtime CSS-in-JS macro. `css({...})` compiles at build time to a class name.
