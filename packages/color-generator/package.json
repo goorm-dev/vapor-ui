@@ -45,14 +45,9 @@
         "test:watch": "vitest",
         "typecheck": "tsc --noEmit"
     },
-    "dependencies": {
-        "@adobe/leonardo-contrast-colors": "1.0.0",
-        "culori": "^4.0.2"
-    },
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
-        "@types/culori": "^4.0.1",
         "@types/node": "^22.20.5",
         "eslint": "catalog:",
         "rimraf": "^6.1.4",

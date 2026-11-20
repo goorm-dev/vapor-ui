@@ -1,98 +1,74 @@
-import type { ColorGeneratorPort, KeyColor, ThemeOptions, ThemeResult } from '../../domain';
-import { BASE_TOKENS, DEFAULT_THEME_OPTIONS } from '../constants';
-import { applyBrandColorSwap, isValidHexColor } from '../utils';
+import type { PaletteChip, PrimitivePalette, ThemeOptions, ThemeResult } from '../../domain';
+import { hexToOklch } from '../../domain/color-math';
+import type { Mode } from '../../domain/models/scale';
+import { BASE_TOKENS } from '../constants';
+import type { HueTable } from '../engine/hue';
+import { keysFromHex, leonardoHues } from '../engine/hue';
+import type { RawPalette } from '../engine/palette';
+import { generateFromHues, generateGray, getBaseHueTable } from '../engine/palette';
+import { isValidColorName, toRawHex } from '../utils';
+
+const round2 = (v: number) => Math.round(v * 100) / 100;
+
+const toChip = (color: string, scale: string, raw: string): PaletteChip => {
+    const [L, C, H] = hexToOklch(raw);
+    // Achromatic cells carry a meaningless hue; print 0 as before.
+    const hue = round2(C) === 0 ? 0 : round2(H);
+    return {
+        name: `color-${color}-${scale}`,
+        hex: `#${raw.toLowerCase()}`,
+        oklch: `oklch(${round2(L)} ${round2(C)} ${hue})`,
+        codeSyntax: `vapor-color-${color}-${scale}`,
+    };
+};
+
+const toPalettes = (raw: RawPalette): PrimitivePalette[] =>
+    Object.entries(raw).map(([name, row]) => ({
+        name,
+        chips: Object.fromEntries(
+            Object.entries(row).map(([s, hex]) => [s, toChip(name, s, hex!)]),
+        ),
+    }));
+
+const checkName = (name: string) => {
+    if (!isValidColorName(name) || name === 'gray') throw new Error(`Invalid color name: ${name}`);
+};
 
 /**
- * generatePrimitiveColorPalette Use Case
- *
- * 시스템의 모든 Primitive Color Token을 생성하는 핵심 함수입니다.
- * leonardoAdapter를 사용하여 단일 기준 배경색을 기반으로 모든 필수 팔레트를 일관되게 생성합니다.
+ * Builds the primitive palettes of both modes: the 11 base colors, `basicColors`, the brand
+ * color, and `gray`, all against the fixed backgrounds (light `#FFFFFF`, dark `#232323`).
  */
-export function generatePrimitiveColorPalette(
-    colorGeneratorPort: ColorGeneratorPort,
-    options: Partial<ThemeOptions> = {},
-): ThemeResult {
-    const mergedOptions = {
-        ...DEFAULT_THEME_OPTIONS,
-        ...options,
-    };
+export function generatePrimitiveColorPalette(options: ThemeOptions = {}): ThemeResult {
+    const { basicColors = {}, brandColor } = options;
+    const baseHues = getBaseHueTable();
+    const hues: HueTable = { ...baseHues };
 
-    if (mergedOptions.brandColor && !isValidHexColor(mergedOptions.brandColor.hexcode)) {
-        throw new Error(`Invalid brand color hex: ${mergedOptions.brandColor.hexcode}`);
+    for (const [name, value] of Object.entries(basicColors)) {
+        checkName(name);
+        const keys =
+            typeof value === 'string'
+                ? keysFromHex(toRawHex(value), baseHues)
+                : value.map(toRawHex);
+        hues[name] = leonardoHues(keys);
     }
 
-    if (mergedOptions.backgroundColor && !isValidHexColor(mergedOptions.backgroundColor.hexcode)) {
-        throw new Error(`Invalid background color hex: ${mergedOptions.backgroundColor.hexcode}`);
+    let brand: { name: string; hex: string } | undefined;
+    if (brandColor) {
+        checkName(brandColor.name);
+        brand = { name: brandColor.name, hex: toRawHex(brandColor.hexcode) };
+        hues[brand.name] = leonardoHues(keysFromHex(brand.hex, baseHues));
     }
 
-    const refBg = mergedOptions.backgroundColor;
-    const colors: KeyColor[] = [];
-
-    // brandColor 이름이 keyColors에 존재하면 대체, 아니면 추가
-    Object.entries(mergedOptions.keyColors).forEach(([name, hexcode]) => {
-        if (options.brandColor && options.brandColor.name === name) {
-            colors.push(options.brandColor);
-        } else {
-            colors.push({ name, hexcode });
-        }
+    const { light, dark, brandScale } = generateFromHues(hues, { brand });
+    const gray = generateGray();
+    const tokens = (mode: Mode, raw: RawPalette) => ({
+        palettes: toPalettes({ ...raw, gray: gray[mode] }),
     });
-
-    if (options.brandColor) {
-        const brandColorExistsInKeyColors = Object.keys(mergedOptions.keyColors).includes(
-            options.brandColor.name,
-        );
-        if (!brandColorExistsInKeyColors) {
-            colors.push(options.brandColor);
-        }
-    }
-
-    const backgroundLightness =
-        mergedOptions.backgroundColor.lightness ?? DEFAULT_THEME_OPTIONS.backgroundColor.lightness;
-
-    const lightLightness = backgroundLightness.light;
-    const darkLightness = backgroundLightness.dark;
-
-    const lightModeTokens = colorGeneratorPort.generatePalette({
-        colors,
-        backgroundColor: refBg,
-        contrastRatios: mergedOptions.contrastRatios,
-        lightness: lightLightness,
-    });
-
-    const darkModeTokens = colorGeneratorPort.generatePalette({
-        colors,
-        backgroundColor: refBg,
-        contrastRatios: mergedOptions.contrastRatios,
-        lightness: darkLightness,
-    });
-
-    if (options.brandColor) {
-        const brandColorName = options.brandColor.name;
-
-        const lightBrandPalette = lightModeTokens.palettes.find((p) => p.name === brandColorName);
-        if (lightBrandPalette) {
-            const swappedLightPalette = applyBrandColorSwap(
-                lightBrandPalette,
-                options.brandColor.hexcode,
-            );
-            const index = lightModeTokens.palettes.findIndex((p) => p.name === brandColorName);
-            lightModeTokens.palettes[index] = swappedLightPalette;
-        }
-
-        const darkBrandPalette = darkModeTokens.palettes.find((p) => p.name === brandColorName);
-        if (darkBrandPalette) {
-            const swappedDarkPalette = applyBrandColorSwap(
-                darkBrandPalette,
-                options.brandColor.hexcode,
-            );
-            const index = darkModeTokens.palettes.findIndex((p) => p.name === brandColorName);
-            darkModeTokens.palettes[index] = swappedDarkPalette;
-        }
-    }
 
     return {
-        lightModeTokens,
-        darkModeTokens,
+        lightModeTokens: tokens('light', light),
+        darkModeTokens: tokens('dark', dark),
         baseTokens: BASE_TOKENS,
+        ...(brand && brandScale && { brand: { name: brand.name, scale: brandScale } }),
     };
 }

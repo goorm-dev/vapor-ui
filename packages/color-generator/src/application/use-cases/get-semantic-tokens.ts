@@ -1,174 +1,83 @@
-import type {
-    BackgroundCanvas,
-    PaletteChip,
-    PrimitivePalette,
-    SemanticResult,
-    SemanticTokens,
-} from '../../domain';
-import {
-    extractOklchLightness,
-    findLowestDeltaEChip,
-    getNextNextStep,
-    getNextStep,
-} from '../utils';
+import type { PrimitivePalette, SemanticResult, SemanticTokens, ThemeResult } from '../../domain';
+import { contrast } from '../../domain/color-math';
+import type { ColorScale, Mode, Scale } from '../../domain/models/scale';
+import { COLOR_SCALES } from '../../domain/models/scale';
+import { assignCell } from '../engine/brand';
+
+const findPalette = (result: ThemeResult, mode: Mode, name: string) => {
+    const palette = (
+        mode === 'light' ? result.lightModeTokens : result.darkModeTokens
+    ).palettes.find((p) => p.name === name);
+    if (!palette) throw new Error(`Palette '${name}' not found in theme result`);
+    return palette;
+};
+
+/** Engine HEX form (`RRGGBB`) of a chip. */
+export const rawHex = (palette: PrimitivePalette, scale: Scale) =>
+    palette.chips[scale].hex.slice(1).toUpperCase();
+
+export const rawRow = (palette: PrimitivePalette) =>
+    Object.fromEntries(Object.keys(palette.chips).map((s) => [s, rawHex(palette, s as Scale)]));
 
 /**
- * getSemanticDependentTokens 함수의 파라미터 인터페이스
+ * The primary palette's anchor scale per mode. Light is the brand cell (500 without a brand).
+ * Dark runs the same cell assignment on the dark palette with the brand HEX, which is never
+ * pinned in dark (400 without a brand).
  */
-export interface GetSemanticDependentTokensParams {
-    primaryColorPalette: PrimitivePalette;
-    canvasColorPalette: PrimitivePalette;
-    lightModeCanvas: BackgroundCanvas;
-    darkModeCanvas: BackgroundCanvas;
-    baseTokens: Record<string, PaletteChip>;
-}
+export const primaryAnchor = (result: ThemeResult, primary: string): Record<Mode, ColorScale> => {
+    if (result.brand?.name !== primary) return { light: '500', dark: '400' };
+    const light = result.brand.scale as ColorScale;
+    const brandHex = rawHex(findPalette(result, 'light', primary), light);
+    const dark =
+        assignCell(brandHex, 'dark', rawRow(findPalette(result, 'dark', primary))) ?? '400';
+    return { light, dark };
+};
 
-/**
- * getSemanticDependentTokens Use Case
- *
- * generatePrimitiveColorPalette에서 생성된 Primitive Palette를 입력받아,
- * 실제 애플리케이션에서 사용될 시맨틱(Semantic) 토큰으로 매핑하는 규칙을 제공합니다.
- */
-export function getSemanticDependentTokens({
-    primaryColorPalette,
-    canvasColorPalette,
-    lightModeCanvas,
-    darkModeCanvas,
-    baseTokens,
-}: GetSemanticDependentTokensParams): SemanticResult {
-    // Light Mode 시맨틱 토큰 생성
-    const lightModeTokens = generateLightModeSemanticTokens(
-        primaryColorPalette,
-        canvasColorPalette,
-        lightModeCanvas,
-        baseTokens,
-    );
+const step = (scale: ColorScale, by: number) =>
+    COLOR_SCALES[Math.min(COLOR_SCALES.indexOf(scale) + by, 9)];
 
-    // Dark Mode 시맨틱 토큰 생성
-    const darkModeTokens = generateDarkModeSemanticTokens(
-        primaryColorPalette,
-        canvasColorPalette,
-        darkModeCanvas,
-        baseTokens,
-    );
+const GRAY: Record<Mode, Record<'canvas100' | 'overlay100' | 'borderNormal', Scale>> = {
+    light: { canvas100: '000', overlay100: '000', borderNormal: '100' },
+    dark: { canvas100: '025', overlay100: '050', borderNormal: '300' },
+};
 
+const tokensFor = (
+    result: ThemeResult,
+    mode: Mode,
+    primary: string,
+    anchor: ColorScale,
+): SemanticTokens => {
+    const palette = findPalette(result, mode, primary);
+    const p = (s: Scale) => `color-${primary}-${s}`;
+    const gray = (s: Scale) => `color-gray-${s}`;
+    const white = result.baseTokens['color-white'].name;
+    const black = result.baseTokens['color-black'].name;
     return {
-        lightModeTokens,
-        darkModeTokens,
+        'color-background-primary-100': p(mode === 'light' ? '100' : '050'),
+        'color-background-primary-200': p(anchor),
+        'color-border-primary': p(anchor),
+        'color-border-normal': gray(GRAY[mode].borderNormal),
+        'color-foreground-primary-100': p(step(anchor, 1)),
+        'color-foreground-primary-200': p(step(anchor, 2)),
+        'color-background-canvas-100': gray(GRAY[mode].canvas100),
+        'color-background-canvas-200': gray('050'),
+        'color-background-overlay-100': gray(GRAY[mode].overlay100),
+        'color-foreground-inverse': mode === 'light' ? white : black,
+        'color-foreground-onPrimary':
+            contrast('FFFFFF', rawHex(palette, anchor)) >= 4.5 ? white : black,
     };
-}
+};
 
 /**
- * Light Mode 시맨틱 토큰 생성
+ * Maps the primitive palettes to semantic tokens. Values are primitive token names.
  */
-function generateLightModeSemanticTokens(
-    primaryColorPalette: PrimitivePalette,
-    canvasColorPalette: PrimitivePalette,
-    backgroundCanvas: BackgroundCanvas,
-    baseTokens: Record<string, PaletteChip>,
-): SemanticTokens {
-    const lowestDeltaEChip = findLowestDeltaEChip(primaryColorPalette);
-    const lowestDeltaEStep = extractStepFromChipName(lowestDeltaEChip.name);
-
-    let backgroundPrimary100: string;
-    if (lowestDeltaEChip.deltaE === 0 && lowestDeltaEChip.name.includes('050')) {
-        backgroundPrimary100 = lowestDeltaEChip.name;
-    } else {
-        backgroundPrimary100 = primaryColorPalette.chips['100']?.name || lowestDeltaEChip.name;
-    }
-
-    const backgroundPrimary200 = lowestDeltaEChip.name;
-    const borderPrimary = backgroundPrimary200;
-
-    const foregroundPrimary100Step = getNextStep(lowestDeltaEStep);
-    const foregroundPrimary100 =
-        primaryColorPalette.chips[foregroundPrimary100Step]?.name ||
-        primaryColorPalette.chips['900'].name;
-
-    const foregroundPrimary200Step = getNextNextStep(lowestDeltaEStep);
-    const foregroundPrimary200 =
-        primaryColorPalette.chips[foregroundPrimary200Step]?.name ||
-        primaryColorPalette.chips['900'].name;
-
-    const colorCanvas = backgroundCanvas.name;
-    const backgroundCanvas100 = colorCanvas;
-    const backgroundCanvas200 = canvasColorPalette.chips['050']?.name || colorCanvas;
-    const backgroundOverlay100 = colorCanvas;
-    const borderNormal = canvasColorPalette.chips['100']?.name || colorCanvas;
-
-    // Adaptive Contrast Rule: lightness >= 0.65이면 color-black, 아니면 color-white
-    const primary200Chip = primaryColorPalette.chips[lowestDeltaEStep];
-    const lightness = extractOklchLightness(primary200Chip?.oklch || lowestDeltaEChip.oklch);
-    const primaryPrimaryInverse =
-        lightness >= 0.65 ? baseTokens['color-black'].name : baseTokens['color-white'].name;
-
+export function getSemanticDependentTokens(
+    themeResult: ThemeResult,
+    primaryColorName = 'blue',
+): SemanticResult {
+    const anchor = primaryAnchor(themeResult, primaryColorName);
     return {
-        'color-background-primary-100': backgroundPrimary100,
-        'color-background-primary-200': backgroundPrimary200,
-        'color-border-primary': borderPrimary,
-        'color-border-normal': borderNormal,
-        'color-foreground-primary-100': foregroundPrimary100,
-        'color-foreground-primary-200': foregroundPrimary200,
-        'color-background-canvas-100': backgroundCanvas100,
-        'color-background-canvas-200': backgroundCanvas200,
-        'color-background-overlay-100': backgroundOverlay100,
-        'color-foreground-inverse': primaryPrimaryInverse,
+        lightModeTokens: tokensFor(themeResult, 'light', primaryColorName, anchor.light),
+        darkModeTokens: tokensFor(themeResult, 'dark', primaryColorName, anchor.dark),
     };
-}
-
-/**
- * Dark Mode 시맨틱 토큰 생성
- */
-function generateDarkModeSemanticTokens(
-    primaryColorPalette: PrimitivePalette,
-    canvasColorPalette: PrimitivePalette,
-    backgroundCanvas: BackgroundCanvas,
-    baseTokens: Record<string, PaletteChip>,
-): SemanticTokens {
-    const lowestDeltaEChip = findLowestDeltaEChip(primaryColorPalette);
-    const lowestDeltaEStep = extractStepFromChipName(lowestDeltaEChip.name);
-
-    const backgroundPrimary100 =
-        primaryColorPalette.chips['050']?.name || primaryColorPalette.chips['100'].name;
-    const backgroundPrimary200 = lowestDeltaEChip.name;
-    const borderPrimary = backgroundPrimary200;
-
-    const foregroundPrimary100Step = getNextStep(lowestDeltaEStep);
-    const foregroundPrimary100 =
-        primaryColorPalette.chips[foregroundPrimary100Step]?.name ||
-        primaryColorPalette.chips['900'].name;
-
-    const foregroundPrimary200Step = getNextNextStep(lowestDeltaEStep);
-    const foregroundPrimary200 =
-        primaryColorPalette.chips[foregroundPrimary200Step]?.name ||
-        primaryColorPalette.chips['900'].name;
-
-    const colorCanvas = backgroundCanvas.name;
-    const backgroundCanvas100 = colorCanvas;
-    const backgroundCanvas200 = canvasColorPalette.chips['050']?.name || colorCanvas;
-    const backgroundOverlay100 = canvasColorPalette.chips['100']?.name || colorCanvas;
-    const borderNormal = canvasColorPalette.chips['300']?.name || colorCanvas;
-
-    const primary200Chip = primaryColorPalette.chips[lowestDeltaEStep];
-    const lightness = extractOklchLightness(primary200Chip?.oklch || lowestDeltaEChip.oklch);
-    const primaryPrimaryInverse =
-        lightness >= 0.65 ? baseTokens['color-black'].name : baseTokens['color-white'].name;
-
-    return {
-        'color-background-primary-100': backgroundPrimary100,
-        'color-background-primary-200': backgroundPrimary200,
-        'color-border-primary': borderPrimary,
-        'color-border-normal': borderNormal,
-        'color-foreground-primary-100': foregroundPrimary100,
-        'color-foreground-primary-200': foregroundPrimary200,
-        'color-background-canvas-100': backgroundCanvas100,
-        'color-background-canvas-200': backgroundCanvas200,
-        'color-background-overlay-100': backgroundOverlay100,
-        'color-foreground-inverse': primaryPrimaryInverse,
-    };
-}
-
-function extractStepFromChipName(chipName: string): string {
-    const match = chipName.match(/(\d{3})$/);
-    return match ? match[1] : '500';
 }

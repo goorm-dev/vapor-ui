@@ -1,38 +1,12 @@
 /**
- * 기본 색상 타입 정의
+ * HEX color code, `#RRGGBB` or `#RGB`.
  */
 export type Hexcode = string;
 
 /**
- * 키 컬러 정보
+ * A named color input.
  */
 export interface KeyColor {
     name: string;
     hexcode: Hexcode;
-}
-
-/**
- * 배경색 정보
- */
-export interface BackgroundLightness {
-    light: number;
-    dark: number;
-}
-export interface BackgroundColor extends KeyColor {
-    lightness?: BackgroundLightness;
-}
-
-/**
- * 명암비 설정 객체 타입
- */
-export type ContrastRatios = Record<string, number>;
-
-/**
- * OKLCH 색상 정보
- */
-export interface OklchColor {
-    mode: 'oklch';
-    l: number;
-    c: number;
-    h?: number;
 }

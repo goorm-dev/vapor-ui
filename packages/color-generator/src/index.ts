@@ -1,30 +1,21 @@
 export {
     generatePrimitiveColorPalette,
     getSemanticDependentTokens,
-    getColorLightness,
-} from './infrastructure';
+    validatePalette,
+} from './application/use-cases';
 
 export type {
-    ThemeOptions,
-    ThemeResult,
-    SemanticResult,
+    Hexcode,
+    KeyColor,
+    PaletteCheck,
+    PaletteChip,
     PrimitiveColorTokens,
     PrimitivePalette,
-    PaletteChip,
-    BackgroundCanvas,
+    Scale,
+    SemanticResult,
     SemanticTokens,
-    KeyColor,
-    BackgroundColor,
-    BackgroundLightness,
-    ContrastRatios,
-    OklchColor,
+    ThemeOptions,
+    ThemeResult,
 } from './domain';
 
-export type { GetSemanticDependentTokensParams } from './application';
-
-export {
-    DEFAULT_CONTRAST_RATIOS,
-    DEFAULT_KEY_COLORS,
-    DEFAULT_THEME_OPTIONS,
-    BASE_TOKENS,
-} from './application/constants';
+export { BASE_TOKENS, LEONARDO_KEYS } from './application/constants';
