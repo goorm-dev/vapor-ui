@@ -5,6 +5,7 @@ import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { useControlled } from '@base-ui/utils/useControlled';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 
 import { useIsoLayoutEffect } from '~/hooks/use-iso-layout-effect';
@@ -16,7 +17,6 @@ import { useTransitionStatus } from '~/hooks/use-transition-status';
 import { useVaporId } from '~/hooks/use-vapor-id';
 import { createContext } from '~/libs/create-context';
 import { cn } from '~/utils/cn';
-import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
 import { createSplitProps } from '~/utils/create-split-props';
 import { createDataAttributes } from '~/utils/data-attributes';
@@ -230,7 +230,7 @@ export const SheetPopupPrimitive = forwardRef<HTMLDivElement, SheetPopupPrimitiv
         const { popupRef, setPopupId } = useSheetRootContext();
         const { side = 'right' } = useSheetPositionerContext();
 
-        const composedRef = composeRefs(popupRef, ref);
+        const composedRef = useMergedRefs(popupRef, ref);
 
         const id = useVaporId(idProp);
         useIsoLayoutEffect(() => {
