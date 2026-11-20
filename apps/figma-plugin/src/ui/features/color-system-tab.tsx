@@ -1,17 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import type {
-    ContrastRatios,
-    SemanticResult,
-    ThemeOptions,
-    ThemeResult,
-} from '@vapor-ui/color-generator';
+import type { SemanticResult, ThemeOptions, ThemeResult } from '@vapor-ui/color-generator';
 import {
-    DEFAULT_CONTRAST_RATIOS,
-    DEFAULT_KEY_COLORS,
+    LEONARDO_KEYS,
     generatePrimitiveColorPalette,
-    getColorLightness,
     getSemanticDependentTokens,
+    validatePalette,
 } from '@vapor-ui/color-generator';
 import { Box, Button, Collapsible, HStack, VStack } from '@vapor-ui/core';
 import { generateColorCSS } from '@vapor-ui/css-generator';
@@ -22,61 +16,28 @@ import { postMessage } from '~/common/messages';
 import { AccessibilityWarning } from '~/ui/components/accessibility-warning';
 import { ColorInput } from '~/ui/components/color-input';
 import { LabeledInput } from '~/ui/components/labeled-input';
-import { RangeSlider } from '~/ui/components/range-slider';
 import { Section } from '~/ui/components/section';
 
-/**
- * 시맨틱 토큰 이름에서 매핑된 단계(step)를 추출합니다.
- * 예: 'color-green-050' → '050'
- */
-const extractStepFromTokenName = (tokenName: string): string => {
-    const match = tokenName.match(/(\d{3})$/);
-    return match ? match[1] : '500';
-};
+// 각 기본 색상의 키 컬러 3개 중 가운데 값을 대표 HEX로 편집합니다.
+const DEFAULT_BASIC_COLORS = Object.fromEntries(
+    Object.entries(LEONARDO_KEYS).map(([name, keys]) => [name, `#${keys[1]}`]),
+);
 
-/**
- * 생성된 테마에서 background-primary-200에 해당하는 실제 HEX 값을 추출합니다.
- */
-const getPrimaryBackgroundHex = (
-    themeResult: ThemeResult,
-    semanticResult: SemanticResult,
-    primaryColorName: string,
-): { hex: string; step: string } | null => {
-    const tokenName = semanticResult.lightModeTokens['color-background-primary-200'];
-    if (!tokenName) return null;
-
-    const step = extractStepFromTokenName(tokenName);
-    const palette = themeResult.lightModeTokens.palettes.find((p) => p.name === primaryColorName);
-    if (!palette) return null;
-
-    const chip = palette.chips[step];
-    if (!chip) return null;
-
-    return { hex: chip.hex, step };
-};
+// HEX 하나는 키 컬러를 다시 유도하므로, 기본값과 다른 색상만 넘겨야 기본 팔레트가 유지됩니다.
+const changedBasicColors = (colors: Record<string, string>) =>
+    Object.fromEntries(
+        Object.entries(colors).filter(
+            ([name, hex]) => hex.toUpperCase() !== DEFAULT_BASIC_COLORS[name]?.toUpperCase(),
+        ),
+    );
 
 export const ColorSystemTab = () => {
-    // Key Colors (10 colors, excluding gray)
-    const [keyColors, setKeyColors] = useState<Record<string, string>>({
-        ...DEFAULT_KEY_COLORS,
-    });
+    // Basic Colors (11 base colors)
+    const [basicColors, setBasicColors] = useState<Record<string, string>>(DEFAULT_BASIC_COLORS);
 
     // Primary Color (Required - always enabled with default blue)
     const [primaryColorName, setPrimaryColorName] = useState<string>('blue');
-    const [primaryColorHex, setPrimaryColorHex] = useState<string>(DEFAULT_KEY_COLORS.blue);
-
-    // Background Color (Required - always enabled with default gray/white)
-    const [backgroundName, setBackgroundName] = useState<string>('gray');
-    const [backgroundHex, setBackgroundHex] = useState<string>(DEFAULT_KEY_COLORS.gray);
-    const [lightness, setLightness] = useState<{ light: number; dark: number }>({
-        light: 100,
-        dark: 14,
-    });
-
-    // Contrast Ratios (optional, 10 values)
-    const [contrastRatios, setContrastRatios] = useState<ContrastRatios>({
-        ...DEFAULT_CONTRAST_RATIOS,
-    });
+    const [primaryColorHex, setPrimaryColorHex] = useState<string>(DEFAULT_BASIC_COLORS.blue);
 
     // Generated results
     const [generatedTheme, setGeneratedTheme] = useState<ThemeResult | null>(null);
@@ -84,37 +45,10 @@ export const ColorSystemTab = () => {
     const [collectionName, setCollectionName] = useState<string>('Color Tokens');
     const [isCopying, setIsCopying] = useState<boolean>(false);
 
-    // 접근성 경고를 위한 primary background 정보 계산
-    const accessibilityInfo = useMemo(() => {
-        if (!generatedTheme || !semanticTokens) return null;
-
-        const primaryInfo = getPrimaryBackgroundHex(
-            generatedTheme,
-            semanticTokens,
-            primaryColorName,
-        );
-        if (!primaryInfo) return null;
-
-        return {
-            primaryBackgroundHex: primaryInfo.hex,
-            primaryMappedStep: primaryInfo.step,
-            canvasBackgroundHex: generatedTheme.lightModeTokens.backgroundCanvas.hex,
-        };
-    }, [generatedTheme, semanticTokens, primaryColorName]);
-
-    // Dynamic lightness calculation when background color changes
-    useEffect(() => {
-        const actualLightness = getColorLightness(backgroundHex);
-
-        if (actualLightness !== null) {
-            const constrainedLightness = Math.max(88, actualLightness);
-
-            setLightness((prev) => ({
-                ...prev,
-                light: constrainedLightness,
-            }));
-        }
-    }, [backgroundHex]);
+    const paletteChecks = useMemo(
+        () => (generatedTheme ? validatePalette(generatedTheme) : []),
+        [generatedTheme],
+    );
 
     const handleGeneratePalette = () => {
         try {
@@ -123,17 +57,11 @@ export const ColorSystemTab = () => {
                 data: {},
             });
 
-            const options: Partial<ThemeOptions> = {
-                keyColors,
-                contrastRatios,
+            const options: ThemeOptions = {
+                basicColors: changedBasicColors(basicColors),
                 brandColor: {
                     name: primaryColorName,
                     hexcode: primaryColorHex,
-                },
-                backgroundColor: {
-                    name: backgroundName,
-                    hexcode: backgroundHex,
-                    lightness,
                 },
             };
 
@@ -142,13 +70,9 @@ export const ColorSystemTab = () => {
             const themeResult = generatePrimitiveColorPalette(options);
             setGeneratedTheme(themeResult);
 
-            Logger.semantic.generating({ primaryColorName, canvasColorName: backgroundName }, {});
+            Logger.semantic.generating({ primaryColorName }, {});
 
-            const semanticResult = getSemanticDependentTokens(
-                themeResult,
-                primaryColorName,
-                backgroundName,
-            );
+            const semanticResult = getSemanticDependentTokens(themeResult, primaryColorName);
 
             Logger.semantic.generated(semanticResult);
             setSemanticTokens(semanticResult);
@@ -202,13 +126,8 @@ export const ColorSystemTab = () => {
 
         try {
             const css = generateColorCSS({
-                keyColors,
+                basicColors: changedBasicColors(basicColors),
                 primary: { name: primaryColorName, hexcode: primaryColorHex },
-                background: {
-                    name: backgroundName,
-                    hexcode: backgroundHex,
-                    lightness,
-                },
             });
 
             if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -253,55 +172,6 @@ export const ColorSystemTab = () => {
                     </VStack>
                 </Section>
 
-                <Section>
-                    <Section.Title title="Background Color" />
-                    <Section.Description description="모든 색상 팔레트의 기준이 되는 배경색을 지정해요. 기본값은 흰색(gray)이에요." />
-                    <VStack $css={{ gap: '$100' }}>
-                        <LabeledInput
-                            label="Color Name"
-                            value={backgroundName}
-                            onChange={setBackgroundName}
-                            placeholder="gray"
-                        />
-                        <ColorInput
-                            label="Hex Code"
-                            value={backgroundHex}
-                            onChange={setBackgroundHex}
-                            placeholder="#FFFFFF"
-                        />
-                    </VStack>
-                </Section>
-
-                <Section>
-                    <Section.Title title="Background Lightness" />
-                    <Section.Description description="Light/Dark 테마별 배경색의 밝기를 지정해요. 색역 클리핑 방지를 위해 Light는 88~100%, Dark는 0~15%로 제한돼요.\n범위를 벗어나면 가장 어두운(900) 색상이 순수한 검정/흰색으로 왜곡될 수 있어요." />
-
-                    <RangeSlider
-                        label="Light Theme"
-                        value={lightness.light}
-                        onChange={(value) =>
-                            setLightness((prev) => ({
-                                ...prev,
-                                light: value,
-                            }))
-                        }
-                        min={88} // [Constraint]: gamut clipping prevention
-                        max={100}
-                    />
-                    <RangeSlider
-                        label="Dark Theme"
-                        value={lightness.dark}
-                        onChange={(value) =>
-                            setLightness((prev) => ({
-                                ...prev,
-                                dark: value,
-                            }))
-                        }
-                        min={0} // [Constraint]: gamut clipping prevention
-                        max={15}
-                    />
-                </Section>
-
                 <Collapsible.Root>
                     <Section isTop>
                         <Collapsible.Trigger className="group flex justify-between w-full items-center">
@@ -310,15 +180,15 @@ export const ColorSystemTab = () => {
                         </Collapsible.Trigger>
                         <Collapsible.Panel>
                             <VStack $css={{ gap: '$100' }}>
-                                <Section.Description description="디자인 시스템의 10가지 기본 색상 팔레트(red, blue, green 등)를 생성하는 키 컬러에요.\n각 색상은 Background Color 대비 명암비를 준수하며, 인지적으로 균일한 050~900 단계로 생성돼요." />
+                                <Section.Description description="디자인 시스템의 11가지 기본 색상 팔레트(red, blue, green 등)를 생성하는 대표 색상이에요.\n각 색상은 고정 배경(light #FFFFFF, dark #232323) 대비 목표 명암비로 050~900 단계가 생성돼요." />
 
-                                {Object.entries(keyColors).map(([colorName, colorValue]) => (
+                                {Object.entries(basicColors).map(([colorName, colorValue]) => (
                                     <ColorInput
                                         key={colorName}
                                         label={colorName}
                                         value={colorValue}
                                         onChange={(value) =>
-                                            setKeyColors((prev) => ({
+                                            setBasicColors((prev) => ({
                                                 ...prev,
                                                 [colorName]: value,
                                             }))
@@ -326,44 +196,6 @@ export const ColorSystemTab = () => {
                                         placeholder="Please enter a hex code"
                                     />
                                 ))}
-                            </VStack>
-                        </Collapsible.Panel>
-                    </Section>
-                </Collapsible.Root>
-
-                <Collapsible.Root>
-                    <Section isTop>
-                        <Collapsible.Trigger className="group flex justify-between w-full items-center">
-                            <Section.Title title="Contrast Ratios" />
-                            <ChevronDownOutlineIcon className="transition-transform group-data-[panel-open]:rotate-180" />
-                        </Collapsible.Trigger>
-                        <Collapsible.Panel>
-                            <VStack $css={{ gap: '$100' }}>
-                                <Section.Description description="각 색상 단계(050~900)가 배경색 대비 가져야 할 명암비 값이에요. 기본값은 WCAG 접근성 기준을 준수해요.\n500(4.5:1)은 WCAG AA, 700(8.5:1)은 WCAG AAA 기준을 충족하는 값이에요." />
-
-                                {Object.entries(contrastRatios)
-                                    .sort(([a], [b]) => {
-                                        const numA = parseInt(a, 10);
-                                        const numB = parseInt(b, 10);
-                                        return numA - numB;
-                                    })
-                                    .map(([shade, ratio]) => (
-                                        <LabeledInput
-                                            key={shade}
-                                            label={shade}
-                                            value={ratio}
-                                            onChange={(value) =>
-                                                setContrastRatios((prev) => ({
-                                                    ...prev,
-                                                    [shade]: Number(value),
-                                                }))
-                                            }
-                                            type="number"
-                                            min="1"
-                                            max="21"
-                                            step="0.1"
-                                        />
-                                    ))}
                             </VStack>
                         </Collapsible.Panel>
                     </Section>
@@ -378,17 +210,7 @@ export const ColorSystemTab = () => {
                     <div className="border-t border-gray-300" />
                     <VStack $css={{ gap: '$200' }}>
                         {/* 접근성 경고 */}
-                        {accessibilityInfo && (
-                            <AccessibilityWarning
-                                primaryBackgroundHex={accessibilityInfo.primaryBackgroundHex}
-                                canvasBackgroundHex={accessibilityInfo.canvasBackgroundHex}
-                                primaryColorName={primaryColorName}
-                                backgroundColorName={backgroundName}
-                                primaryMappedStep={accessibilityInfo.primaryMappedStep}
-                                backgroundLightness={lightness.light}
-                                contrastRatios={contrastRatios}
-                            />
-                        )}
+                        <AccessibilityWarning checks={paletteChecks} />
 
                         <LabeledInput
                             label="Collection Name"
@@ -401,14 +223,8 @@ export const ColorSystemTab = () => {
                             <div className="text-sm font-medium text-gray-700 mb-2">
                                 Palette Generated
                             </div>
-                            <div className="text-xs text-gray-600 mb-1">
-                                Primary Color: {primaryColorName} ({primaryColorHex})
-                            </div>
-                            <div className="text-xs text-gray-600 mb-1">
-                                Background: {backgroundName} ({backgroundHex})
-                            </div>
                             <div className="text-xs text-gray-600">
-                                Lightness - Light: {lightness.light}% / Dark: {lightness.dark}%
+                                Primary Color: {primaryColorName} ({primaryColorHex})
                             </div>
                         </Box>
 

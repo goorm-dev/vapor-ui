@@ -1,4 +1,4 @@
-import type { PaletteChip } from '@vapor-ui/color-generator';
+import type { PaletteChip, PrimitiveColorTokens } from '@vapor-ui/color-generator';
 
 /* -------------------------------------------------------------------------------------------------
  * Color Conversion
@@ -121,4 +121,23 @@ export function isValidColorData(
     }
 
     return isValidHexColor((colorData as { hex: string }).hex);
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * Canvas
+ * -----------------------------------------------------------------------------------------------*/
+
+const CANVAS_GRAY_SCALE = { light: '000', dark: '025' } as const;
+
+/**
+ * `color-canvas` predates the gray palette. Keep the token, valued from gray 000 (light) / 025 (dark).
+ */
+export function canvasToken(
+    modeTokens: PrimitiveColorTokens,
+    mode: 'light' | 'dark',
+): Record<string, PaletteChip> {
+    const gray = modeTokens.palettes.find((palette) => palette.name === 'gray');
+    const chip = gray?.chips[CANVAS_GRAY_SCALE[mode]];
+    if (!chip) return {};
+    return { 'color-canvas': { ...chip, name: 'color-canvas', codeSyntax: 'vapor-color-canvas' } };
 }

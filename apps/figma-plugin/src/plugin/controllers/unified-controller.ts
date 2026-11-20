@@ -3,6 +3,7 @@ import type { PaletteChip, SemanticResult, ThemeResult } from '@vapor-ui/color-g
 import { figmaNoticeService } from '../services/figma-notification';
 import { figmaUIService } from '../services/figma-ui-service';
 import { figmaVariableService } from '../services/figma-variable-service';
+import { canvasToken } from '../utils/color';
 import { sortThemesByOrder } from '../utils/theme-sorter';
 
 /**
@@ -28,14 +29,7 @@ function convertThemeResultToThemeData(
 
     return {
         tokens: {
-            // Add background canvas token
-            'color-canvas': {
-                name: modeData.backgroundCanvas.name,
-                hex: modeData.backgroundCanvas.hex,
-                oklch: modeData.backgroundCanvas.oklch,
-                codeSyntax: modeData.backgroundCanvas.codeSyntax,
-                deltaE: 0,
-            },
+            ...canvasToken(modeData, mode === 'lightModeTokens' ? 'light' : 'dark'),
             // Add all palette chips
             ...modeData.palettes.reduce(
                 (acc, palette) => {

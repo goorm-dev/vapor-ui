@@ -1,7 +1,7 @@
 import type { PaletteChip, ThemeResult } from '@vapor-ui/color-generator';
 
 import { Logger } from '~/common/logger';
-import { hexToFigmaColor } from '~/plugin/utils/color';
+import { canvasToken, hexToFigmaColor } from '~/plugin/utils/color';
 
 /* -------------------------------------------------------------------------------------------------
  * Internal Types
@@ -79,14 +79,7 @@ export const figmaVariableService = {
                             },
                             {},
                         ),
-                        // Add background canvas (convert BackgroundCanvas to PaletteChip format)
-                        'color-canvas': {
-                            name: themeResult.lightModeTokens.backgroundCanvas.name,
-                            hex: themeResult.lightModeTokens.backgroundCanvas.hex,
-                            oklch: themeResult.lightModeTokens.backgroundCanvas.oklch,
-                            codeSyntax: themeResult.lightModeTokens.backgroundCanvas.codeSyntax,
-                            deltaE: 0,
-                        },
+                        ...canvasToken(themeResult.lightModeTokens, 'light'),
                     },
                     metadata: {
                         theme: 'light',
@@ -109,14 +102,7 @@ export const figmaVariableService = {
                             },
                             {},
                         ),
-                        // Add background canvas (convert BackgroundCanvas to PaletteChip format)
-                        'color-canvas': {
-                            name: themeResult.darkModeTokens.backgroundCanvas.name,
-                            hex: themeResult.darkModeTokens.backgroundCanvas.hex,
-                            oklch: themeResult.darkModeTokens.backgroundCanvas.oklch,
-                            codeSyntax: themeResult.darkModeTokens.backgroundCanvas.codeSyntax,
-                            deltaE: 0,
-                        },
+                        ...canvasToken(themeResult.darkModeTokens, 'dark'),
                     },
                     metadata: {
                         theme: 'dark',
