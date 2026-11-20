@@ -1,59 +1,65 @@
 import type { CSSProperties, ReactElement, Ref } from 'react';
-import { Fragment, createRef } from 'react';
+import { Fragment, createRef, useCallback, useState } from 'react';
+
+import { render } from '@testing-library/react';
 
 import { adaptRenderElement } from './adapt-render-element';
 
 interface TargetState {
-    disabled?: boolean;
+    disabled: boolean;
 }
 
 interface TargetProps {
     ref?: Ref<HTMLButtonElement>;
     className?: string | ((state: TargetState) => string);
     style?: CSSProperties | ((state: TargetState) => CSSProperties);
+    disabled?: boolean;
     type?: 'button' | 'submit';
     onClick?: () => void;
 }
 
-const Target = (props: TargetProps) => {
-    void props;
+/** Resolves its own stateful callbacks, like a Vapor component does. */
+const Target = ({ ref, className, style, disabled = false, ...props }: TargetProps) => {
+    const state: TargetState = { disabled };
 
-    return null;
+    return (
+        <button
+            ref={ref}
+            className={typeof className === 'function' ? className(state) : className}
+            style={typeof style === 'function' ? style(state) : style}
+            {...props}
+        />
+    );
 };
 
-type OutputProps = TargetProps & {
-    ref: (node: HTMLButtonElement | null) => void;
-    'data-host'?: string;
-};
-type RenderCallback = (props: Record<string, unknown>, state: object) => ReactElement<OutputProps>;
+type HostProps = Record<string, unknown> & { ref?: Ref<HTMLButtonElement> };
+type RenderCallback = (props: HostProps, state: object) => ReactElement;
 
-const callRender = (render: unknown, hostProps: Record<string, unknown>) => {
+/** Calls a render callback with host props, like a Base UI part does. */
+const Host = ({ render, hostProps = {} }: { render: unknown; hostProps?: HostProps }) => {
     expect(typeof render).toBe('function');
 
-    return (render as RenderCallback)(hostProps, {}).props;
+    return (render as RenderCallback)(hostProps, {});
 };
-
-const asClassName = (value: OutputProps['className']) => value as (state: TargetState) => string;
-const asStyle = (value: OutputProps['style']) => value as (state: TargetState) => CSSProperties;
 
 describe('adaptRenderElement', () => {
     describe('given a render element without stateful callbacks', () => {
         it('returns the element as-is', () => {
-            const element = <Target className="static" style={{ opacity: 1 }} />;
+            const element = <Target className="static" />;
 
             expect(adaptRenderElement(element)).toBe(element);
         });
     });
 
     describe('given a non-element render', () => {
-        it('returns undefined as-is', () => {
-            expect(adaptRenderElement(undefined)).toBeUndefined();
+        it('returns a render function as-is', () => {
+            const callback = () => <div />;
+
+            expect(adaptRenderElement(callback)).toBe(callback);
         });
 
-        it('returns a render function as-is', () => {
-            const render = () => <Target />;
-
-            expect(adaptRenderElement(render)).toBe(render);
+        it('returns undefined as-is', () => {
+            expect(adaptRenderElement(undefined)).toBeUndefined();
         });
 
         it('returns a Fragment as-is', () => {
@@ -71,33 +77,45 @@ describe('adaptRenderElement', () => {
         const className = (state: TargetState) => (state.disabled ? 'off' : 'on');
 
         it('keeps the className a function and appends the host className', () => {
-            const render = adaptRenderElement(<Target className={className} />);
-            const output = callRender(render, { className: 'host' });
-            const merged = asClassName(output.className);
+            const rendered = render(
+                <Host
+                    render={adaptRenderElement(<Target className={className} />)}
+                    hostProps={{ className: 'host' }}
+                />,
+            );
 
-            expect(typeof merged).toBe('function');
-            expect(merged({ disabled: false })).toBe('host on');
-            expect(merged({ disabled: true })).toBe('host off');
+            expect(rendered.getByRole('button')).toHaveAttribute('class', 'host on');
+
+            rendered.rerender(
+                <Host
+                    render={adaptRenderElement(<Target className={className} disabled />)}
+                    hostProps={{ className: 'host' }}
+                />,
+            );
+
+            expect(rendered.getByRole('button')).toHaveAttribute('class', 'host off');
         });
 
         it('passes the function through when the host has no className', () => {
-            const render = adaptRenderElement(<Target className={className} />);
-            const output = callRender(render, {});
-            const merged = asClassName(output.className);
+            const rendered = render(
+                <Host render={adaptRenderElement(<Target className={className} disabled />)} />,
+            );
 
-            expect(merged({ disabled: true })).toBe('off');
+            expect(rendered.getByRole('button')).toHaveAttribute('class', 'off');
         });
     });
 
     describe('given a render element with a function style', () => {
         it('keeps the style a function and lays it over the host style', () => {
             const style = (state: TargetState) => ({ opacity: state.disabled ? 0.4 : 1 });
-            const render = adaptRenderElement(<Target style={style} />);
-            const output = callRender(render, { style: { color: 'red', opacity: 0 } });
-            const merged = asStyle(output.style);
+            const rendered = render(
+                <Host
+                    render={adaptRenderElement(<Target style={style} disabled />)}
+                    hostProps={{ style: { color: 'red', opacity: 0 } }}
+                />,
+            );
 
-            expect(typeof merged).toBe('function');
-            expect(merged({ disabled: true })).toEqual({ color: 'red', opacity: 0.4 });
+            expect(rendered.getByRole('button')).toHaveStyle({ color: 'red', opacity: '0.4' });
         });
     });
 
@@ -105,36 +123,121 @@ describe('adaptRenderElement', () => {
         it('calls both the host and element event handlers', () => {
             const hostClick = vi.fn();
             const elementClick = vi.fn();
-            const render = adaptRenderElement(
-                <Target className={() => 'on'} onClick={elementClick} />,
+            const rendered = render(
+                <Host
+                    render={adaptRenderElement(
+                        <Target className={() => 'on'} onClick={elementClick} />,
+                    )}
+                    hostProps={{ onClick: hostClick }}
+                />,
             );
-            const output = callRender(render, { onClick: hostClick });
 
-            output.onClick?.();
+            rendered.getByRole('button').click();
 
             expect(hostClick).toHaveBeenCalledTimes(1);
             expect(elementClick).toHaveBeenCalledTimes(1);
         });
 
         it('lets element props override host props', () => {
-            const render = adaptRenderElement(<Target className={() => 'on'} type="submit" />);
-            const output = callRender(render, { type: 'button', 'data-host': '' });
+            const rendered = render(
+                <Host
+                    render={adaptRenderElement(<Target className={() => 'on'} type="submit" />)}
+                    hostProps={{ type: 'button', 'data-host': '' }}
+                />,
+            );
+            const button = rendered.getByRole('button');
 
-            expect(output.type).toBe('submit');
-            expect(output['data-host']).toBe('');
+            expect(button).toHaveAttribute('type', 'submit');
+            expect(button).toHaveAttribute('data-host', '');
         });
 
         it('assigns the node to both the host ref and the element ref', () => {
             const hostRef = createRef<HTMLButtonElement>();
             const elementRef = createRef<HTMLButtonElement>();
-            const node = document.createElement('button');
-            const render = adaptRenderElement(<Target ref={elementRef} className={() => 'on'} />);
-            const output = callRender(render, { ref: hostRef });
+            const rendered = render(
+                <Host
+                    render={adaptRenderElement(<Target ref={elementRef} className={() => 'on'} />)}
+                    hostProps={{ ref: hostRef }}
+                />,
+            );
+            const button = rendered.getByRole('button');
 
-            output.ref(node);
+            expect(hostRef.current).toBe(button);
+            expect(elementRef.current).toBe(button);
+        });
+    });
 
-            expect(hostRef.current).toBe(node);
-            expect(elementRef.current).toBe(node);
+    describe('keeping the composed ref stable', () => {
+        it('does not loop when the element ref sets state on attach', () => {
+            const Measured = () => {
+                const [, setSize] = useState({ width: -1 });
+                const measure = useCallback((node: HTMLButtonElement | null) => {
+                    if (node) setSize({ width: node.offsetWidth });
+                }, []);
+
+                return (
+                    <Host
+                        render={adaptRenderElement(<Target ref={measure} className={() => 'on'} />)}
+                    />
+                );
+            };
+
+            expect(() => render(<Measured />)).not.toThrow();
+        });
+
+        it('attaches the refs once across host renders with the same refs', () => {
+            const hostRef = vi.fn();
+            const elementRef = vi.fn();
+            const ui = () => (
+                <Host
+                    render={adaptRenderElement(<Target ref={elementRef} className={() => 'on'} />)}
+                    hostProps={{ ref: hostRef }}
+                />
+            );
+            const rendered = render(ui());
+
+            rendered.rerender(ui());
+            rendered.rerender(ui());
+
+            const button = rendered.getByRole('button');
+
+            expect(hostRef.mock.calls).toEqual([[button]]);
+            expect(elementRef.mock.calls).toEqual([[button]]);
+        });
+
+        it('moves the node to a new host ref', () => {
+            const firstHostRef = vi.fn();
+            const nextHostRef = vi.fn();
+            const ui = (hostRef: Ref<HTMLButtonElement>) => (
+                <Host
+                    render={adaptRenderElement(<Target className={() => 'on'} />)}
+                    hostProps={{ ref: hostRef }}
+                />
+            );
+            const rendered = render(ui(firstHostRef));
+
+            rendered.rerender(ui(nextHostRef));
+
+            const button = rendered.getByRole('button');
+
+            expect(firstHostRef.mock.calls).toEqual([[button], [null]]);
+            expect(nextHostRef.mock.calls).toEqual([[button]]);
+        });
+
+        it('detaches both refs on unmount', () => {
+            const hostRef = createRef<HTMLButtonElement>();
+            const elementRef = createRef<HTMLButtonElement>();
+            const rendered = render(
+                <Host
+                    render={adaptRenderElement(<Target ref={elementRef} className={() => 'on'} />)}
+                    hostProps={{ ref: hostRef }}
+                />,
+            );
+
+            rendered.unmount();
+
+            expect(hostRef.current).toBeNull();
+            expect(elementRef.current).toBeNull();
         });
     });
 });
