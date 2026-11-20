@@ -32,7 +32,7 @@ type ExternalProps<State> = { className?: ClassNameParams<State>; style?: StyleP
  * Lays a possibly stateful style over a static one. Keeps the result a function when the
  * external style is one, so Base UI can still call it with its own state.
  */
-export const mergeStatefulStyle = <State>(
+const mergeStatefulStyle = <State>(
     inputStyle: CSSProperties | undefined,
     externalStyle: StyleParams<State>,
 ): StyleParams<State> =>

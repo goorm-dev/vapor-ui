@@ -36,11 +36,8 @@ type HostProps = Record<string, unknown> & { ref?: Ref<HTMLButtonElement> };
 type RenderCallback = (props: HostProps, state: object) => ReactElement<HostProps>;
 
 /** Calls a render callback with host props, like a Base UI part does. */
-const Host = ({ render, hostProps = {} }: { render: unknown; hostProps?: HostProps }) => {
-    expect(typeof render).toBe('function');
-
-    return (render as RenderCallback)(hostProps, {});
-};
+const Host = ({ render, hostProps = {} }: { render: unknown; hostProps?: HostProps }) =>
+    (render as RenderCallback)(hostProps, {});
 
 describe('adaptRenderElement', () => {
     describe('given a render element without stateful callbacks', () => {
@@ -75,6 +72,10 @@ describe('adaptRenderElement', () => {
 
     describe('given a render element with a function className', () => {
         const className = (state: TargetState) => (state.disabled ? 'off' : 'on');
+
+        it('returns a render callback', () => {
+            expect(adaptRenderElement(<Target className={className} />)).toBeTypeOf('function');
+        });
 
         it('keeps the className a function and appends the host className', () => {
             const rendered = render(
