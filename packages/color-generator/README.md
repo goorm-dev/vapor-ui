@@ -1,15 +1,8 @@
 # @vapor-ui/color-generator
 
-A powerful, WCAG-compliant color palette generator built on Adobe Leonardo, designed for design systems that prioritize accessibility and perceptual uniformity.
+Generates the Vapor primitive color palette for light and dark mode, and maps it to semantic tokens.
 
-## Features
-
-- **WCAG-Compliant**: All generated colors meet accessibility standards with guaranteed contrast ratios
-- **Perceptually Uniform**: Colors use OKLCH color space for visually even distribution
-- **Atomic Themes**: Ensures color consistency across entire themes to maintain accessibility
-- **Leonardo Integration**: Leverages Adobe Leonardo's contrast-based color generation
-- **Flexible Customization**: Support for brand colors and custom backgrounds
-- **Type-Safe**: Full TypeScript support with comprehensive type definitions
+The engine is a TypeScript port of the design team's reference script, [`reference/generate_palette.py`](./reference/generate_palette.py). With default input, the output matches the script's `palette.json` HEX for HEX. See [ADR-0003](../../docs/adr/0003-color-generator-ports-reference-script.md).
 
 ## Installation
 
@@ -17,400 +10,110 @@ A powerful, WCAG-compliant color palette generator built on Adobe Leonardo, desi
 pnpm add @vapor-ui/color-generator
 ```
 
-## Quick Start
+## Quick start
 
-```typescript
+```ts
 import {
     generatePrimitiveColorPalette,
     getSemanticDependentTokens,
+    validatePalette,
 } from '@vapor-ui/color-generator';
 
-// Generate default palette (11 colors: red, blue, gray, etc.)
-const theme = generatePrimitiveColorPalette();
-
-// Map to semantic tokens
-const semantic = getSemanticDependentTokens(theme);
-
-console.log(semantic.lightModeTokens['color-background-primary-100']); // #d9ecff
-console.log(semantic.darkModeTokens['color-background-primary-100']); // #003666
-```
-
-## Core Concepts
-
-### Leonardo Adapter
-
-The Leonardo Adapter wraps Adobe Leonardo's contrast-based color generation to ensure:
-
-- **Guaranteed Contrast Ratios**: Every color step maintains precise contrast against the reference background
-- **Duo-Key Generation**: Automatically generates richer color scales from single key colors
-- **DeltaE Calculation**: Provides color difference metrics for brand color matching
-- **Perceptual Uniformity**: Uses OKLCH color space for human-perception-aligned results
-
-### Atomic Theme Principle
-
-**Critical**: Themes must be treated atomically. Partial overrides are forbidden to maintain WCAG compliance.
-
-**Why?** Leonardo generates colors relative to a specific reference background. If you change the background color but keep the original palette, the contrast ratios break and WCAG compliance is lost.
-
-**Solution**: When customizing background or brand colors, `generatePrimitiveColorPalette` regenerates the entire theme with the new reference background, ensuring all colors maintain proper contrast ratios.
-
-```typescript
-// ❌ WRONG: Partial override breaks accessibility
-const theme = generatePrimitiveColorPalette(); // White background
-// Later: Override only background to beige - red-500 no longer guarantees 4.5:1 contrast
-
-// ✅ CORRECT: Atomic theme regeneration
 const theme = generatePrimitiveColorPalette({
-    backgroundColor: { name: 'beige', hexcode: '#FDF7E0' },
-});
-// All colors recalculated for beige background - contrast ratios maintained
-```
-
-### WCAG Compliance
-
-The default contrast ratio scale ensures accessibility:
-
-```typescript
-{
-  '050': 1.07,  // Subtle backgrounds
-  '100': 1.3,
-  '200': 1.7,
-  '300': 2.5,
-  '400': 3.0,
-  '500': 4.5,   // WCAG AA Normal Text
-  '600': 6.5,
-  '700': 8.5,   // WCAG AAA Normal Text
-  '800': 11.5,
-  '900': 15.0   // Maximum contrast
-}
-```
-
-## API Reference
-
-### `generatePrimitiveColorPalette(options?)`
-
-Generates all primitive color tokens for a design system.
-
-#### Parameters
-
-**`options.keyColors?: Record<string, string>`**
-
-- Override the 11 default system colors
-- Default: `DEFAULT_KEY_COLORS` (red, pink, grape, violet, blue, cyan, green, lime, yellow, orange, gray)
-
-**`options.brandColor?: { name: string, hexcode: string }`**
-
-- Add a custom brand palette (e.g., `{ name: 'mint', hexcode: '#00BEEF' }`)
-- Uses Brand Color Swap to preserve exact brand color at closest deltaE step
-
-**`options.backgroundColor?: { name: string, hexcode: string, lightness?: { light: number, dark: number } }`**
-
-- Customize the reference background color
-- Default: `{ name: 'gray', hexcode: '#FFFFFF', lightness: { light: 100, dark: 14 } }`
-- Automatically generates an additional palette if name is not in default colors
-- **`lightness`**: Optional lightness values for light/dark modes
-    - **Recommended ranges to prevent gamut clipping:**
-        - **Light mode: 88-100** (values < 88 may cause the 900 step to clip to `#000000`)
-        - **Dark mode: 0-15** (values > 15 may cause the 900 step to clip to `#FFFFFF`)
-    - The library accepts any lightness value; UI implementations should limit input controls to these recommended ranges
-
-**`options.contrastRatios?: Record<string, number>`**
-
-- Override contrast ratio values for each step (050-900)
-- Default: `DEFAULT_CONTRAST_RATIOS`
-
-#### Returns
-
-`ThemeResult` containing:
-
-- `lightModeTokens`: Palettes for light mode (lightness: 100)
-- `darkModeTokens`: Palettes for dark mode (lightness: 14)
-- `baseTokens`: color-white and color-black
-
-#### Examples
-
-```typescript
-// Default: 11 palettes (111 color chips)
-const basic = generatePrimitiveColorPalette();
-
-// With brand color: 12 palettes (121 color chips)
-const branded = generatePrimitiveColorPalette({
-    brandColor: { name: 'mint', hexcode: '#00BEEF' },
+    basicColors: { teal: '#00838F' },
+    brandColor: { name: 'acme', hexcode: '#2A72E5' },
 });
 
-// With custom background: 12 palettes (121 color chips)
-const themed = generatePrimitiveColorPalette({
-    backgroundColor: { name: 'beige', hexcode: '#FDF7E0' },
-});
+theme.brand; // { name: 'acme', scale: '400' }
 
-// With both: 13 palettes (131 color chips)
-const full = generatePrimitiveColorPalette({
-    brandColor: { name: 'mint', hexcode: '#00BEEF' },
-    backgroundColor: { name: 'beige', hexcode: '#FDF7E0' },
-});
+const semantic = getSemanticDependentTokens(theme, 'acme');
+semantic.lightModeTokens['color-background-primary-200']; // 'color-acme-400'
+semantic.lightModeTokens['color-foreground-onPrimary']; // 'color-white'
 
-// Access palette data
-console.log(full.lightModeTokens.palettes.find((p) => p.name === 'mint'));
-console.log(full.lightModeTokens.backgroundCanvas); // { name: 'color-canvas', hex: '#fcf6df', ... }
-console.log(full.baseTokens['color-white']); // { name: 'color-white', hex: '#ffffff', ... }
+validatePalette(theme).filter((check) => check.status === 'fail'); // []
 ```
 
-### `getSemanticDependentTokens(themeResult, primaryColorName?, canvasColorName?)`
+## How the palette is built
 
-Maps primitive palettes to semantic tokens used in applications.
+Every palette is computed against fixed backgrounds: light `#FFFFFF`, dark `#232323`.
 
-#### Parameters
+- **Hue.** Each color has three key colors. The hue of each scale is read from the white → keys → black OKLCH path at that scale's target contrast.
+- **Lightness.** Each cell is solved to its target contrast against the background (`TARGET_CONTRAST`, one table per mode).
+- **Chroma.**
+    - Light 050–200 share one chroma cap per scale, computed from the 11 base colors only. Yellow-family colors (200 hue in 60–150°) use their own cap.
+    - Light 400–900 use the largest chroma sRGB can express. 300 sits halfway between 200 and 400.
+    - Dark 400–900 take the chroma and hue of the light curve at the same lightness, with dark 400 at ×0.9.
+    - Dark 050–300 use the dark 400 hue and the same cap rule as light.
+- **Gray.** Chroma 0, 000–900 in both modes. Dark 000 sits darker than the background.
 
-- **`themeResult`**: Output from `generatePrimitiveColorPalette`
-- **`primaryColorName`**: Color to use for primary semantic tokens (default: `'blue'`)
-- **`canvasColorName`**: Color to use for canvas semantic tokens (default: `'gray'`)
+Palettes come out in this order: the 11 base colors, `basicColors`, the brand color, then `gray`. Colors have scales 050–900; gray has 000–900.
 
-#### Returns
+## Options
 
-`SemanticResult` containing `lightModeTokens` and `darkModeTokens` with semantic token mappings:
-
-```typescript
-{
-  'color-background-primary-100': string;   // Subtle primary background
-  'color-background-primary-200': string;   // Strong primary background
-  'color-border-primary': string;           // Primary border color
-  'color-foreground-primary-100': string;           // Primary text (AA)
-  'color-foreground--primary-200': string;           // Primary text (AAA)
-  'color-background-canvas-100': string;    // Main canvas background
-  'color-background-canvas-200': string;    // Elevated canvas background
-  'color-background-overlay-100': string;   // Overlay/modal background
-  'color-foreground-inverse': string; // Inverse text on Primary (lightness >= 65: black, < 65: white)
-}
+```ts
+generatePrimitiveColorPalette({
+    basicColors?: Record<string, Hexcode | [Hexcode, Hexcode, Hexcode]>;
+    brandColor?: { name: string; hexcode: Hexcode };
+}): ThemeResult;
 ```
 
-#### Examples
+### `basicColors`
 
-```typescript
-// Use default blue as primary
-const semantic = getSemanticDependentTokens(theme);
+Adds a color, or replaces a base color of the same name.
 
-// Use brand color as primary
-const brandedTheme = generatePrimitiveColorPalette({
-    brandColor: { name: 'mint', hexcode: '#00BEEF' },
-});
-const brandedSemantic = getSemanticDependentTokens(brandedTheme, 'mint');
+- One HEX borrows the key colors of the base color with the nearest 500 hue, rotates them to the input hue, and puts the input HEX in place of the key nearest in lightness.
+- Three HEX are used as the key colors as-is.
 
-// Use custom background and brand primary
-const fullTheme = generatePrimitiveColorPalette({
-    brandColor: { name: 'mint', hexcode: '#00BEEF' },
-    backgroundColor: { name: 'beige', hexcode: '#FDF7E0' },
-});
-const fullSemantic = getSemanticDependentTokens(fullTheme, 'mint', 'beige');
+The input only shapes the hue curve, so it may not appear in the palette. Other colors never change: the 050–200 chroma caps always come from the default base colors.
+
+### `brandColor`
+
+The brand HEX becomes a palette of its own (or replaces a base color of the same name) and is pinned into one light cell as-is. The cell is found by walking scales in order of log-contrast distance to the HEX. The first scale wins if it passes every accessibility rule for that scale and keeps the contrast order with its neighbours. `ThemeResult.brand` names the cell.
+
+Dark derives from the pinned light curve. The brand HEX is never pinned in dark.
+
+## Semantic tokens
+
+```ts
+getSemanticDependentTokens(themeResult: ThemeResult, primaryColorName = 'blue'): SemanticResult;
 ```
 
-### `getColorLightness(colorHex)`
+Values are primitive token names, such as `color-blue-500`.
 
-Helper utility to extract LCH lightness from a hex color. Useful when you want to preserve the exact background color by matching the lightness value.
+| Token                                                  | Light                                                  | Dark                     |
+| ------------------------------------------------------ | ------------------------------------------------------ | ------------------------ |
+| `color-background-primary-200`, `color-border-primary` | anchor                                                 | anchor                   |
+| `color-foreground-primary-100` / `-200`                | anchor +1 / +2 (max 900)                               | anchor +1 / +2 (max 900) |
+| `color-background-primary-100`                         | primary 100                                            | primary 050              |
+| `color-foreground-onPrimary` (provisional name)        | white if white on the anchor reaches 4.5:1, else black | same                     |
+| `color-foreground-inverse`                             | `color-white`                                          | `color-black`            |
+| `color-background-canvas-100`                          | gray 000                                               | gray 025                 |
+| `color-background-canvas-200`                          | gray 050                                               | gray 050                 |
+| `color-background-overlay-100`                         | gray 000                                               | gray 050                 |
+| `color-border-normal`                                  | gray 100                                               | gray 300                 |
 
-#### Parameters
+The anchor is the primary palette's base scale. When the primary palette is the brand palette, light uses the brand cell and dark runs the same cell assignment on the dark palette. Otherwise light uses 500 and dark uses 400.
 
-- **`colorHex`**: HEX color string (e.g., `'#dbe0ea'`)
+## Palette check
 
-#### Returns
+`validatePalette(themeResult)` returns one `{ id, status, details }` per rule.
 
-Integer lightness value (0-100) or `null` if invalid
+| `id`              | Rule                                                                               | Status when broken |
+| ----------------- | ---------------------------------------------------------------------------------- | ------------------ |
+| `hue-gap`         | Colors at the same scale differ in hue by at least 5.5° (blue and cobalt excepted) | `warn`             |
+| `target-contrast` | Each cell is within ±1% of its target contrast; the brand cell is exempt           | `fail`             |
+| `a11y`            | 400 and 500 pass 3:1 and 4.5:1 against the backgrounds and cards (`A11Y_RULES`)    | `fail`             |
+| `chroma`          | Each cell's chroma follows its scale's chroma rule                                 | `fail`             |
+| `brand-monotone`  | The brand cell keeps the contrast order with its neighbours                        | `warn`             |
+| `primary-anchor`  | The primary anchor reaches 3:1 against the background in both modes                | `warn`             |
 
-#### Example
+## Exports
 
-```typescript
-import { generatePrimitiveColorPalette, getColorLightness } from '@vapor-ui/color-generator';
+- `generatePrimitiveColorPalette`, `getSemanticDependentTokens`, `validatePalette`
+- `BASE_TOKENS`: `color-white` and `color-black` chips
+- `LEONARDO_KEYS`: key colors of the 11 base colors
+- Types: `ThemeOptions`, `ThemeResult`, `PrimitiveColorTokens`, `PrimitivePalette`, `PaletteChip`, `Scale`, `SemanticTokens`, `SemanticResult`, `PaletteCheck`, `KeyColor`, `Hexcode`
 
-const userBg = '#dbe0ea';
-const lightness = getColorLightness(userBg); // 89
+## Changing the rules
 
-const theme = generatePrimitiveColorPalette({
-    backgroundColor: {
-        name: 'custom',
-        hexcode: userBg,
-        lightness: { light: lightness, dark: 14 },
-    },
-});
-// Result: #dbe0ea is used exactly as-is
-```
-
-## Architecture Overview
-
-The package follows a clean 3-layer architecture:
-
-### Domain Layer (`src/domain/`)
-
-Pure TypeScript types and interfaces defining core business models and contracts. No external dependencies.
-
-- **Models**: `Color`, `Palette`, `Theme`, `PaletteChip` types
-- **Ports**: `ColorGeneratorPort` interface (contract between application and infrastructure)
-
-### Application Layer (`src/application/`)
-
-Business logic and use cases. Depends only on domain layer. No external library imports (except culori for color space conversions).
-
-- **Use Cases**: `generatePrimitivePalette`, `getSemanticTokens`
-- **Constants**: `DEFAULT_KEY_COLORS`, `DEFAULT_CONTRAST_RATIOS`, `DEFAULT_THEME_OPTIONS`
-- **Utils**: Palette utilities, validation helpers
-
-### Infrastructure Layer (`src/infrastructure/`)
-
-External integrations and technical implementations. Only layer that imports external libraries.
-
-- **Adapters**: Leonardo adapter implementing `ColorGeneratorPort`
-- **Entrypoints**: Public API and dependency injection
-
-### Dependency Flow
-
-```
-Infrastructure → Application → Domain
-     ↑                            ↑
-   (implements)              (defines contracts)
-```
-
-## Advanced Usage
-
-### Custom Contrast Ratios
-
-```typescript
-import { DEFAULT_CONTRAST_RATIOS, generatePrimitiveColorPalette } from '@vapor-ui/color-generator';
-
-const theme = generatePrimitiveColorPalette({
-    contrastRatios: {
-        ...DEFAULT_CONTRAST_RATIOS,
-        '500': 5.0, // Increase AA text contrast
-        '700': 10.0, // Increase AAA text contrast
-    },
-});
-```
-
-### Brand Color Swap
-
-When providing a `brandColor`, the generator finds the closest matching color chip by deltaE and replaces it with your exact brand color (deltaE = 0). This preserves your brand identity while maintaining overall accessibility.
-
-```typescript
-const theme = generatePrimitiveColorPalette({
-    brandColor: { name: 'company', hexcode: '#FF6B35' }, // Exact brand color
-});
-
-// The chip with lowest deltaE to #FF6B35 is replaced with exact value
-// e.g., if closest is blue-400, blue-400 becomes exactly #FF6B35
-```
-
-### Gamut Clipping Prevention
-
-The lightness values should be kept within recommended ranges to prevent color clipping:
-
-- **Light mode**: 88-100 (recommended - values < 88 may cause the 900 step to clip to #000)
-- **Dark mode**: 0-15 (recommended - values > 15 may cause the 900 step to clip to #FFF)
-
-**Note**: The library accepts any lightness value without validation. It's the responsibility of UI implementations (e.g., Figma plugin, web interfaces) to limit user input to these recommended ranges using slider controls or validation.
-
-```typescript
-const theme = generatePrimitiveColorPalette({
-    backgroundColor: {
-        name: 'gray',
-        hexcode: '#FFFFFF',
-        lightness: {
-            light: 95, // Recommended: 88-100
-            dark: 10, // Recommended: 0-15
-        },
-    },
-});
-```
-
-### Accessing Raw Palette Data
-
-```typescript
-const theme = generatePrimitiveColorPalette({
-    brandColor: { name: 'mint', hexcode: '#00BEEF' },
-});
-
-// Find specific palette
-const mintPalette = theme.lightModeTokens.palettes.find((p) => p.name === 'mint');
-
-// Access specific color chip
-const mint500 = mintPalette.chips['500'];
-console.log(mint500.hex); // '#00a0d4'
-console.log(mint500.oklch); // 'oklch(65.58% 0.128 231.79)'
-console.log(mint500.deltaE); // 0 (exact brand color)
-console.log(mint500.codeSyntax); // 'color-mint-500'
-
-// Iterate all colors
-theme.lightModeTokens.palettes.forEach((palette) => {
-    Object.entries(palette.chips).forEach(([step, chip]) => {
-        console.log(`${palette.name}-${step}: ${chip.hex} (Contrast: ${chip.deltaE})`);
-    });
-});
-```
-
-## Constants
-
-```typescript
-import {
-    DEFAULT_CONTRAST_RATIOS,
-    DEFAULT_KEY_COLORS,
-    DEFAULT_THEME_OPTIONS,
-} from '@vapor-ui/color-generator';
-
-// 11 system colors
-console.log(DEFAULT_KEY_COLORS.blue); // '#2A72E5'
-
-// 10 contrast ratio steps
-console.log(DEFAULT_CONTRAST_RATIOS['500']); // 4.5 (WCAG AA)
-
-// Default options
-console.log(DEFAULT_THEME_OPTIONS.backgroundColor); // { name: 'gray', hexcode: '#FFFFFF', lightness: { light: 100, dark: 14 } }
-```
-
-## Type Exports
-
-```typescript
-import type {
-    BackgroundCanvas,
-    BackgroundColor,
-    BackgroundLightness,
-    ContrastRatios,
-    KeyColor,
-    OklchColor,
-    PaletteChip,
-    PrimitiveColorTokens,
-    PrimitivePalette,
-    SemanticResult,
-    SemanticTokens,
-    ThemeOptions,
-    ThemeResult,
-} from '@vapor-ui/color-generator';
-```
-
-## Important Notes
-
-### Accessibility First
-
-This generator prioritizes WCAG compliance over visual preferences. If a generated color doesn't match your expectation, it's likely because the contrast requirement takes precedence.
-
-### Atomic Theme Enforcement
-
-The architecture prevents partial theme overrides by design. This is not a limitation but a feature that guarantees accessibility across your entire design system.
-
-### Performance
-
-Color generation is computationally intensive. Generate palettes at build time rather than runtime for production applications.
-
-### Color Space
-
-All calculations use OKLCH for perceptual uniformity. Output includes both hex (for web) and OKLCH (for advanced use cases).
-
-## Related Resources
-
-- [Adobe Leonardo Documentation](https://leonardocolor.io/)
-- [WCAG Contrast Guidelines](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html)
-- [OKLCH Color Space](https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl)
-- [Vapor UI Documentation](https://vapor-ui.goorm.io/)
-
-## License
-
-MIT
-
-## Contributing
-
-See [CONTRIBUTING.md](../../CONTRIBUTING.md) in the repository root.
+Change `reference/generate_palette.py` first, regenerate the fixtures (see [`reference/README.md`](./reference/README.md)), then update the port until `pnpm --filter @vapor-ui/color-generator test` passes.
