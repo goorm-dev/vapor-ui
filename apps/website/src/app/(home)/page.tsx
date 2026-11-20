@@ -32,14 +32,6 @@ const ThemeSection = () => {
                         name: 'my-blue',
                         hexcode: '#3174dc',
                     },
-                    background: {
-                        name: 'my-bg',
-                        hexcode: '#ffffff',
-                        lightness: {
-                            light: 100,
-                            dark: 14,
-                        },
-                    },
                 },
                 radius: 'md',
                 scaling: 1,
@@ -52,14 +44,6 @@ const ThemeSection = () => {
                         name: 'my-violet',
                         hexcode: '#8b5cf6',
                     },
-                    background: {
-                        name: 'my-bg',
-                        hexcode: '#ffffff',
-                        lightness: {
-                            light: 100,
-                            dark: 14,
-                        },
-                    },
                 },
                 radius: 'xl',
                 scaling: 1,
@@ -71,14 +55,6 @@ const ThemeSection = () => {
                     primary: {
                         name: 'my-pink',
                         hexcode: '#ec4899',
-                    },
-                    background: {
-                        name: 'my-bg',
-                        hexcode: '#ffffff',
-                        lightness: {
-                            light: 100,
-                            dark: 14,
-                        },
                     },
                 },
                 radius: 'full',
