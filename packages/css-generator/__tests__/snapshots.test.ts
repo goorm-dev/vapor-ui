@@ -10,14 +10,6 @@ import type { ColorThemeConfig, CompleteCSSConfig } from '../src/types';
 
 const MOCK_COLOR_CONFIG: ColorThemeConfig = {
     primary: { name: 'mint', hexcode: '#71d378' },
-    background: {
-        name: 'neutral',
-        hexcode: '#F8FAFC',
-        lightness: {
-            light: 98,
-            dark: 8,
-        },
-    },
 };
 
 const MOCK_TOTAL_CONFIG: CompleteCSSConfig = {
@@ -41,6 +33,21 @@ describe('CSS Generator Snapshots', () => {
             format: 'compact',
         });
         expect(result).toMatchSnapshot();
+    });
+
+    it('should value --color-canvas from gray 000 in light and gray 025 in dark', () => {
+        const [light, dark] = generateColorCSS(MOCK_COLOR_CONFIG, { format: 'compact' }).split(
+            '[data-vapor-theme="dark"]',
+        );
+        const value = (rule: string, name: string) =>
+            rule.match(new RegExp(`--vapor-color-${name}:([^;}]+)`))?.[1];
+
+        expect(value(light, 'canvas')).toMatch(/^#[0-9a-f]{6}$/);
+        expect(value(light, 'canvas')).toBe(value(light, 'gray-000'));
+        expect(value(dark, 'canvas')).toBe(value(dark, 'gray-025'));
+        expect(value(light, 'foreground-onPrimary')).toMatch(
+            /^var\(--vapor-color-(white|black)\)$/,
+        );
     });
 
     /* -------------------------------------------------------------------------------------------------

@@ -1,13 +1,11 @@
-import type { BackgroundColor, KeyColor } from '@vapor-ui/color-generator';
+import type { KeyColor, ThemeOptions } from '@vapor-ui/color-generator';
 
 export interface ColorThemeConfig {
     primary: KeyColor;
-    background: BackgroundColor;
     /**
-     * 시스템 기본 키 컬러 (11개)
-     * 생략 시 DEFAULT_KEY_COLORS가 사용됩니다.
+     * 추가 색상, 또는 같은 이름의 기본 색상 대체. `generatePrimitiveColorPalette`의 `basicColors`로 전달됩니다.
      */
-    keyColors?: Record<string, string>;
+    basicColors?: ThemeOptions['basicColors'];
 }
 
 export interface CompleteCSSConfig {

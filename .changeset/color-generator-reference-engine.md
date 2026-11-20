@@ -1,0 +1,5 @@
+---
+'@vapor-ui/color-generator': minor
+---
+
+Replace the Leonardo-based engine with a TypeScript port of the design team's reference palette script, so every cell meets its target contrast in both light and dark mode. `generatePrimitiveColorPalette` now takes only `basicColors` and `brandColor`; backgrounds are fixed at `#FFFFFF` light and `#232323` dark, and `backgroundColor`, `lightness` and `contrastRatios` are removed along with `getColorLightness`, `DEFAULT_CONTRAST_RATIOS` and `DEFAULT_KEY_COLORS` (now `LEONARDO_KEYS`). `ThemeResult` loses `backgroundCanvas`, `PaletteChip` loses `deltaE`, and gray becomes a palette with scales 000–900. `getSemanticDependentTokens(themeResult, primaryColorName)` drops the canvas argument and adds `color-foreground-onPrimary` (provisional name). The new `validatePalette(themeResult)` reports hue gap, target contrast, accessibility, chroma, brand monotonicity and primary anchor checks.

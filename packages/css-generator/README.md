@@ -20,11 +20,6 @@ import { generateCompleteCSS } from '@vapor-ui/css-generator';
 const css = generateCompleteCSS({
     colors: {
         primary: { name: 'mint', hexcode: '#71d378' },
-        background: {
-            name: 'neutral',
-            hexcode: '#f8fafc',
-            lightness: { light: 98, dark: 8 },
-        },
     },
     scaling: 1.15,
     radius: 'lg',
@@ -38,12 +33,11 @@ const css = generateCompleteCSS({
 Generate complete theme CSS with colors, scaling, and radius.
 
 ```typescript
-import type { BackgroundColor, KeyColor } from '@vapor-ui/color-generator';
+import type { KeyColor, ThemeOptions } from '@vapor-ui/color-generator';
 
 interface ColorThemeConfig {
     primary: KeyColor; // { name: string; hexcode: string }
-    background: BackgroundColor; // { name: string; hexcode: string; lightness?: { light: number; dark: number } }
-    keyColors?: Record<string, string>; // Optional: Override default system key colors (11 colors)
+    basicColors?: ThemeOptions['basicColors']; // Optional: add colors or replace a base color of the same name
 }
 
 interface CompleteCSSConfig {
@@ -62,11 +56,6 @@ import { generateColorCSS } from '@vapor-ui/css-generator';
 
 const colorCSS = generateColorCSS({
     primary: { name: 'mint', hexcode: '#71d378' },
-    background: {
-        name: 'neutral',
-        hexcode: '#f8fafc',
-        lightness: { light: 98, dark: 8 },
-    },
 });
 ```
 
@@ -136,7 +125,10 @@ const radiusCSS = generateRadiusCSS('xl');
 ### Primitive Color Palettes
 
 - `--{prefix}-color-{name}-{050-900}`: Color palettes (10 steps per color)
-- `--{prefix}-color-canvas`: Canvas background color (based on backgroundColor lightness)
+- `--{prefix}-color-gray-{000-900}`: Gray palette (12 steps, including 000 and 025)
+- `--{prefix}-color-canvas`: Canvas background color (gray 000 in light, gray 025 in dark)
+
+Backgrounds are fixed: light `#FFFFFF`, dark `#232323`. See `@vapor-ui/color-generator`.
 
 ### Semantic Color Tokens
 
@@ -147,7 +139,8 @@ const radiusCSS = generateRadiusCSS('xl');
 - `--{prefix}-color-background-overlay-100`: Overlay background
 - `--{prefix}-color-foreground-100`: Primary text color
 - `--{prefix}-color-foreground-200`: Secondary text color
-- `--{prefix}-color-foreground-inverse`: Inverse text color (auto-calculated for contrast)
+- `--{prefix}-color-foreground-inverse`: Inverse text color (white in light, black in dark)
+- `--{prefix}-color-foreground-onPrimary`: Text and icons on the primary fill (white when it reaches 4.5:1, else black; provisional name)
 - `--{prefix}-color-border-normal`: Normal border color
 - `--{prefix}-color-border-primary`: Primary border color
 

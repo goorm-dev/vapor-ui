@@ -15,13 +15,19 @@ interface ColorCSSGeneratorContext {
     options: Required<CSSGeneratorOptions>;
 }
 
-const generatePaletteVariables = (modeTokens: ThemeResult['lightModeTokens'], prefix: string) => {
+// `--{prefix}-color-canvas` predates the gray palette; keep the name, value it from gray.
+const CANVAS_GRAY_SCALE: Record<ThemeVariant, string> = { light: '000', dark: '025' };
+
+const generatePaletteVariables = (
+    modeTokens: ThemeResult['lightModeTokens'],
+    variant: ThemeVariant,
+    prefix: string,
+) => {
     const variables: ReturnType<typeof createCSSVariable>[] = [];
 
-    // Generate backgroundCanvas token first
-    const bgCanvas = modeTokens.backgroundCanvas;
-    const bgVariableName = bgCanvas.codeSyntax.replace('vapor-', `${prefix}-`);
-    variables.push(createCSSVariable(bgVariableName, bgCanvas.hex));
+    const gray = modeTokens.palettes.find((palette) => palette.name === 'gray');
+    const canvas = gray?.chips[CANVAS_GRAY_SCALE[variant]];
+    if (canvas) variables.push(createCSSVariable(`${prefix}-color-canvas`, canvas.hex));
 
     // Generate palette tokens
     modeTokens.palettes.forEach((palette) => {
@@ -61,7 +67,7 @@ const generateRootThemeCSS = (
         variant === 'light' ? semanticTokens.lightModeTokens : semanticTokens.darkModeTokens;
 
     const properties = [
-        ...generatePaletteVariables(modeTokens, prefix),
+        ...generatePaletteVariables(modeTokens, variant, prefix),
         ...generateSemanticVariables(semanticModeTokens, prefix),
     ];
 
@@ -85,23 +91,14 @@ export const generateColorCSS = (
     };
 
     const themeResult = generatePrimitiveColorPalette({
-        ...(colorConfig.keyColors && { keyColors: colorConfig.keyColors }),
+        basicColors: colorConfig.basicColors,
         brandColor: {
             name: colorConfig.primary.name,
             hexcode: colorConfig.primary.hexcode,
         },
-        backgroundColor: {
-            name: colorConfig.background.name,
-            hexcode: colorConfig.background.hexcode,
-            lightness: colorConfig.background.lightness,
-        },
     });
 
-    const semanticTokens = getSemanticDependentTokens(
-        themeResult,
-        colorConfig.primary.name,
-        colorConfig.background.name,
-    );
+    const semanticTokens = getSemanticDependentTokens(themeResult, colorConfig.primary.name);
 
     const context: ColorCSSGeneratorContext = {
         themeResult,

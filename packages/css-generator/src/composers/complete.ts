@@ -33,8 +33,8 @@ export const generateCompleteCSS = (
     const resolvedOptions = { ...DEFAULT_OPTIONS, ...options };
 
     // Validate configuration
-    if (!config.colors?.primary?.hexcode || !config.colors?.background?.hexcode) {
-        throw new Error('Invalid color configuration: primary and background colors are required');
+    if (!config.colors?.primary?.hexcode) {
+        throw new Error('Invalid color configuration: primary color is required');
     }
 
     if (typeof config.scaling !== 'number' || config.scaling <= 0) {
