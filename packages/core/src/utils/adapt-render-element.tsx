@@ -1,14 +1,12 @@
-import type { CSSProperties, ReactElement, Ref } from 'react';
+import type { ReactElement, Ref } from 'react';
 import { Fragment, cloneElement, isValidElement } from 'react';
 
-import { mergeProps } from '@base-ui/react';
 import type { HTMLProps } from '@base-ui/react/types';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 
-import { cn } from './cn';
 import { getElementRef } from './get-element-ref';
 import type { ClassNameParams, StyleParams } from './stateful-props';
-import { mergeStatefulStyle } from './stateful-props';
+import { mergeStatefulProps } from './stateful-props';
 
 type ElementProps = Record<string, unknown> & {
     className?: ClassNameParams<object>;
@@ -26,24 +24,19 @@ const hasStatefulCallback = ({ className, style }: ElementProps) =>
     typeof className === 'function' || typeof style === 'function';
 
 /**
- * Merges the host props into the render element by hand.
+ * Merges the host props into the render element with `mergeStatefulProps`, which keeps a function
+ * `className` / `style` a function.
  *
  * A component, not a plain function, so `useMergedRefs` can keep the composed ref stable while the
  * host ref and the element ref stay the same. A new ref on every render would make React detach
  * and re-attach it each time, and a ref that sets state on attach would loop.
  */
 const RenderElementAdapter = ({ element, hostProps }: RenderElementAdapterProps) => {
-    const { className: hostClassName, style: hostStyle, ref: hostRef, ...hostRest } = hostProps;
-    const { className, style, ...elementRest } = element.props;
+    const { ref: hostRef, ...hostRest } = hostProps;
 
     const ref = useMergedRefs(hostRef, getElementRef(element));
 
-    return cloneElement(element, {
-        ...mergeProps(hostRest, elementRest),
-        className: cn(hostClassName, className),
-        style: mergeStatefulStyle(hostStyle as CSSProperties | undefined, style),
-        ref,
-    });
+    return cloneElement(element, { ...mergeStatefulProps(hostRest, element.props), ref });
 };
 
 /**
