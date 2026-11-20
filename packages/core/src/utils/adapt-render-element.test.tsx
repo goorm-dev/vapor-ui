@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactElement, Ref } from 'react';
-import { Fragment, createRef, useCallback, useState } from 'react';
+import { Fragment, cloneElement, createRef, useCallback, useState } from 'react';
 
 import { render } from '@testing-library/react';
 
@@ -33,7 +33,7 @@ const Target = ({ ref, className, style, disabled = false, ...props }: TargetPro
 };
 
 type HostProps = Record<string, unknown> & { ref?: Ref<HTMLButtonElement> };
-type RenderCallback = (props: HostProps, state: object) => ReactElement;
+type RenderCallback = (props: HostProps, state: object) => ReactElement<HostProps>;
 
 /** Calls a render callback with host props, like a Base UI part does. */
 const Host = ({ render, hostProps = {} }: { render: unknown; hostProps?: HostProps }) => {
@@ -149,6 +149,35 @@ describe('adaptRenderElement', () => {
 
             expect(button).toHaveAttribute('type', 'submit');
             expect(button).toHaveAttribute('data-host', '');
+        });
+
+        it('merges the props a host clones onto the adapted element', () => {
+            const hostClick = vi.fn();
+            const clonedClick = vi.fn();
+            const clonedRef = createRef<HTMLButtonElement>();
+
+            /** Renders the adapted element, then clones it with more props, like Toolbar does. */
+            const CloningHost = ({ render }: { render: unknown }) =>
+                cloneElement((render as RenderCallback)({ onClick: hostClick }, {}), {
+                    className: 'cloned',
+                    'data-cloned': '',
+                    onClick: clonedClick,
+                    ref: clonedRef,
+                    children: 'label',
+                });
+
+            const rendered = render(
+                <CloningHost render={adaptRenderElement(<Target className={() => 'on'} />)} />,
+            );
+            const button = rendered.getByRole('button', { name: 'label' });
+
+            button.click();
+
+            expect(button).toHaveAttribute('class', 'cloned on');
+            expect(button).toHaveAttribute('data-cloned', '');
+            expect(clonedRef.current).toBe(button);
+            expect(hostClick).toHaveBeenCalledTimes(1);
+            expect(clonedClick).toHaveBeenCalledTimes(1);
         });
 
         it('assigns the node to both the host ref and the element ref', () => {

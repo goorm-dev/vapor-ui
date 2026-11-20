@@ -1,6 +1,7 @@
 import type { ReactElement, Ref } from 'react';
-import { Fragment, cloneElement, isValidElement } from 'react';
+import { Fragment, cloneElement, forwardRef, isValidElement } from 'react';
 
+import { mergeProps } from '@base-ui/react';
 import type { HTMLProps } from '@base-ui/react/types';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 
@@ -15,7 +16,7 @@ type ElementProps = Record<string, unknown> & {
 
 type HostProps = HTMLProps & { ref?: Ref<unknown> };
 
-interface RenderElementAdapterProps {
+interface RenderElementAdapterProps extends HostProps {
     element: ReactElement<ElementProps>;
     hostProps: HostProps;
 }
@@ -30,14 +31,22 @@ const hasStatefulCallback = ({ className, style }: ElementProps) =>
  * A component, not a plain function, so `useMergedRefs` can keep the composed ref stable while the
  * host ref and the element ref stay the same. A new ref on every render would make React detach
  * and re-attach it each time, and a ref that sets state on attach would loop.
+ *
+ * A host that renders the adapted callback itself and then passes the result on as a `render`
+ * element (Toolbar does) gets the adapter cloned with more props. Those land on the adapter, so it
+ * merges them over `hostProps` instead of dropping them.
  */
-const RenderElementAdapter = ({ element, hostProps }: RenderElementAdapterProps) => {
-    const { ref: hostRef, ...hostRest } = hostProps;
+const RenderElementAdapter = forwardRef<HTMLElement, RenderElementAdapterProps>(
+    ({ element, hostProps, ...clonedProps }, clonedRef) => {
+        const { ref: hostRef, ...hostRest } = hostProps;
 
-    const ref = useMergedRefs(hostRef, getElementRef(element));
+        const ref = useMergedRefs(hostRef, clonedRef, getElementRef(element));
+        const outerProps = mergeProps(hostRest, clonedProps);
 
-    return cloneElement(element, { ...mergeStatefulProps(hostRest, element.props), ref });
-};
+        return cloneElement(element, { ...mergeStatefulProps(outerProps, element.props), ref });
+    },
+);
+RenderElementAdapter.displayName = 'RenderElementAdapter';
 
 /**
  * Turns a `render` element that carries a function `className` / `style` into a render callback.
@@ -48,7 +57,8 @@ const RenderElementAdapter = ({ element, hostProps }: RenderElementAdapterProps)
  * intact, so the element resolves them against its own state.
  *
  * Every other `render` value is returned as-is. Only render elements with a function
- * `className` / `style` take this path, which adds one `RenderElementAdapter` to the tree.
+ * `className` / `style` take this path, which adds one `RenderElementAdapter` to the tree. So
+ * switching the element's `className` between a string and a function remounts its DOM node.
  */
 export const adaptRenderElement = <Render,>(render: Render): Render => {
     if (!isValidElement<ElementProps>(render) || render.type === Fragment) {
