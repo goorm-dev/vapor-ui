@@ -4,6 +4,8 @@ import type { Mock } from 'vitest';
 import { axe } from 'vitest-axe';
 
 import { Toolbar } from '.';
+import { Button } from '../button';
+import { TextInput } from '../text-input';
 import { Toggle } from '../toggle';
 
 const INPUT_PLACEHOLDER = 'Search';
@@ -144,6 +146,37 @@ describe('<Toolbar.Button />', () => {
         expect(onPressedChange).toHaveBeenCalledWith(true, expect.anything());
         expect(toggle).toHaveAttribute('aria-pressed', 'true');
     });
+
+    it('should keep the toolbar props when the `render` element has a function `className`', async () => {
+        const onClick: Mock = vi.fn();
+        const rendered = render(
+            <Toolbar.Root>
+                <Toolbar.Button
+                    data-testid="bold"
+                    onClick={onClick}
+                    render={<Button className={() => 'stateful'} />}
+                >
+                    Bold
+                </Toolbar.Button>
+                <Toolbar.Button>Italic</Toolbar.Button>
+            </Toolbar.Root>,
+        );
+        const bold = rendered.getByRole('button', { name: 'Bold' });
+        const italic = rendered.getByRole('button', { name: 'Italic' });
+
+        expect(bold).toHaveClass('stateful');
+        expect(bold).toHaveAttribute('data-testid', 'bold');
+        expect(bold).toHaveAttribute('data-orientation', 'horizontal');
+
+        await userEvent.tab();
+        expect(bold).toHaveFocus();
+
+        await userEvent.keyboard('{ArrowRight}');
+        expect(italic).toHaveFocus();
+
+        await userEvent.click(bold);
+        expect(onClick).toHaveBeenCalledTimes(1);
+    });
 });
 
 describe('<Toolbar.Input />', () => {
@@ -176,6 +209,33 @@ describe('<Toolbar.Input />', () => {
 
         await userEvent.keyboard('{ArrowRight}');
         expect(input).toHaveFocus();
+    });
+
+    it('should keep the toolbar props when the `render` element has a function `className`', async () => {
+        const onValueChange: Mock = vi.fn();
+        const rendered = render(
+            <Toolbar.Root>
+                <Toolbar.Button>Bold</Toolbar.Button>
+                <Toolbar.Input
+                    placeholder={INPUT_PLACEHOLDER}
+                    onValueChange={onValueChange}
+                    render={<TextInput className={() => 'stateful'} />}
+                />
+            </Toolbar.Root>,
+        );
+        const button = rendered.getByRole('button', { name: 'Bold' });
+        const input = rendered.getByPlaceholderText(INPUT_PLACEHOLDER);
+
+        expect(input).toHaveClass('stateful');
+
+        await userEvent.tab();
+        expect(button).toHaveFocus();
+
+        await userEvent.keyboard('{ArrowRight}');
+        expect(input).toHaveFocus();
+
+        await userEvent.keyboard('a');
+        expect(onValueChange).toHaveBeenCalledWith('a');
     });
 });
 

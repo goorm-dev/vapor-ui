@@ -323,6 +323,34 @@ describe('Sheet', () => {
         expect(popup).toBeInTheDocument();
         expect(popup).not.toBeVisible();
     });
+
+    it('keeps a callback ref on Sheet.PopupPrimitive attached across rerenders', () => {
+        const cleanupRef = vi.fn();
+        const ref = vi.fn((node: HTMLDivElement | null) => (node ? cleanupRef : undefined));
+
+        const SheetWithRef = ({ title }: { title: string }) => (
+            <Sheet.Root open>
+                <Sheet.PortalPrimitive>
+                    <Sheet.PositionerPrimitive>
+                        <Sheet.PopupPrimitive ref={ref}>
+                            <Sheet.Title>{title}</Sheet.Title>
+                        </Sheet.PopupPrimitive>
+                    </Sheet.PositionerPrimitive>
+                </Sheet.PortalPrimitive>
+            </Sheet.Root>
+        );
+
+        const rendered = render(<SheetWithRef title="a" />);
+        const attachedOnMount = ref.mock.calls.length;
+        const cleanedOnMount = cleanupRef.mock.calls.length;
+
+        rendered.rerender(<SheetWithRef title="b" />);
+        rendered.rerender(<SheetWithRef title="c" />);
+
+        expect(attachedOnMount).toBeGreaterThan(0);
+        expect(ref).toHaveBeenCalledTimes(attachedOnMount);
+        expect(cleanupRef).toHaveBeenCalledTimes(cleanedOnMount);
+    });
 });
 
 const TRIGGER_TEXT = 'Trigger';

@@ -281,4 +281,20 @@ describe('Textarea', () => {
             expect(textarea.style.height).toBe(`${lineHeight * line + paddingBlock}px`);
         });
     });
+
+    test('keeps a callback ref attached across rerenders and runs its cleanup on unmount', () => {
+        const cleanupRef = vi.fn();
+        const ref = vi.fn((node: HTMLTextAreaElement | null) => (node ? cleanupRef : undefined));
+
+        const rendered = render(<Textarea ref={ref} placeholder="a" />);
+        rendered.rerender(<Textarea ref={ref} placeholder="b" />);
+        rendered.rerender(<Textarea ref={ref} placeholder="c" />);
+
+        expect(ref).toHaveBeenCalledTimes(1);
+        expect(cleanupRef).not.toHaveBeenCalled();
+
+        rendered.unmount();
+
+        expect(cleanupRef).toHaveBeenCalledTimes(1);
+    });
 });

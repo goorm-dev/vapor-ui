@@ -4,12 +4,12 @@ import { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { Field as BaseField } from '@base-ui/react/field';
 import { useControlled } from '@base-ui/utils/useControlled';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 
 import { useFieldRequired } from '~/components/field/field';
 import { useInputGroup } from '~/components/input-group/input-group';
 import { useRenderElement } from '~/hooks/use-render-element';
 import { cn } from '~/utils/cn';
-import { composeRefs } from '~/utils/compose-refs';
 import { createSplitProps } from '~/utils/create-split-props';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
@@ -56,7 +56,7 @@ export const Textarea = forwardRef<HTMLElement, Textarea.Props>((props, ref) => 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     useAutoResize({ ref: textareaRef, value, autoResize });
 
-    const composedRef = composeRefs(textareaRef, ref);
+    const composedRef = useMergedRefs(textareaRef, ref);
 
     const handleValueChange = (newValue: string, event: Textarea.ChangeEventDetails) => {
         if (disabled || readOnly) return;

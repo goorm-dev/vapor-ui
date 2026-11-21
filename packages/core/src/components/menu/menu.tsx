@@ -4,12 +4,12 @@ import type { ReactElement, RefObject } from 'react';
 import { forwardRef, useRef } from 'react';
 
 import { Menu as BaseMenu } from '@base-ui/react/menu';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { ChevronRightOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 
 import { useRenderElement } from '~/hooks/use-render-element';
 import { createContext } from '~/libs/create-context';
 import { cn } from '~/utils/cn';
-import { composeRefs } from '~/utils/compose-refs';
 import { createRender } from '~/utils/create-renderer';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
@@ -267,7 +267,7 @@ export const MenuSubmenuTrigger = forwardRef<HTMLElement, MenuSubmenuTrigger.Pro
     (props, ref) => {
         const { className, children, ...componentProps } = resolveStyles(props);
         const { triggerRef } = useSubmenuContext();
-        const composedRef = composeRefs(triggerRef, ref);
+        const composedRef = useMergedRefs(triggerRef, ref);
 
         return (
             <BaseMenu.SubmenuTrigger

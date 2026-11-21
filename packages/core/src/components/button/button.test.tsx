@@ -19,6 +19,60 @@ describe('Button', () => {
         expect(result).toHaveNoViolations();
     });
 
+    describe('prop: render', () => {
+        it('should resolve a function `className` of the render element with its own state', () => {
+            const rendered = render(
+                <Button
+                    render={
+                        <Button
+                            disabled
+                            className={(state) => (state.disabled ? 'is-disabled' : 'is-enabled')}
+                        />
+                    }
+                >
+                    {BUTTON_LABEL}
+                </Button>,
+            );
+            const button = rendered.getByRole('button', { name: BUTTON_LABEL });
+
+            expect(button).toHaveClass('is-disabled');
+            expect(button.className).not.toContain('=>');
+        });
+
+        it('should run the cleanup returned by the render element ref on unmount', () => {
+            const cleanup = vi.fn();
+            const elementRef = vi.fn(() => cleanup);
+
+            const rendered = render(
+                <Button render={<Button ref={elementRef} className={() => 'stateful'} />}>
+                    {BUTTON_LABEL}
+                </Button>,
+            );
+            rendered.unmount();
+
+            expect(cleanup).toHaveBeenCalledTimes(1);
+            expect(elementRef).not.toHaveBeenCalledWith(null);
+        });
+
+        it('should resolve a function `style` of the render element with its own state', () => {
+            const rendered = render(
+                <Button
+                    render={
+                        <Button
+                            disabled
+                            style={(state) => ({ opacity: state.disabled ? 0.4 : 1 })}
+                        />
+                    }
+                >
+                    {BUTTON_LABEL}
+                </Button>,
+            );
+            const button = rendered.getByRole('button', { name: BUTTON_LABEL });
+
+            expect(button).toHaveStyle({ opacity: '0.4' });
+        });
+    });
+
     describe('prop: disabled', () => {
         it('should not be clickable when disabled', async () => {
             const handleClickMock: Mock = vi.fn();
