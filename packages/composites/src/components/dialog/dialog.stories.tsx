@@ -153,9 +153,9 @@ export const AsyncAction: Story = {
             <Dialog.Root
                 actionsRef={actionsRef}
                 trigger={<Button>Async Action</Button>}
-                assistive={<Dialog.Assistive disabled={saving}>취소</Dialog.Assistive>}
+                assistive={<Dialog.Assistive isDisabled={saving}>취소</Dialog.Assistive>}
                 action={
-                    <Dialog.Action disabled={saving} closeOnClick={false} onClick={handleClick}>
+                    <Dialog.Action isDisabled={saving} closeOnClick={false} onClick={handleClick}>
                         {saving ? '저장 중...' : '저장'}
                     </Dialog.Action>
                 }

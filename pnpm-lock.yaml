@@ -14249,7 +14249,7 @@ snapshots:
       '@typescript-eslint/visitor-keys': 8.67.0
       debug: 4.4.3(supports-color@10.2.2)
       minimatch: 10.2.4
-      semver: 7.8.5
+      semver: 7.8.6
       tinyglobby: 0.2.17
       ts-api-utils: 2.5.0(typescript@5.9.3)
       typescript: 5.9.3
@@ -19595,7 +19595,7 @@ snapshots:
       esbuild: 0.25.12
       esbuild-register: 3.6.0(esbuild@0.25.12)(supports-color@10.2.2)
       recast: 0.23.11
-      semver: 7.8.5
+      semver: 7.8.6
       ws: 8.21.3
     optionalDependencies:
       prettier: 3.9.10
@@ -19619,7 +19619,7 @@ snapshots:
       esbuild: 0.25.12
       esbuild-register: 3.6.0(esbuild@0.25.12)(supports-color@10.2.2)
       recast: 0.23.11
-      semver: 7.8.5
+      semver: 7.8.6
       ws: 8.21.3
     optionalDependencies:
       prettier: 3.9.10
@@ -19643,7 +19643,7 @@ snapshots:
       esbuild: 0.25.12
       esbuild-register: 3.6.0(esbuild@0.25.12)(supports-color@10.2.2)
       recast: 0.23.11
-      semver: 7.8.5
+      semver: 7.8.6
       ws: 8.21.3
     optionalDependencies:
       prettier: 3.9.10
@@ -19667,7 +19667,7 @@ snapshots:
       esbuild: 0.25.12
       esbuild-register: 3.6.0(esbuild@0.25.12)(supports-color@10.2.2)
       recast: 0.23.11
-      semver: 7.8.5
+      semver: 7.8.6
       ws: 8.21.3
     optionalDependencies:
       prettier: 3.9.10
