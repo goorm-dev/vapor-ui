@@ -1,4 +1,4 @@
-import type { Hexcode, KeyColor } from './color';
+import type { KeyColor } from './color';
 import type { PaletteChip, PrimitiveColorTokens } from './palette';
 import type { Scale } from './scale';
 
@@ -11,7 +11,7 @@ export interface ThemeOptions {
      * colors from the nearest base color; three HEX are the key colors as-is. The HEX only
      * shapes the hue curve, so it may not appear in the palette.
      */
-    basicColors?: Record<string, Hexcode | [Hexcode, Hexcode, Hexcode]>;
+    basicColors?: KeyColor[];
     /** Pinned into one light cell as-is; the rest of its palette follows from it. */
     brandColor?: KeyColor;
 }

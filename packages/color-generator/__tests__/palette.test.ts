@@ -22,7 +22,9 @@ describe('reference script parity', () => {
     });
 
     it('matches reference/palette.teal.json for a one-HEX basic color', () => {
-        const result = generatePrimitiveColorPalette({ basicColors: { teal: '#00838F' } });
+        const result = generatePrimitiveColorPalette({
+            basicColors: [{ name: 'teal', hexcode: '#00838F' }],
+        });
         expect(without(table(result, 'light'), 'gray')).toEqual(referenceTeal.light);
         expect(without(table(result, 'dark'), 'gray')).toEqual(referenceTeal.dark);
     });
@@ -40,7 +42,10 @@ describe('reference script parity', () => {
 describe('output shape', () => {
     it('lists base colors, then basic colors, then the brand, then gray', () => {
         const result = generatePrimitiveColorPalette({
-            basicColors: { teal: '#00838F', red: ['#F8636A', '#BB1225', '#9E0006'] },
+            basicColors: [
+                { name: 'teal', hexcode: '#00838F' },
+                { name: 'red', hexcode: '#F8636A' },
+            ],
             brandColor: { name: 'acme', hexcode: '#FF6B00' },
         });
         expect(result.lightModeTokens.palettes.map((p) => p.name)).toEqual([
@@ -70,15 +75,20 @@ describe('output shape', () => {
 });
 
 describe('basic colors', () => {
-    it('uses three key colors as-is', () => {
-        const result = generatePrimitiveColorPalette({
-            basicColors: { rose: ['#F8636A', '#BB1225', '#9E0006'] },
-        });
-        expect(table(result, 'light').rose).toEqual(reference.light.red);
+    it('rejects a duplicate name within basic colors or shared with the brand', () => {
+        const teal = { name: 'teal', hexcode: '#00838F' };
+        expect(() => generatePrimitiveColorPalette({ basicColors: [teal, teal] })).toThrow(
+            'Duplicate color name: teal',
+        );
+        expect(() =>
+            generatePrimitiveColorPalette({ basicColors: [teal], brandColor: teal }),
+        ).toThrow('Duplicate color name: teal');
     });
 
     it('replacing a base color leaves the other colors unchanged', () => {
-        const result = generatePrimitiveColorPalette({ basicColors: { blue: '#00838F' } });
+        const result = generatePrimitiveColorPalette({
+            basicColors: [{ name: 'blue', hexcode: '#00838F' }],
+        });
         expect(without(table(result, 'light'), 'blue', 'gray')).toEqual(
             without(reference.light, 'blue'),
         );

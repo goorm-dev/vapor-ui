@@ -20,7 +20,7 @@ import {
 } from '@vapor-ui/color-generator';
 
 const theme = generatePrimitiveColorPalette({
-    basicColors: { teal: '#00838F' },
+    basicColors: [{ name: 'teal', hexcode: '#00838F' }],
     brandColor: { name: 'acme', hexcode: '#2A72E5' },
 });
 
@@ -52,17 +52,16 @@ Palettes come out in this order: the 11 base colors, `basicColors`, the brand co
 
 ```ts
 generatePrimitiveColorPalette({
-    basicColors?: Record<string, Hexcode | [Hexcode, Hexcode, Hexcode]>;
-    brandColor?: { name: string; hexcode: Hexcode };
+    basicColors?: KeyColor[]; // KeyColor = { name: string; hexcode: Hexcode }
+    brandColor?: KeyColor;
 }): ThemeResult;
 ```
 
 ### `basicColors`
 
-Adds a color, or replaces a base color of the same name.
+Adds colors, or replaces a base color of the same name. Palettes come out in array order. A name used twice, here or by `brandColor`, throws.
 
-- One HEX borrows the key colors of the base color with the nearest 500 hue, rotates them to the input hue, and puts the input HEX in place of the key nearest in lightness.
-- Three HEX are used as the key colors as-is.
+The HEX borrows the key colors of the base color with the nearest 500 hue, rotates them to the input hue, and puts the input HEX in place of the key nearest in lightness.
 
 The input only shapes the hue curve, so it may not appear in the palette. Other colors never change: the 050–200 chroma caps always come from the default base colors.
 

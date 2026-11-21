@@ -24,12 +24,15 @@ const DEFAULT_BASIC_COLORS = Object.fromEntries(
 );
 
 // HEX 하나는 키 컬러를 다시 유도하므로, 기본값과 다른 색상만 넘겨야 기본 팔레트가 유지됩니다.
-const changedBasicColors = (colors: Record<string, string>) =>
-    Object.fromEntries(
-        Object.entries(colors).filter(
-            ([name, hex]) => hex.toUpperCase() !== DEFAULT_BASIC_COLORS[name]?.toUpperCase(),
-        ),
-    );
+// primary는 brandColor로 따로 넘기므로 같은 이름을 basicColors에서 뺍니다(중복 이름은 throw).
+const changedBasicColors = (colors: Record<string, string>, primaryName: string) =>
+    Object.entries(colors)
+        .filter(
+            ([name, hex]) =>
+                name !== primaryName &&
+                hex.toUpperCase() !== DEFAULT_BASIC_COLORS[name]?.toUpperCase(),
+        )
+        .map(([name, hexcode]) => ({ name, hexcode }));
 
 export const ColorSystemTab = () => {
     // Basic Colors (11 base colors)
@@ -58,7 +61,7 @@ export const ColorSystemTab = () => {
             });
 
             const options: ThemeOptions = {
-                basicColors: changedBasicColors(basicColors),
+                basicColors: changedBasicColors(basicColors, primaryColorName),
                 brandColor: {
                     name: primaryColorName,
                     hexcode: primaryColorHex,
@@ -126,7 +129,7 @@ export const ColorSystemTab = () => {
 
         try {
             const css = generateColorCSS({
-                basicColors: changedBasicColors(basicColors),
+                basicColors: changedBasicColors(basicColors, primaryColorName),
                 primary: { name: primaryColorName, hexcode: primaryColorHex },
             });
 

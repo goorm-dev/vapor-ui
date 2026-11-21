@@ -39,22 +39,24 @@ const checkName = (name: string) => {
  * color, and `gray`, all against the fixed backgrounds (light `#FFFFFF`, dark `#232323`).
  */
 export function generatePrimitiveColorPalette(options: ThemeOptions = {}): ThemeResult {
-    const { basicColors = {}, brandColor } = options;
+    const { basicColors = [], brandColor } = options;
     const baseHues = getBaseHueTable();
     const hues: HueTable = { ...baseHues };
-
-    for (const [name, value] of Object.entries(basicColors)) {
+    const seen = new Set<string>();
+    const claim = (name: string) => {
         checkName(name);
-        const keys =
-            typeof value === 'string'
-                ? keysFromHex(toRawHex(value), baseHues)
-                : value.map(toRawHex);
-        hues[name] = leonardoHues(keys);
+        if (seen.has(name)) throw new Error(`Duplicate color name: ${name}`);
+        seen.add(name);
+    };
+
+    for (const { name, hexcode } of basicColors) {
+        claim(name);
+        hues[name] = leonardoHues(keysFromHex(toRawHex(hexcode), baseHues));
     }
 
     let brand: { name: string; hex: string } | undefined;
     if (brandColor) {
-        checkName(brandColor.name);
+        claim(brandColor.name);
         brand = { name: brandColor.name, hex: toRawHex(brandColor.hexcode) };
         hues[brand.name] = leonardoHues(keysFromHex(brand.hex, baseHues));
     }
