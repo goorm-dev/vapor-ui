@@ -46,9 +46,25 @@ export const CustomValueText: Story = {
         value: 45,
         size: 'md',
         type: 'default',
-        formatValue: {
-            valueText: (value) => `${value} GB`,
-        },
+        valueText: (value) => `${value} GB`,
+        maxValueText: (max) => `${max} GB`,
+    },
+    render: (args) => (
+        <VStack $css={{ gap: '$200', width: '320px' }}>
+            <Meter {...args} />
+        </VStack>
+    ),
+};
+
+export const RemoveValueLabel: Story = {
+    args: {
+        label: '배터리 잔량',
+        min: 0,
+        max: 100,
+        value: 45,
+        size: 'md',
+        type: 'default',
+        valueText: false,
     },
     render: (args) => (
         <VStack $css={{ gap: '$200', width: '320px' }}>
@@ -112,7 +128,7 @@ const TestBedRender = () => {
                         value={row.value}
                         size={row.size}
                         type={row.type}
-                        formatValue={row.hasValueText ? undefined : false}
+                        valueText={row.hasValueText ? undefined : () => null}
                     />
                 </div>
             )}
