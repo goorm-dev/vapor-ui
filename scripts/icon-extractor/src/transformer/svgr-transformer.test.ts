@@ -53,7 +53,7 @@ test('ids come from useIconId so every rendered instance gets its own', async ()
 
     assert.match(first, /useIconId\("vapor-icons-mono-FirstIcon"\)/);
     assert.match(second, /useIconId\("vapor-icons-mono-SecondIcon"\)/);
-    assert.doesNotMatch(first, /\bid="/, 'a static id repeats when the icon renders twice');
+    assert.doesNotMatch(first, /\bid="/);
     // The reference has to move with the definition.
     assert.match(first, /mask=\{`url\(#\$\{id\}__a\)`\}/);
     assert.match(first, /id=\{`\$\{id\}__a`\}/);

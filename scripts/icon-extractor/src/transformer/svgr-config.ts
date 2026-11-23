@@ -7,41 +7,35 @@ type SvgoPlugin = Extract<
 
 type Jsx = Parameters<NonNullable<Config['template']>>[0]['jsx'];
 type Node = { type: string; [key: string]: unknown };
+type Attribute = { value?: Node | null };
 
-/**
- * Turn every attribute string that holds `prefix` into a template literal on the runtime `id`, so
- * each rendered instance gets its own ids. Returns whether anything was rewritten.
- */
-const bindIdsToRuntime = (node: Node, prefix: string): boolean => {
-    let bound = false;
-    for (const attr of (node.openingElement as { attributes: Node[] }).attributes) {
-        const value = attr.value as Node | null;
-        if (value?.type !== 'StringLiteral' || !(value.value as string).includes(prefix)) continue;
-        const parts = (value.value as string).split(prefix);
-        attr.value = {
-            type: 'JSXExpressionContainer',
-            expression: {
-                type: 'TemplateLiteral',
-                quasis: parts.map((raw, i) => ({
-                    type: 'TemplateElement',
-                    value: { raw, cooked: raw },
-                    tail: i === parts.length - 1,
-                })),
-                expressions: parts.slice(1).map(() => ({ type: 'Identifier', name: 'id' })),
-            },
-        };
-        bound = true;
-    }
-    for (const child of node.children as Node[]) {
-        if (child.type === 'JSXElement' && bindIdsToRuntime(child, prefix)) bound = true;
-    }
-    return bound;
+const findIdAttributes = (node: Node, prefix: string): Attribute[] => [
+    ...(node.openingElement as { attributes: Attribute[] }).attributes.filter(
+        ({ value }) => value?.type === 'StringLiteral' && (value.value as string).includes(prefix),
+    ),
+    ...(node.children as Node[])
+        .filter((child) => child.type === 'JSXElement')
+        .flatMap((child) => findIdAttributes(child, prefix)),
+];
+
+const bindToRuntimeId = (attribute: Attribute, prefix: string) => {
+    const parts = ((attribute.value as Node).value as string).split(prefix);
+    attribute.value = {
+        type: 'JSXExpressionContainer',
+        expression: {
+            type: 'TemplateLiteral',
+            quasis: parts.map((raw, i) => ({
+                type: 'TemplateElement',
+                value: { raw, cooked: raw },
+                tail: i === parts.length - 1,
+            })),
+            expressions: parts.slice(1).map(() => ({ type: 'Identifier', name: 'id' })),
+        },
+    };
 };
 
 /**
- * Wrap the SVG in IconBase instead of rendering a bare <svg>. Icons whose SVG keeps ids (masks,
- * clip paths, gradients) read them from useIconId, because a static id repeats when the same icon
- * renders twice on one page.
+ * Wrap the SVG in IconBase instead of rendering a bare <svg>.
  */
 const buildTemplate =
     (idPrefix: string): Config['template'] =>
@@ -57,7 +51,8 @@ const buildTemplate =
             argument: { type: 'Identifier', name: 'props' },
         } as Jsx['openingElement']['attributes'][number]);
 
-        if (!bindIdsToRuntime(jsx as unknown as Node, idPrefix)) {
+        const idAttributes = findIdAttributes(jsx as unknown as Node, idPrefix);
+        if (idAttributes.length === 0) {
             return tpl`
 import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
@@ -70,6 +65,7 @@ export default ${componentName};
 `;
         }
 
+        for (const attribute of idAttributes) bindToRuntimeId(attribute, idPrefix);
         const prefix = { type: 'StringLiteral', value: idPrefix } as unknown as string;
         return tpl`
 import IconBase from '~/components/icon-base';
