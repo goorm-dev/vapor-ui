@@ -1,143 +1,85 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useReducer, useState } from 'react';
 
-import type { SemanticResult, ThemeOptions, ThemeResult } from '@vapor-ui/color-generator';
+import type { ThemeOptions, ThemeResult } from '@vapor-ui/color-generator';
 import {
-    BASE_COLOR_HEX,
     generatePrimitiveColorPalette,
     getSemanticDependentTokens,
     validatePalette,
 } from '@vapor-ui/color-generator';
-import { Box, Button, Collapsible, HStack, Text, VStack } from '@vapor-ui/core';
-import { generateColorCSS } from '@vapor-ui/css-generator';
-import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
+import { Box, Button, HStack, Tabs, Text, VStack } from '@vapor-ui/core';
+import { generateColorCSSFromTheme } from '@vapor-ui/css-generator';
+import { ConfirmOutlineIcon } from '@vapor-ui/icons';
 
 import { Logger } from '~/common/logger';
 import { postMessage } from '~/common/messages';
 import { AccessibilityWarning } from '~/ui/components/accessibility-warning';
-import { ColorInput } from '~/ui/components/color-input';
+import { ConfirmDialog } from '~/ui/components/confirm-dialog';
 import { LabeledInput } from '~/ui/components/labeled-input';
-import { Section } from '~/ui/components/section';
 
-const DEFAULT_BASIC_COLORS: Record<string, string> = { ...BASE_COLOR_HEX };
+import { BasicTab } from './basic-tab';
+import { BrandTab } from './brand-tab';
+import type { ThemeAction } from './theme-draft';
+import {
+    confirmationFor,
+    draftToOptions,
+    flaggedCells,
+    initialDraft,
+    primaryName,
+    themeDraftReducer,
+    withoutHues,
+} from './theme-draft';
 
-// HEX 하나는 키 컬러를 다시 유도하므로, 기본값과 다른 색상만 넘겨야 기본 팔레트가 유지됩니다.
-// primary는 brandColor로 따로 넘기므로 같은 이름을 basicColors에서 뺍니다(중복 이름은 throw).
-const changedBasicColors = (colors: Record<string, string>, primaryName: string) =>
-    Object.entries(colors)
-        .filter(
-            ([name, hex]) =>
-                name !== primaryName.toLowerCase() &&
-                hex.toUpperCase() !== DEFAULT_BASIC_COLORS[name]?.toUpperCase(),
-        )
-        .map(([name, hexcode]) => ({ name, hexcode }));
+type Generated = { theme: ThemeResult; error: null } | { theme: null; error: string };
 
-const messageOf = (error: unknown) => (error instanceof Error ? error.message : String(error));
+const generate = (options: ThemeOptions): Generated => {
+    try {
+        return { theme: generatePrimitiveColorPalette(options), error: null };
+    } catch (error) {
+        return { theme: null, error: error instanceof Error ? error.message : String(error) };
+    }
+};
 
 export const ColorSystemTab = () => {
-    // Basic Colors (11 base colors)
-    const [basicColors, setBasicColors] = useState<Record<string, string>>(DEFAULT_BASIC_COLORS);
+    const [draft, dispatch] = useReducer(themeDraftReducer, initialDraft);
+    const [pending, setPending] = useState<{ message: string; action: ThemeAction } | null>(null);
+    const [collectionName, setCollectionName] = useState('Color Tokens');
+    const [isCopying, setIsCopying] = useState(false);
 
-    // Primary Color (Required - always enabled with default blue)
-    const [primaryColorName, setPrimaryColorName] = useState<string>('blue');
-    const [primaryColorHex, setPrimaryColorHex] = useState<string>(DEFAULT_BASIC_COLORS.blue);
+    // Hue edits never move the baseline, so slider drags reuse it instead of generating twice.
+    const baselineKey = JSON.stringify(draftToOptions(withoutHues(draft)));
+    const baseline = useMemo(() => generate(JSON.parse(baselineKey)).theme, [baselineKey]);
+    const { theme, error } = useMemo(() => generate(draftToOptions(draft)), [draft]);
+    const checks = useMemo(() => (theme ? validatePalette(theme) : []), [theme]);
+    const flags = useMemo(() => flaggedCells(checks), [checks]);
+    const canExport = theme !== null && checks.every((check) => check.status !== 'fail');
 
-    // Generated results
-    const [generatedTheme, setGeneratedTheme] = useState<ThemeResult | null>(null);
-    const [semanticTokens, setSemanticTokens] = useState<SemanticResult | null>(null);
-    const [collectionName, setCollectionName] = useState<string>('Color Tokens');
-    const [isCopying, setIsCopying] = useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-    const paletteChecks = useMemo(
-        () => (generatedTheme ? validatePalette(generatedTheme) : []),
-        [generatedTheme],
-    );
-
-    const handleGeneratePalette = () => {
-        try {
-            postMessage({
-                type: 'palette-generation-started',
-                data: {},
-            });
-
-            const options: ThemeOptions = {
-                basicColors: changedBasicColors(basicColors, primaryColorName),
-                brandColor: {
-                    name: primaryColorName,
-                    hexcode: primaryColorHex,
-                },
-            };
-
-            Logger.palette.generating({ options });
-
-            const themeResult = generatePrimitiveColorPalette(options);
-            setGeneratedTheme(themeResult);
-
-            Logger.semantic.generating({ primaryColorName }, {});
-
-            const semanticResult = getSemanticDependentTokens(themeResult, primaryColorName);
-
-            Logger.semantic.generated(semanticResult);
-            setSemanticTokens(semanticResult);
-
-            postMessage({
-                type: 'create-unified-palette-sections',
-                data: {
-                    generatedTheme: themeResult,
-                    semanticTokens: semanticResult,
-                },
-            });
-
-            Logger.palette.generated('통합 팔레트 UI 요청 전송 완료');
-            setErrorMessage(null);
-        } catch (error) {
-            Logger.palette.error('팔레트 생성 실패', error);
-            setErrorMessage(`팔레트 생성 실패: ${messageOf(error)}`);
-        }
+    const request = (action: ThemeAction) => {
+        const message = confirmationFor(draft, action);
+        if (message) setPending({ message, action });
+        else dispatch(action);
     };
 
-    const handleCreateFigmaVariables = () => {
-        if (!generatedTheme) {
-            Logger.warn('팔레트가 생성되지 않았습니다');
-            return;
-        }
-
+    const handleExport = () => {
+        if (!theme || !canExport) return;
+        const semanticTokens = getSemanticDependentTokens(theme, primaryName(draft));
+        Logger.info('Figma 내보내기 요청', { primary: primaryName(draft), collectionName });
+        postMessage({ type: 'palette-generation-started', data: {} });
         postMessage({
-            type: 'variable-generation-started',
-            data: {},
+            type: 'create-unified-palette-sections',
+            data: { generatedTheme: theme, semanticTokens },
         });
-
-        try {
-            Logger.variables.creating(collectionName);
-
-            postMessage({
-                type: 'create-unified-figma-variables',
-                data: {
-                    generatedTheme,
-                    collectionName,
-                },
-            });
-
-            Logger.info('Figma 변수 생성 요청 전송 완료');
-            setErrorMessage(null);
-        } catch (error) {
-            Logger.variables.error('Figma 변수 생성 요청 실패', error);
-            setErrorMessage(`Figma 변수 생성 요청 실패: ${messageOf(error)}`);
-        }
+        postMessage({
+            type: 'create-unified-figma-variables',
+            data: { generatedTheme: theme, collectionName },
+        });
     };
 
     const handleCopyCssVariables = async () => {
-        if (isCopying || !generatedTheme) return;
-
+        if (isCopying || !theme) return;
         setIsCopying(true);
-
         try {
-            const css = generateColorCSS({
-                basicColors: changedBasicColors(basicColors, primaryColorName),
-                primary: { name: primaryColorName, hexcode: primaryColorHex },
-            });
-
-            if (navigator.clipboard && navigator.clipboard.writeText) {
+            const css = generateColorCSSFromTheme(theme, primaryName(draft));
+            if (navigator.clipboard?.writeText) {
                 await navigator.clipboard.writeText(css);
             } else {
                 const textarea = document.createElement('textarea');
@@ -147,124 +89,81 @@ export const ColorSystemTab = () => {
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
             }
-
-            setTimeout(() => {
-                setIsCopying(false);
-            }, 2000);
-        } catch (error) {
-            Logger.error('CSS 복사 실패', error);
+            setTimeout(() => setIsCopying(false), 2000);
+        } catch (copyError) {
+            Logger.error('CSS 복사 실패', copyError);
             setIsCopying(false);
         }
     };
 
+    const tabProps = { draft, theme, baseline, flags, request };
+
     return (
         <VStack $css={{ gap: '$300' }}>
-            <VStack $css={{ gap: '$200' }}>
-                <Section>
-                    <Section.Title title="Primary Color" />
-                    <Section.Description description="브랜드의 핵심 색상을 지정해요. 기본값은 Vapor의 파란색(blue)이에요." />
-                    <VStack $css={{ gap: '$100' }}>
-                        <LabeledInput
-                            label="Color Name"
-                            value={primaryColorName}
-                            onChange={setPrimaryColorName}
-                            placeholder="blue"
-                        />
-                        <ColorInput
-                            label="Hex Code"
-                            value={primaryColorHex}
-                            onChange={setPrimaryColorHex}
-                            placeholder="#2a72e5"
-                        />
-                    </VStack>
-                </Section>
+            <Tabs.Root defaultValue="basic">
+                <Tabs.List>
+                    <Tabs.Button value="basic">베이직 컬러</Tabs.Button>
+                    <Tabs.Button value="brand">브랜드</Tabs.Button>
+                </Tabs.List>
+                <Tabs.Panel value="basic" className="pt-3">
+                    <BasicTab {...tabProps} />
+                </Tabs.Panel>
+                <Tabs.Panel value="brand" className="pt-3">
+                    <BrandTab {...tabProps} />
+                </Tabs.Panel>
+            </Tabs.Root>
 
-                <Collapsible.Root>
-                    <Section isTop>
-                        <Collapsible.Trigger className="group flex justify-between w-full items-center">
-                            <Section.Title title="Primitive Color" />
-                            <ChevronDownOutlineIcon className="transition-transform group-data-[panel-open]:rotate-180" />
-                        </Collapsible.Trigger>
-                        <Collapsible.Panel>
-                            <VStack $css={{ gap: '$100' }}>
-                                <Section.Description description="디자인 시스템의 11가지 기본 색상 팔레트(red, blue, green 등)를 생성하는 대표 색상이에요.\n각 색상은 고정 배경(light #FFFFFF, dark #232323) 대비 목표 명암비로 050~900 단계가 생성돼요." />
-
-                                {Object.entries(basicColors).map(([colorName, colorValue]) => (
-                                    <ColorInput
-                                        key={colorName}
-                                        label={colorName}
-                                        value={colorValue}
-                                        onChange={(value) =>
-                                            setBasicColors((prev) => ({
-                                                ...prev,
-                                                [colorName]: value,
-                                            }))
-                                        }
-                                        placeholder="Please enter a hex code"
-                                    />
-                                ))}
-                            </VStack>
-                        </Collapsible.Panel>
-                    </Section>
-                </Collapsible.Root>
-
-                <Button onClick={handleGeneratePalette}>Generate Palette</Button>
+            <VStack
+                $css={{ gap: '$200' }}
+                className="sticky bottom-0 pt-3 pb-1 bg-white border-t border-gray-300"
+            >
+                {error && (
+                    <Box
+                        role="alert"
+                        className="p-3 bg-v-red-50 border border-v-red-200 rounded-lg"
+                    >
+                        <Text typography="body3" foreground="danger-100">
+                            팔레트 생성 실패: {error}
+                        </Text>
+                    </Box>
+                )}
+                <Box className="max-h-40 overflow-y-auto">
+                    <AccessibilityWarning checks={checks} />
+                </Box>
+                <LabeledInput
+                    label="Collection Name"
+                    value={collectionName}
+                    onChange={setCollectionName}
+                    placeholder="Enter collection name"
+                />
+                <HStack $css={{ gap: '$200' }}>
+                    <Button onClick={handleExport} disabled={!canExport} className="flex-1">
+                        Figma로 내보내기
+                    </Button>
+                    <Button
+                        onClick={handleCopyCssVariables}
+                        variant="outline"
+                        disabled={isCopying || !theme}
+                        className="flex-1"
+                    >
+                        {isCopying ? <ConfirmOutlineIcon /> : 'Copy CSS Variables'}
+                    </Button>
+                </HStack>
+                {!canExport && theme && (
+                    <Text typography="body4" foreground="danger-100">
+                        FAIL 검사가 남아 있으면 내보낼 수 없어요.
+                    </Text>
+                )}
             </VStack>
 
-            {errorMessage && (
-                <Box role="alert" className="p-3 bg-v-red-50 border border-v-red-200 rounded-lg">
-                    <Text typography="body3" foreground="danger-100">
-                        {errorMessage}
-                    </Text>
-                </Box>
-            )}
-
-            {/* Results Section */}
-            {generatedTheme && semanticTokens && (
-                <>
-                    <div className="border-t border-gray-300" />
-                    <VStack $css={{ gap: '$200' }}>
-                        {/* 접근성 경고 */}
-                        <AccessibilityWarning checks={paletteChecks} />
-
-                        <LabeledInput
-                            label="Collection Name"
-                            value={collectionName}
-                            onChange={setCollectionName}
-                            placeholder="Enter collection name"
-                        />
-
-                        <Box className="p-3 bg-v-gray-100 rounded-lg">
-                            <div className="text-sm font-medium text-gray-700 mb-2">
-                                Palette Generated
-                            </div>
-                            <div className="text-xs text-gray-600">
-                                Primary Color: {primaryColorName} ({primaryColorHex})
-                            </div>
-                        </Box>
-
-                        <HStack $css={{ gap: '$200' }}>
-                            <Button
-                                onClick={handleCreateFigmaVariables}
-                                variant="outline"
-                                color="secondary"
-                                className="w-full"
-                            >
-                                Create Figma Variables
-                            </Button>
-                            <Button
-                                onClick={handleCopyCssVariables}
-                                variant="outline"
-                                color="primary"
-                                className="w-full"
-                                disabled={isCopying}
-                            >
-                                {isCopying ? <ConfirmOutlineIcon /> : 'Copy CSS Variables'}
-                            </Button>
-                        </HStack>
-                    </VStack>
-                </>
-            )}
+            <ConfirmDialog
+                message={pending?.message ?? null}
+                onCancel={() => setPending(null)}
+                onConfirm={() => {
+                    if (pending) dispatch(pending.action);
+                    setPending(null);
+                }}
+            />
         </VStack>
     );
 };
