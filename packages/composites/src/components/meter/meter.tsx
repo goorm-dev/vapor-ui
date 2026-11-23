@@ -157,7 +157,7 @@ interface MeterBaseProps {
     label: Slots['label'];
 
     /**
-     * 미터의 현재 상태를 설명하는 보조 텍스트. 스크린리더기에 의해 읽히지 않으므로, 필수 정보를 포함하지 않는다.
+     * 미터의 현재 상태를 설명하는 보조 텍스트. `meter` role의 자식은 presentational로 처리되므로 필수 정보를 포함하지 않는다.
      */
     description?: Slots['description'];
 

@@ -1,6 +1,6 @@
 {
     "name": "MeterDescription",
-    "description": "Shows the formatted Description as text, hidden from assistive technology to avoid a duplicate announcement. Renders a `<span>` element.",
+    "description": "Describes the meter's current state. Linked to the meter through `aria-describedby`, so screen readers announce it as plain text: the `meter` role makes its children presentational, which drops semantics such as links or emphasis. Renders a `<span>` element.",
     "props": [
         {
             "name": "className",

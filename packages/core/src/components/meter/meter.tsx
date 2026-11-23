@@ -205,7 +205,7 @@ MeterValue.displayName = 'Meter.Value';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Shows the formatted Description as text, hidden from assistive technology to avoid a duplicate announcement. Renders a `<span>` element.
+ * Describes the meter's current state. Linked to the meter through `aria-describedby`, so screen readers announce it as plain text: the `meter` role makes its children presentational, which drops semantics such as links or emphasis. Renders a `<span>` element.
  */
 export const MeterDescription = forwardRef<HTMLSpanElement, MeterDescription.Props>(
     (props, ref) => {
