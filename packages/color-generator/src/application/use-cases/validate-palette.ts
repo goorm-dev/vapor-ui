@@ -9,17 +9,10 @@ import {
 } from '../../domain/color-math';
 import type { ColorScale, Mode } from '../../domain/models/scale';
 import { COLOR_SCALES, MODES } from '../../domain/models/scale';
-import {
-    A11Y_RULES,
-    BG,
-    CAPPED_SCALES,
-    DARK_400_CHROMA_FACTOR,
-    EXPRESSIBLE_MAX,
-    TARGET_CONTRAST,
-    YELLOW_FAMILY_RANGE,
-} from '../constants';
+import { A11Y_RULES, BG, CAPPED_SCALES, EXPRESSIBLE_MAX, TARGET_CONTRAST } from '../constants';
 import { isMonotone } from '../engine/brand';
-import { getBaseCaps } from '../engine/palette';
+import { keysFromHex, leonardoHues } from '../engine/hue';
+import { darkUpper, getBaseCaps, getBaseHueTable, inYellowFamily } from '../engine/palette';
 import { primaryAnchor, rawRow } from './get-semantic-tokens';
 
 const HUE_GAP_MIN = 5.5;
@@ -27,6 +20,7 @@ const HUE_GAP_EXCEPTIONS = [['blue', 'cobalt']];
 const TARGET_TOLERANCE = 0.01;
 /** HEX rounding moves chroma by up to 0.0013 in the reference output. */
 const CHROMA_TOLERANCE = 0.003;
+const DARK_UPPER = COLOR_SCALES.slice(4);
 
 type Rows = Record<Mode, Record<string, Record<ColorScale, string>>>;
 type IsBrandCell = (m: Mode, c: string, s: ColorScale) => boolean;
@@ -46,22 +40,6 @@ const upperMaxChroma = (L: number, C: number, H: number, step = 0.0005) => {
         else hi = mid;
     }
     return lo;
-};
-
-/** Chroma along the light curve at lightness L, as dark 400–900 derive it. */
-const lightCurveChroma = (lightRow: Record<ColorScale, string>) => {
-    const curve = COLOR_SCALES.map((s) => hexToOklch(lightRow[s])).sort(
-        (p, q) => q[0] - p[0] || q[1] - p[1] || q[2] - p[2],
-    );
-    return (L: number) => {
-        if (L >= curve[0][0]) return curve[0][1];
-        for (let i = 0; i + 1 < curve.length; i++) {
-            const [L1, C1] = curve[i];
-            const [L2, C2] = curve[i + 1];
-            if (L2 <= L && L <= L1) return C1 + ((C2 - C1) * (L1 - L)) / (L1 - L2);
-        }
-        return curve[curve.length - 1][1];
-    };
 };
 
 const status = (details: string[], bad: 'warn' | 'fail') => (details.length ? bad : 'ok');
@@ -117,10 +95,15 @@ const a11y = (rows: Rows): PaletteCheck => {
 
 /**
  * Each cell's chroma follows its scale's rule, recomputed at the cell's own lightness and hue.
- * The brand cell is a pinned HEX, so it is exempt, and so is a light 300 next to it, whose
+ * Dark 400–900 are rederived from the light row as the engine does, at the engine's unrounded
+ * lightness: a HEX-rounded lightness lands elsewhere on a steep light curve. The brand cell is a pinned HEX, so it is exempt, and so is a light 300 next to it, whose
  * rule reads the 200 and 400 chroma from before the pin.
  */
-const chroma = (rows: Rows, isBrandCell: IsBrandCell): PaletteCheck => {
+const chroma = (
+    rows: Rows,
+    isBrandCell: IsBrandCell,
+    isYellow: (c: string) => boolean,
+): PaletteCheck => {
     const caps = getBaseCaps();
     const details: string[] = [];
     for (const m of MODES)
@@ -128,9 +111,9 @@ const chroma = (rows: Rows, isBrandCell: IsBrandCell): PaletteCheck => {
             const P = Object.fromEntries(
                 COLOR_SCALES.map((s) => [s, hexToOklch(row[s])]),
             ) as Record<ColorScale, ReturnType<typeof hexToOklch>>;
-            const h200 = hexToOklch(rows.light[c]['200'])[2];
-            const yellow = YELLOW_FAMILY_RANGE[0] <= h200 && h200 <= YELLOW_FAMILY_RANGE[1];
-            const lightC = lightCurveChroma(rows.light[c]);
+            const yellow = isYellow(c);
+            const derived: Partial<Record<ColorScale, string>> =
+                m === 'dark' ? darkUpper(rows.light[c], DARK_UPPER) : {};
             for (const s of COLOR_SCALES) {
                 if (isBrandCell(m, c, s)) continue;
                 if (
@@ -140,14 +123,18 @@ const chroma = (rows: Rows, isBrandCell: IsBrandCell): PaletteCheck => {
                 )
                     continue;
                 const [L, C, H] = P[s];
-                let want: number;
-                if (CAPPED_SCALES.includes(s)) want = caps[m][s][yellow ? 'yellow' : 'normal'];
-                else if (s === '300') want = (P['200'][1] + P['400'][1]) / 2;
-                else if (m === 'light') want = EXPRESSIBLE_MAX;
-                else want = lightC(L) * (s === '400' ? DARK_400_CHROMA_FACTOR : 1.0);
-                const expect = [gamutChroma(L, want, H), upperMaxChroma(L, want, H)].reduce(
-                    (a, b) => (Math.abs(b - C) < Math.abs(a - C) ? b : a),
-                );
+                let expect: number;
+                if (derived[s]) expect = hexToOklch(derived[s])[1];
+                else {
+                    const want = CAPPED_SCALES.includes(s)
+                        ? caps[m][s][yellow ? 'yellow' : 'normal']
+                        : s === '300'
+                          ? (P['200'][1] + P['400'][1]) / 2
+                          : EXPRESSIBLE_MAX;
+                    expect = [gamutChroma(L, want, H), upperMaxChroma(L, want, H)].reduce((a, b) =>
+                        Math.abs(b - C) < Math.abs(a - C) ? b : a,
+                    );
+                }
                 if (Math.abs(C - expect) > CHROMA_TOLERANCE)
                     details.push(
                         `${m} ${c}-${s}: chroma ${C.toFixed(4)} (rule ${expect.toFixed(4)})`,
@@ -185,6 +172,17 @@ export function validatePalette(result: ThemeResult): PaletteCheck[] {
             monotone.push(`light ${brand.name}-${s} breaks the contrast order`);
     }
 
+    // The engine reads the yellow family off the hue table. A brand row's table comes from the
+    // brand HEX; every other row keeps an unpinned light 200, whose hue is the table's.
+    const isYellow = (c: string) =>
+        inYellowFamily(
+            c === brand?.name
+                ? leonardoHues(
+                      keysFromHex(rows.light[c][brand.scale as ColorScale], getBaseHueTable()),
+                  )['200']
+                : hexToOklch(rows.light[c]['200'])[2],
+        );
+
     const primary = brand?.name ?? 'blue';
     const anchor = primaryAnchor(result, primary);
     const weak = MODES.flatMap((m) => {
@@ -198,7 +196,7 @@ export function validatePalette(result: ThemeResult): PaletteCheck[] {
         hueGap(rows),
         targetContrast(rows, isBrandCell),
         a11y(rows),
-        chroma(rows, isBrandCell),
+        chroma(rows, isBrandCell, isYellow),
         { id: 'brand-monotone', status: status(monotone, 'warn'), details: monotone },
         { id: 'primary-anchor', status: status(weak, 'warn'), details: weak },
     ];

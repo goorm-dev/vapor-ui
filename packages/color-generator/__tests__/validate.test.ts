@@ -4,6 +4,9 @@ import { generatePrimitiveColorPalette, validatePalette } from '../src';
 import { hexToOklch, oklchToLinRgb, toHex } from '../src/domain/color-math';
 import { table, withHex } from './helpers';
 
+// Before the dark chroma fix, 60 seeds held 3 failures (dark 400 twice, dark 900 once at #acfd43).
+// A local 200-seed run passes; the test keeps 60 because each generation takes ~0.6s.
+const SWEEP = 60;
 const defaults = generatePrimitiveColorPalette();
 const light = table(defaults, 'light');
 const statuses = (result: typeof defaults) =>
@@ -45,6 +48,38 @@ describe('validatePalette', () => {
             statuses(withHex(result, 'light', 'brand', '300', brand['500']))['brand-monotone'],
         ).toBe('warn');
     });
+
+    it.each(['#F0F0F0', '#5AED87', '#777777', '#93778F'])(
+        'passes the chroma rule with brand %s',
+        (hexcode) => {
+            const result = generatePrimitiveColorPalette({
+                brandColor: { name: 'brand', hexcode },
+            });
+            expect(validatePalette(result).find((c) => c.id === 'chroma')?.details).toEqual([]);
+        },
+    );
+
+    it('passes the chroma rule for seeded random brand colors', () => {
+        // mulberry32: a fixed seed keeps the sample stable across runs
+        let seed = 0x5eed;
+        const random = () => {
+            seed = (seed + 0x6d2b79f5) | 0;
+            let t = Math.imul(seed ^ (seed >>> 15), seed | 1);
+            t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+            return ((t ^ (t >>> 14)) >>> 0) / 2 ** 32;
+        };
+        const failures = Array.from({ length: SWEEP }, () => {
+            const hexcode = `#${Math.floor(random() * 0x1000000)
+                .toString(16)
+                .padStart(6, '0')}`;
+            const result = generatePrimitiveColorPalette({
+                brandColor: { name: 'brand', hexcode },
+            });
+            const { details } = validatePalette(result).find((c) => c.id === 'chroma')!;
+            return details.map((d) => `${hexcode} ${d}`);
+        }).flat();
+        expect(failures).toEqual([]);
+    }, 120_000); // shortcut: 60 generations outlast the 30s default, drop once generation is sped up
 
     it('exempts the brand cell from the target contrast', () => {
         const result = generatePrimitiveColorPalette({

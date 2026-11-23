@@ -56,7 +56,7 @@ export const solve = (
 export const maxChroma = (target: number, bg: string, hue: number, darkerThanBg: boolean) =>
     solve(target, bg, EXPRESSIBLE_MAX, hue, darkerThanBg).C;
 
-const inYellowFamily = (hue200: number) =>
+export const inYellowFamily = (hue200: number) =>
     YELLOW_FAMILY_RANGE[0] <= hue200 && hue200 <= YELLOW_FAMILY_RANGE[1];
 
 const chromaOf = (hex: string) => hexToOklch(hex)[1];
