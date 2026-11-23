@@ -78,7 +78,6 @@
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
         "@vapor-ui/core": "workspace:^",
-        "@vapor-ui/figma-blueprint": "workspace:*",
         "@vitest/browser": "catalog:",
         "@vitest/coverage-v8": "catalog:",
         "eslint": "catalog:",
