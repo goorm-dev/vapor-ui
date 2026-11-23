@@ -54,6 +54,7 @@ Palettes come out in this order: the 11 base colors, `basicColors`, the brand co
 generatePrimitiveColorPalette({
     basicColors?: KeyColor[]; // KeyColor = { name: string; hexcode: Hexcode }
     brandColor?: KeyColor;
+    hueOverrides?: HueOverrides; // { [name]: { [scale]: hue in degrees } }
 }): ThemeResult;
 ```
 
@@ -70,6 +71,12 @@ The input only shapes the hue curve, so it may not appear in the palette. Other 
 The brand HEX becomes a palette of its own (or replaces a base color of the same name) and is pinned into one light cell as-is. The cell is found by walking scales in order of log-contrast distance to the HEX. The first scale wins if it passes every accessibility rule for that scale and keeps the contrast order with its neighbours. `ThemeResult.brand` names the cell.
 
 Dark derives from the pinned light curve. The brand HEX is never pinned in dark.
+
+### `hueOverrides`
+
+Sets the light OKLCH hue of single cells, keyed by lowercase palette name (base, `basicColors` or brand) and scale: `{ blue: { '500': 270 } }`. The cell keeps its role: lightness is still solved to the target contrast and chroma still follows the scale's rule at the new hue. Dark derives from the overridden light curve as usual.
+
+`gray`, unknown names and the pinned brand cell ignore their overrides.
 
 ## Semantic tokens
 

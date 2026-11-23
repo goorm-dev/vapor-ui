@@ -3,6 +3,12 @@ import type { PaletteChip, PrimitiveColorTokens } from './palette';
 import type { Scale } from './scale';
 
 /**
+ * Palette name (lowercase, brand name included) → scale → absolute light-mode OKLCH hue in
+ * degrees.
+ */
+export type HueOverrides = Record<string, Partial<Record<Scale, number>>>;
+
+/**
  * Options of `generatePrimitiveColorPalette`.
  */
 export interface ThemeOptions {
@@ -14,6 +20,12 @@ export interface ThemeOptions {
     basicColors?: KeyColor[];
     /** Pinned into one light cell as-is; the rest of its palette follows from it. */
     brandColor?: KeyColor;
+    /**
+     * Light hues to use instead of the generated ones. Each overridden cell keeps its contrast
+     * target and chroma rule, and dark follows from the overridden light curve. `gray`, unknown
+     * names and the pinned brand cell ignore their overrides.
+     */
+    hueOverrides?: HueOverrides;
 }
 
 /**

@@ -6,6 +6,7 @@ export {
 
 export type {
     Hexcode,
+    HueOverrides,
     KeyColor,
     PaletteCheck,
     PaletteChip,

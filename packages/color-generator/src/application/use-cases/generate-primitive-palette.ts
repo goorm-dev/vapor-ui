@@ -39,7 +39,7 @@ const checkName = (name: string) => {
  * color, and `gray`, all against the fixed backgrounds (light `#FFFFFF`, dark `#232323`).
  */
 export function generatePrimitiveColorPalette(options: ThemeOptions = {}): ThemeResult {
-    const { basicColors = [], brandColor } = options;
+    const { basicColors = [], brandColor, hueOverrides = {} } = options;
     const baseHues = getBaseHueTable();
     const hues: HueTable = { ...baseHues };
     const seen = new Set<string>();
@@ -60,6 +60,10 @@ export function generatePrimitiveColorPalette(options: ThemeOptions = {}): Theme
         brand = { name: claim(brandColor.name), hex: toRawHex(brandColor.hexcode) };
         hues[brand.name] = leonardoHues(keysFromHex(brand.hex, baseHues));
     }
+
+    // Copy, never mutate: base rows are the cached base hue table. `hues` has no gray row.
+    for (const [name, row] of Object.entries(hueOverrides))
+        if (hues[name]) hues[name] = { ...hues[name], ...row };
 
     const { light, dark, brandScale } = generateFromHues(hues, { brand });
     const gray = generateGray();
