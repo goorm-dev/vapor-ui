@@ -7,7 +7,7 @@ import {
     getSemanticDependentTokens,
     validatePalette,
 } from '@vapor-ui/color-generator';
-import { Box, Button, Collapsible, HStack, VStack } from '@vapor-ui/core';
+import { Box, Button, Collapsible, HStack, Text, VStack } from '@vapor-ui/core';
 import { generateColorCSS } from '@vapor-ui/css-generator';
 import { ChevronDownOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
 
@@ -29,10 +29,12 @@ const changedBasicColors = (colors: Record<string, string>, primaryName: string)
     Object.entries(colors)
         .filter(
             ([name, hex]) =>
-                name !== primaryName &&
+                name !== primaryName.toLowerCase() &&
                 hex.toUpperCase() !== DEFAULT_BASIC_COLORS[name]?.toUpperCase(),
         )
         .map(([name, hexcode]) => ({ name, hexcode }));
+
+const messageOf = (error: unknown) => (error instanceof Error ? error.message : String(error));
 
 export const ColorSystemTab = () => {
     // Basic Colors (11 base colors)
@@ -47,6 +49,7 @@ export const ColorSystemTab = () => {
     const [semanticTokens, setSemanticTokens] = useState<SemanticResult | null>(null);
     const [collectionName, setCollectionName] = useState<string>('Color Tokens');
     const [isCopying, setIsCopying] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const paletteChecks = useMemo(
         () => (generatedTheme ? validatePalette(generatedTheme) : []),
@@ -89,8 +92,10 @@ export const ColorSystemTab = () => {
             });
 
             Logger.palette.generated('통합 팔레트 UI 요청 전송 완료');
+            setErrorMessage(null);
         } catch (error) {
             Logger.palette.error('팔레트 생성 실패', error);
+            setErrorMessage(`팔레트 생성 실패: ${messageOf(error)}`);
         }
     };
 
@@ -117,8 +122,10 @@ export const ColorSystemTab = () => {
             });
 
             Logger.info('Figma 변수 생성 요청 전송 완료');
+            setErrorMessage(null);
         } catch (error) {
             Logger.variables.error('Figma 변수 생성 요청 실패', error);
+            setErrorMessage(`Figma 변수 생성 요청 실패: ${messageOf(error)}`);
         }
     };
 
@@ -206,6 +213,14 @@ export const ColorSystemTab = () => {
 
                 <Button onClick={handleGeneratePalette}>Generate Palette</Button>
             </VStack>
+
+            {errorMessage && (
+                <Box role="alert" className="p-3 bg-v-red-50 border border-v-red-200 rounded-lg">
+                    <Text typography="body3" foreground="danger-100">
+                        {errorMessage}
+                    </Text>
+                </Box>
+            )}
 
             {/* Results Section */}
             {generatedTheme && semanticTokens && (
