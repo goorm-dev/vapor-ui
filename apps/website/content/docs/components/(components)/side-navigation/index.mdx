@@ -1,0 +1,85 @@
+---
+title: 'SideNavigation'
+site_name: 'SideNavigation - Vapor Core'
+description: '사이드바에 세로로 나열하는 내비게이션 메뉴로, 페이지 링크와 하위 링크를 펼치고 접는 그룹으로 구성됩니다.'
+---
+
+<Demo file="components/(components)/side-navigation/demos/default-side-navigation.tsx" />
+
+## Usage
+
+---
+
+앱 전체의 계층 링크를 옆 패널에 늘 펼쳐 두려면 SideNavigation을 사용합니다. 목적에 따라 다른 컴포넌트를 고릅니다.
+
+- 사이트 상단에서 떠 있는 패널로 하위 링크를 열려면 NavigationMenu를 사용합니다.
+- 같은 페이지 안에서 패널을 전환하려면 Tabs를 사용합니다.
+- 오버레이 안에 액션 목록을 보여 주려면 Menu를 사용합니다.
+
+`SideNavigation.Root`는 `<nav>`를 렌더하므로 `aria-label`로 이름을 붙입니다. 포커스는 Tab 키로 링크와 트리거를 차례로 이동합니다. `SideNavigation.Trigger`는 그룹을 펼치고 접기만 하며 페이지로 이동하지 않습니다.
+
+## Property
+
+---
+
+### Current
+
+링크가 현재 페이지일 때 `current`를 설정합니다. `aria-current="page"`가 함께 지정됩니다. 현재 페이지가 들어 있는 그룹은 자동으로 펼쳐지지 않으므로 `defaultOpen`이나 `open`으로 직접 펼칩니다.
+
+<Demo file="components/(components)/side-navigation/demos/side-navigation-current.tsx" />
+
+### Disabled
+
+`SideNavigation.Root`에 설정하면 모든 링크와 트리거가 비활성화됩니다. 링크, 하위 링크, 트리거에 설정한 `disabled`가 Root의 값보다 우선합니다. 비활성화된 링크는 `current`보다 비활성화된 모양이 우선합니다.
+
+<Demo file="components/(components)/side-navigation/demos/side-navigation-disabled.tsx" />
+
+### Open State
+
+`defaultOpen`으로 그룹의 초기 열림 상태를 설정하거나, `open`과 `onOpenChange`로 제어 모드로 사용합니다. 그룹은 각각 독립적으로 열리고 닫힙니다.
+
+<Demo file="components/(components)/side-navigation/demos/side-navigation-open-state.tsx" />
+
+## Props Table
+
+---
+
+### SideNavigation.Root
+
+<ComponentPropsTable componentName="side-navigation-root" />
+
+### SideNavigation.List
+
+<ComponentPropsTable componentName="side-navigation-list" />
+
+### SideNavigation.Item
+
+<ComponentPropsTable componentName="side-navigation-item" />
+
+### SideNavigation.Link
+
+<ComponentPropsTable componentName="side-navigation-link" />
+
+### SideNavigation.Group
+
+<ComponentPropsTable componentName="side-navigation-group" />
+
+### SideNavigation.Trigger
+
+<ComponentPropsTable componentName="side-navigation-trigger" />
+
+#### SideNavigation.TriggerPrimitive
+
+<ComponentPropsTable componentName="side-navigation-trigger-primitive" />
+
+#### SideNavigation.TriggerIndicatorPrimitive
+
+<ComponentPropsTable componentName="side-navigation-trigger-indicator-primitive" />
+
+### SideNavigation.Panel
+
+<ComponentPropsTable componentName="side-navigation-panel" />
+
+### SideNavigation.SubLink
+
+<ComponentPropsTable componentName="side-navigation-sub-link" />
