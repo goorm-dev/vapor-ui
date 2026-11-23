@@ -62,6 +62,19 @@ test('ids come from useIconId so every rendered instance gets its own', async ()
     assert.match(colour, /useIconId\("vapor-icons-color-FirstIcon"\)/);
 });
 
+test('an id left static fails generation instead of shipping a broken reference', async () => {
+    const styleRef = `
+<svg viewBox="0 0 16 16"><linearGradient id="g"><stop stop-color="red"/></linearGradient>
+<path d="M2 2H14V14H2V2Z" style="fill:url(#g)"/></svg>`;
+    const classSelector = `
+<svg viewBox="0 0 16 16"><style>.shape:hover{fill:red}</style>
+<clipPath id="c"><rect width="16" height="16"/></clipPath>
+<path class="shape" clip-path="url(#c)" d="M2 2H14V14H2V2Z"/></svg>`;
+
+    await assert.rejects(convert(styleRef, 'StyleRefIcon', true), /stayed static/);
+    await assert.rejects(convert(classSelector, 'ClassSelectorIcon', true), /stayed static/);
+});
+
 test('icons without ids stay hook-free', async () => {
     const out = await convert(COLOR_SVG, 'SampleColorIcon', true);
 

@@ -66,6 +66,9 @@ export default ${componentName};
         }
 
         for (const attribute of idAttributes) bindToRuntimeId(attribute, idPrefix);
+        if (JSON.stringify(jsx).includes(idPrefix)) {
+            throw new Error(`${idPrefix}: an id stayed static outside a string attribute`);
+        }
         const prefix = { type: 'StringLiteral', value: idPrefix } as unknown as string;
         return tpl`
 import IconBase from '~/components/icon-base';
