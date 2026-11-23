@@ -13,6 +13,7 @@ export default {
         size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
         type: { control: 'inline-radio', options: ['default', 'warning'] },
         label: { control: 'text' },
+        description: { control: 'text' },
         min: { control: { type: 'range', min: 0 } },
         max: { control: { type: 'range', max: 100 } },
     },
@@ -30,6 +31,8 @@ export const Default: Story = {
         max: 150,
         size: 'md',
         type: 'default',
+        description: '저장 공간에 여유가 있습니다.',
+        maxValueText: 0,
     },
     render: (args) => (
         <VStack $css={{ gap: '$200', width: '320px' }}>
@@ -80,6 +83,7 @@ export const WarningState: Story = {
         size: 'md',
         type: 'warning',
         getAriaValueText: (formatted) => `${formatted} 사용 중, 경고 범위 진입`,
+        description: '데이터 사용량이 많습니다. 파일을 정리해주세요.',
     },
     render: (args) => (
         <VStack $css={{ gap: '$200', width: '320px' }}>
@@ -128,7 +132,7 @@ const TestBedRender = () => {
                         value={row.value}
                         size={row.size}
                         type={row.type}
-                        valueText={row.hasValueText ? undefined : () => null}
+                        valueText={row.hasValueText ? undefined : false}
                     />
                 </div>
             )}

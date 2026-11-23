@@ -2,7 +2,8 @@
 
 import type { ReactNode } from 'react';
 
-import { Meter as MeterPrimitives } from '@vapor-ui/core';
+import { HStack, Meter as MeterPrimitives } from '@vapor-ui/core';
+import { WarningIcon } from '@vapor-ui/icons';
 
 import type { SlotProps } from '~/utils/create-slots';
 import { createSlots } from '~/utils/create-slots';
@@ -11,6 +12,7 @@ import { createSlots } from '~/utils/create-slots';
 
 const slots = createSlots({
     label: MeterPrimitives.Label,
+    description: MeterPrimitives.Description,
 });
 
 export const Meter = ({
@@ -26,6 +28,7 @@ export const Meter = ({
 
     // slots
     label,
+    description: descriptionProp,
     valueText: valueTextProp,
     maxValueText: maxValueTextProp,
 }: Meter.Props) => {
@@ -52,6 +55,26 @@ export const Meter = ({
         );
     };
 
+    const hasErrorIcon =
+        type === 'warning' &&
+        descriptionProp !== null &&
+        descriptionProp !== undefined &&
+        descriptionProp !== '' &&
+        typeof descriptionProp !== 'boolean';
+
+    const errorIcon = hasErrorIcon && (
+        <HStack render={<span />} $css={{ alignItems: 'center' }}>
+            <WarningIcon />
+        </HStack>
+    );
+
+    const description = descriptionProp && (
+        <>
+            {errorIcon}
+            {descriptionProp}
+        </>
+    );
+
     return (
         <MeterPrimitives.Root
             value={value}
@@ -60,15 +83,31 @@ export const Meter = ({
             getAriaValueText={getAriaValueText}
             size={size}
             type={type}
+            $css={{
+                display: 'grid',
+                gridTemplateAreas: "'label value' 'track track' 'description description'",
+            }}
         >
-            <slots.label render={label} />
-            <MeterPrimitives.Value $css={{ display: 'flex', gap: '$025', alignItems: 'center' }}>
+            <slots.label render={label} $css={{ gridArea: 'label' }} />
+            <MeterPrimitives.Value
+                $css={{ display: 'flex', gap: '$025', alignItems: 'center', gridArea: 'value' }}
+            >
                 {renderValue}
             </MeterPrimitives.Value>
 
-            <MeterPrimitives.TrackPrimitive>
+            <MeterPrimitives.TrackPrimitive $css={{ gridArea: 'track' }}>
                 <MeterPrimitives.IndicatorPrimitive />
             </MeterPrimitives.TrackPrimitive>
+
+            <slots.description
+                render={description}
+                $css={{
+                    gridArea: 'description',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '$050',
+                }}
+            />
         </MeterPrimitives.Root>
     );
 };
@@ -76,7 +115,7 @@ export const Meter = ({
 type Slots = SlotProps<typeof slots, 'label'>;
 type RootProps = MeterPrimitives.Root.Props;
 
-export interface MeterProps {
+interface MeterBaseProps {
     /**
      * 현재 측정값. `min`과 `max` 사이의 숫자를 전달한다. 접근성 트리의 `aria-valuenow`로 노출된다.
      */
@@ -118,7 +157,14 @@ export interface MeterProps {
     label: Slots['label'];
 
     /**
-     * 화면에 표시할 현재 값 텍스트를 반환한다. 인자로 현재 할당된 `value` 값을 받는다. 생략하면 계산된 값(예: `42%`)을 표시한다.
+     * 미터의 현재 상태를 설명하는 보조 텍스트. 스크린리더기에 의해 읽히지 않으므로, 필수 정보를 포함하지 않는다.
+     */
+    description?: Slots['description'];
+
+    /**
+     * 화면에 표시할 현재 값 텍스트를 반환한다. 인자로 현재 할당된 `value` 값을 받는다.
+     * - `undefined`: 계산된 값(예: `42%`)을 표시한다.
+     * - `false`: 값을 표시하지 않는다.
      * @example
      * <Meter valueText={(value) => `${value}GB`} />
      */
@@ -126,12 +172,26 @@ export interface MeterProps {
 
     /**
      * 최댓값을 표시한다. 현재 값 뒤에서 `/`로 구분하여 표시되며, 함수로 전달하면 `max` 값을 인자로 전달 받는다.
+     * `valueText` 함수를 전달할 때만 사용할 수 있다.
      * @example
-     * <Meter max={150} maxValueText={(max) => `${max}GB`} />
-     * <Meter max={150} maxValueText="150GB" />
+     * <Meter max={150} valueText={(value) => `${value}GB`} maxValueText={(max) => `${max}GB`} />
+     * <Meter max={150} valueText={(value) => `${value}GB`} maxValueText="150GB" />
      */
     maxValueText?: ((max: number) => ReactNode) | ReactNode;
 }
+
+/**
+ * Type Narrowing
+ * `valueText`가 생략되거나 `false`면 `maxValueText`는 `never`가 된다.
+ */
+type MeterValueTextProps =
+    | { valueText: (value: number) => ReactNode }
+    | {
+          valueText?: false;
+          maxValueText?: never;
+      };
+
+export type MeterProps = MeterBaseProps & MeterValueTextProps;
 
 export namespace Meter {
     export type Props = MeterProps;

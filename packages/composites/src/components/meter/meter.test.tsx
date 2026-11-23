@@ -80,6 +80,22 @@ describe('Meter (composite)', () => {
         expect(valueText).toHaveTextContent('42%');
     });
 
+    it('should only accept `maxValueText` alongside a `valueText` function', () => {
+        const base = { type: 'default', label: LABEL_TEXT, value: 1 } as const;
+
+        // @ts-expect-error `maxValueText` is `never` when `valueText` is omitted
+        const omitted: Meter.Props = { ...base, maxValueText: '100' };
+        // @ts-expect-error `maxValueText` is `never` when `valueText` is `false`
+        const hidden: Meter.Props = { ...base, valueText: false, maxValueText: '100' };
+        const withFunction: Meter.Props = {
+            ...base,
+            valueText: (value) => value,
+            maxValueText: '100',
+        };
+
+        expect([omitted, hidden, withFunction]).toHaveLength(3);
+    });
+
     it('should have no a11y violations', async () => {
         const rendered = render(<Meter type="default" label={LABEL_TEXT} value={42} />);
         const result = await axe(rendered.container);
