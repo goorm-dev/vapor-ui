@@ -96,47 +96,114 @@ export const WarningState: Story = {
  * Test Bed
  * ---------------------------------------------------------------------------------------------- */
 
+const LONG_LABEL = '팀 전체 워크스페이스와 공유 첨부파일이 이번 결제 주기 동안 사용한 저장 공간';
+const LONG_DESCRIPTION =
+    '저장 공간이 거의 가득 찼습니다. 오래된 파일을 정리하거나 요금제를 변경해 저장 공간을 확보해주세요.';
+
+const valueTextCases = {
+    default: {},
+    hidden: { valueText: false },
+    custom: { valueText: (value: number) => `${value}GB` },
+    'custom + max': {
+        valueText: (value: number) => `${value}GB`,
+        maxValueText: (max: number) => `${max}GB`,
+    },
+} as const;
+
 const TestBedRender = () => {
     return (
-        <Regression.Table
-            conditions={[
-                {
-                    key: 'size',
-                    label: 'size',
-                    values: ['sm', 'md', 'lg'] as const,
-                    format: (v) => `size = ${v}`,
-                },
-                {
-                    key: 'type',
-                    label: 'type',
-                    values: ['default', 'warning'] as const,
-                    format: (v) => `type = ${v}`,
-                },
-                {
-                    key: 'value',
-                    label: 'value',
-                    values: [0, 25, 50, 75, 100],
-                    format: (v) => `value = ${v}`,
-                },
-                {
-                    key: 'hasValueText',
-                    label: 'valueText',
-                    values: [true, false],
-                    format: (v) => `valueText = ${v ? 'O' : 'X'}`,
-                },
-            ]}
-            render={(row) => (
-                <div style={{ width: '240px' }}>
-                    <Meter
-                        label="저장 공간"
-                        value={row.value}
-                        size={row.size}
-                        type={row.type}
-                        valueText={row.hasValueText ? undefined : false}
-                    />
-                </div>
-            )}
-        />
+        <VStack $css={{ gap: '$400' }}>
+            <Regression.Table
+                conditions={[
+                    {
+                        key: 'size',
+                        label: 'size',
+                        values: ['sm', 'md', 'lg'] as const,
+                        format: (v) => `size = ${v}`,
+                    },
+                    {
+                        key: 'type',
+                        label: 'type',
+                        values: ['default', 'warning'] as const,
+                        format: (v) => `type = ${v}`,
+                    },
+                    {
+                        key: 'value',
+                        label: 'value',
+                        values: [0, 50, 100],
+                        format: (v) => `value = ${v}`,
+                    },
+                    {
+                        key: 'description',
+                        label: 'description',
+                        values: ['저장 공간에 여유가 있습니다.', undefined],
+                        format: (v) => `description = ${v ? 'O' : 'X'}`,
+                    },
+                ]}
+                render={(row) => (
+                    <div style={{ width: '240px' }}>
+                        <Meter
+                            label="저장 공간"
+                            value={row.value}
+                            size={row.size}
+                            type={row.type}
+                            description={row.description}
+                        />
+                    </div>
+                )}
+            />
+            <Regression.Table
+                conditions={[
+                    {
+                        key: 'valueText',
+                        label: 'valueText',
+                        values: ['default', 'hidden', 'custom', 'custom + max'] as const,
+                        format: (v) => `valueText = ${v}`,
+                    },
+                ]}
+                render={(row) => (
+                    <div style={{ width: '240px' }}>
+                        <Meter
+                            label="저장 공간"
+                            type="default"
+                            value={45}
+                            max={150}
+                            {...valueTextCases[row.valueText]}
+                        />
+                    </div>
+                )}
+            />
+            <Regression.Table
+                conditions={[
+                    {
+                        key: 'type',
+                        label: 'type',
+                        values: ['default', 'warning'] as const,
+                        format: (v) => `type = ${v}`,
+                    },
+                    {
+                        key: 'content',
+                        label: 'content',
+                        values: ['long label', 'long description'] as const,
+                        format: (v) => `content = ${v}`,
+                    },
+                ]}
+                render={(row) => (
+                    <div style={{ width: '240px' }}>
+                        <Meter
+                            label={row.content === 'long label' ? LONG_LABEL : '저장 공간'}
+                            value={92}
+                            type={row.type}
+                            description={
+                                row.content === 'long description'
+                                    ? LONG_DESCRIPTION
+                                    : '저장 공간을 확인해주세요.'
+                            }
+                        />
+                    </div>
+                )}
+            />
+        </VStack>
     );
 };
 
