@@ -5,8 +5,7 @@ import { hexToOklch, oklchToLinRgb, toHex } from '../src/domain/color-math';
 import { table, withHex } from './helpers';
 
 // Before the dark chroma fix, 60 seeds held 3 failures (dark 400 twice, dark 900 once at #acfd43).
-// A local 200-seed run passes; the test keeps 60 because each generation takes ~0.6s.
-const SWEEP = 60;
+const SWEEP = 200;
 const defaults = generatePrimitiveColorPalette();
 const light = table(defaults, 'light');
 const statuses = (result: typeof defaults) =>
@@ -79,7 +78,7 @@ describe('validatePalette', () => {
             return details.map((d) => `${hexcode} ${d}`);
         }).flat();
         expect(failures).toEqual([]);
-    }, 120_000); // shortcut: 60 generations outlast the 30s default, drop once generation is sped up
+    }, 60_000); // 200 generations take ~11s, past the 5s default
 
     it('exempts the brand cell from the target contrast', () => {
         const result = generatePrimitiveColorPalette({
