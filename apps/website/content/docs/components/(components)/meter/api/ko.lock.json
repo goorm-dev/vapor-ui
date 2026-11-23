@@ -1,4 +1,26 @@
 {
+    "meter-description": {
+        "description": {
+            "source": "efe9585f4a895a10",
+            "guide": 2,
+            "terms": "1912fd938105e849"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
     "meter-indicator-primitive": {
         "description": {
             "source": "4a53583c4a6aba0d",
