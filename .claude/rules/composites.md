@@ -306,7 +306,7 @@ export const DialogRoot = forwardRef<HTMLDivElement, DialogRoot.Props>((props, r
     return (
         <DialogPrimitives.Root /* ...그 외 프로퍼티 */>
             <DialogPrimitives.PortalPrimitive>
-                <DialogPrimitives.PopupPrimitive ref={ref} id={id} className={className} style={style}>
+                <DialogPrimitives.PopupPrimitive ref={ref} {...(id && { id })} className={className} style={style}>
                     {/* ... */}
                 </DialogPrimitives.PopupPrimitive>
             </DialogPrimitives.PortalPrimitive>
