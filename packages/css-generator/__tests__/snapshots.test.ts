@@ -1,7 +1,9 @@
+import { generatePrimitiveColorPalette } from '@vapor-ui/color-generator';
 import { describe, expect, it } from 'vitest';
 
 import {
     generateColorCSS,
+    generateColorCSSFromTheme,
     generateCompleteCSS,
     generateRadiusCSS,
     generateScalingCSS,
@@ -48,6 +50,21 @@ describe('CSS Generator Snapshots', () => {
         expect(value(light, 'foreground-onPrimary')).toMatch(
             /^var\(--vapor-color-(white|black)\)$/,
         );
+    });
+
+    it('writes a given theme as-is, hue overrides included', () => {
+        const options = { hueOverrides: { red: { '500': 10 } } };
+        const css = generateColorCSSFromTheme(generatePrimitiveColorPalette(options), 'blue');
+        const plain = generateColorCSSFromTheme(generatePrimitiveColorPalette(), 'blue');
+        const red500 = (rule: string) => rule.match(/--vapor-color-red-500:\s*([^;]+);/)?.[1];
+
+        expect(red500(css)).not.toBe(red500(plain));
+        expect(
+            generateColorCSSFromTheme(
+                generatePrimitiveColorPalette({ brandColor: MOCK_COLOR_CONFIG.primary }),
+                'mint',
+            ),
+        ).toBe(generateColorCSS(MOCK_COLOR_CONFIG));
     });
 
     it.each([
