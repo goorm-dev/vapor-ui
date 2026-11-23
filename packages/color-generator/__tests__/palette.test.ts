@@ -37,6 +37,13 @@ describe('reference script parity', () => {
     it('finds the upper end of a split in-gamut chroma range (cobalt light-800)', () => {
         expect(gamutChroma(0.36522, 0.6, 264.13)).toBeCloseTo(0.2528782257881398, 10);
     });
+
+    it('finds an in-gamut chroma range narrower than 0.0001', () => {
+        // in gamut only between ~0.035914 and ~0.035946 above 0.0304
+        expect(
+            gamutChroma(0.05164011753828483, 0.06388623250356247, 263.8970700268121),
+        ).toBeCloseTo(0.035946, 6);
+    });
 });
 
 describe('output shape', () => {

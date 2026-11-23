@@ -134,24 +134,69 @@ def oklch_to_linrgb(L, C, H):
 def _in_gamut(rgb):
     return all(-1e-6 <= x <= 1 + 1e-6 for x in rgb)
 
+def _channel_turns(L, C, H):
+    """(0, C) 안에서 선형 RGB 채널이 꺾이는 C 값들
+    L·H를 고정하면 채널마다 C의 3차식이라 같은 간격 표본 4개로 정확히 정해짐"""
+    step = C / 3
+    samples = [oklch_to_linrgb(L, i * step, H) for i in range(4)]
+    turns = []
+    for ch in range(3):
+        y0, y1, y2, y3 = (rgb[ch] for rgb in samples)
+        d1 = y1 - y0
+        d2 = y2 - 2 * y1 + y0
+        d3 = y3 - 3 * y2 + 3 * y1 - y0
+        # t = c / step 기준 도함수: qa t^2 + qb t + qc
+        qa = d3 / 2
+        qb = d2 - d3
+        qc = d1 - d2 / 2 + d3 / 3
+        disc = qb * qb - 4 * qa * qc
+        if disc < 0:
+            continue
+        q = -(qb + (1 if qb >= 0 else -1) * math.sqrt(disc)) / 2
+        for t in (q / qa if qa else math.nan, qc / q if q else math.nan):
+            if 0 < t < 3:
+                turns.append(t * step)
+    return turns
+
+def _edge(ok, inside, outside):
+    """한 번만 뒤집히는 ok에서 inside 쪽으로 ok가 성립하는 마지막 지점"""
+    for _ in range(60):
+        mid = (inside + outside) / 2
+        if ok(mid):
+            inside = mid
+        else:
+            outside = mid
+    return inside
+
+def _top_in_gamut(L, H, a, b):
+    """모든 채널이 단조인 [a, b]에서 범위 안에 드는 가장 큰 C, 없으면 None"""
+    lo, hi = a, b
+    for ch in range(3):
+        for ok in (lambda c, ch=ch: oklch_to_linrgb(L, c, H)[ch] >= -1e-6,
+                   lambda c, ch=ch: oklch_to_linrgb(L, c, H)[ch] <= 1 + 1e-6):
+            ok_a, ok_b = ok(a), ok(b)
+            if ok_a and ok_b:
+                continue
+            if not ok_a and not ok_b:
+                return None
+            if ok_b:
+                lo = max(lo, _edge(ok, b, a))
+            else:
+                hi = min(hi, _edge(ok, a, b))
+    return hi if lo <= hi else None
+
 def gamut_chroma(L, C, H):
     """sRGB 밖이면 L·H를 고정하고, C 이하에서 범위 안에 드는 가장 큰 C를 찾음
-    파랑 계열은 범위 안 C 구간이 중간에 끊겨 이분 탐색이 낮은 경계에서 멈추므로 위에서부터 훑음"""
+    파랑 계열은 범위 안 C 구간이 중간에 끊기므로 채널이 꺾이는 지점으로 [0, C]를 나누고
+    단조 구간마다 위에서부터 확인"""
     if _in_gamut(oklch_to_linrgb(L, C, H)):
         return C
-    c = C
-    while c > 0 and not _in_gamut(oklch_to_linrgb(L, c, H)):
-        c -= 0.0001
-    if c <= 0:
-        return 0.0
-    lo, hi = c, min(C, c + 0.0001)
-    for _ in range(30):
-        mid = (lo + hi) / 2
-        if _in_gamut(oklch_to_linrgb(L, mid, H)):
-            lo = mid
-        else:
-            hi = mid
-    return lo
+    cuts = sorted([C, *_channel_turns(L, C, H), 0], reverse=True)
+    for i in range(len(cuts) - 1):
+        top = _top_in_gamut(L, H, cuts[i + 1], cuts[i])
+        if top is not None:
+            return top
+    return 0.0
 
 def to_hex(rgb):
     """HEX 반올림 (채널별 사사오입)"""

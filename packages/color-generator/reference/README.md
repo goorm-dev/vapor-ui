@@ -2,7 +2,7 @@
 
 `generate_palette.py` is the designer-owned reference script. Its output is the source of truth for `@vapor-ui/color-generator`; the TS port must match it hex for hex.
 
-This copy carries one fix over the designer's original: `gamut_chroma` scans down from the requested chroma instead of bisecting, because blue hues have a split in-gamut chroma range (cobalt light-800 `001FAF` → `0100C6`, every other cell unchanged).
+This copy carries one fix over the designer's original: `gamut_chroma` splits the chroma range where an RGB channel turns and checks each monotonic span from the top instead of bisecting the whole range, because blue hues have a split in-gamut chroma range (cobalt light-800 `001FAF` → `0100C6`, every other cell unchanged).
 
 | File                | Made by                                                                |
 | ------------------- | ---------------------------------------------------------------------- |

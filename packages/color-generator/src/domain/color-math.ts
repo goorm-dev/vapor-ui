@@ -83,22 +83,75 @@ export const oklchToLinRgb = (L: number, C: number, H: number) => {
 export const inGamut = (rgb: number[]) => rgb.every((x) => x >= -1e-6 && x <= 1 + 1e-6);
 
 /**
- * Largest chroma <= C that stays in sRGB at fixed L and H. Scans down before bisecting
- * because blue hues have a split in-gamut chroma range.
+ * Chroma values in (0, C) where a linear RGB channel turns. At fixed L and H each channel
+ * is a cubic in chroma, so four evenly spaced samples define it exactly.
+ */
+const channelTurns = (L: number, C: number, H: number) => {
+    const step = C / 3;
+    const samples = [0, 1, 2, 3].map((i) => oklchToLinRgb(L, i * step, H));
+    const turns: number[] = [];
+    for (let ch = 0; ch < 3; ch++) {
+        const [y0, y1, y2, y3] = samples.map((rgb) => rgb[ch]);
+        const d1 = y1 - y0;
+        const d2 = y2 - 2 * y1 + y0;
+        const d3 = y3 - 3 * y2 + 3 * y1 - y0;
+        // derivative in t = c / step: qa t^2 + qb t + qc
+        const qa = d3 / 2;
+        const qb = d2 - d3;
+        const qc = d1 - d2 / 2 + d3 / 3;
+        const disc = qb * qb - 4 * qa * qc;
+        if (disc < 0) continue;
+        const q = -(qb + Math.sign(qb || 1) * Math.sqrt(disc)) / 2;
+        for (const t of [qa ? q / qa : NaN, q ? qc / q : NaN]) {
+            if (t > 0 && t < 3) turns.push(t * step);
+        }
+    }
+    return turns;
+};
+
+/** Last point from `inside` toward `outside` where `ok` holds, for `ok` that flips once. */
+const edge = (ok: (c: number) => boolean, inside: number, outside: number) => {
+    for (let i = 0; i < 60; i++) {
+        const mid = (inside + outside) / 2;
+        if (ok(mid)) inside = mid;
+        else outside = mid;
+    }
+    return inside;
+};
+
+/** Largest in-gamut chroma in [a, b], where every channel is monotonic, or null. */
+const topInGamut = (L: number, H: number, a: number, b: number) => {
+    let lo = a;
+    let hi = b;
+    for (let ch = 0; ch < 3; ch++) {
+        for (const ok of [
+            (c: number) => oklchToLinRgb(L, c, H)[ch] >= -1e-6,
+            (c: number) => oklchToLinRgb(L, c, H)[ch] <= 1 + 1e-6,
+        ]) {
+            const okA = ok(a);
+            const okB = ok(b);
+            if (okA && okB) continue;
+            if (!okA && !okB) return null;
+            if (okB) lo = Math.max(lo, edge(ok, b, a));
+            else hi = Math.min(hi, edge(ok, a, b));
+        }
+    }
+    return lo <= hi ? hi : null;
+};
+
+/**
+ * Largest chroma <= C that stays in sRGB at fixed L and H. Blue hues have a split in-gamut
+ * chroma range, so the search splits [0, C] where any channel turns and checks each
+ * monotonic span from the top.
  */
 export const gamutChroma = (L: number, C: number, H: number) => {
     if (inGamut(oklchToLinRgb(L, C, H))) return C;
-    let c = C;
-    while (c > 0 && !inGamut(oklchToLinRgb(L, c, H))) c -= 0.0001;
-    if (c <= 0) return 0;
-    let lo = c;
-    let hi = Math.min(C, c + 0.0001);
-    for (let i = 0; i < 30; i++) {
-        const mid = (lo + hi) / 2;
-        if (inGamut(oklchToLinRgb(L, mid, H))) lo = mid;
-        else hi = mid;
+    const cuts = [C, ...channelTurns(L, C, H), 0].sort((x, y) => y - x);
+    for (let i = 0; i < cuts.length - 1; i++) {
+        const top = topInGamut(L, H, cuts[i + 1], cuts[i]);
+        if (top !== null) return top;
     }
-    return lo;
+    return 0;
 };
 
 export const toHex = (rgb: number[]) =>
