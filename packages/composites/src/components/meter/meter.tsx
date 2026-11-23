@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 
-import { Meter as MeterPrimitives, Text } from '@vapor-ui/core';
+import { Meter as MeterPrimitives } from '@vapor-ui/core';
 
 import type { SlotProps } from '~/utils/create-slots';
 import { createSlots } from '~/utils/create-slots';
@@ -11,8 +11,6 @@ import { createSlots } from '~/utils/create-slots';
 
 const slots = createSlots({
     label: MeterPrimitives.Label,
-    valueText: MeterPrimitives.Value,
-    maxValueText: Text,
 });
 
 export const Meter = ({
@@ -28,29 +26,26 @@ export const Meter = ({
 
     // slots
     label,
-    formatValue,
+    valueText: valueTextProp,
+    maxValueText: maxValueTextProp,
 }: Meter.Props) => {
-    const renderValue = (formattedValue: string, value: number, max: number) => {
-        if (formatValue === false) return '';
-        if (!formatValue) return formattedValue;
+    const valueText = (formattedValue: string, value: number) => {
+        if (valueTextProp === false) return '';
+        if (!valueTextProp) return formattedValue;
+        return valueTextProp(value);
+    };
 
-        const { formattedValueText, valueText, maxValueText } = formatValue;
+    const maxValueText =
+        typeof maxValueTextProp === 'function' ? maxValueTextProp(max) : maxValueTextProp;
 
-        if (formattedValueText) {
-            return typeof formattedValueText === 'function'
-                ? formattedValueText(formattedValue)
-                : formattedValueText;
-        }
-
+    const renderValue = (formattedValue: string, value: number) => {
         return (
             <>
-                <span>{typeof valueText === 'function' ? valueText(value) : valueText}</span>
+                <span>{valueText(formattedValue, value)}</span>
                 {!!maxValueText && (
                     <>
                         <span>/</span>
-                        <span>
-                            {typeof maxValueText === 'function' ? maxValueText(max) : maxValueText}
-                        </span>
+                        <span>{maxValueText}</span>
                     </>
                 )}
             </>
@@ -80,25 +75,6 @@ export const Meter = ({
 
 type Slots = SlotProps<typeof slots, 'label'>;
 type RootProps = MeterPrimitives.Root.Props;
-type ValueProps = MeterPrimitives.Value.Props;
-
-type ValueChildrenArgs = Parameters<NonNullable<ValueProps['children']>>;
-type ValueFormatter<I extends number> = ((value: ValueChildrenArgs[I]) => ReactNode) | ReactNode;
-
-type FormattedValue = ValueFormatter<0>;
-type Value = ValueFormatter<1>;
-type MaxValue = ValueFormatter<2>;
-
-/**
- * 값 표기 방식의 두 가지 shape.
- * - `formattedValueText`: 단일 포맷터로 전체 텍스트를 렌더한다.
- * - `valueText` + `maxValueText`: 현재 값과 최댓값을 분리해 각각 렌더한다.
- *
- * `never`로 두 그룹의 키를 서로 배제한다.
- */
-type FormatValue =
-    | { formattedValueText: FormattedValue; valueText?: never; maxValueText?: never }
-    | { formattedValueText?: never; valueText: Value; maxValueText?: MaxValue };
 
 export interface MeterProps {
     /**
@@ -142,21 +118,19 @@ export interface MeterProps {
     label: Slots['label'];
 
     /**
-     * 값 표기 방식을 결정한다. 두 shape 중 하나만 허용되며 두 그룹을 동시에 지정할 수 없다.
-     * - `formattedValueText` 단독: 전체 문자열을 반환한다.
-     * - `valueText` + `maxValueText` 동시: 현재 값과 최댓값을 분리해 렌더한다.
-     *
+     * 화면에 표시할 현재 값 텍스트를 반환한다. 인자로 현재 할당된 `value` 값을 받는다. 생략하면 계산된 값(예: `42%`)을 표시한다.
      * @example
-     * <Meter formatValue={{ formattedValueText: (f, v, m) => `${v} / ${m}` }} />
-     * @example
-     * <Meter
-     *   formatValue={{
-     *     valueText: (v) => `${v} GB`,
-     *     maxValueText: (m) => `${m} GB`,
-     *   }}
-     * />
+     * <Meter valueText={(value) => `${value}GB`} />
      */
-    formatValue?: FormatValue | false;
+    valueText?: ((value: number) => ReactNode) | false;
+
+    /**
+     * 최댓값을 표시한다. 현재 값 뒤에서 `/`로 구분하여 표시되며, 함수로 전달하면 `max` 값을 인자로 전달 받는다.
+     * @example
+     * <Meter max={150} maxValueText={(max) => `${max}GB`} />
+     * <Meter max={150} maxValueText="150GB" />
+     */
+    maxValueText?: ((max: number) => ReactNode) | ReactNode;
 }
 
 export namespace Meter {

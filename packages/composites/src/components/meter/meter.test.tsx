@@ -36,21 +36,22 @@ describe('Meter (composite)', () => {
         expect(screen.getByRole('meter')).toHaveAttribute('aria-valuetext', '42% 사용 (42)');
     });
 
-    it('should render `formattedValueText` from the formatted value and hide it from assistive technology', () => {
+    it('should render `valueText` from the formatted value and hide it from assistive technology', () => {
         render(
             <Meter
                 type="default"
                 label={LABEL_TEXT}
                 value={42}
-                formatValue={{
-                    formattedValueText: (formattedValue) => `${formattedValue} 사용`,
-                }}
+                valueText={(value) => `${value}GB 사용`}
             />,
         );
 
-        const valueNode = screen.getByText('42% 사용');
+        const valueNode = screen.getByText('42GB 사용');
         expect(valueNode).toBeInTheDocument();
-        expect(valueNode).toHaveAttribute('aria-hidden', 'true');
+        expect(valueNode.closest('[data-slots*="Meter.Value"]')).toHaveAttribute(
+            'aria-hidden',
+            'true',
+        );
     });
 
     it('should render `valueText` and `maxValueText` with the raw value and the resolved `max`', () => {
@@ -62,10 +63,8 @@ describe('Meter (composite)', () => {
                 label={LABEL_TEXT}
                 value={VALUE}
                 max={MAX}
-                formatValue={{
-                    valueText: (value) => `${value}GB`,
-                    maxValueText: (max) => `${max}GB`,
-                }}
+                valueText={(value) => `${value}GB`}
+                maxValueText={(max) => `${max}GB`}
             />,
         );
         const valueText = container.querySelector('[data-slots*="Meter.Value"]');
@@ -95,7 +94,7 @@ describe('Meter (composite)', () => {
                 value={92}
                 type="warning"
                 size="lg"
-                formatValue={{ formattedValueText: (formatted) => formatted }}
+                valueText={(formatted) => formatted}
                 getAriaValueText={(formatted) => `${formatted} 사용 중, 경고 범위`}
             />,
         );
