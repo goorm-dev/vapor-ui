@@ -1,5 +1,6 @@
 import type { RecipeVariants } from '@vanilla-extract/recipes';
 
+import { foregrounds } from '~/styles/mixins/foreground.css';
 import { componentRecipe, componentStyle } from '~/styles/mixins/layer-style.css';
 import { typography } from '~/styles/mixins/typography.css';
 import { vars } from '~/styles/themes.css';
@@ -8,7 +9,6 @@ export const root = componentStyle({
     display: 'grid',
     gridTemplateColumns: 'minmax(0, 1fr) auto',
     alignItems: 'start',
-    rowGap: vars.size.space['100'],
     columnGap: vars.size.space['150'],
     width: '100%',
 });
@@ -16,6 +16,7 @@ export const root = componentStyle({
 export const track = componentRecipe({
     base: {
         gridColumn: '1 / -1',
+        marginTop: vars.size.space['100'],
         borderRadius: vars.size.borderRadius['900'],
         backgroundColor: vars.color.background['secondary'],
         overflow: 'hidden',
@@ -65,6 +66,17 @@ export const value = componentStyle([
         color: vars.color.foreground['hint'],
     },
 ]);
+
+export const description = componentRecipe({
+    base: [typography({ style: 'subtitle1' }), { marginTop: vars.size.space['075'] }],
+    defaultVariants: { type: 'default' },
+    variants: {
+        type: {
+            default: [foregrounds({ color: 'secondary' })],
+            warning: [foregrounds({ color: 'danger' })],
+        },
+    },
+});
 
 export type TrackVariants = NonNullable<RecipeVariants<typeof track>>;
 export type IndicatorVariants = NonNullable<RecipeVariants<typeof indicator>>;

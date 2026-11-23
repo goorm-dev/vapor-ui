@@ -5,4 +5,5 @@ export {
     MeterTrack as Track,
     MeterIndicatorPrimitive as IndicatorPrimitive,
     MeterValue as Value,
+    MeterDescription as Description,
 } from './meter';

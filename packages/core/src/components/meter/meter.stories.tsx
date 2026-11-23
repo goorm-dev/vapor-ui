@@ -25,6 +25,7 @@ const MeterExample = ({
         <Meter.Label>{label}</Meter.Label>
         <Meter.Value />
         <Meter.Track />
+        <Meter.Description>Description</Meter.Description>
     </Meter.Root>
 );
 
