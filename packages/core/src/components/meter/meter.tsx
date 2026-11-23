@@ -51,11 +51,12 @@ export const MeterRoot = forwardRef<HTMLDivElement, MeterRoot.Props>((props, ref
     const hasLabelRef = useRef(false);
     const ariaLabel = otherProps['aria-label'];
     const ariaLabelledBy = otherProps['aria-labelledby'];
+    const ariaDescribedByProp = otherProps['aria-describedby'];
 
-    const [descriptionIds, setDescriptionIds] = useState<string>();
+    const [descriptionIds, setDescriptionIds] = useState<string[]>([]);
     const registerDescription = useCallback((id: string) => {
-        setDescriptionIds(id);
-        return () => setDescriptionIds(undefined);
+        setDescriptionIds((ids) => (ids.includes(id) ? ids : [...ids, id]));
+        return () => setDescriptionIds((ids) => ids.filter((each) => each !== id));
     }, []);
 
     useEffect(() => {
@@ -80,13 +81,16 @@ export const MeterRoot = forwardRef<HTMLDivElement, MeterRoot.Props>((props, ref
         [size, type, registerDescription],
     );
 
+    const ariaDescribedBy =
+        [ariaDescribedByProp, ...descriptionIds].filter(Boolean).join(' ') || undefined;
+
     return (
         <MeterProvider value={contextValue}>
             <BaseMeter.Root
                 ref={ref}
                 min={min}
                 max={max}
-                aria-describedby={descriptionIds}
+                aria-describedby={ariaDescribedBy}
                 className={cn(styles.root, className)}
                 {...otherProps}
             />
