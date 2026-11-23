@@ -59,7 +59,7 @@ generatePrimitiveColorPalette({
 
 ### `basicColors`
 
-Adds colors, or replaces a base color of the same name. Palettes come out in array order. A name used twice, here or by `brandColor`, throws.
+Adds colors, or replaces a base color of the same name. Palettes come out in array order. Names are lowercased first, so `Teal` makes the palette `teal`. A name used twice (`Blue` and `blue` count as one), here or by `brandColor`, throws, and so does `gray`.
 
 The HEX borrows the key colors of the base color with the nearest 500 hue, rotates them to the input hue, and puts the input HEX in place of the key nearest in lightness.
 
@@ -77,7 +77,7 @@ Dark derives from the pinned light curve. The brand HEX is never pinned in dark.
 getSemanticDependentTokens(themeResult: ThemeResult, primaryColorName = 'blue'): SemanticResult;
 ```
 
-Values are primitive token names, such as `color-blue-500`.
+Values are primitive token names, such as `color-blue-500`. `primaryColorName` is lowercased before the lookup, as palette names are.
 
 | Token                                                  | Light                                                  | Dark                     |
 | ------------------------------------------------------ | ------------------------------------------------------ | ------------------------ |
@@ -105,6 +105,8 @@ The anchor is the primary palette's base scale. When the primary palette is the 
 | `chroma`          | Each cell's chroma follows its scale's chroma rule                                 | `fail`             |
 | `brand-monotone`  | The brand cell keeps the contrast order with its neighbours                        | `warn`             |
 | `primary-anchor`  | The primary anchor reaches 3:1 against the background in both modes                | `warn`             |
+
+The `chroma` check reruns the engine's rule, not an approximation of it: a brand palette's yellow family comes from the hue table of the brand HEX, and dark 400–900 are rederived from the light row at the engine's own lightness. A palette straight from `generatePrimitiveColorPalette` passes `chroma` (tested on the default palette and on seeded random brand colors); a `fail` points at cells edited afterwards.
 
 ## Exports
 
