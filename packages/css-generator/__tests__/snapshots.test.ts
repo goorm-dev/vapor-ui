@@ -50,6 +50,23 @@ describe('CSS Generator Snapshots', () => {
         );
     });
 
+    it.each([
+        ['generateColorCSS', {}],
+        ['generateColorCSS', { prefix: 'custom' }],
+        ['generateCompleteCSS', {}],
+        ['generateCompleteCSS', { prefix: 'custom' }],
+    ] as const)('defines every var() it references (%s %o)', (name, options) => {
+        const css =
+            name === 'generateColorCSS'
+                ? generateColorCSS(MOCK_COLOR_CONFIG, options)
+                : generateCompleteCSS(MOCK_TOTAL_CONFIG, options);
+        const defined = new Set(Array.from(css.matchAll(/(--[\w-]+)\s*:/g), (m) => m[1]));
+        const undefinedRefs = Array.from(css.matchAll(/var\((--[\w-]+)/g), (m) => m[1]).filter(
+            (ref) => !defined.has(ref),
+        );
+        expect(undefinedRefs).toEqual([]);
+    });
+
     /* -------------------------------------------------------------------------------------------------
      * Radius CSS
      * -----------------------------------------------------------------------------------------------*/

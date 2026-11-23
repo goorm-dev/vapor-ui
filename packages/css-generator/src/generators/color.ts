@@ -19,22 +19,26 @@ interface ColorCSSGeneratorContext {
 const CANVAS_GRAY_SCALE: Record<ThemeVariant, string> = { light: '000', dark: '025' };
 
 const generatePaletteVariables = (
-    modeTokens: ThemeResult['lightModeTokens'],
+    themeResult: ThemeResult,
     variant: ThemeVariant,
     prefix: string,
 ) => {
+    const modeTokens =
+        variant === 'light' ? themeResult.lightModeTokens : themeResult.darkModeTokens;
     const variables: ReturnType<typeof createCSSVariable>[] = [];
 
     const gray = modeTokens.palettes.find((palette) => palette.name === 'gray');
     const canvas = gray?.chips[CANVAS_GRAY_SCALE[variant]];
     if (canvas) variables.push(createCSSVariable(`${prefix}-color-canvas`, canvas.hex));
 
-    // Generate palette tokens
-    modeTokens.palettes.forEach((palette) => {
-        Object.values(palette.chips).forEach((chip) => {
-            const variableName = chip.codeSyntax.replace('vapor-', `${prefix}-`);
-            variables.push(createCSSVariable(variableName, chip.hex));
-        });
+    // `color-white` / `color-black` back the semantic tokens in both modes.
+    const chips = [
+        ...Object.values(themeResult.baseTokens),
+        ...modeTokens.palettes.flatMap((palette) => Object.values(palette.chips)),
+    ];
+    chips.forEach((chip) => {
+        const variableName = chip.codeSyntax.replace('vapor-', `${prefix}-`);
+        variables.push(createCSSVariable(variableName, chip.hex));
     });
 
     return variables;
@@ -60,14 +64,11 @@ const generateRootThemeCSS = (
     const { themeResult, semanticTokens, options } = context;
     const { prefix } = options;
 
-    const modeTokens =
-        variant === 'light' ? themeResult.lightModeTokens : themeResult.darkModeTokens;
-
     const semanticModeTokens =
         variant === 'light' ? semanticTokens.lightModeTokens : semanticTokens.darkModeTokens;
 
     const properties = [
-        ...generatePaletteVariables(modeTokens, variant, prefix),
+        ...generatePaletteVariables(themeResult, variant, prefix),
         ...generateSemanticVariables(semanticModeTokens, prefix),
     ];
 
