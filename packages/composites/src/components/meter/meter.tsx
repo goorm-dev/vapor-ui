@@ -42,10 +42,16 @@ export const Meter = ({
         typeof maxValueTextProp === 'function' ? maxValueTextProp(max) : maxValueTextProp;
 
     const renderValue = (formattedValue: string, value: number) => {
+        const hasMaxValueText =
+            maxValueText !== undefined &&
+            maxValueText !== null &&
+            maxValueText !== '' &&
+            typeof maxValueText !== 'boolean';
+
         return (
             <>
                 <span>{valueText(formattedValue, value)}</span>
-                {!!maxValueText && (
+                {hasMaxValueText && (
                     <>
                         <span>/</span>
                         <span>{maxValueText}</span>
