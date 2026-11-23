@@ -85,6 +85,20 @@ describe('basic colors', () => {
         ).toThrow('Duplicate color name: teal');
     });
 
+    it('lowercases names before the reserved and duplicate checks', () => {
+        expect(() =>
+            generatePrimitiveColorPalette({ basicColors: [{ name: 'Gray', hexcode: '#888888' }] }),
+        ).toThrow('Invalid color name: gray');
+        expect(() =>
+            generatePrimitiveColorPalette({
+                basicColors: [
+                    { name: 'Blue', hexcode: '#00838F' },
+                    { name: 'blue', hexcode: '#00838F' },
+                ],
+            }),
+        ).toThrow('Duplicate color name: blue');
+    });
+
     it('replacing a base color leaves the other colors unchanged', () => {
         const result = generatePrimitiveColorPalette({
             basicColors: [{ name: 'blue', hexcode: '#00838F' }],

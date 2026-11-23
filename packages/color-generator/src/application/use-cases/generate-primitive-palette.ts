@@ -43,21 +43,21 @@ export function generatePrimitiveColorPalette(options: ThemeOptions = {}): Theme
     const baseHues = getBaseHueTable();
     const hues: HueTable = { ...baseHues };
     const seen = new Set<string>();
-    const claim = (name: string) => {
+    /** Lowercases `input`, then rejects `gray`, invalid names and repeats. */
+    const claim = (input: string) => {
+        const name = input.toLowerCase();
         checkName(name);
         if (seen.has(name)) throw new Error(`Duplicate color name: ${name}`);
         seen.add(name);
+        return name;
     };
 
-    for (const { name, hexcode } of basicColors) {
-        claim(name);
-        hues[name] = leonardoHues(keysFromHex(toRawHex(hexcode), baseHues));
-    }
+    for (const { name, hexcode } of basicColors)
+        hues[claim(name)] = leonardoHues(keysFromHex(toRawHex(hexcode), baseHues));
 
     let brand: { name: string; hex: string } | undefined;
     if (brandColor) {
-        claim(brandColor.name);
-        brand = { name: brandColor.name, hex: toRawHex(brandColor.hexcode) };
+        brand = { name: claim(brandColor.name), hex: toRawHex(brandColor.hexcode) };
         hues[brand.name] = leonardoHues(keysFromHex(brand.hex, baseHues));
     }
 

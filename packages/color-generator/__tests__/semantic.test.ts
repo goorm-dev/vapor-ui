@@ -46,6 +46,19 @@ describe('getSemanticDependentTokens', () => {
         ).toThrow();
     });
 
+    it('lowercases the brand name and the primary name', () => {
+        const result = generatePrimitiveColorPalette({
+            brandColor: { name: 'Acme', hexcode: '#2A72E5' },
+        });
+        expect(result.brand?.name).toBe('acme');
+        expect(result.lightModeTokens.palettes.map((p) => p.name)).toContain('acme');
+        expect(
+            getSemanticDependentTokens(result, 'Acme').lightModeTokens[
+                'color-background-primary-200'
+            ],
+        ).toBe('color-acme-400');
+    });
+
     describe('brand as primary', () => {
         it('anchors on a light brand cell at 200 with black on-primary text and warns', () => {
             const result = withBrand('#94CCF9');

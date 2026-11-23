@@ -70,14 +70,16 @@ const tokensFor = (
 
 /**
  * Maps the primitive palettes to semantic tokens. Values are primitive token names.
+ * `primaryColorName` is lowercased, as palette names are.
  */
 export function getSemanticDependentTokens(
     themeResult: ThemeResult,
     primaryColorName = 'blue',
 ): SemanticResult {
-    const anchor = primaryAnchor(themeResult, primaryColorName);
+    const primary = primaryColorName.toLowerCase();
+    const anchor = primaryAnchor(themeResult, primary);
     return {
-        lightModeTokens: tokensFor(themeResult, 'light', primaryColorName, anchor.light),
-        darkModeTokens: tokensFor(themeResult, 'dark', primaryColorName, anchor.dark),
+        lightModeTokens: tokensFor(themeResult, 'light', primary, anchor.light),
+        darkModeTokens: tokensFor(themeResult, 'dark', primary, anchor.dark),
     };
 }
