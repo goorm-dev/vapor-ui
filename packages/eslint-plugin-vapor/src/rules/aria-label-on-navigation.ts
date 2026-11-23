@@ -10,7 +10,7 @@ export const ariaLabelOnNavigationRule: Rule.RuleModule = {
         type: 'suggestion',
         docs: {
             description:
-                'Enforce aria-label prop on NavigationMenu.Root and Breadcrumb.Root components.',
+                'Enforce aria-label prop on NavigationMenu.Root, SideNavigation.Root and Breadcrumb.Root components.',
         },
         fixable: undefined,
         messages: {
@@ -19,7 +19,7 @@ export const ariaLabelOnNavigationRule: Rule.RuleModule = {
         },
     },
     create(context) {
-        const components = new Set(['NavigationMenu', 'Breadcrumb']);
+        const components = new Set(['NavigationMenu', 'SideNavigation', 'Breadcrumb']);
         const sourceToComponent = getSource(components);
 
         const importedNames = new Set<string>(); // import { NavigationMenu }
