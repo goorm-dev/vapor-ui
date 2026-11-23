@@ -44,7 +44,8 @@
         "build": "rimraf dist && tsup",
         "clean": "rimraf dist .turbo node_modules",
         "lint": "eslint ./src",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "test": "vitest --run"
     },
     "dependencies": {
         "clsx": "^2.1.1"
@@ -59,7 +60,8 @@
         "react-dom": "catalog:",
         "rimraf": "^6.1.4",
         "tsup": "^8.5.1",
-        "typescript": "catalog:"
+        "typescript": "catalog:",
+        "vitest": "catalog:"
     },
     "peerDependencies": {
         "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
