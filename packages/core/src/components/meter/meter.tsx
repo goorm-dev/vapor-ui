@@ -14,7 +14,6 @@ import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
 import { warn } from '~/utils/warn';
 
-import { Text } from '../text';
 import type { IndicatorVariants, TrackVariants } from './meter.css';
 import * as styles from './meter.css';
 
@@ -227,8 +226,6 @@ export const MeterDescription = forwardRef<HTMLSpanElement, MeterDescription.Pro
                 ...componentProps,
             },
         });
-
-        return <Text ref={ref} className={cn(styles.description, className)} {...componentProps} />;
     },
 );
 MeterDescription.displayName = 'Meter.Description';
