@@ -37,6 +37,23 @@ describe('validatePalette', () => {
         expect(statuses(withHex(defaults, 'light', 'red', '700', dull)).chroma).toBe('fail');
     });
 
+    it('warns on close hues with one line per pair naming both cells', () => {
+        const { status, details } = validatePalette(defaults).find((c) => c.id === 'hue-gap')!;
+        expect(status).toBe('warn');
+        expect(details.length).toBeGreaterThan(0);
+        for (const detail of details)
+            expect(detail).toMatch(
+                /^(light|dark) [a-z-]+-(\d{3}) · \1 [a-z-]+-\2: hue gap \d+\.\d° \(min 5\.5°\)$/,
+            );
+        expect(details.some((d) => d.startsWith('light red-700 · light orange-700:'))).toBe(true);
+    });
+
+    it('exempts blue and cobalt from the hue gap', () => {
+        const result = withHex(defaults, 'light', 'cobalt', '500', light.blue['500']);
+        const { details } = validatePalette(result).find((c) => c.id === 'hue-gap')!;
+        expect(details.some((d) => d.includes('blue-500') && d.includes('cobalt-500'))).toBe(false);
+    });
+
     it('warns when a brand cell breaks the contrast order', () => {
         const result = generatePrimitiveColorPalette({
             brandColor: { name: 'brand', hexcode: '#2A72E5' },

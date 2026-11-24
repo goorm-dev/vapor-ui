@@ -44,8 +44,9 @@ const upperMaxChroma = (L: number, C: number, H: number, step = 0.0005) => {
 
 const status = (details: string[], bad: 'warn' | 'fail') => (details.length ? bad : 'ok');
 
+/** One detail per close pair, naming both cells so each can be flagged. */
 const hueGap = (rows: Rows): PaletteCheck => {
-    const pairs = new Map<string, string[]>();
+    const details: string[] = [];
     for (const m of MODES) {
         const colors = Object.keys(rows[m]);
         for (const s of COLOR_SCALES)
@@ -53,15 +54,13 @@ const hueGap = (rows: Rows): PaletteCheck => {
                 for (const b of colors.slice(i + 1)) {
                     if (HUE_GAP_EXCEPTIONS.some((e) => e.includes(a) && e.includes(b))) continue;
                     const d = hueDiff(hexToOklch(rows[m][a][s])[2], hexToOklch(rows[m][b][s])[2]);
-                    if (d >= HUE_GAP_MIN) continue;
-                    const key = `${a} · ${b}`;
-                    pairs.set(key, [...(pairs.get(key) ?? []), `${m} ${s} ${d.toFixed(1)}°`]);
+                    if (d < HUE_GAP_MIN)
+                        details.push(
+                            `${m} ${a}-${s} · ${m} ${b}-${s}: hue gap ${d.toFixed(1)}° (min ${HUE_GAP_MIN}°)`,
+                        );
                 }
             });
     }
-    const details = Array.from(pairs).map(
-        ([pair, v]) => `${pair}: hue gap under ${HUE_GAP_MIN}° (${v.join(', ')})`,
-    );
     return { id: 'hue-gap', status: status(details, 'warn'), details };
 };
 
