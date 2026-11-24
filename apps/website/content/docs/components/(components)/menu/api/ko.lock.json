@@ -58,9 +58,9 @@
             "terms": "4f53cda18c2baa0c"
         },
         "props.label": {
-            "source": "1edc6a4332b10491",
+            "source": "ffd6b245b5892a42",
             "guide": 2,
-            "terms": "9d600eecf6a80945"
+            "terms": "b01d06383280049d"
         },
         "props.nativeButton": {
             "source": "fd073644b0e7e06b",
@@ -120,9 +120,9 @@
             "terms": "4f53cda18c2baa0c"
         },
         "props.label": {
-            "source": "1edc6a4332b10491",
+            "source": "ffd6b245b5892a42",
             "guide": 2,
-            "terms": "9d600eecf6a80945"
+            "terms": "b01d06383280049d"
         },
         "props.nativeButton": {
             "source": "fd073644b0e7e06b",
@@ -221,9 +221,9 @@
             "terms": "4f53cda18c2baa0c"
         },
         "props.label": {
-            "source": "1edc6a4332b10491",
+            "source": "ffd6b245b5892a42",
             "guide": 2,
-            "terms": "9d600eecf6a80945"
+            "terms": "b01d06383280049d"
         },
         "props.nativeButton": {
             "source": "fd073644b0e7e06b",
@@ -530,9 +530,9 @@
             "terms": "4f53cda18c2baa0c"
         },
         "props.label": {
-            "source": "1edc6a4332b10491",
+            "source": "ffd6b245b5892a42",
             "guide": 2,
-            "terms": "9d600eecf6a80945"
+            "terms": "b01d06383280049d"
         },
         "props.nativeButton": {
             "source": "fd073644b0e7e06b",
@@ -582,9 +582,9 @@
             "terms": "4f53cda18c2baa0c"
         },
         "props.label": {
-            "source": "1edc6a4332b10491",
+            "source": "ffd6b245b5892a42",
             "guide": 2,
-            "terms": "9d600eecf6a80945"
+            "terms": "b01d06383280049d"
         },
         "props.nativeButton": {
             "source": "fd073644b0e7e06b",
@@ -619,9 +619,9 @@
             "terms": "d22b8df8d7fc074d"
         },
         "props.actionsRef": {
-            "source": "6511758f3b0bdaec",
+            "source": "f190faa8851c0641",
             "guide": 2,
-            "terms": "3dc9ff164840b150"
+            "terms": "a71c4fb15ba00b43"
         },
         "props.children": {
             "source": "1d893ed3eba8c6d1",
@@ -667,6 +667,11 @@
             "source": "302510bef07ebdb8",
             "guide": 2,
             "terms": "d24cefbb77a268e6"
+        },
+        "props.onItemHighlighted": {
+            "source": "472418476863c9c4",
+            "guide": 2,
+            "terms": "d1f3f6c6f3095355"
         },
         "props.onOpenChange": {
             "source": "00dc71fb7ab90875",
@@ -802,9 +807,9 @@
             "terms": "2dd8dcdba2b16492"
         },
         "props.actionsRef": {
-            "source": "6511758f3b0bdaec",
+            "source": "f190faa8851c0641",
             "guide": 2,
-            "terms": "3dc9ff164840b150"
+            "terms": "a71c4fb15ba00b43"
         },
         "props.children": {
             "source": "156579b9de2935f6",
@@ -840,6 +845,11 @@
             "source": "76db443ceb9fd4b3",
             "guide": 2,
             "terms": "9a94fba5c1cf20d5"
+        },
+        "props.onItemHighlighted": {
+            "source": "472418476863c9c4",
+            "guide": 2,
+            "terms": "d1f3f6c6f3095355"
         },
         "props.onOpenChange": {
             "source": "00dc71fb7ab90875",
@@ -899,9 +909,9 @@
             "terms": "4f53cda18c2baa0c"
         },
         "props.label": {
-            "source": "1edc6a4332b10491",
+            "source": "ffd6b245b5892a42",
             "guide": 2,
-            "terms": "9d600eecf6a80945"
+            "terms": "b01d06383280049d"
         },
         "props.nativeButton": {
             "source": "fd073644b0e7e06b",
@@ -951,9 +961,9 @@
             "terms": "4f53cda18c2baa0c"
         },
         "props.label": {
-            "source": "1edc6a4332b10491",
+            "source": "ffd6b245b5892a42",
             "guide": 2,
-            "terms": "9d600eecf6a80945"
+            "terms": "b01d06383280049d"
         },
         "props.nativeButton": {
             "source": "fd073644b0e7e06b",

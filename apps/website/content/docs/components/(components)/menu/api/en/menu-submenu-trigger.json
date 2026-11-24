@@ -51,7 +51,7 @@
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "Overrides the text label to use when the item is matched during keyboard text navigation."
+            "description": "Overrides the text used for keyboard text navigation and filtering.\nFalls back to the rendered text when not provided."
         },
         {
             "name": "nativeButton",
