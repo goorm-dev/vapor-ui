@@ -76,11 +76,13 @@ async function highlightProp(
     const types = Array.isArray(prop.type) ? prop.type : [prop.type];
 
     const [highlightedTypes, detailedType, defaultValue] = await Promise.all([
-        Promise.all(types.map((t) => getHighlightTokens(t))),
+        Promise.all(types.map((t) => getHighlightTokens(t, 'type'))),
         prop.detailedType
             ? getHighlightDetailedType(prop.detailedType, typeRefs)
             : Promise.resolve(undefined),
-        prop.defaultValue ? getHighlightTokens(prop.defaultValue) : Promise.resolve(undefined),
+        prop.defaultValue
+            ? getHighlightTokens(prop.defaultValue, 'value')
+            : Promise.resolve(undefined),
     ]);
 
     return {

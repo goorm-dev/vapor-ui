@@ -1,7 +1,12 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { Fragment } from 'react';
 
 import { Flex, HStack, Text } from '@vapor-ui/core';
+
+const UNION_OPERATOR_STYLE = {
+    '--shiki-light': '#D73A49',
+    '--shiki-dark': '#F97583',
+} as CSSProperties;
 
 interface TypeChipsProps {
     types: ReactNode[];
@@ -28,15 +33,16 @@ export const TypeChips = ({ types }: TypeChipsProps) => {
 
                     <Text
                         aria-hidden
-                        // render={<code />}
+                        render={<code />}
                         typography="code1"
+                        className="shiki"
                         $css={{
                             display: index === types.length - 1 ? 'none' : 'block',
                             userSelect: 'none',
-                            color: '#D73A49',
                         }}
                     >
-                        |
+                        {/* github-light/dark color for `keyword.operator.type`, so it matches the `|` shiki colors inside a type */}
+                        <span style={UNION_OPERATOR_STYLE}>|</span>
                     </Text>
                 </Fragment>
             ))}

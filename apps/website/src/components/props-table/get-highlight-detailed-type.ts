@@ -48,7 +48,7 @@ export async function getHighlightDetailedType(
               .sort((a, b) => b.length - a.length)
         : [];
 
-    const hast = await highlightToHast(source, 'ts');
+    const hast = await highlightToHast(source, 'type');
     const tokens = flattenTokens(hast);
 
     const matches = refNames.length > 0 ? findRefMatches(source, tokens, refNames) : [];
@@ -74,7 +74,7 @@ export async function getHighlightDetailedType(
 async function resolveDefinitions(refNames: Set<string>, typeRefs: Record<string, string>) {
     const entries = await Promise.all(
         [...refNames].map(
-            async (name) => [name, await getHighlightTokens(typeRefs[name])] as const,
+            async (name) => [name, await getHighlightTokens(typeRefs[name], 'type')] as const,
         ),
     );
     return new Map(entries);

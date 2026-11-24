@@ -23,10 +23,15 @@ function getHighlighter() {
     return highlighterPromise;
 }
 
-export async function highlightToHast(code: string, lang = 'ts'): Promise<Root> {
+/** `type` reads `code` as a TS type expression, `value` as a JS expression. */
+export type HighlightContext = 'type' | 'value';
+
+export async function highlightToHast(code: string, context: HighlightContext): Promise<Root> {
     const highlighter = await getHighlighter();
     return highlighter.codeToHast(code, {
-        lang,
+        lang: 'ts',
+        // Without it a bare type string tokenizes as an expression, so `boolean` or `HTMLElement` come out as plain variables.
+        grammarContextCode: context === 'type' ? 'type _ = ' : undefined,
         themes: { light: 'github-light', dark: 'github-dark' },
         defaultColor: false,
         transformers: [
