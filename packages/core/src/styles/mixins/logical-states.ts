@@ -7,6 +7,8 @@ export const pressed = (selector = '&[data-pressed]') => selector;
 
 export const disabled = (selector = '&[data-disabled]') => selector;
 
+export const current = (selector = '&[data-current]') => `${selector}${NOT_DISABLED}`;
+
 export const readonly = (selector = '&[data-readonly]') => `${selector}${NOT_DISABLED}`;
 
 export const invalid = (selector = '&[data-invalid]') =>
@@ -15,6 +17,7 @@ export const invalid = (selector = '&[data-invalid]') =>
 export const when = {
     checked,
     pressed,
+    current,
     disabled,
     invalid,
     readonly,

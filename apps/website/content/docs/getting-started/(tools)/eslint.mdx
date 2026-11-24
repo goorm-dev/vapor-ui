@@ -79,13 +79,17 @@ module.exports = {
 
 ### navigation-has-aria-label
 
-`NavigationMenu.Root`와 `Breadcrumb.Root` 컴포넌트에 `aria-label` 속성이 있는지 검사합니다.
+`NavigationMenu.Root`, `SideNavigation.Root`, `Breadcrumb.Root` 컴포넌트에 `aria-label` 속성이 있는지 검사합니다.
 
 ```tsx
 // ❌
 <NavigationMenu.Root>
   <NavigationMenu.List>...</NavigationMenu.List>
 </NavigationMenu.Root>
+
+<SideNavigation.Root>
+  <SideNavigation.List>...</SideNavigation.List>
+</SideNavigation.Root>
 
 <Breadcrumb.Root>
   <Breadcrumb.List>...</Breadcrumb.List>
@@ -95,6 +99,10 @@ module.exports = {
 <NavigationMenu.Root aria-label="Main">
   <NavigationMenu.List>...</NavigationMenu.List>
 </NavigationMenu.Root>
+
+<SideNavigation.Root aria-label="Service">
+  <SideNavigation.List>...</SideNavigation.List>
+</SideNavigation.Root>
 
 <Breadcrumb.Root aria-label="Page Path">
   <Breadcrumb.List>...</Breadcrumb.List>
