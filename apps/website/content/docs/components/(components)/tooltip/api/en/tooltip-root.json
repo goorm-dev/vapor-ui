@@ -29,7 +29,7 @@
             "type": ["React.RefObject<Tooltip.Root.Actions | null>"],
             "detailedType": "React.RefObject<Tooltip.Root.Actions | null> | undefined",
             "required": false,
-            "description": "A ref to imperative actions.\n- `unmount`: Unmounts the tooltip popup.\n- `close`: Closes the tooltip imperatively when called."
+            "description": "A ref to imperative actions.\n- `unmount`: Ends the closing phase of the tooltip after an externally controlled closing animation finishes.\nCall `preventUnmountOnClose()` in `onOpenChange` first, otherwise the tooltip completes closing on its own.\nWhether it leaves the DOM is decided by `keepMounted` on the portal.\n- `close`: Closes the tooltip imperatively when called."
         },
         {
             "name": "children",

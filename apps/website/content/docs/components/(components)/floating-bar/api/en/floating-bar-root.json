@@ -29,7 +29,7 @@
             "type": ["React.RefObject<FloatingBar.Root.Actions | null>"],
             "detailedType": "React.RefObject<FloatingBar.Root.Actions | null> | undefined",
             "required": false,
-            "description": "A ref to imperative actions.\n- `unmount`: Manually unmounts the popover.\nCall this after any externally controlled closing animation finishes.\n- `close`: Closes the popover imperatively when called."
+            "description": "A ref to imperative actions.\n- `unmount`: Ends the closing phase of the popover after an externally controlled closing animation finishes.\nCall `preventUnmountOnClose()` in `onOpenChange` first, otherwise the popover completes closing on its own.\nWhether it leaves the DOM is decided by `keepMounted` on the portal.\n- `close`: Closes the popover imperatively when called."
         },
         {
             "name": "children",

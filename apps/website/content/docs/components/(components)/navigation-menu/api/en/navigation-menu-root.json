@@ -67,7 +67,7 @@
             "type": ["React.RefObject<NavigationMenu.Root.Actions | null>"],
             "detailedType": "React.RefObject<NavigationMenu.Root.Actions | null> | undefined",
             "required": false,
-            "description": "A ref to imperative actions."
+            "description": "A ref to imperative actions.\n- `unmount`: Ends the closing phase of the navigation menu popup after an externally controlled closing animation finishes.\nCall `preventUnmountOnClose()` in `onValueChange` first, otherwise the navigation menu popup completes closing on its own.\nWhether it leaves the DOM is decided by `keepMounted` on the portal.\n- `close`: Closes the navigation menu imperatively when called."
         },
         {
             "name": "closeDelay",
@@ -108,8 +108,8 @@
         }
     ],
     "typeRefs": {
-        "NavigationMenu.Root.Actions": "{\n  unmount: () => void;\n}",
-        "NavigationMenu.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"trigger-hover\"; event: MouseEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"link-press\"; event: MouseEvent | PointerEvent; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
+        "NavigationMenu.Root.Actions": "{\n  unmount: () => void;\n  close: () => void;\n}",
+        "NavigationMenu.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"imperative-action\"; event: Event; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"trigger-hover\"; event: MouseEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"link-press\"; event: MouseEvent | PointerEvent; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n  preventUnmountOnClose: () => void;\n}",
         "NavigationMenu.Root.State": "{\n  open: boolean;\n  nested: boolean;\n}"
     }
 }

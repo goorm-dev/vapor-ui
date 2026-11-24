@@ -28,15 +28,15 @@
         },
         {
             "name": "defaultValue",
-            "type": ["Value[]", "null"],
-            "detailedType": "Value[] | null | undefined",
+            "type": ["readonly Value[]", "null"],
+            "detailedType": "readonly Value[] | null | undefined",
             "required": false,
             "description": "Select가 처음 렌더링될 때의 비제어 값.\n\n제어 컴포넌트로 렌더링하려면 대신 `value` prop을 사용하세요."
         },
         {
             "name": "onOpenChange",
             "type": ["function"],
-            "detailedType": "((open: boolean, eventDetails: MultiSelect.Root.ChangeEventDetails) => void) | undefined",
+            "detailedType": "((open: boolean, eventDetails: SelectRootOpenChangeEventDetails) => void) | undefined",
             "required": false,
             "description": "Select 팝업이 열리거나 닫힐 때 호출되는 이벤트 핸들러."
         },
@@ -56,8 +56,8 @@
         },
         {
             "name": "value",
-            "type": ["Value[]", "null"],
-            "detailedType": "Value[] | null | undefined",
+            "type": ["readonly Value[]", "null"],
+            "detailedType": "readonly Value[] | null | undefined",
             "required": false,
             "description": "Select의 값. 제어 컴포넌트로 쓸 때 사용하세요."
         },
@@ -80,7 +80,7 @@
             "type": ["React.RefObject<MultiSelect.Root.Actions | null>"],
             "detailedType": "React.RefObject<MultiSelect.Root.Actions | null> | undefined",
             "required": false,
-            "description": "명령형 동작에 대한 ref.\n- `unmount`: Select를 수동으로 언마운트합니다.\n외부에서 제어하는 닫힘 애니메이션이 끝난 뒤에 호출하세요."
+            "description": "명령형 액션에 접근하는 ref.\n- `unmount`: 외부에서 제어하는 닫힘 애니메이션이 끝난 뒤 Select의 닫힘 단계를 끝냅니다. 먼저 `onOpenChange`에서 `preventUnmountOnClose()`를 호출하세요. 호출하지 않으면 Select가 스스로 닫힘을 완료합니다. DOM에서 제거할지는 포털의 `keepMounted`가 결정합니다.\n- `close`: 호출하면 Select를 명령형으로 닫습니다."
         },
         {
             "name": "autoComplete",
@@ -198,7 +198,7 @@
         }
     ],
     "typeRefs": {
-        "MultiSelect.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"item-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"cancel-open\"; event: MouseEvent; }\n  | { reason: \"window-resize\"; event: UIEvent; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
-        "MultiSelect.Root.Actions": "{\n  unmount: () => void;\n}"
+        "MultiSelect.Root.Actions": "{\n  unmount: () => void;\n  close: () => void;\n}",
+        "MultiSelect.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"imperative-action\"; event: Event; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"item-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"cancel-open\"; event: MouseEvent; }\n  | { reason: \"window-resize\"; event: UIEvent; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}"
     }
 }

@@ -36,7 +36,7 @@
         {
             "name": "onOpenChange",
             "type": ["function"],
-            "detailedType": "((open: boolean, eventDetails: Select.Root.ChangeEventDetails) => void) | undefined",
+            "detailedType": "((open: boolean, eventDetails: SelectRootOpenChangeEventDetails) => void) | undefined",
             "required": false,
             "description": "Event handler called when the select popup is opened or closed."
         },
@@ -80,7 +80,7 @@
             "type": ["React.RefObject<Select.Root.Actions | null>"],
             "detailedType": "React.RefObject<Select.Root.Actions | null> | undefined",
             "required": false,
-            "description": "A ref to imperative actions.\n- `unmount`: Manually unmounts the select.\nCall this after any externally controlled closing animation finishes."
+            "description": "A ref to imperative actions.\n- `unmount`: Ends the closing phase of the select after an externally controlled closing animation finishes.\nCall `preventUnmountOnClose()` in `onOpenChange` first, otherwise the select completes closing on its own.\nWhether it leaves the DOM is decided by `keepMounted` on the portal.\n- `close`: Closes the select imperatively when called."
         },
         {
             "name": "autoComplete",
@@ -198,7 +198,7 @@
         }
     ],
     "typeRefs": {
-        "Select.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"item-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"cancel-open\"; event: MouseEvent; }\n  | { reason: \"window-resize\"; event: UIEvent; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}",
-        "Select.Root.Actions": "{\n  unmount: () => void;\n}"
+        "Select.Root.Actions": "{\n  unmount: () => void;\n  close: () => void;\n}",
+        "Select.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"imperative-action\"; event: Event; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"item-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"cancel-open\"; event: MouseEvent; }\n  | { reason: \"window-resize\"; event: UIEvent; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n}"
     }
 }
