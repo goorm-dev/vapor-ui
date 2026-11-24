@@ -37,7 +37,7 @@
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "키보드 텍스트 탐색에서 항목과 일치시킬 때 사용할 텍스트 레이블을 대체합니다."
+            "description": "키보드 텍스트 탐색과 필터링에 쓰이는 텍스트를 재정의합니다. 지정하지 않으면 렌더링된 텍스트를 사용합니다."
         },
         {
             "name": "nativeButton",

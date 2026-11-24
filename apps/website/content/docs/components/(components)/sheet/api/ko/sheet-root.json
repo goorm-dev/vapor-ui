@@ -36,7 +36,7 @@
             "type": ["React.RefObject<Sheet.Root.Actions | null>"],
             "detailedType": "React.RefObject<Sheet.Root.Actions | null> | undefined",
             "required": false,
-            "description": "명령형 액션에 접근하는 ref.\n- `unmount`: Dialog를 수동으로 언마운트합니다.\n외부에서 제어하는 닫힘 애니메이션이 끝난 뒤에 호출하세요.\n- `close`: 호출하면 Dialog를 명령형으로 닫습니다."
+            "description": "명령형 액션에 접근하는 ref.\n- `unmount`: 외부에서 제어하는 닫힘 애니메이션이 끝난 뒤 Dialog의 닫힘 단계를 끝냅니다. 먼저 `onOpenChange`에서 `preventUnmountOnClose()`를 호출하세요. 호출하지 않으면 Dialog가 스스로 닫힘을 완료합니다. DOM에서 제거되는지는 포털의 `keepMounted`로 결정합니다.\n- `close`: 호출하면 Dialog를 명령형으로 닫습니다."
         },
         {
             "name": "children",
