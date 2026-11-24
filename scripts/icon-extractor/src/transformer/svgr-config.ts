@@ -5,22 +5,55 @@ type SvgoPlugin = Extract<
     { fn: unknown }
 >;
 
+type Jsx = Parameters<NonNullable<Config['template']>>[0]['jsx'];
+type Node = { type: string; [key: string]: unknown };
+type Attribute = { value?: Node | null };
+
+const findIdAttributes = (node: Node, prefix: string): Attribute[] => [
+    ...(node.openingElement as { attributes: Attribute[] }).attributes.filter(
+        ({ value }) => value?.type === 'StringLiteral' && (value.value as string).includes(prefix),
+    ),
+    ...(node.children as Node[])
+        .filter((child) => child.type === 'JSXElement')
+        .flatMap((child) => findIdAttributes(child, prefix)),
+];
+
+const bindToRuntimeId = (attribute: Attribute, prefix: string) => {
+    const parts = ((attribute.value as Node).value as string).split(prefix);
+    attribute.value = {
+        type: 'JSXExpressionContainer',
+        expression: {
+            type: 'TemplateLiteral',
+            quasis: parts.map((raw, i) => ({
+                type: 'TemplateElement',
+                value: { raw, cooked: raw },
+                tail: i === parts.length - 1,
+            })),
+            expressions: parts.slice(1).map(() => ({ type: 'Identifier', name: 'id' })),
+        },
+    };
+};
+
 /**
  * Wrap the SVG in IconBase instead of rendering a bare <svg>.
  */
-const template: Config['template'] = ({ componentName, jsx }, { tpl }) => {
-    const identifier = {
-        type: 'JSXIdentifier',
-        name: 'IconBase',
-    } as typeof jsx.openingElement.name;
-    jsx.openingElement.name = identifier;
-    if (jsx.closingElement) jsx.closingElement.name = identifier;
-    jsx.openingElement.attributes.push({
-        type: 'JSXSpreadAttribute',
-        argument: { type: 'Identifier', name: 'props' },
-    } as (typeof jsx.openingElement.attributes)[number]);
+const buildTemplate =
+    (idPrefix: string): Config['template'] =>
+    ({ componentName, jsx }, { tpl }) => {
+        const identifier = {
+            type: 'JSXIdentifier',
+            name: 'IconBase',
+        } as Jsx['openingElement']['name'];
+        jsx.openingElement.name = identifier;
+        if (jsx.closingElement) jsx.closingElement.name = identifier;
+        jsx.openingElement.attributes.push({
+            type: 'JSXSpreadAttribute',
+            argument: { type: 'Identifier', name: 'props' },
+        } as Jsx['openingElement']['attributes'][number]);
 
-    return tpl`
+        const idAttributes = findIdAttributes(jsx as unknown as Node, idPrefix);
+        if (idAttributes.length === 0) {
+            return tpl`
 import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
 
@@ -30,7 +63,28 @@ const ${componentName} = (props: IconProps) => (
 
 export default ${componentName};
 `;
+        }
+
+        for (const attribute of idAttributes) bindToRuntimeId(attribute, idPrefix);
+        if (JSON.stringify(jsx).includes(idPrefix)) {
+            throw new Error(`${idPrefix}: an id stayed static outside a string attribute`);
+        }
+        const prefix = { type: 'StringLiteral', value: idPrefix } as unknown as string;
+        return tpl`
+import IconBase from '~/components/icon-base';
+import type { IconProps } from '~/components/icon-base';
+import { useIconId } from '~/components/use-icon-id';
+
+const ${componentName} = (props: IconProps) => {
+    const id = useIconId(${prefix});
+    return (
+        ${jsx}
+    );
 };
+
+export default ${componentName};
+`;
+    };
 
 const BLACK = /^(#000|#000000|black)$/i;
 
@@ -66,25 +120,28 @@ const buildConfig = ({
 }: {
     iconName: string;
     isColorIcon: boolean;
-}): Config => ({
-    typescript: true,
-    template,
-    plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx'],
-    svgoConfig: {
-        multipass: true,
-        plugins: [
-            // removeViewBox would drop the viewBox because it matches width/height;
-            // removeDimensions then drops width/height instead, leaving IconBase in charge of size.
-            { name: 'preset-default', params: { overrides: { removeViewBox: false } } },
-            'removeDimensions',
-            {
-                name: 'prefixIds',
-                params: { prefix: `vapor-icons-${isColorIcon ? 'color' : 'mono'}-${iconName}` },
-            },
-            // Mono icons follow the consumer's `color`; colour icons keep Figma's palette.
-            ...(isColorIcon ? [] : [blackFollowsCurrentColor]),
-        ],
-    },
-});
+}): Config => {
+    const idPrefix = `vapor-icons-${isColorIcon ? 'color' : 'mono'}-${iconName}`;
+    return {
+        typescript: true,
+        template: buildTemplate(idPrefix),
+        plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx'],
+        svgoConfig: {
+            multipass: true,
+            plugins: [
+                // removeViewBox would drop the viewBox because it matches width/height;
+                // removeDimensions then drops width/height instead, leaving IconBase in charge of size.
+                { name: 'preset-default', params: { overrides: { removeViewBox: false } } },
+                'removeDimensions',
+                {
+                    name: 'prefixIds',
+                    params: { prefix: idPrefix },
+                },
+                // Mono icons follow the consumer's `color`; colour icons keep Figma's palette.
+                ...(isColorIcon ? [] : [blackFollowsCurrentColor]),
+            ],
+        },
+    };
+};
 
 export { buildConfig };

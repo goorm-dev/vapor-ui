@@ -47,19 +47,38 @@ test('colour icons keep the Figma palette', async () => {
     assert.doesNotMatch(out, /currentColor/);
 });
 
-test('ids are namespaced per icon so two icons on one page cannot collide', async () => {
+test('ids come from useIconId so every rendered instance gets its own', async () => {
     const first = await convert(MONO_SVG, 'FirstIcon');
     const second = await convert(MONO_SVG, 'SecondIcon');
 
-    const idOf = (out: string) => /id="([^"]+)"/.exec(out)?.[1];
-    assert.match(String(idOf(first)), /^vapor-icons-mono-FirstIcon/);
-    assert.match(String(idOf(second)), /^vapor-icons-mono-SecondIcon/);
-    assert.notEqual(idOf(first), idOf(second));
+    assert.match(first, /useIconId\("vapor-icons-mono-FirstIcon"\)/);
+    assert.match(second, /useIconId\("vapor-icons-mono-SecondIcon"\)/);
+    assert.doesNotMatch(first, /\bid="/);
     // The reference has to move with the definition.
-    assert.match(first, new RegExp(`url\\(#${idOf(first)}\\)`));
+    assert.match(first, /mask=\{`url\(#\$\{id\}__a\)`\}/);
+    assert.match(first, /id=\{`\$\{id\}__a`\}/);
 
-    const colour = await convert(COLOR_SVG, 'FirstIcon', true);
-    assert.doesNotMatch(colour, /vapor-icons-mono-/);
+    const colour = await convert(MONO_SVG, 'FirstIcon', true);
+    assert.match(colour, /useIconId\("vapor-icons-color-FirstIcon"\)/);
+});
+
+test('an id left static fails generation instead of shipping a broken reference', async () => {
+    const styleRef = `
+<svg viewBox="0 0 16 16"><linearGradient id="g"><stop stop-color="red"/></linearGradient>
+<path d="M2 2H14V14H2V2Z" style="fill:url(#g)"/></svg>`;
+    const classSelector = `
+<svg viewBox="0 0 16 16"><style>.shape:hover{fill:red}</style>
+<clipPath id="c"><rect width="16" height="16"/></clipPath>
+<path class="shape" clip-path="url(#c)" d="M2 2H14V14H2V2Z"/></svg>`;
+
+    await assert.rejects(convert(styleRef, 'StyleRefIcon', true), /stayed static/);
+    await assert.rejects(convert(classSelector, 'ClassSelectorIcon', true), /stayed static/);
+});
+
+test('icons without ids stay hook-free', async () => {
+    const out = await convert(COLOR_SVG, 'SampleColorIcon', true);
+
+    assert.doesNotMatch(out, /useIconId/);
 });
 
 test('IconBase owns the size: viewBox stays, width/height go', async () => {
