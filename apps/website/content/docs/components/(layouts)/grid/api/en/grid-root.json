@@ -11,18 +11,19 @@
             "defaultValue": "row"
         },
         {
+            "name": "inline",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Displays the container as `inline-grid` instead of `grid`, so it sits inline with surrounding content.",
+            "defaultValue": "false"
+        },
+        {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Grid.Root.State) => (string | undefined)) | undefined",
             "required": false,
             "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
-        },
-        {
-            "name": "inline",
-            "type": ["boolean"],
-            "detailedType": "boolean | undefined",
-            "required": false,
-            "description": "Displays the container as `inline-grid` instead of `grid`, so it sits inline with surrounding content."
         },
         {
             "name": "style",

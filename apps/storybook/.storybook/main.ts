@@ -1,5 +1,6 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
+import { vaporVitePlugin } from '@vapor-ui/style-macro/vite';
 import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import path, { dirname, join } from 'node:path';
@@ -83,6 +84,13 @@ const config: StorybookConfig = {
             },
 
             plugins: [
+                // core 는 css() 를 쓰지 않는다. composites 소스는 배포물과 같은 레이어로 컴파일한다.
+                vaporVitePlugin({
+                    include: ['../../packages/composites/src/**'],
+                    exclude: ['**/*.test.*'],
+                    layer: 'vapor-composites',
+                }),
+
                 coreDistCssPassthrough,
                 vanillaExtractPlugin({
                     identifiers: ({ hash, filePath, debugId }) => {

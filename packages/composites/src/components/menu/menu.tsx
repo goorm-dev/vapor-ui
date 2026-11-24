@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, useContext, useMemo } from 'react';
 import type { ReactNode } from 'react';
 
@@ -5,6 +7,7 @@ import { useControlled } from '@base-ui/utils/useControlled';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { Box, Menu as MenuPrimitives, Text, VStack } from '@vapor-ui/core';
 import { ChevronRightOutlineIcon, ConfirmOutlineIcon } from '@vapor-ui/icons';
+import { css } from '@vapor-ui/style-macro';
 
 import type { SlotProps } from '~/utils/create-slots';
 import { createSlots } from '~/utils/create-slots';
@@ -440,12 +443,9 @@ export const MenuItem = ({
         <MenuPrimitives.Item
             disabled={isDisabled}
             onClick={onClick}
-            $css={{
+            className={css(itemGrid, {
                 color: variant === 'critical' ? '$fg-danger' : '$fg-normal',
-                display: 'grid',
-                ...getItemLayout({ hasLeading: !!leading, hasTrailing: !!trailing }),
-                gap: '$000',
-            }}
+            })}
         >
             <ItemLayout
                 leading={leading}
@@ -517,11 +517,7 @@ export const MenuCheckItem = ({
 }: MenuCheckItem.Props) => {
     const context = useMenuCheckGroupContext();
     const { mode, hasSelection } = context;
-    const itemLayout = getItemLayout({
-        hasMarker: mode === 'multiple' ? true : hasSelection,
-        hasLeading: !!leading,
-        hasTrailing: !!trailing,
-    });
+    const hasMarker = mode === 'multiple' || hasSelection;
 
     if (mode === 'single') {
         return (
@@ -530,10 +526,10 @@ export const MenuCheckItem = ({
                 disabled={isDisabled}
                 value={valueProp}
                 onClick={onClick}
-                $css={{ display: 'grid', gap: '$000', ...itemLayout }}
+                className={css(hasMarker ? itemGridWithMarker : itemGrid)}
             >
                 <MenuPrimitives.RadioItemIndicatorPrimitive
-                    $css={{ gridArea: 'marker', marginRight: '$050' }}
+                    className={css({ gridArea: 'marker', marginRight: '$space-050' })}
                 >
                     <ConfirmOutlineIcon />
                 </MenuPrimitives.RadioItemIndicatorPrimitive>
@@ -558,9 +554,11 @@ export const MenuCheckItem = ({
             checked={checked}
             onCheckedChange={handleCheckedChange}
             onClick={onClick}
-            $css={{ display: 'grid', gap: '$000', ...itemLayout }}
+            className={css(hasMarker ? itemGridWithMarker : itemGrid)}
         >
-            <MenuPrimitives.CheckboxItemIndicatorPrimitive $css={{ gridArea: 'marker' }} />
+            <MenuPrimitives.CheckboxItemIndicatorPrimitive
+                className={css({ gridArea: 'marker' })}
+            />
 
             <ItemLayout
                 leading={leading}
@@ -628,17 +626,8 @@ export const MenuSubmenuItem = ({
     label,
     trailing,
 }: MenuSubmenuItem.Props) => {
-    const itemLayout = getItemLayout({
-        hasLeading: !!leading,
-        hasTrailing: !!trailing,
-        indicator: 'auto',
-    });
-
     return (
-        <MenuPrimitives.SubmenuTrigger
-            disabled={isDisabled}
-            $css={{ display: 'grid', gap: '$000', ...itemLayout }}
-        >
+        <MenuPrimitives.SubmenuTrigger disabled={isDisabled} className={css(itemGrid)}>
             <ItemLayout
                 leading={leading}
                 label={label}
@@ -648,7 +637,11 @@ export const MenuSubmenuItem = ({
 
             <Box
                 render={<ChevronRightOutlineIcon />}
-                $css={{ color: '$fg-secondary', marginLeft: '$050' }}
+                className={css({
+                    gridArea: 'indicator',
+                    color: '$fg-secondary',
+                    marginLeft: '$space-050',
+                })}
             />
         </MenuPrimitives.SubmenuTrigger>
     );
@@ -693,14 +686,12 @@ export namespace MenuSubmenuItem {
 const Separator = () => {
     return (
         <MenuPrimitives.Separator
-            $css={{
-                display: {
-                    default: 'block',
-                    _firstChild: 'none',
-                    _lastChild: 'none',
-                    _adjacentToSeparator: 'none',
-                },
-            }}
+            className={css({
+                display: 'block',
+                ':first-child': { display: 'none' },
+                ':last-child': { display: 'none' },
+                '& + &': { display: 'none' },
+            })}
         />
     );
 };
@@ -719,32 +710,26 @@ interface ItemLayoutProps extends ItemSlots {}
 
 const ItemLayout = ({ leading, label, description, trailing }: ItemLayoutProps) => (
     <>
-        <itemSlots.leading render={leading} $css={{ gridArea: 'leading', marginRight: '$075' }} />
-        <VStack $css={{ gridArea: 'label' }}>
+        <itemSlots.leading
+            render={leading}
+            className={css({ gridArea: 'leading', marginRight: '$space-075' })}
+        />
+        <VStack className={css({ gridArea: 'label' })}>
             <itemSlots.label render={label} />
             <itemSlots.description render={description} foreground="hint" typography="body3" />
         </VStack>
-        <itemSlots.trailing render={trailing} $css={{ gridArea: 'trailing', marginLeft: '$150' }} />
+        <itemSlots.trailing
+            render={trailing}
+            className={css({ gridArea: 'trailing', marginLeft: '$space-150' })}
+        />
     </>
 );
 
-interface ItemLayoutOptions {
-    hasMarker?: boolean;
-    markerColumn?: string;
-    hasLeading: boolean;
-    hasTrailing: boolean;
-    indicator?: string;
-}
+const itemGrid = css({
+    display: 'grid',
+    gap: '$space-000',
+    gridTemplateAreas: '"marker leading label trailing indicator"',
+    gridTemplateColumns: '0 auto 1fr auto auto',
+});
 
-const getItemLayout = ({
-    hasMarker = false,
-    markerColumn = '1.375rem',
-    hasLeading,
-    hasTrailing,
-    indicator,
-}: ItemLayoutOptions) => {
-    const gridTemplateAreas = `"${hasMarker ? 'marker ' : ''}${hasLeading ? 'leading ' : ''}label${hasTrailing ? ' trailing' : ''}"`;
-    const gridTemplateColumns = `${hasMarker ? markerColumn : ''} ${hasLeading ? 'auto' : ''} 1fr ${hasTrailing ? 'auto' : ''} ${indicator ? 'auto' : ''}`;
-
-    return { gridTemplateAreas, gridTemplateColumns };
-};
+const itemGridWithMarker = css(itemGrid, { gridTemplateColumns: '1.375rem auto 1fr auto auto' });

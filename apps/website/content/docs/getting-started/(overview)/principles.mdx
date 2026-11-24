@@ -162,15 +162,4 @@ const CustomButton = ({ colorPalette, size, ...props }: Button.Props) => {
 
 ## 6. Cascade Layer 아키텍처
 
-Vapor UI는 CSS Cascade Layer를 사용하여 스타일 충돌을 방지합니다.
-
-```css
-@layer vapor, components;
-
-/* 커스텀 스타일을 안전하게 확장할 수 있음 */
-@layer components {
-    .custom-button {
-        /* 여기 있는 스타일은 충돌하지 않음 */
-    }
-}
-```
+Vapor UI는 CSS Cascade Layer로 스타일 우선순위를 정합니다. 테마, 리셋, 컴포넌트, 유틸리티 스타일이 각자의 레이어에 담겨 있어서, 선택자 명시도와 관계없이 순서가 보장됩니다. 레이어 구성과 앱 스타일을 끼워 넣는 방법은 [CSS Layers](/docs/getting-started/css-layers)를 참고하세요.

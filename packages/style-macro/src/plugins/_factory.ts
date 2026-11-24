@@ -1,0 +1,63 @@
+import { relative } from 'node:path';
+import { createUnplugin } from 'unplugin';
+
+import { stripQuery } from './_id';
+import {
+    MODULE_CSS_PLACEHOLDER,
+    MODULE_CSS_SUFFIX,
+    VAPOR_SRC_QUERY,
+    compileOrError,
+} from './_module-css';
+import { type ResolvedOptions, type VaporPluginOptions, resolveOptions, toPosix } from './_options';
+
+export type { VaporPluginOptions };
+
+/**
+ * webpack 용 JS 변환. `css()` 를 class 로 바꾸고, CSS 를 만든 모듈에
+ * `import '@vapor-ui/style-macro/module.vapor.css?vapor-src=src%2Fa.tsx.vapor.css'` 를 넣는다. 쿼리 값도
+ * `.css` 로 끝나야 Next dev 가 이 모듈을 CSS import 로 보고 수정 시 스타일을 갱신한다
+ * (`mod.resource` 에 `/\.css$/` 검사).
+ *
+ * 리소스가 실제 `.css` 파일이라 앱의 CSS 규칙(css-loader·mini-css-extract, Next 내장 CSS)을
+ * 그대로 타고, Next 의 RSC CSS 수집도 서버 컴포넌트의 CSS 로 인식한다. 소스마다 쿼리가 달라
+ * 모듈이 따로 생기고, `vaporWebpackPlugin` 의 `enforce: 'pre'` 규칙(`css-loader`)이 쿼리가
+ * 가리키는 소스를 CSS 로 컴파일한다. 소스 경로는 root 기준 상대 경로라 빌드 머신과 무관하다.
+ *
+ * `root` 는 번들러가 주는 webpack `compiler.context` 를 그대로 쓴다. 그 값은 `webpack` 훅에서야
+ * 오므로 옵션 해석을 그때(또는 첫 사용 시점)까지 미룬다. 번들러 루트가 없으면 사용자 `root` 가 필수다.
+ */
+export default createUnplugin<VaporPluginOptions | undefined>((rawOpts) => {
+    const raw = rawOpts ?? {};
+    let resolved: ResolvedOptions | null = null;
+    const opts = (): ResolvedOptions => (resolved ??= resolveOptions(raw));
+
+    return {
+        name: 'vapor-style-macro',
+        enforce: 'pre',
+
+        webpack(compiler: { context?: string }) {
+            resolved = resolveOptions(raw, { root: compiler.context });
+        },
+
+        transformInclude(id) {
+            return opts().include(stripQuery(id));
+        },
+
+        transform(code, id) {
+            const compiled = compileOrError(
+                this,
+                code,
+                id,
+                opts(),
+                (_cssName, filename) =>
+                    `${MODULE_CSS_PLACEHOLDER}?${VAPOR_SRC_QUERY}=${encodeURIComponent(
+                        toPosix(relative(opts().root, filename)),
+                    )}${MODULE_CSS_SUFFIX}`,
+            );
+            if (!compiled || compiled.code === code) return null;
+            // unplugin@3.4.0 webpack loader 는 앞 loader 의 map 이 없으면 이 map 을 버린다
+            // (`map == null ? map : res.map || map`). README "Source map" 참고.
+            return { code: compiled.code, map: compiled.map };
+        },
+    };
+});

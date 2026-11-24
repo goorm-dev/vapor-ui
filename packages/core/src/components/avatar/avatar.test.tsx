@@ -143,7 +143,9 @@ describe('Avatar', () => {
         /** change image source */
         rendered.rerender(<AvatarTest src={src2} alt={alt} />);
 
-        expect(rendered.queryByRole('img')).not.toBeInTheDocument();
+        await waitFor(() => {
+            expect(rendered.queryByRole('img')).not.toBeInTheDocument();
+        });
         expect(rendered.queryByText(fallbackText)).toBeInTheDocument();
 
         image = await rendered.findByRole('img');

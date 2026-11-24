@@ -13,16 +13,19 @@ export const Component = () => {
                 <input name="email" type="email" />
                 <button type="submit">Submit</button>
             </Form>
+
             {/* only onClearErrors callback */}
             <Form>
                 <input name="name" type="text" />
                 <button type="submit">Submit</button>
             </Form>
+
             {/* inline function expression */}
             <Form errors={errors}>
                 <input name="password" type="password" />
                 <button type="submit">Submit</button>
             </Form>
+
             {/* no onClearErrors - should remain unchanged */}
             <Form errors={errors}>
                 <input name="confirm" type="password" />

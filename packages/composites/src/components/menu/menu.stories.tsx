@@ -8,6 +8,7 @@ import {
     PlusOutlineIcon,
     TrashOutlineIcon,
 } from '@vapor-ui/icons';
+import { css } from '@vapor-ui/style-macro';
 
 import { Regression } from '~/utils/regressions';
 
@@ -26,7 +27,10 @@ export default {
 
 const Kbd = ({ children, ...props }: Box.Props) => {
     return (
-        <Box $css={{ fontFamily: 'monospace', fontSize: '12px', color: '$fg-hint' }} {...props}>
+        <Box
+            className={css({ fontFamily: 'monospace', fontSize: '12px', color: '$fg-hint' })}
+            {...props}
+        >
             {children}
         </Box>
     );
@@ -152,7 +156,7 @@ export const Controlled: Story = {
         const [multipleValue, setMultipleValue] = useState<string[]>();
 
         return (
-            <VStack $css={{ alignItems: 'flex-start' }}>
+            <VStack className={css({ alignItems: 'flex-start' })}>
                 <Text>1. Selected Single Value: {singleValue ?? <span>Not Selected</span>}</Text>
                 <Text>
                     2. Selected Multiple Value:{' '}
@@ -162,7 +166,7 @@ export const Controlled: Story = {
                 <Menu.Root
                     trigger={
                         <Button
-                            $css={{ marginTop: '$100' }}
+                            className={css({ marginTop: '$space-100' })}
                             colorPalette="secondary"
                             variant="outline"
                         >

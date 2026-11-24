@@ -1,18 +1,16 @@
 import { globalLayer } from '@vanilla-extract/css';
 
-const LAYER_ORDER = ['theme', 'reset', 'components', 'utilities'] as const;
+export const LAYER_ORDER = ['theme', 'reset', 'components', 'composites', 'utilities'] as const;
 
-export const layerName = Object.fromEntries(LAYER_ORDER.map((name) => [name, name])) as Record<
-    (typeof LAYER_ORDER)[number],
-    string
->;
+export const layerName = Object.fromEntries(
+    LAYER_ORDER.map((name) => [name, `vapor-${name}`]),
+) as Record<(typeof LAYER_ORDER)[number], string>;
 
-const prefix = globalLayer('vapor');
 const createLayersInOrder = () => {
     const layerInstances: Record<string, ReturnType<typeof globalLayer>> = {};
 
-    LAYER_ORDER.forEach((layerName) => {
-        layerInstances[layerName] = globalLayer({ parent: prefix }, layerName);
+    LAYER_ORDER.forEach((name) => {
+        layerInstances[name] = globalLayer(`vapor-${name}`);
     });
 
     return layerInstances;
@@ -24,5 +22,6 @@ export const layers = {
     theme: layerInstances.theme,
     reset: layerInstances.reset,
     components: layerInstances.components,
+    composites: layerInstances.composites,
     utilities: layerInstances.utilities,
 };

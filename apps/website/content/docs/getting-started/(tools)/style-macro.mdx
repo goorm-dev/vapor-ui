@@ -1,0 +1,338 @@
+---
+title: Style Macro
+description: '@vapor-ui/style-macro로 Vapor UI 디자인 토큰을 사용하는 스타일을 빌드 타임에 CSS로 컴파일하세요.'
+---
+
+**Style Macro**는 빌드 타임에 동작하는 Zero Runtime CSS-in-JS 도구입니다. 컴포넌트 코드에서 `css({...})`로 스타일을 작성하면, 번들러 플러그인이 빌드 시점에 이를 **className 하나와 CSS 블록 하나**로 컴파일합니다.
+
+<Callout title="주의하세요" type="warn">
+
+- Style Macro는 현재 베타 단계로, 팀 내부적으로 베타 테스트를 진행 중에 있습니다.
+- 정식 릴리즈 전까지 API와 동작이 변경될 수 있으므로 **프로덕션 환경에서의 사용은 권장하지 않습니다.** 미리 사용해 보고 싶다면 사이드 프로젝트나 내부 도구처럼 변경에 대응할 수 있는 환경에서 먼저 시도해 보세요.
+- 사용 중 발견한 문제나 의견은 내부 슬랙 채널 혹은 [GitHub Issues](https://github.com/goorm-dev/vapor-ui/issues)으로 알려 주세요.
+
+</Callout>
+
+## Why
+
+- **런타임 비용이 없습니다.** 스타일은 빌드 시점에 정적 CSS 파일로 추출됩니다. 브라우저에서 스타일을 계산하거나 `<style>` 태그를 삽입하지 않습니다.
+- **디자인 토큰을 타입 안전하게 사용합니다.** `color: '$fg-primary'`처럼 `$` 접두사로 Vapor UI 토큰을 참조합니다. 속성에 맞지 않는 토큰이나 없는 토큰은 에디터 자동완성과 빌드 에러로 바로 드러납니다.
+- **사용하는 스타일만 번들에 포함됩니다.** `css()`를 쓰는 모듈은 자기 CSS만 import 합니다. 앱이 import 하지 않는 컴포넌트의 CSS는 번들에 들어가지 않습니다.
+- **Server Component에서도 사용할 수 있습니다.** `css()`의 반환값은 순수한 `string`이라서 Server Component에서 만든 class를 Client Component로 그대로 넘길 수 있습니다.
+- **Vapor UI 레이어 체계와 맞물립니다.** 생성된 스타일은 `vapor-utilities` 레이어에 담기므로 Vapor UI 컴포넌트 스타일을 별도의 우선순위 조정 없이 덮어씁니다. 자세한 내용은 [CSS Layers](/docs/getting-started/css-layers)를 참고하세요.
+
+## Installation
+
+```package-install
+npm install @vapor-ui/style-macro
+```
+
+`@vapor-ui/core`의 디자인 토큰을 참조하므로 `@vapor-ui/core`가 함께 설치되어 있어야 합니다. 설치 방법은 [Installation](/docs/getting-started/installation)을 참고하세요.
+
+## Configuration
+
+Style Macro는 번들러 플러그인으로 동작합니다. 지원하는 번들러는 다음과 같습니다.
+
+| 번들러                       | Entry point                      | 용도                |
+| ---------------------------- | -------------------------------- | ------------------- |
+| Vite 7, 8                    | `@vapor-ui/style-macro/vite`     | 애플리케이션        |
+| Next.js (webpack, Turbopack) | `@vapor-ui/style-macro/next`     | 애플리케이션        |
+| webpack 5                    | `@vapor-ui/style-macro/webpack`  | 애플리케이션        |
+| Rolldown                     | `@vapor-ui/style-macro/rolldown` | 컴포넌트 라이브러리 |
+
+그 밖의 번들러(Parcel 등)는 지원하지 않습니다.
+
+### 공통: CSS 진입점
+
+어떤 번들러를 쓰든 앱의 CSS 진입점에서 `@vapor-ui/core/layers.css`를 **모든 `@vapor-ui/*` import 보다 먼저** 불러와 레이어 순서를 고정해야 합니다.
+
+```css title="globals.css"
+@import '@vapor-ui/core/layers.css';
+@import '@vapor-ui/core/styles.css';
+```
+
+### Vite
+
+```ts title="vite.config.ts"
+import { vaporVitePlugin } from '@vapor-ui/style-macro/vite';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+    plugins: [vaporVitePlugin(), react()],
+});
+```
+
+Vite 플러그인에 `index.html`에 라이트/다크 테마 깜빡임(FOUC)을 막는 스크립트가 기본으로 포함됩니다. 해당 옵션을 사용하지 않을 경우 `injectColorScheme`를 false로 지정하세요.
+
+```ts title="vite.config.ts"
+import { vaporVitePlugin } from '@vapor-ui/style-macro/vite';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+    plugins: [vaporVitePlugin({ injectColorScheme: false }), react()], // [!code ++]
+});
+```
+
+### Next.js
+
+```ts title="next.config.ts"
+import { vaporNextPlugin } from '@vapor-ui/style-macro/next';
+import type { NextConfig } from 'next';
+
+const withVapor = vaporNextPlugin();
+
+const nextConfig: NextConfig = {/* config options here */};
+
+export default withVapor(nextConfig);
+```
+
+`vaporNextPlugin`은 webpack과 Turbopack 중 사용 중인 번들러를 감지해 설정합니다. 서버 컴포넌트와 클라이언트 컴포넌트의 스타일 모두 라우트별 CSS로 나뉩니다.
+
+App Router에서는 FOUC 방지 스크립트를 루트 layout에 직접 추가하세요.
+
+```tsx title="app/layout.tsx"
+import { buildColorSchemeScript } from '@vapor-ui/style-macro';
+
+import './globals.css';
+
+const COLOR_SCHEME_SCRIPT = buildColorSchemeScript({ defaultTheme: 'system' });
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+    return (
+        <html lang="ko" suppressHydrationWarning>
+            <head>
+                <script dangerouslySetInnerHTML={{ __html: COLOR_SCHEME_SCRIPT }} />
+            </head>
+            <body>{children}</body>
+        </html>
+    );
+}
+```
+
+`suppressHydrationWarning`은 `<html>`에만 지정하세요. 스크립트가 `<html>`에 테마 속성을 추가해 서버 마크업과 달라지는데, 이 경고만 억제하고 자식 요소에는 영향을 주지 않습니다.
+
+| 옵션           | 기본값             | 설명                            |
+| -------------- | ------------------ | ------------------------------- |
+| `storageKey`   | `vapor-ui-theme`   | 테마를 저장하는 localStorage 키 |
+| `attribute`    | `data-vapor-theme` | `<html>`에 설정할 속성 이름     |
+| `defaultTheme` | `system`           | `light` `dark` `system` 중 하나 |
+
+옵션 값은 앱의 `ThemeProvider`와 같게 맞추세요. 기본값은 `ThemeProvider` 기본값과 같습니다. `ThemeProvider`에 다른 `storageKey`나 `defaultTheme`을 넘겼다면 이 스크립트에도 같은 값을 넘깁니다. 예를 들어 라이트 테마로 고정한 앱이 `defaultTheme: 'light'`를 넘기지 않으면, 저장된 테마가 없는 사용자의 OS가 다크 모드일 때 다크 테마가 적용됩니다. Vite와 webpack의 자동 주입도 같습니다. `injectColorScheme`에 객체로 옵션을 넘기세요.
+
+### webpack
+
+```js title="webpack.config.js"
+import { vaporWebpackPlugin } from '@vapor-ui/style-macro/webpack';
+
+export default {
+    plugins: [vaporWebpackPlugin()],
+};
+```
+
+플러그인이 만든 모듈 CSS는 앱의 `.css` 규칙으로 처리됩니다. `css-loader`와 `style-loader`(또는 `mini-css-extract-plugin`), 혹은 `experiments.css`로 `.css` 파일을 처리하도록 설정되어 있어야 합니다. `html-webpack-plugin`이 설치되어 있으면 FOUC 방지 스크립트를 자동으로 넣습니다.
+
+### 컴포넌트 라이브러리 (Rolldown)
+
+`css()`를 쓰는 컴포넌트 라이브러리는 빌드 시점에 매크로를 컴파일해 배포합니다. 라이브러리 사용자는 플러그인을 설정하지 않아도 되고, 컴포넌트를 import 하면 그 컴포넌트의 CSS가 함께 들어갑니다.
+
+```ts title="rolldown.config.ts"
+import { vaporRolldownPlugin } from '@vapor-ui/style-macro/rolldown';
+
+export default {
+    input: { 'button/button': 'src/button/button.tsx' },
+    plugins: [vaporRolldownPlugin({ hash: true, layer: 'acme-ui' })],
+    output: { dir: 'dist', preserveModules: true, preserveModulesRoot: 'src' },
+};
+```
+
+```json title="package.json"
+{
+    "sideEffects": ["**/*.css"]
+}
+```
+
+- `hash: true`를 권장합니다. 기본값은 빌드 환경의 `NODE_ENV`를 따르므로 고정하지 않으면 배포물의 class 이름이 빌드 환경에 따라 달라집니다.
+- 앱과 다른 `layer`를 지정하고, 그 레이어를 소비자의 레이어 선언에서 `vapor-utilities`보다 앞에 두는 것을 권장합니다. 그래야 사용자가 넘긴 `className`이 CSS 로드 순서와 무관하게 이깁니다. `@vapor-ui/composites`가 이 방식으로 `vapor-composites` 레이어를 사용합니다.
+
+## Usage
+
+### 기본 사용
+
+`css()`에 스타일 객체를 넘기고, 반환된 class 이름을 `className`에 지정합니다.
+
+```tsx
+import { css } from '@vapor-ui/style-macro';
+
+export default function Card({ children }: { children: React.ReactNode }) {
+    return (
+        <div
+            className={css({
+                padding: '$space-300',
+                borderRadius: '$radius-300',
+                backgroundColor: '$bg-canvas-base',
+                color: '$fg-normal',
+            })}
+        >
+            {children}
+        </div>
+    );
+}
+```
+
+### 디자인 토큰
+
+`$` 접두사로 디자인 토큰을 참조합니다. 각 CSS 속성은 대응하는 토큰 그룹(색상, 간격, 반경 등)의 토큰만 받습니다. 사용할 수 있는 토큰은 [Color](/docs/getting-started/color), [Size](/docs/getting-started/size), [Typography](/docs/getting-started/typography)를 참고하세요.
+
+```ts
+css({ color: '$fg-primary' }); // 색상 토큰
+css({ padding: '$space-200' }); // padding-top/right/bottom/left로 전개
+css({ width: '320px', opacity: 0.8 }); // 일반 CSS 값도 그대로 사용
+```
+
+### 중첩 선택자와 미디어 쿼리
+
+키가 `:`, `::`, `@`, `[`, `&`로 시작하면 중첩 규칙으로 처리됩니다.
+
+```ts
+css({
+    color: '$fg-primary',
+    ':hover': { color: '$fg-secondary' },
+    '::before': { content: '"→"' },
+    '&.selected': { backgroundColor: '$bg-primary' },
+    '[data-active="true"]': { opacity: 1 },
+    '@media (min-width: 768px)': { padding: '$space-400' },
+});
+```
+
+### 조건부 값
+
+속성 값에 삼항 연산자를 쓸 수 있습니다. 양쪽 분기는 모두 리터럴이나 토큰이어야 합니다.
+
+```tsx
+function Tab({ active, compact }: { active: boolean; compact: boolean }) {
+    return (
+        <button
+            className={css({
+                color: active ? '$fg-primary' : '$fg-secondary',
+                padding: compact ? '$space-100' : '$space-300',
+            })}
+        />
+    );
+}
+```
+
+### 동적 값
+
+props처럼 런타임에 정해지는 값도 넘길 수 있습니다. 플러그인이 해당 값을 CSS 변수로 바꾸고 요소의 `style`에 자동으로 넣습니다.
+
+```tsx
+function Swatch({ color }: { color: string }) {
+    return <div className={css({ backgroundColor: color })} />;
+}
+```
+
+값이 `undefined`나 `null`이면 CSS `var()` 스펙대로 해당 속성은 `unset`으로 동작합니다. `background-color`처럼 상속되지 않는 속성은 초기값(투명 등)이 되고, 컴포넌트의 기본 스타일로 돌아가지 않습니다. 기본값이 필요하면 직접 지정하세요.
+
+```tsx
+function ActionButton({ bg }: { bg?: string }) {
+    return <Button className={css({ backgroundColor: bg ?? '$bg-primary' })}>저장</Button>;
+}
+```
+
+### 스타일 합성
+
+여러 스타일을 합칠 때는 `css(a, b)`처럼 인자로 넘깁니다. 같은 속성은 뒤에 오는 인자가 이깁니다.
+
+```tsx
+const base = css({ padding: '$space-200', color: '$fg-normal' });
+const danger = css({ color: '$fg-danger' });
+
+function Alert({ urgent }: { urgent: boolean }) {
+    return <div className={css(base, urgent && danger)} />;
+}
+```
+
+같은 파일 안에서 값이 정적으로 결정되는 인자(객체 리터럴, 모듈 최상위의 `css()` 상수, 그 사이의 `&&`, `?:`)는 빌드 시점에 하나의 CSS 블록으로 병합됩니다.
+
+## Caveats
+
+### shorthand 속성에는 토큰을 쓸 수 없습니다
+
+`background`, `border` 같은 shorthand 속성은 토큰을 받지 않습니다. 개별 속성으로 나눠 작성하세요. 단, `padding`, `margin` 등 토큰 그룹이 하나로 정해지는 일부 shorthand는 토큰을 받아 개별 속성으로 전개합니다.
+
+```ts
+// ❌
+css({ background: '$bg-primary' });
+css({ border: '1px solid $border-normal' });
+
+// ✅
+css({ backgroundColor: '$bg-primary' });
+css({ borderWidth: '1px', borderStyle: 'solid', borderColor: '$border-normal' });
+```
+
+### 정적으로 분석할 수 있는 형태로 작성하세요
+
+Style Macro는 소스 코드를 빌드 시점에 분석합니다. 다음 형태는 분석할 수 없어 빌드 에러가 납니다.
+
+```ts
+// ❌ spread
+css({ ...baseStyle, color: '$fg-primary' });
+
+// ❌ computed key
+css({ [property]: '$space-200' });
+
+// ❌ 삼항 분기 안의 동적 값
+css({ color: active ? userColor : '$fg-primary' });
+```
+
+`animation-name`, `content`처럼 식별자를 값으로 받는 속성에도 동적 값을 쓸 수 없습니다.
+
+### 템플릿 리터럴로 class를 합치지 마세요
+
+`` `${a} ${b}` ``처럼 이어 붙이면 같은 속성끼리의 우선순위가 보장되지 않으므로 빌드 에러로 처리됩니다. 항상 `css(a, b)`를 사용하세요.
+
+```ts
+// ❌
+<div className={`${base} ${danger}`} />
+
+// ✅
+<div className={css(base, danger)} />
+```
+
+### override는 사용하는 모듈 안에 작성하세요
+
+한 모듈의 `css()`는 그 모듈이 import 한 라이브러리 CSS보다 뒤에 로드되므로, Vapor UI 컴포넌트에 넘긴 override가 이깁니다. 반면 override 스타일을 공용 styles 파일처럼 다른 모듈에 두면 같은 레이어 안에서의 로드 순서가 보장되지 않습니다. override는 그 스타일을 쓰는 컴포넌트 파일 안에 작성하세요.
+
+### 조건부 조합은 최대 16개입니다
+
+정적으로 병합되는 조건부 합성은 분기마다 CSS 블록을 미리 만듭니다. 조합 수가 16개를 넘지 않도록 조건을 나누세요.
+
+## API Reference
+
+### Plugin 옵션
+
+모든 번들러 플러그인이 같은 옵션을 받습니다.
+
+| 옵션                | 기본값                                  | 설명                                                                                                                                              |
+| ------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `include`           | `[]`                                    | 변환 대상에 추가할 glob. 기본 대상(`root` 하위 JS/TS, `node_modules` 제외)에 더해집니다. 예: `['node_modules/@acme/ui/dist/**']`                  |
+| `exclude`           | `[]`                                    | 변환에서 제외할 glob. `include`보다 우선합니다                                                                                                    |
+| `root`              | 번들러 프로젝트 루트                    | `include`, `exclude` glob의 기준 경로                                                                                                             |
+| `hash`              | `process.env.NODE_ENV === 'production'` | `true`면 해시 class 이름, `false`면 읽을 수 있는 class 이름을 생성합니다                                                                          |
+| `injectColorScheme` | `true`                                  | FOUC 방지 스크립트 자동 주입 여부(Vite, webpack). 객체로 `buildColorSchemeScript` 옵션을 넘길 수 있습니다                                         |
+| `layer`             | `vapor-utilities`                       | 생성된 스타일을 담을 CSS cascade layer 이름. 앱의 레이어 순서 선언에 포함되어야 하며, 빠지면 가장 뒤의 레이어로 취급되어 앱 스타일보다 우선합니다 |
+
+### 에러 코드
+
+| 코드                  | 원인                                                   |
+| --------------------- | ------------------------------------------------------ |
+| `unknown-token`       | 해당 속성의 토큰 그룹에 없는 토큰                      |
+| `scope-mismatch`      | 다른 토큰 그룹의 토큰 사용 (예: `color: '$space-200'`) |
+| `unknown-property`    | 토큰을 받지 않는 속성에 토큰 사용 (shorthand 등)       |
+| `invalid-input-shape` | 값 안에 섞인 토큰, 지원하지 않는 입력 형태             |
+| `dynamic-value`       | 식별자 속성이나 삼항 분기 안의 동적 값                 |
+| `computed-key`        | computed key 사용                                      |
+| `spread`              | spread 사용                                            |
+| `invalid-selector`    | 중첩 키가 `:` `::` `@` `[` `&` 중 하나로 시작하지 않음 |

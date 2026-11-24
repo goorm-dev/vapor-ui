@@ -13,7 +13,7 @@ To run a single test file: `pnpm vitest run src/components/button/button.test.ts
 Full rule files live in `.claude/rules/` at the repo root. Load them when you need deeper guidance:
 
 - `@.claude/rules/component-api.md` — component API, file structure, compound pattern, props typing
-- `@.claude/rules/styling.md` — Vanilla Extract styling, tokens, layer cascade, sprinkles
+- `@.claude/rules/styling.md` — Vanilla Extract styling, tokens, layer cascade, `css()` macro boundary
 - `@.claude/rules/typescript.md` — TypeScript conventions, naming, coding style
 - `@.claude/rules/testing.md` — testing stack, coverage expectations, fake timers
 - `@.claude/rules/docs.md` — Storybook story structure, `TestBed` story convention
@@ -49,7 +49,7 @@ Never use `Object.assign` to build compound namespace exports — use the 3-file
 
 ### Props Typing
 
-All components use `VaporUIComponentProps` from `~/utils/types`, which merges Base UI's `render` prop, the `$css` sprinkles prop, and stateful `className`/`style`:
+All components use `VaporUIComponentProps` from `~/utils/types`, which merges Base UI's `render` prop, the Sprinkles `$css` prop (still supported for external consumers; see the note below for the planned transition to the `css()` macro from `@vapor-ui/style-macro`), and stateful `className`/`style`:
 
 ```tsx
 export namespace Button {
@@ -106,7 +106,7 @@ All styles live in `*.css.ts` files. No inline styles, no CSS modules.
 
 ### Three primitives
 
-- **`componentRecipe`** — components with variants. Placed inside `@layer vapor.components` automatically.
+- **`componentRecipe`** — components with variants. Placed inside `@layer vapor-components` automatically.
 - **`componentStyle`** — static, no-variant component parts.
 - **`interaction()` mixin** — include in `base` for any interactive element (hover/active/focus via `::before` overlay).
 
@@ -135,17 +135,46 @@ selectors: { [when.disabled()]: { opacity: 0.32 } }
 
 Always use the `vars` object from `~/styles/themes.css`. Never use hard-coded values.
 
+### `css()` macro (consumer-facing styling)
+
+User-facing composition (new components, docs examples, demo code) uses the `css()` macro from [`@vapor-ui/style-macro`](../style-macro). It compiles each call to one class + one CSS block at build time (Vanilla Extract model) with no runtime style dictionary:
+
+```tsx
+import { css } from '@vapor-ui/style-macro';
+
+<div
+    className={css({
+        padding: '$space-400',
+        color: accent, // dynamic → hoisted to a CSS var in `style={{ ... }}`
+        ':hover': { color: '$foreground-accent' },
+    })}
+/>;
+```
+
+Core component implementations stay on Vanilla Extract (`componentRecipe` / `componentStyle`) — the macro is for leaf product code and consumers assembling layouts.
+
+How it is wired (see `packages/style-macro/README.md` for per-bundler setup):
+
+- `css()` returns a plain **string** (RSC-safe). Arguments resolvable in the same file (object literals, top-level `const x = css(...)`, and `&&` / `?:` between them) merge at compile time into one block — later arguments win, conditional combinations get one block per branch. Other arguments (imports, props) are joined by `_cx([...])`; which of two classes wins then follows CSS load order. Joining results yourself (template literal, `cn()`) behaves the same — no merge, load order decides; use `css(a, b)` when later arguments must win.
+- Each module that calls `css()` imports its own CSS (Vanilla Extract model): a virtual `<file>.vapor.css` (Vite), a `module.vapor.css?vapor-src=…` request (webpack / Next webpack) or `./<file>?vapor-css` (Turbopack). Library builds (`rolldown`) emit one `<file>.vapor.css` per module. Unimported components ship no CSS. The consumer's CSS entry (`@vapor-ui/core/layers.css` first) must be imported before any `@vapor-ui/*` import so layer order registers first.
+- Class format: `v<hash>` (prod) / `<name>_<hash>` (dev), hash = murmur2(`<package name>/<path relative to that package>` + block declarations).
+- Unexpanded shorthands (`border`, `background`, `font`, …) still do not accept tokens; `padding`/`margin`/`inset`/`borderRadius` are expanded to longhands first and do.
+
 ### `$css` prop
 
-`$css` is the public API for sprinkle styles. Deprecated flat props (`padding`, `margin`, etc.) are being removed — always write `$css={{ padding: '150' }}` instead.
+The sprinkles-backed `$css` prop is still a supported public API. External consumers of `@vapor-ui/core` and `@vapor-ui/composites` can keep using `$css={{ padding: '150' }}` and we do not mark it with `@deprecated`.
+
+The `css()` macro from `@vapor-ui/style-macro` is being dogfooded inside this monorepo (core / composites / website) first. Once the macro is proven stable, consumer-facing docs will announce the transition and a codemod will migrate `$css` call sites. Until then both APIs coexist.
+
+The flat `padding`/`margin`/… variant props exposed via `DeprecatedSprinkles` remain `@deprecated` — do not reintroduce them, and migrate existing callers to `$css={{ padding: '…' }}`.
 
 ### `@layer` cascade order
 
 ```text
-vapor.theme → vapor.reset → vapor.components → vapor.utilities → (no layer: user className)
+vapor-theme → vapor-reset → vapor-components → vapor-utilities → (no layer: user className)
 ```
 
-User `className` always wins over component styles without `!important`.
+`vapor-utilities` is where the `css()` macro emits its blocks (`@vapor-ui/composites` uses its own `vapor-composites` layer). User `className` without a layer always wins over component styles — no `!important` needed.
 
 ## Testing
 

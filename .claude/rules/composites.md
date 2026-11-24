@@ -11,7 +11,7 @@ paths:
 
 1. [슬롯은 `createSlots`로 만든다](#1-슬롯은-createslots로-만든다)
 2. [모든 prop에 JSDoc을 붙인다](#2-모든-prop에-jsdoc을-붙인다)
-3. [스타일은 `$css` prop으로 작성한다](#3-스타일은-css-prop으로-작성한다)
+3. [스타일은 `className={css({...})}` 로 작성한다](#3-스타일은-classnamecss-로-작성한다)
 4. [Primitive prop은 인터페이스 내부에서 재정의한다](#4-primitive-prop은-인터페이스-내부에서-재정의한다)
 5. [타입은 TypeScript `namespace`로 노출한다](#5-타입은-typescript-namespace로-노출한다)
 6. [서브 컴포넌트는 `index.parts.ts`로 분리한다](#6-서브-컴포넌트는-indexpartsts로-분리한다)
@@ -47,7 +47,7 @@ type Slots = SlotProps<typeof slots, 'title'>;
 
 // 렌더링
 <slots.title render={title} />
-<slots.description render={description} $css={{ color: '$basic-gray-500' }} />
+<slots.description render={description} className={css({ color: '$basic-gray-500' })} />
 ```
 
 > 외부에 노출되는 서브 컴포넌트가 자체 슬롯 세트를 가진다면 그 서브 컴포넌트 스코프에 별도 `createSlots` 호출을 둔다. 컴포넌트 최상위와 뒤섞지 않는다. 반대로 `Header`, `Body`, `Footer`처럼 외부 API가 아닌 내부 아나토미 분리용 컴포넌트는 최상위 슬롯을 props drilling으로 전달한다.
@@ -95,13 +95,15 @@ export interface DialogProps {
 }
 ```
 
-## 3. 스타일은 `$css` prop으로 작성한다
+## 3. 스타일은 `className={css({...})}` 로 작성한다
 
-Composites는 `className` / `style` 오버라이드를 소비자에게 노출하지 않는다(→ [`CLAUDE.md §8`](../../packages/composites/CLAUDE.md)). 컴포넌트 내부 스타일은 `@vapor-ui/core` primitive가 제공하는 `$css` prop을 사용한다. `$css`는 디자인 토큰(`$300`, `$basic-gray-500` 등)을 지원하므로 하드코딩된 색상·간격 값을 사용하지 않는다.
+Composites는 `className` / `style` 오버라이드를 소비자에게 노출하지 않는다(→ [`CLAUDE.md §8`](../../packages/composites/CLAUDE.md)). 컴포넌트 **내부** 스타일은 [`@vapor-ui/style-macro`](../../packages/style-macro)의 `css()` 매크로를 컴포넌트가 감싸는 core primitive 의 `className` 에 넘겨 적용한다. 디자인 토큰(`$space-300`, `$fg-primary`, `$basic-gray-500` 등)을 그대로 지원하므로 하드코딩된 색상·간격 값을 사용하지 않는다.
+
+> `@vapor-ui/core` primitive 의 `$css` prop 은 deprecated. 신규 코드에서는 사용하지 않고, 기존 코드는 점진적으로 `className={css({...})}` 로 이관한다.
 
 **규칙**
 
-- 정적 스타일은 primitive의 `$css`에 인라인으로 작성한다. 스타일 파일(`.css.ts`) 별도 생성 금지.
+- 정적 스타일은 primitive 의 `className` 에 `css({...})` 호출을 인라인으로 작성한다. 스타일 파일(`.css.ts`) 별도 생성 금지.
 - 색상·간격·radius 등은 반드시 토큰(`$...`)으로 참조한다.
 - 상태에 따라 값이 달라지는 스타일은 삼항 연산으로 표현한다.
 - 여러 컴포넌트에 반복 적용되는 오프셋·정렬은 primitive 자체 default에 맡기고, 필요할 때만 재정의한다.
@@ -109,28 +111,30 @@ Composites는 `className` / `style` 오버라이드를 소비자에게 노출하
 **예시** (`src/components/dialog/dialog.tsx`)
 
 ```tsx
+import { css } from '@vapor-ui/style-macro';
+
 <DialogPrimitives.Header
-    $css={{
+    className={css({
         justifyContent: 'space-between',
         alignItems: 'start',
         height: 'unset',
-        paddingTop: '$300',
-        paddingBottom: '$200',
-        gap: '$200',
-    }}
+        paddingTop: '$space-300',
+        paddingBottom: '$space-200',
+        gap: '$space-200',
+    })}
 >
-    <VStack $css={{ alignItems: 'flex-start', gap: '$025', flex: 1 }}>
+    <VStack className={css({ alignItems: 'flex-start', gap: '$space-025', flex: 1 })}>
         <slots.title render={title} />
-        <slots.description render={description} $css={{ color: '$basic-gray-500' }} />
+        <slots.description render={description} className={css({ color: '$basic-gray-500' })} />
     </VStack>
 </DialogPrimitives.Header>
 
 // 상태에 따라 분기하는 경우
 <DialogPrimitives.Body
-    $css={{
-        marginBottom: '$300',
+    className={css({
+        marginBottom: '$space-300',
         maskImage: scrollable ? 'linear-gradient(to top, transparent 0, black 20px)' : '',
-    }}
+    })}
 >
     {children}
 </DialogPrimitives.Body>
@@ -311,7 +315,7 @@ export namespace DialogAssistive {
 
 - [ ] 슬롯을 `createSlots`로 만들었고, 필수 슬롯 key를 `SlotProps` 두 번째 제네릭에 넘겼다.
 - [ ] 모든 prop에 JSDoc이 있다. 기본값이 있는 prop에는 `@default`가 붙어 있다.
-- [ ] 스타일은 `$css`로만 작성했고, 색상·간격은 토큰(`$...`)을 사용했다.
+- [ ] 스타일은 `className={css({...})}` 로 작성했고, 색상·간격은 토큰(`$space-...`, `$fg-...`, `$bg-...` 등)을 사용했다. 신규 `$css` 사용 없음.
 - [ ] Primitive prop을 노출할 때 로컬 alias를 만들고 인터페이스 내부에서 `Alias['prop']`으로 인덱싱했다.
 - [ ] `export namespace <Component> { export type Props = ... }` 패턴으로 타입을 노출했다.
 - [ ] 서브 컴포넌트가 있는 컴포넌트라면 `index.parts.ts`를 두고 `index.ts`에서 namespace로 재수출했다.
