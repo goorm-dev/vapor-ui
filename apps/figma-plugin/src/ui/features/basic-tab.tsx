@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import type { ThemeResult } from '@vapor-ui/color-generator';
-import { Button, HStack, Text, VStack } from '@vapor-ui/core';
+import { Button, Text, VStack } from '@vapor-ui/core';
 
 import { ColorInput } from '~/ui/components/color-input';
 import { LabeledInput } from '~/ui/components/labeled-input';
@@ -28,29 +28,28 @@ export const BasicTab = ({ draft, theme, baseline, flags, request }: BasicTabPro
         <VStack $css={{ gap: '$300' }}>
             {draft.basics.map((palette) => (
                 <Section key={palette.name}>
-                    <HStack $css={{ gap: '$100', alignItems: 'center' }}>
-                        <ColorInput
-                            label={palette.name}
-                            value={palette.hex}
-                            onChange={(hex) =>
-                                request({ type: 'set-hex', name: palette.name, hex })
-                            }
-                        />
-                        {!palette.preset && (
-                            <Button
-                                size="sm"
-                                variant="ghost"
-                                colorPalette="danger"
-                                onClick={() =>
-                                    request({ type: 'remove-basic', name: palette.name })
-                                }
-                            >
-                                삭제
-                            </Button>
-                        )}
-                    </HStack>
+                    <ColorInput
+                        label={palette.name}
+                        value={palette.hex}
+                        onChange={(hex) => request({ type: 'set-hex', name: palette.name, hex })}
+                        action={
+                            !palette.preset && (
+                                <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    colorPalette="danger"
+                                    className="shrink-0"
+                                    onClick={() =>
+                                        request({ type: 'remove-basic', name: palette.name })
+                                    }
+                                >
+                                    삭제
+                                </Button>
+                            )
+                        }
+                    />
                     {draft.brand?.name === palette.name ? (
-                        <Text typography="body3" foreground="hint-200">
+                        <Text typography="body2" foreground="hint-200">
                             브랜드 탭의 {palette.name}이(가) 이 팔레트를 대체해요.
                         </Text>
                     ) : (
@@ -65,37 +64,12 @@ export const BasicTab = ({ draft, theme, baseline, flags, request }: BasicTabPro
                                 onHue={(scale, hue) =>
                                     request({ type: 'set-hue', name: palette.name, scale, hue })
                                 }
+                                advice={{ draft, request }}
                             />
                         )
                     )}
                 </Section>
             ))}
-
-            <Section>
-                <Section.Title title="새 색 추가" />
-                <LabeledInput
-                    label="Color Name"
-                    value={newName}
-                    onChange={(value) => setNewName(value.trim())}
-                    placeholder="teal"
-                    invalid={Boolean(nameError)}
-                />
-                {nameError && (
-                    <Text typography="body4" foreground="danger-100">
-                        소문자로 시작하고 소문자, 숫자, -만 써요. gray는 쓸 수 없어요.
-                    </Text>
-                )}
-                <ColorInput label="Hex Code" value={newHex} onChange={setNewHex} />
-                <Button
-                    disabled={!isValidName(newName)}
-                    onClick={() => {
-                        request({ type: 'add-basic', name: newName, hex: newHex });
-                        setNewName('');
-                    }}
-                >
-                    새 색 추가
-                </Button>
-            </Section>
 
             {theme && baseline && (
                 <Section>
@@ -109,6 +83,33 @@ export const BasicTab = ({ draft, theme, baseline, flags, request }: BasicTabPro
                     />
                 </Section>
             )}
+
+            <Section>
+                <Section.Title title="새 색 추가" />
+                <LabeledInput
+                    label="Color Name"
+                    value={newName}
+                    onChange={(value) => setNewName(value.trim())}
+                    placeholder="teal"
+                    invalid={Boolean(nameError)}
+                />
+                {nameError && (
+                    <Text typography="body3" foreground="danger-100">
+                        소문자로 시작하고 소문자, 숫자, -만 써요. gray는 쓸 수 없어요.
+                    </Text>
+                )}
+                <ColorInput label="Hex Code" value={newHex} onChange={setNewHex} />
+                <Button
+                    variant="outline"
+                    disabled={!isValidName(newName)}
+                    onClick={() => {
+                        request({ type: 'add-basic', name: newName, hex: newHex });
+                        setNewName('');
+                    }}
+                >
+                    새 색 추가
+                </Button>
+            </Section>
         </VStack>
     );
 };

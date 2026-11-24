@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { Scale, ThemeResult } from '@vapor-ui/color-generator';
 import { Button, HStack, Text, VStack } from '@vapor-ui/core';
 
-import type { Hues } from '~/ui/features/theme-draft';
+import type { HueRecommendation } from '~/ui/features/hue-recommendation';
+import { searchHue } from '~/ui/features/hue-recommendation';
+import type { Hues, ThemeAction, ThemeDraft } from '~/ui/features/theme-draft';
 import { COLOR_SCALES, HUE_RANGE, hueDelta, hueOf } from '~/ui/features/theme-draft';
 
 const GRAY_SCALES: readonly Scale[] = ['000', '025', ...COLOR_SCALES];
@@ -19,38 +21,130 @@ const chipsOf = (theme: ThemeResult, mode: (typeof MODES)[number], name: string)
 interface HueSliderProps {
     label: string;
     baseHue: number;
+    /** The generated cell's `oklch(L C H)`, used for the track preview. */
+    baseOklch: string;
     /** The edited hue, or `undefined` for the generated one. */
     hue: number | undefined;
     onChange: (hue: number | null) => void;
 }
 
-const HueSlider = ({ label, baseHue, hue, onChange }: HueSliderProps) => {
+// The native track is invisible in the plugin, so draw it: thumb plus a hue gradient track.
+const SLIDER_CLASS = [
+    'flex-1 min-w-0 h-2 rounded-full appearance-none cursor-pointer',
+    '[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:size-4',
+    '[&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white',
+    '[&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-black/60',
+    '[&::-webkit-slider-thumb]:shadow',
+].join(' ');
+
+const HueSlider = ({ label, baseHue, baseOklch, hue, onChange }: HueSliderProps) => {
     // Unwrapped around the baseline so a slider near 0°/360° stays continuous.
     const value = baseHue + hueDelta(baseHue, hue ?? baseHue);
+    // Preview only: the engine re-solves L and C per hue, so the real cell can differ slightly.
+    const [l, c] = baseOklch.slice(6, -1).split(' ');
+    const stops = [-HUE_RANGE, -HUE_RANGE / 2, 0, HUE_RANGE / 2, HUE_RANGE].map(
+        (d) => `oklch(${l} ${c} ${baseHue + d})`,
+    );
     return (
-        <HStack $css={{ gap: '$100', alignItems: 'center' }}>
-            <Text typography="body3" className="w-36 shrink-0">
-                {label} 색조 {(hue ?? baseHue).toFixed(1)}°
-            </Text>
-            <input
-                type="range"
-                aria-label={`${label} 색조`}
-                min={baseHue - HUE_RANGE}
-                max={baseHue + HUE_RANGE}
-                step={0.5}
-                value={value}
-                onChange={(e) => onChange(Number(e.target.value))}
-                className="flex-1 min-w-0"
-            />
-            <Button
-                size="sm"
-                variant="ghost"
-                colorPalette="secondary"
-                disabled={hue === undefined}
-                onClick={() => onChange(null)}
+        <>
+            <HStack $css={{ gap: '$050', alignItems: 'center' }}>
+                <Text typography="body3" foreground="hint-200" className="w-8 shrink-0">
+                    색조
+                </Text>
+                <input
+                    type="range"
+                    aria-label={`${label} 색조`}
+                    min={baseHue - HUE_RANGE}
+                    max={baseHue + HUE_RANGE}
+                    step={0.1}
+                    value={value}
+                    onChange={(e) => onChange(Number(e.target.value))}
+                    className={SLIDER_CLASS}
+                    style={{ background: `linear-gradient(to right, ${stops.join(', ')})` }}
+                />
+            </HStack>
+            <HStack $css={{ gap: '$050', alignItems: 'center' }}>
+                <span className="w-8 shrink-0" />
+                <Text typography="body3" className="flex-1 min-w-0 break-all">
+                    {label} · {(hue ?? baseHue).toFixed(1)}°
+                </Text>
+                <Button
+                    size="sm"
+                    variant="ghost"
+                    colorPalette="secondary"
+                    disabled={hue === undefined}
+                    onClick={() => onChange(null)}
+                >
+                    초기화
+                </Button>
+            </HStack>
+        </>
+    );
+};
+
+interface HueAdviceProps {
+    name: string;
+    scale: Scale;
+    draft: ThemeDraft;
+    request: (action: ThemeAction) => void;
+}
+
+/**
+ * The recommended hue for a cell with a hue-gap warning. Each search step generates the whole
+ * theme (~60 ms), so the search runs one step per task to keep the plugin responsive.
+ */
+const HueAdvice = ({ name, scale, draft, request }: HueAdviceProps) => {
+    const [result, setResult] = useState<{ draft: ThemeDraft; rec: HueRecommendation | null }>();
+
+    useEffect(() => {
+        const steps = searchHue(draft, { name, scale });
+        let timer = setTimeout(function tick() {
+            const step = steps.next();
+            if (step.done) setResult({ draft, rec: step.value });
+            else timer = setTimeout(tick);
+        });
+        return () => clearTimeout(timer);
+    }, [draft, name, scale]);
+
+    // `undefined` while searching: a result for an older draft is stale.
+    const rec = result?.draft === draft ? result.rec : undefined;
+    if (rec === null) return null;
+
+    const move = rec?.kind === 'move' ? rec : null;
+    const hue = move && `${move.hue.toFixed(1)}°`;
+    const message = !rec
+        ? '추천 색조 찾는 중…'
+        : rec.kind === 'none'
+          ? `범위 내 추천 불가 · ${rec.reason}`
+          : rec.name === name
+            ? `추천 ${hue}`
+            : `${rec.name}-${rec.scale}을 ${hue}로 조정 권장`;
+    return (
+        <HStack $css={{ gap: '$050', alignItems: 'center' }}>
+            <span className="w-8 shrink-0" />
+            <Text
+                typography="body3"
+                foreground={move ? undefined : 'hint-200'}
+                className="flex-1 min-w-0 break-all"
             >
-                초기화
-            </Button>
+                {message}
+            </Text>
+            {move && (
+                <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() =>
+                        request({
+                            type: 'set-hue',
+                            name: move.name,
+                            scale: move.scale,
+                            hue: move.hue,
+                        })
+                    }
+                >
+                    적용
+                </Button>
+            )}
         </HStack>
     );
 };
@@ -67,6 +161,8 @@ interface PaletteEditorProps {
     onHue?: (scale: Scale, hue: number | null) => void;
     /** The pinned brand cell, which ignores hue edits. */
     lockedScale?: Scale;
+    /** Enables a recommended hue for a flagged cell; it may move a cell in another palette. */
+    advice?: { draft: ThemeDraft; request: (action: ThemeAction) => void };
 }
 
 /**
@@ -81,6 +177,7 @@ export const PaletteEditor = ({
     flags,
     onHue,
     lockedScale,
+    advice,
 }: PaletteEditorProps) => {
     const [selected, setSelected] = useState<Scale | null>(null);
     const scales = name === 'gray' ? GRAY_SCALES : COLOR_SCALES;
@@ -91,6 +188,10 @@ export const PaletteEditor = ({
     const baseChip = active && chipsOf(baseline, 'light', name)[active];
     const baseHue = baseChip ? hueOf(baseChip.oklch) : null;
     const edited = active ? hues[active] : undefined;
+    // Cheap pre-check; the search itself tells hue-gap apart from other warnings.
+    const flagged =
+        active !== null &&
+        (flags.has(`light ${name}-${active}`) || flags.has(`dark ${name}-${active}`));
 
     return (
         <VStack $css={{ gap: '$100' }}>
@@ -98,7 +199,7 @@ export const PaletteEditor = ({
                 const chips = chipsOf(theme, mode, name);
                 return (
                     <HStack key={mode} $css={{ gap: '$050', alignItems: 'center' }}>
-                        <Text typography="body4" foreground="hint-200" className="w-8 shrink-0">
+                        <Text typography="body3" foreground="hint-200" className="w-8 shrink-0">
                             {mode}
                         </Text>
                         {scales.map((scale) => {
@@ -128,7 +229,7 @@ export const PaletteEditor = ({
                                         <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-white ring-1 ring-black" />
                                     )}
                                     {mode === 'light' && scale === lockedScale && (
-                                        <span className="absolute inset-0 grid place-items-center text-[10px] text-white mix-blend-difference">
+                                        <span className="absolute inset-0 grid place-items-center text-xs text-white mix-blend-difference">
                                             ●
                                         </span>
                                     )}
@@ -143,7 +244,7 @@ export const PaletteEditor = ({
                 {scales.map((scale) => (
                     <Text
                         key={scale}
-                        typography="body4"
+                        typography="body3"
                         foreground="hint-200"
                         className="flex-1 min-w-0 text-center"
                     >
@@ -152,13 +253,17 @@ export const PaletteEditor = ({
                 ))}
             </HStack>
 
-            {active && baseHue !== null && onHue && (
+            {active && baseChip && baseHue !== null && onHue && (
                 <HueSlider
                     label={`${name}-${active}`}
                     baseHue={baseHue}
+                    baseOklch={baseChip.oklch}
                     hue={edited}
                     onChange={(hue) => onHue(active, hue)}
                 />
+            )}
+            {active && flagged && advice && (
+                <HueAdvice key={active} name={name} scale={active} {...advice} />
             )}
         </VStack>
     );

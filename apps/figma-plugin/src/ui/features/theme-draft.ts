@@ -65,7 +65,7 @@ export const initialDraft: ThemeDraft = {
 
 const hasHues = (palette: { hues: Hues }) => Object.keys(palette.hues).length > 0;
 
-const normalizeHue = (hue: number) => ((hue % 360) + 360) % 360;
+export const normalizeHue = (hue: number) => ((hue % 360) + 360) % 360;
 
 const withHue = (hues: Hues, scale: Scale, hue: number | null): Hues => {
     const { [scale]: _, ...rest } = hues;

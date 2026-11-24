@@ -39,13 +39,14 @@ export const BrandTab = ({ draft, theme, baseline, flags, request }: BrandTabPro
                     invalid={Boolean(nameError)}
                 />
                 {nameError && (
-                    <Text typography="body4" foreground="danger-100">
+                    <Text typography="body3" foreground="danger-100">
                         소문자로 시작하고 소문자, 숫자, -만 써요. gray는 쓸 수 없어요.
                     </Text>
                 )}
                 <ColorInput label="Hex Code" value={hex} onChange={setHex} />
-                <HStack $css={{ gap: '$100' }}>
+                <HStack $css={{ gap: '$150' }}>
                     <Button
+                        variant="outline"
                         className="flex-1"
                         disabled={!isValidName(name) || unchanged}
                         onClick={() => request({ type: 'set-brand', name, hex })}
@@ -78,6 +79,7 @@ export const BrandTab = ({ draft, theme, baseline, flags, request }: BrandTabPro
                         onHue={(scale, hue) =>
                             request({ type: 'set-hue', name: brand.name, scale, hue })
                         }
+                        advice={{ draft, request }}
                     />
                 </Section>
             )}

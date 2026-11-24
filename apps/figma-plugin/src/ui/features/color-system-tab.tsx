@@ -115,19 +115,20 @@ export const ColorSystemTab = () => {
 
             <VStack
                 $css={{ gap: '$200' }}
-                className="sticky bottom-0 pt-3 pb-1 bg-white border-t border-gray-300"
+                className="sticky bottom-0 py-v-150 bg-white border-t border-gray-300"
             >
                 {error && (
                     <Box
                         role="alert"
                         className="p-3 bg-v-red-50 border border-v-red-200 rounded-lg"
                     >
-                        <Text typography="body3" foreground="danger-100">
+                        <Text typography="body2" foreground="danger-100">
                             팔레트 생성 실패: {error}
                         </Text>
                     </Box>
                 )}
-                <Box className="max-h-40 overflow-y-auto">
+                {/* Short cap keeps most of the 760px frame for the palettes. */}
+                <Box className="overflow-y-auto">
                     <AccessibilityWarning checks={checks} />
                 </Box>
                 <LabeledInput
@@ -136,21 +137,21 @@ export const ColorSystemTab = () => {
                     onChange={setCollectionName}
                     placeholder="Enter collection name"
                 />
-                <HStack $css={{ gap: '$200' }}>
-                    <Button onClick={handleExport} disabled={!canExport} className="flex-1">
+                <HStack $css={{ gap: '$150' }}>
+                    <Button onClick={handleExport} disabled={!canExport} className="flex-3 min-w-0">
                         Figma로 내보내기
                     </Button>
                     <Button
                         onClick={handleCopyCssVariables}
                         variant="outline"
                         disabled={isCopying || !theme}
-                        className="flex-1"
+                        className="flex-2 min-w-0"
                     >
                         {isCopying ? <ConfirmOutlineIcon /> : 'Copy CSS Variables'}
                     </Button>
                 </HStack>
                 {!canExport && theme && (
-                    <Text typography="body4" foreground="danger-100">
+                    <Text typography="body3" foreground="danger-100">
                         FAIL 검사가 남아 있으면 내보낼 수 없어요.
                     </Text>
                 )}

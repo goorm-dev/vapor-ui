@@ -27,14 +27,14 @@ export const LabeledSelect = <T extends string>({
 
     return (
         <div className="flex items-center gap-2">
-            <label htmlFor={selectId} className="text-xs text-gray-600 min-w-[102px]">
+            <label htmlFor={selectId} className="text-sm text-gray-600 min-w-[102px]">
                 {label}:
             </label>
             <select
                 id={selectId}
                 value={value}
                 onChange={(e) => onChange(e.target.value as T)}
-                className={`px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 ${className}`}
+                className={`px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 ${className}`}
                 {...selectProps}
             >
                 {options.map((option) => (

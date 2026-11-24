@@ -144,12 +144,18 @@ describe('flaggedCells', () => {
                 details: ['light my-brand-500: chroma 0.1 (rule 0.2)'],
             },
             { id: 'target-contrast', status: 'fail', details: ['dark red-050: 1.1 (target 1.2)'] },
-            { id: 'hue-gap', status: 'warn', details: ['red · orange: hue gap (light 700 1.0°)'] },
+            {
+                id: 'hue-gap',
+                status: 'warn',
+                details: ['light red-700 · light orange-700: hue gap 1.0° (min 5.5°)'],
+            },
             { id: 'primary-anchor', status: 'ok', details: [] },
         ]);
         expect(Object.fromEntries(flags)).toEqual({
             'light my-brand-500': 'fail',
             'dark red-050': 'fail',
+            'light red-700': 'warn',
+            'light orange-700': 'warn',
         });
     });
 });
