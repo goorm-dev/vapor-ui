@@ -47,23 +47,18 @@
             }
         },
         "./tailwind.css": "./dist/styles/tailwind-preset.css.ts.vanilla.css",
-        "./styles.css": "./dist/styles/themes.css.ts.vanilla.css",
-        "./figma-blueprint/*": "./figma-blueprint/*"
+        "./styles.css": "./dist/styles/themes.css.ts.vanilla.css"
     },
     "main": "./dist/index.cjs",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.cts",
     "files": [
         "dist",
-        "docs",
-        "figma-blueprint"
+        "docs"
     ],
     "scripts": {
-        "build": "rimraf dist figma-blueprint && rolldown -c rolldown.config.ts && figma-blueprint ship",
-        "clean": "rimraf dist figma-blueprint node_modules .turbo",
-        "figma:check": "figma connect publish --dry-run",
-        "figma:preview": "figma connect preview",
-        "figma:publish": "figma connect publish",
+        "build": "rimraf dist && rolldown -c rolldown.config.ts",
+        "clean": "rimraf dist node_modules .turbo",
         "lint": "eslint ./src",
         "prepack": "pnpm --filter website docs:llms ../../packages/core/docs",
         "test": "vitest --run",
@@ -85,7 +80,6 @@
         "rainbow-sprinkles": "^1.0.0"
     },
     "devDependencies": {
-        "@figma/code-connect": "^2.0.2",
         "@repo/eslint-config": "workspace:*",
         "@repo/rolldown-config": "workspace:*",
         "@repo/typescript-config": "workspace:*",
@@ -93,19 +87,18 @@
         "@testing-library/dom": "^10.4.2",
         "@testing-library/jest-dom": "^6.9.1",
         "@testing-library/react": "^16.3.3",
-        "@testing-library/user-event": "^14.6.10",
+        "@testing-library/user-event": "^14.6.13",
         "@types/node": "^22.20.5",
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
         "@vanilla-extract/rollup-plugin": "^1.5.4",
         "@vanilla-extract/vite-plugin": "^5.2.6",
-        "@vapor-ui/figma-blueprint": "workspace:*",
         "@vitest/browser": "catalog:",
         "@vitest/coverage-v8": "catalog:",
         "autoprefixer": "^10.5.4",
         "eslint": "catalog:",
         "happy-dom": "^20.11.1",
-        "postcss": "^8.5.32",
+        "postcss": "^8.5.33",
         "react": "catalog:",
         "react-dom": "catalog:",
         "rimraf": "^6.1.4",

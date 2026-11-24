@@ -67,7 +67,7 @@
         "@types/react": "catalog:",
         "@types/react-dom": "catalog:",
         "eslint": "catalog:",
-        "postcss": "^8.5.32",
+        "postcss": "^8.5.33",
         "shiki": "^3.23.0",
         "tailwindcss": "^4.3.5",
         "tsx": "^4.23.15",
