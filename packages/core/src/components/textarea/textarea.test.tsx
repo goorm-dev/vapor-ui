@@ -237,13 +237,19 @@ describe('Textarea', () => {
             const rendered = render(<Textarea autoResize data-testid="textarea" />);
             const textarea = rendered.getByTestId('textarea') as HTMLTextAreaElement;
 
-            // Spy on style.height setter
+            // Spy on style.height setter. happy-dom v21 exposes `element.style` as a Proxy that
+            // rejects `Object.defineProperty`, so shadow the `style` getter on the instance with
+            // a Proxy that forwards reads/writes and records every assignment to `height`.
             const heightSetterSpy = vi.fn();
-            Object.defineProperty(textarea.style, 'height', {
+            const styleProxy = new Proxy(textarea.style, {
+                set(target, prop, value) {
+                    if (prop === 'height') heightSetterSpy(value);
+                    return Reflect.set(target, prop, value);
+                },
+            });
+            Object.defineProperty(textarea, 'style', {
                 configurable: true,
-                set: heightSetterSpy,
-                get: () =>
-                    heightSetterSpy.mock.calls[heightSetterSpy.mock.calls.length - 1]?.[0] || '',
+                get: () => styleProxy,
             });
 
             await userEvent.type(textarea, 'Some content');
