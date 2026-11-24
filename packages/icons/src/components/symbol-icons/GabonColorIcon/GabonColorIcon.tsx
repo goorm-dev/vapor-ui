@@ -1,26 +1,30 @@
 import IconBase from '~/components/icon-base';
 import type { IconProps } from '~/components/icon-base';
+import { useIconId } from '~/components/use-icon-id';
 
-const GabonColorIcon = (props: IconProps) => (
-    <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
-        <mask
-            id="vapor-icons-color-GabonColorIcon__a"
-            width={16}
-            height={16}
-            x={0}
-            y={0}
-            maskUnits="userSpaceOnUse"
-            style={{
-                maskType: 'luminance',
-            }}
-        >
-            <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-        </mask>
-        <g mask="url(#vapor-icons-color-GabonColorIcon__a)">
-            <path fill="#009F60" d="M18.665 0H-2.667v5.333h21.332z" />
-            <path fill="#FCD20F" d="M18.665 5.333H-2.667v5.332h21.332z" />
-            <path fill="#3776C5" d="M18.665 10.667H-2.667V16h21.332z" />
-        </g>
-    </IconBase>
-);
+const GabonColorIcon = (props: IconProps) => {
+    const id = useIconId('vapor-icons-color-GabonColorIcon');
+    return (
+        <IconBase xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16" {...props}>
+            <mask
+                id={`${id}__a`}
+                width={16}
+                height={16}
+                x={0}
+                y={0}
+                maskUnits="userSpaceOnUse"
+                style={{
+                    maskType: 'luminance',
+                }}
+            >
+                <path fill="#fff" d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+            </mask>
+            <g mask={`url(#${id}__a)`}>
+                <path fill="#009F60" d="M18.665 0H-2.667v5.333h21.332z" />
+                <path fill="#FCD20F" d="M18.665 5.333H-2.667v5.332h21.332z" />
+                <path fill="#3776C5" d="M18.665 10.667H-2.667V16h21.332z" />
+            </g>
+        </IconBase>
+    );
+};
 export default GabonColorIcon;
