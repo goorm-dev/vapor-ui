@@ -132,13 +132,13 @@ Backgrounds are fixed: light `#FFFFFF`, dark `#232323`. See `@vapor-ui/color-gen
 
 ### Semantic Color Tokens
 
-- `--{prefix}-color-canvas-100`: Primary canvas background
-- `--{prefix}-color-canvas-200`: Secondary canvas background
-- `--{prefix}-color-background-primary-100`: Primary background (light)
-- `--{prefix}-color-background-primary-200`: Primary background (brand color)
+- `--{prefix}-color-background-canvas-100`: Page background
+- `--{prefix}-color-background-canvas-200`: Secondary page background
 - `--{prefix}-color-background-overlay-100`: Overlay background
-- `--{prefix}-color-foreground-100`: Primary text color
-- `--{prefix}-color-foreground-200`: Secondary text color
+- `--{prefix}-color-background-primary-100`: Light primary background
+- `--{prefix}-color-background-primary-200`: Primary fill (the brand cell in light)
+- `--{prefix}-color-foreground-primary-100`: Primary text and icons
+- `--{prefix}-color-foreground-primary-200`: Stronger primary text and icons
 - `--{prefix}-color-foreground-inverse`: Inverse text color (white in light, black in dark)
 - `--{prefix}-color-foreground-onPrimary`: Text and icons on the primary fill (white when it reaches 4.5:1, else black; provisional name)
 - `--{prefix}-color-border-normal`: Normal border color
@@ -162,42 +162,41 @@ The `generateRadiusCSS` function accepts predefined radius keys:
 
 ## Output Example
 
+`generateCompleteCSS` with the Quick Start config:
+
 ```css
 :root,
 [data-vapor-theme='light'] {
-    /* Canvas */
-    --vapor-color-canvas: #f5f5f5;
-
-    /* Primitive Palettes (050-900 steps) */
-    --vapor-color-mint-050: #e8faea;
-    --vapor-color-mint-100: #d1f5d5;
-    --vapor-color-mint-200: #a8ebb0;
-    --vapor-color-mint-300: #71d378;
-    /* ... more palette colors ... */
-    --vapor-color-mint-900: #1a4d1e;
-
-    /* Semantic Tokens */
-    --vapor-color-canvas-100: var(--vapor-color-canvas);
-    --vapor-color-canvas-200: var(--vapor-color-neutral-050);
+    --vapor-color-canvas: #ffffff;
+    --vapor-color-white: #ffffff;
+    --vapor-color-black: #000000;
+    /* ... base and gray palettes ... */
+    --vapor-color-mint-100: #c2edb4;
+    --vapor-color-mint-200: #71d378;
+    --vapor-color-mint-300: #5ac24e;
+    /* ... mint 400–800 ... */
+    --vapor-color-mint-900: #002d0c;
+    --vapor-color-mint-050: #e0f7d8;
     --vapor-color-background-primary-100: var(--vapor-color-mint-100);
-    --vapor-color-background-primary-200: var(--vapor-color-mint-300);
-    --vapor-color-foreground-100: var(--vapor-color-mint-400);
-    --vapor-color-foreground-200: var(--vapor-color-mint-500);
-    --vapor-color-foreground-inverse: #000000;
-    --vapor-color-border-normal: var(--vapor-color-neutral-100);
-    --vapor-color-border-primary: var(--vapor-color-mint-300);
-
-    /* System */
+    --vapor-color-background-primary-200: var(--vapor-color-mint-200);
+    --vapor-color-border-primary: var(--vapor-color-mint-200);
+    --vapor-color-border-normal: var(--vapor-color-gray-100);
+    --vapor-color-foreground-primary-100: var(--vapor-color-mint-300);
+    --vapor-color-foreground-primary-200: var(--vapor-color-mint-400);
+    --vapor-color-background-canvas-100: var(--vapor-color-gray-000);
+    --vapor-color-background-canvas-200: var(--vapor-color-gray-050);
+    --vapor-color-background-overlay-100: var(--vapor-color-gray-000);
+    --vapor-color-foreground-inverse: var(--vapor-color-white);
+    --vapor-color-foreground-onPrimary: var(--vapor-color-black);
     --vapor-scale-factor: 1.15;
     --vapor-radius-factor: 1.5;
 }
 
 [data-vapor-theme='dark'] {
-    --vapor-color-canvas: #161717;
-    --vapor-color-mint-050: #1f3d21;
-    /* ... dark mode palette colors ... */
-    --vapor-color-canvas-100: var(--vapor-color-canvas);
-    --vapor-color-canvas-200: var(--vapor-color-neutral-050);
-    /* ... dark mode semantic tokens ... */
+    --vapor-color-canvas: #232323;
+    /* ... dark palettes ... */
+    --vapor-color-background-primary-100: var(--vapor-color-mint-050);
+    --vapor-color-background-primary-200: var(--vapor-color-mint-700);
+    /* ... dark semantic tokens ... */
 }
 ```
