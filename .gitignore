@@ -68,3 +68,6 @@ packages/core/docs/
 
 # Code Connect templates and tables `figma-blueprint build` packs into core, composites and icons
 packages/*/figma-blueprint/
+
+# Python bytecode from running the reference script
+packages/color-generator/reference/__pycache__/
