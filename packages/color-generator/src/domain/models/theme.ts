@@ -32,8 +32,9 @@ export interface ThemeOptions {
     hueAnchors?: Record<string, Partial<HueAnchors>>;
     /**
      * Light hues of single steps, applied over the anchor curve. Each overridden cell keeps its
-     * contrast target and chroma rule, and dark follows from the overridden light curve.
-     * `gray`, unknown names and the pinned brand cell ignore their overrides.
+     * contrast target and chroma rule, and dark follows from the overridden light curve. The
+     * pinned brand cell ignores its override. An unknown name, `gray`, a step outside 050–900,
+     * or a non-finite hue throws. Hues wrap, so 444 means 84.
      */
     hueOverrides?: HueOverrides;
 }

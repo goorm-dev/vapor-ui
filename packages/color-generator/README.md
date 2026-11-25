@@ -81,7 +81,7 @@ Replaces any of a palette's three hue anchors, keyed by lowercase palette name (
 
 Sets the light OKLCH hue of single cells after the anchor curve, keyed by lowercase palette name (base, `basicColors` or brand) and scale: `{ blue: { '500': 270 } }`. The cell keeps its role: lightness is still solved to the target contrast and chroma still follows the scale's rule at the new hue. Dark derives from the overridden light curve as usual.
 
-`gray`, unknown names and the pinned brand cell ignore their overrides.
+The pinned brand cell ignores its override. An unknown name, `gray`, a step outside `050`–`900`, or a non-finite hue throws. Hues wrap, so `444` means `84`.
 
 ## Semantic tokens
 

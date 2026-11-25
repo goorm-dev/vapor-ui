@@ -5,9 +5,9 @@ import type {
     ThemeOptions,
     ThemeResult,
 } from '../../domain';
-import { hexToOklch } from '../../domain/color-math';
+import { hexToOklch, pyMod } from '../../domain/color-math';
 import type { Mode } from '../../domain/models/scale';
-import { ANCHOR_SCALES } from '../../domain/models/scale';
+import { ANCHOR_SCALES, COLOR_SCALES } from '../../domain/models/scale';
 import { BASE_TOKENS, HUE_ANCHORS } from '../constants';
 import type { HueTable } from '../engine/hue';
 import { anchorHues, anchorsFromHex } from '../engine/hue';
@@ -41,13 +41,33 @@ const checkName = (name: string) => {
     if (!isValidColorName(name) || name === 'gray') throw new Error(`Invalid color name: ${name}`);
 };
 
-const checkAnchors = (name: string, given: Record<string, unknown>) => {
-    for (const [s, hue] of Object.entries(given)) {
-        if (!(ANCHOR_SCALES as readonly string[]).includes(s))
-            throw new Error(`Invalid hue anchor step for ${name}: ${s} (use 050, 600 or 900)`);
-        if (typeof hue !== 'number' || !Number.isFinite(hue))
-            throw new Error(`Hue anchor ${name}-${s} must be a finite number: ${String(hue)}`);
-    }
+/**
+ * Checks one palette's entry of `hueAnchors` or `hueOverrides`: the palette must exist (own key
+ * only, so `constructor` is unknown), steps must be in `steps`, hues finite. Returns the hues
+ * wrapped into 0–360.
+ */
+const checkHues = <S extends string>(
+    option: 'anchor' | 'override',
+    known: object,
+    name: string,
+    given: Record<string, unknown>,
+    steps: readonly S[],
+) => {
+    if (!Object.prototype.hasOwnProperty.call(known, name))
+        throw new Error(`Unknown palette for hue ${option}s: ${name}`);
+    return Object.fromEntries(
+        Object.entries(given).map(([s, hue]) => {
+            if (!(steps as readonly string[]).includes(s))
+                throw new Error(
+                    `Invalid hue ${option} step for ${name}: ${s} (use ${steps.join(', ')})`,
+                );
+            if (typeof hue !== 'number' || !Number.isFinite(hue))
+                throw new Error(
+                    `Hue ${option} ${name}-${s} must be a finite number: ${String(hue)}`,
+                );
+            return [s, pyMod(hue, 360)];
+        }),
+    ) as Partial<Record<S, number>>;
 };
 
 /**
@@ -78,16 +98,16 @@ export function generatePrimitiveColorPalette(options: ThemeOptions = {}): Theme
     }
 
     // Order: anchors → curve → single-step overrides. `anchors` has no gray row.
-    for (const [name, given] of Object.entries(hueAnchors)) {
-        if (!anchors[name]) throw new Error(`Unknown palette for hue anchors: ${name}`);
-        checkAnchors(name, given);
-        anchors[name] = { ...anchors[name], ...given };
-    }
+    for (const [name, given] of Object.entries(hueAnchors))
+        anchors[name] = {
+            ...anchors[name],
+            ...checkHues('anchor', anchors, name, given, ANCHOR_SCALES),
+        };
     const hues: HueTable = Object.fromEntries(
         Object.entries(anchors).map(([name, a]) => [name, anchorHues(a)]),
     );
     for (const [name, row] of Object.entries(hueOverrides))
-        if (hues[name]) hues[name] = { ...hues[name], ...row };
+        hues[name] = { ...hues[name], ...checkHues('override', hues, name, row, COLOR_SCALES) };
 
     const { light, dark, brandScale } = generateFromHues(hues, { brand });
     const gray = generateGray();

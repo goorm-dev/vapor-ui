@@ -91,11 +91,25 @@ describe('hueOverrides', () => {
         expect(table(out, 'light')).toEqual(table(base, 'light'));
     });
 
-    it('ignores gray and unknown names', () => {
-        const out = generatePrimitiveColorPalette({
-            hueOverrides: { gray: { '500': 120 }, nope: { '500': 120 } },
-        });
-        expect(out).toEqual(defaults);
+    it('wraps hues into 0–360', () => {
+        const wrapped = generatePrimitiveColorPalette({ hueOverrides: { yellow: { '200': 444 } } });
+        const plain = generatePrimitiveColorPalette({ hueOverrides: { yellow: { '200': 84 } } });
+        expect(wrapped).toEqual(plain);
+        expect(failures(wrapped)).toEqual([]);
+    });
+
+    it.each([
+        [{ nope: { '500': 120 } }, /Unknown palette/],
+        [{ gray: { '500': 120 } }, /Unknown palette/],
+        [{ toString: { '500': 120 } }, /Unknown palette/],
+        [{ blue: { '000': 120 } }, /Invalid hue override step/],
+        [{ blue: { '500': Number.NaN } }, /must be a finite number/],
+        [{ blue: { '500': Infinity } }, /must be a finite number/],
+        [{ blue: { '500': '120' } }, /must be a finite number/],
+    ])('rejects %j', (hueOverrides, message) => {
+        expect(() =>
+            generatePrimitiveColorPalette({ hueOverrides } as unknown as ThemeOptions),
+        ).toThrow(message);
     });
 
     it('matches the baseline with no or empty overrides', () => {
@@ -145,6 +159,7 @@ describe('hueAnchors', () => {
     it.each([
         [{ nope: { '600': 10 } }, /Unknown palette/],
         [{ gray: { '600': 10 } }, /Unknown palette/],
+        [{ constructor: { '900': 30 } }, /Unknown palette/],
         [{ red: { '500': 10 } }, /Invalid hue anchor step/],
         [{ red: { '600': Number.NaN } }, /must be a finite number/],
         [{ red: { '900': Infinity } }, /must be a finite number/],
