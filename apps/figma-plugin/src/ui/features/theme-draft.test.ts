@@ -139,6 +139,35 @@ describe('theme draft', () => {
         expect(draftToOptions(reset)).toEqual(draftToOptions(initialDraft));
     });
 
+    it('builds the same palettes as the engine given the same anchors', () => {
+        // Untouched, the plugin draft builds the engine's default palettes exactly.
+        expect(generate(initialDraft)).toEqual(generatePrimitiveColorPalette());
+
+        const brandColor = { name: 'acme', hexcode: '#7a3cff' };
+        // Untouched base colors take HUE_ANCHORS, so only the new color is a basic color.
+        const basicColors = [{ name: 'teal', hexcode: '#00838f' }];
+        const hueAnchors = {
+            red: { '050': 18.5, '900': 30 },
+            teal: { '600': 200.25 },
+            acme: { '050': 300, '600': 285.5, '900': 275 },
+        };
+        const draft = run(
+            { type: 'add-basic', name: 'teal', hex: '#00838F' },
+            { type: 'set-brand', name: 'acme', hex: '#7A3CFF' },
+            ...Object.entries(hueAnchors).flatMap(([name, row]) =>
+                Object.entries(row).map(([step, hue]): ThemeAction => ({
+                    type: 'set-anchor',
+                    name,
+                    step: step as '050' | '600' | '900',
+                    hue,
+                })),
+            ),
+        );
+        const engine = generatePrimitiveColorPalette({ basicColors, brandColor, hueAnchors });
+        expect(generate(draft)).toEqual(engine);
+        expect(engine.hueAnchors).toMatchObject(hueAnchors);
+    });
+
     it('clears every per-step hue of one palette and keeps its anchors', () => {
         const draft = run(
             { type: 'set-anchor', name: 'red', step: '600', hue: 20 },

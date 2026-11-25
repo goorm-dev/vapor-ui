@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import type { HueAnchors, Scale, ThemeResult } from '@vapor-ui/color-generator';
-import { Button, Collapsible, HStack, Text, VStack } from '@vapor-ui/core';
+import { Button, Collapsible, HStack, Text, TextInput, VStack } from '@vapor-ui/core';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 
 import type { HueRecommendation } from '~/ui/features/hue-recommendation';
@@ -34,7 +34,6 @@ interface HueSliderProps {
     /** The edited hue, or `undefined` for the generated one. */
     hue: number | undefined;
     onChange: (hue: number | null) => void;
-    disabled?: boolean;
 }
 
 // The native track is invisible in the plugin, so draw it: thumb plus a hue gradient track.
@@ -46,7 +45,7 @@ const SLIDER_CLASS = [
     '[&::-webkit-slider-thumb]:shadow',
 ].join(' ');
 
-const HueSlider = ({ label, baseHue, baseOklch, hue, onChange, disabled }: HueSliderProps) => {
+const HueSlider = ({ label, baseHue, baseOklch, hue, onChange }: HueSliderProps) => {
     // Unwrapped around the baseline so a slider near 0°/360° stays continuous.
     const value = baseHue + hueDelta(baseHue, hue ?? baseHue);
     // Preview only: the engine re-solves L and C per hue, so the real cell can differ slightly.
@@ -68,8 +67,7 @@ const HueSlider = ({ label, baseHue, baseOklch, hue, onChange, disabled }: HueSl
                     step={0.1}
                     value={value}
                     onChange={(e) => onChange(Number(e.target.value))}
-                    disabled={disabled}
-                    className={`${SLIDER_CLASS} disabled:opacity-40 disabled:cursor-not-allowed`}
+                    className={SLIDER_CLASS}
                     style={{ background: `linear-gradient(to right, ${stops.join(', ')})` }}
                 />
             </HStack>
@@ -82,13 +80,66 @@ const HueSlider = ({ label, baseHue, baseOklch, hue, onChange, disabled }: HueSl
                     size="sm"
                     variant="ghost"
                     colorPalette="secondary"
-                    disabled={disabled || hue === undefined}
+                    disabled={hue === undefined}
                     onClick={() => onChange(null)}
                 >
                     초기화
                 </Button>
             </HStack>
         </>
+    );
+};
+
+interface AnchorInputProps {
+    label: string;
+    step: string;
+    /** The anchor with no edit: shown when `hue` is unset, and what 초기화 returns to. */
+    defaultHue: number;
+    hue: number | undefined;
+    onChange: (hue: number | null) => void;
+    disabled: boolean;
+}
+
+/** One anchor hue in degrees. Commits on blur or Enter; an empty field resets it. */
+const AnchorInput = ({ label, step, defaultHue, hue, onChange, disabled }: AnchorInputProps) => {
+    const shown = (hue ?? defaultHue).toFixed(2);
+    const commit = (text: string) => {
+        if (text.trim() === '') return onChange(null);
+        const next = Number(text);
+        if (Number.isFinite(next) && next.toFixed(2) !== shown) onChange(next);
+    };
+    return (
+        <VStack $css={{ gap: '$025' }} className="flex-1 min-w-0">
+            <HStack $css={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                <Text typography="body3" className={hue === undefined ? '' : 'font-semibold'}>
+                    {step}
+                </Text>
+                <Button
+                    size="sm"
+                    variant="ghost"
+                    colorPalette="secondary"
+                    disabled={disabled || hue === undefined}
+                    onClick={() => onChange(null)}
+                >
+                    초기화
+                </Button>
+            </HStack>
+            {/* Remounts on each committed value, so a rejected entry snaps back to it. */}
+            <TextInput
+                key={shown}
+                type={'number' as TextInput.Props['type']}
+                step={0.01}
+                size="sm"
+                aria-label={`${label} 기준 색조(°)`}
+                defaultValue={shown}
+                disabled={disabled}
+                onBlur={(e) => commit(e.currentTarget.value)}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') commit(e.currentTarget.value);
+                }}
+                className="w-full"
+            />
+        </VStack>
     );
 };
 
@@ -173,7 +224,7 @@ interface PaletteEditorProps {
     lockedScale?: Scale;
     /** Enables a recommended hue for a flagged cell; it may move a cell in another palette. */
     advice?: { draft: ThemeDraft; request: (action: ThemeAction) => void };
-    /** Anchor sliders: the edits, the anchors they reset to (none hides them), and a dispatcher. */
+    /** Anchor inputs: the edits, the anchors they reset to (none hides them), and a dispatcher. */
     anchors?: {
         edits: Anchors;
         defaults: HueAnchors | undefined;
@@ -277,19 +328,26 @@ export const PaletteEditor = ({
                 ))}
             </HStack>
 
-            {anchors &&
-                anchorDefaults &&
-                ANCHOR_STEPS.map((step) => (
-                    <HueSlider
-                        key={step}
-                        label={`${name}-${step} 기준`}
-                        baseHue={anchorDefaults[step]}
-                        baseOklch={chipsOf(theme, 'light', name)[step]!.oklch}
-                        hue={anchors.edits[step]}
-                        onChange={(hue) => anchors.request({ type: 'set-anchor', name, step, hue })}
-                        disabled={anchorsLocked}
-                    />
-                ))}
+            {anchors && anchorDefaults && (
+                <HStack $css={{ gap: '$050', alignItems: 'flex-start' }}>
+                    <Text typography="body3" foreground="hint-200" className="w-8 shrink-0 pt-1">
+                        색조
+                    </Text>
+                    {ANCHOR_STEPS.map((step) => (
+                        <AnchorInput
+                            key={step}
+                            label={`${name}-${step}`}
+                            step={step}
+                            defaultHue={anchorDefaults[step]}
+                            hue={anchors.edits[step]}
+                            onChange={(hue) =>
+                                anchors.request({ type: 'set-anchor', name, step, hue })
+                            }
+                            disabled={anchorsLocked}
+                        />
+                    ))}
+                </HStack>
+            )}
             {anchorDefaults && anchorsLocked && (
                 <Text typography="body3" foreground="hint-200">
                     칸별 색조를 편집한 팔레트예요. 세부 조정을 초기화하면 기준 색조를 바꿀 수
