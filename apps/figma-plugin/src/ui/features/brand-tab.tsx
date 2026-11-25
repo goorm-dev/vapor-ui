@@ -15,11 +15,20 @@ interface BrandTabProps {
     draft: ThemeDraft;
     theme: ThemeResult | null;
     baseline: ThemeResult | null;
+    /** Each palette's anchors with no hue edits: where its anchor sliders reset to. */
+    anchorDefaults: ThemeResult['hueAnchors'];
     flags: Map<string, 'warn' | 'fail'>;
     request: (action: ThemeAction) => void;
 }
 
-export const BrandTab = ({ draft, theme, baseline, flags, request }: BrandTabProps) => {
+export const BrandTab = ({
+    draft,
+    theme,
+    baseline,
+    anchorDefaults,
+    flags,
+    request,
+}: BrandTabProps) => {
     const { brand } = draft;
     const [name, setName] = useState(brand?.name ?? '');
     const [hex, setHex] = useState(brand?.hex ?? '#2a72e5');
@@ -80,6 +89,11 @@ export const BrandTab = ({ draft, theme, baseline, flags, request }: BrandTabPro
                             request({ type: 'set-hue', name: brand.name, scale, hue })
                         }
                         advice={{ draft, request }}
+                        anchors={{
+                            edits: brand.anchors,
+                            defaults: anchorDefaults?.[brand.name],
+                            request,
+                        }}
                     />
                 </Section>
             )}

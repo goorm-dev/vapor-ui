@@ -1,12 +1,20 @@
 import { useEffect, useState } from 'react';
 
-import type { Scale, ThemeResult } from '@vapor-ui/color-generator';
-import { Button, HStack, Text, VStack } from '@vapor-ui/core';
+import type { HueAnchors, Scale, ThemeResult } from '@vapor-ui/color-generator';
+import { Button, Collapsible, HStack, Text, VStack } from '@vapor-ui/core';
+import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 
 import type { HueRecommendation } from '~/ui/features/hue-recommendation';
 import { searchHue } from '~/ui/features/hue-recommendation';
-import type { Hues, ThemeAction, ThemeDraft } from '~/ui/features/theme-draft';
-import { COLOR_SCALES, HUE_RANGE, hueDelta, hueOf } from '~/ui/features/theme-draft';
+import type { Anchors, Hues, ThemeAction, ThemeDraft } from '~/ui/features/theme-draft';
+import {
+    ANCHOR_STEPS,
+    COLOR_SCALES,
+    HUE_RANGE,
+    hasHues,
+    hueDelta,
+    hueOf,
+} from '~/ui/features/theme-draft';
 
 const GRAY_SCALES: readonly Scale[] = ['000', '025', ...COLOR_SCALES];
 const MODES = ['light', 'dark'] as const;
@@ -26,6 +34,7 @@ interface HueSliderProps {
     /** The edited hue, or `undefined` for the generated one. */
     hue: number | undefined;
     onChange: (hue: number | null) => void;
+    disabled?: boolean;
 }
 
 // The native track is invisible in the plugin, so draw it: thumb plus a hue gradient track.
@@ -37,7 +46,7 @@ const SLIDER_CLASS = [
     '[&::-webkit-slider-thumb]:shadow',
 ].join(' ');
 
-const HueSlider = ({ label, baseHue, baseOklch, hue, onChange }: HueSliderProps) => {
+const HueSlider = ({ label, baseHue, baseOklch, hue, onChange, disabled }: HueSliderProps) => {
     // Unwrapped around the baseline so a slider near 0°/360° stays continuous.
     const value = baseHue + hueDelta(baseHue, hue ?? baseHue);
     // Preview only: the engine re-solves L and C per hue, so the real cell can differ slightly.
@@ -59,7 +68,8 @@ const HueSlider = ({ label, baseHue, baseOklch, hue, onChange }: HueSliderProps)
                     step={0.1}
                     value={value}
                     onChange={(e) => onChange(Number(e.target.value))}
-                    className={SLIDER_CLASS}
+                    disabled={disabled}
+                    className={`${SLIDER_CLASS} disabled:opacity-40 disabled:cursor-not-allowed`}
                     style={{ background: `linear-gradient(to right, ${stops.join(', ')})` }}
                 />
             </HStack>
@@ -72,7 +82,7 @@ const HueSlider = ({ label, baseHue, baseOklch, hue, onChange }: HueSliderProps)
                     size="sm"
                     variant="ghost"
                     colorPalette="secondary"
-                    disabled={hue === undefined}
+                    disabled={disabled || hue === undefined}
                     onClick={() => onChange(null)}
                 >
                     초기화
@@ -163,6 +173,12 @@ interface PaletteEditorProps {
     lockedScale?: Scale;
     /** Enables a recommended hue for a flagged cell; it may move a cell in another palette. */
     advice?: { draft: ThemeDraft; request: (action: ThemeAction) => void };
+    /** Anchor sliders: the edits, the anchors they reset to (none hides them), and a dispatcher. */
+    anchors?: {
+        edits: Anchors;
+        defaults: HueAnchors | undefined;
+        request: (action: ThemeAction) => void;
+    };
 }
 
 /**
@@ -178,8 +194,13 @@ export const PaletteEditor = ({
     onHue,
     lockedScale,
     advice,
+    anchors,
 }: PaletteEditorProps) => {
     const [selected, setSelected] = useState<Scale | null>(null);
+    const [detailOpen, setDetailOpen] = useState(false);
+    // Per-step hues are absolute, so moving the curve under them would kink it.
+    const anchorsLocked = hasHues({ hues });
+    const anchorDefaults = anchors?.defaults;
     const scales = name === 'gray' ? GRAY_SCALES : COLOR_SCALES;
     const editable = (scale: Scale) => onHue !== undefined && scale !== lockedScale;
 
@@ -212,7 +233,10 @@ export const PaletteEditor = ({
                                     key={scale}
                                     type="button"
                                     disabled={!canEdit}
-                                    onClick={() => setSelected(selected === scale ? null : scale)}
+                                    onClick={() => {
+                                        setSelected(selected === scale ? null : scale);
+                                        setDetailOpen(true);
+                                    }}
                                     title={`${chip.name} ${chip.hex} ${chip.oklch}${scale === lockedScale && mode === 'light' ? ' (브랜드 고정)' : ''}`}
                                     aria-pressed={canEdit ? selected === scale : undefined}
                                     className={[
@@ -253,17 +277,64 @@ export const PaletteEditor = ({
                 ))}
             </HStack>
 
-            {active && baseChip && baseHue !== null && onHue && (
-                <HueSlider
-                    label={`${name}-${active}`}
-                    baseHue={baseHue}
-                    baseOklch={baseChip.oklch}
-                    hue={edited}
-                    onChange={(hue) => onHue(active, hue)}
-                />
+            {anchors &&
+                anchorDefaults &&
+                ANCHOR_STEPS.map((step) => (
+                    <HueSlider
+                        key={step}
+                        label={`${name}-${step} 기준`}
+                        baseHue={anchorDefaults[step]}
+                        baseOklch={chipsOf(theme, 'light', name)[step]!.oklch}
+                        hue={anchors.edits[step]}
+                        onChange={(hue) => anchors.request({ type: 'set-anchor', name, step, hue })}
+                        disabled={anchorsLocked}
+                    />
+                ))}
+            {anchorDefaults && anchorsLocked && (
+                <Text typography="body3" foreground="hint-200">
+                    칸별 색조를 편집한 팔레트예요. 세부 조정을 초기화하면 기준 색조를 바꿀 수
+                    있어요.
+                </Text>
             )}
-            {active && flagged && advice && (
-                <HueAdvice key={active} name={name} scale={active} {...advice} />
+
+            {onHue && (
+                <Collapsible.Root open={detailOpen} onOpenChange={setDetailOpen}>
+                    <Collapsible.Trigger className="group flex justify-between w-full items-center">
+                        <Text typography="body3">세부 조정</Text>
+                        <ChevronDownOutlineIcon className="transition-transform group-data-[panel-open]:rotate-180" />
+                    </Collapsible.Trigger>
+                    <Collapsible.Panel>
+                        <VStack $css={{ gap: '$100', paddingTop: '$100' }}>
+                            {active && baseChip && baseHue !== null ? (
+                                <HueSlider
+                                    label={`${name}-${active}`}
+                                    baseHue={baseHue}
+                                    baseOklch={baseChip.oklch}
+                                    hue={edited}
+                                    onChange={(hue) => onHue(active, hue)}
+                                />
+                            ) : (
+                                <Text typography="body3" foreground="hint-200">
+                                    light 칸을 골라 색조를 바꿔요.
+                                </Text>
+                            )}
+                            {active && flagged && advice && (
+                                <HueAdvice key={active} name={name} scale={active} {...advice} />
+                            )}
+                            {anchors && (
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    colorPalette="secondary"
+                                    disabled={!anchorsLocked}
+                                    onClick={() => anchors.request({ type: 'clear-hues', name })}
+                                >
+                                    칸별 색조 모두 초기화
+                                </Button>
+                            )}
+                        </VStack>
+                    </Collapsible.Panel>
+                </Collapsible.Root>
             )}
         </VStack>
     );
