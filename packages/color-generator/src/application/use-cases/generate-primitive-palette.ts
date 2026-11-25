@@ -121,5 +121,8 @@ export function generatePrimitiveColorPalette(options: ThemeOptions = {}): Theme
         baseTokens: BASE_TOKENS,
         ...(brand && brandScale && { brand: { name: brand.name, scale: brandScale } }),
         yellowFamily: Array.from(yellow),
+        hueAnchors: Object.fromEntries(
+            Object.entries(anchors).map(([name, a]) => [name, { ...a }]),
+        ),
     };
 }

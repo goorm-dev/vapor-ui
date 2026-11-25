@@ -54,6 +54,12 @@ export interface ThemeResult {
      * falls back to each palette's light 200 hue when this is absent.
      */
     yellowFamily?: string[];
+    /**
+     * Palette name → the hue anchors its light curve was built from: the default or HEX-derived
+     * ones with `hueAnchors` applied, wrapped into 0–360 (no gray row). Passing them back as
+     * `hueAnchors` with the same colors rebuilds the same palettes.
+     */
+    hueAnchors?: Record<string, HueAnchors>;
 }
 
 /**

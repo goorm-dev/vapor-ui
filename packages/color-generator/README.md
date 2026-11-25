@@ -77,6 +77,8 @@ Dark derives from the pinned light curve. The brand HEX is never pinned in dark.
 
 Replaces any of a palette's three hue anchors, keyed by lowercase palette name (base, `basicColors` or brand): `{ red: { '900': 30 } }`. Missing anchors keep the default or HEX-derived value, and every step follows the curve through the three. Hues wrap, so `-10` means `350`. An unknown name, `gray`, a key other than `050`, `600` or `900`, or a non-finite hue throws.
 
+`ThemeResult.hueAnchors` returns the three anchors every palette (gray excepted) was built from, with these replacements applied and wrapped into 0–360. Passing them back with the same colors rebuilds the same palettes.
+
 ### `hueOverrides`
 
 Sets the light OKLCH hue of single cells after the anchor curve, keyed by lowercase palette name (base, `basicColors` or brand) and scale: `{ blue: { '500': 270 } }`. The cell keeps its role: lightness is still solved to the target contrast and chroma still follows the scale's rule at the new hue. Dark derives from the overridden light curve as usual.

@@ -120,6 +120,24 @@ describe('hueOverrides', () => {
 });
 
 describe('hueAnchors', () => {
+    it('returns the anchors each palette was built from, and they rebuild it', () => {
+        expect(defaults.hueAnchors).toEqual(HUE_ANCHORS);
+
+        const options: ThemeOptions = {
+            basicColors: [{ name: 'Mint', hexcode: '#3CC8B4' }],
+            brandColor: { name: 'acme', hexcode: '#FF6B00' },
+        };
+        const result = generatePrimitiveColorPalette({
+            ...options,
+            hueAnchors: { red: { '900': -10 }, mint: { '600': 170 } },
+        });
+        const anchors = result.hueAnchors!;
+        expect(Object.keys(anchors)).toEqual([...Object.keys(HUE_ANCHORS), 'mint', 'acme']);
+        expect(anchors.red).toEqual({ ...HUE_ANCHORS.red, '900': 350 });
+        expect(anchors.mint['600']).toBe(170);
+        expect(generatePrimitiveColorPalette({ ...options, hueAnchors: anchors })).toEqual(result);
+    });
+
     it('puts each given anchor step at its hue', () => {
         const result = generatePrimitiveColorPalette({
             hueAnchors: { red: { '900': 30 }, violet: { '050': 300, '600': 285 } },
