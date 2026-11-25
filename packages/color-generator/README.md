@@ -118,7 +118,7 @@ The anchor is the primary palette's base scale. When the primary palette is the 
 | `brand-monotone`  | The brand cell keeps the contrast order with its neighbours                        | `warn`             |
 | `primary-anchor`  | The primary anchor reaches 3:1 against the background in both modes                | `warn`             |
 
-The `chroma` check reruns the engine's rule, not an approximation of it: a brand palette's yellow family comes from the hue table of the brand HEX, and dark 400–900 are rederived from the light row at the engine's own lightness. A palette straight from `generatePrimitiveColorPalette` passes `chroma` (tested on the default palette and on seeded random brand colors); a `fail` points at cells edited afterwards.
+The `chroma` check reruns the engine's rule, not an approximation of it: the yellow family is the list the engine names in `ThemeResult.yellowFamily` (without it, each palette's light 200 hue decides), and dark 400–900 are rederived from the light row at the engine's own lightness. A palette straight from `generatePrimitiveColorPalette` passes `chroma` (tested on the default palette and on seeded random brand colors); a `fail` points at cells edited afterwards.
 
 ## Exports
 

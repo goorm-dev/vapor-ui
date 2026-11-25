@@ -102,6 +102,32 @@ describe('validatePalette', () => {
         },
     );
 
+    it.each([
+        [
+            'blue brand on yellow anchors',
+            '#3366ff',
+            { hueAnchors: { brand: { '050': 95, '600': 90, '900': 85 } } },
+        ],
+        ['blue brand with a yellow 200', '#3366ff', { hueOverrides: { brand: { '200': 100 } } }],
+        [
+            'yellow brand on blue anchors',
+            '#ffcc00',
+            { hueAnchors: { brand: { '050': 260, '600': 262, '900': 265 } } },
+        ],
+    ])('passes the chroma rule for a %s', (_, hexcode, options) => {
+        const result = generatePrimitiveColorPalette({
+            brandColor: { name: 'brand', hexcode },
+            ...options,
+        });
+        expect(validatePalette(result).find((c) => c.id === 'chroma')?.details).toEqual([]);
+    });
+
+    it('reads the yellow family off light 200 when the result does not name it', () => {
+        const { yellowFamily, ...rest } = defaults;
+        expect(yellowFamily).toEqual(['yellow', 'lime']);
+        expect(validatePalette(rest).filter((c) => c.status === 'fail')).toEqual([]);
+    });
+
     it('passes the chroma rule with no light chroma spike for seeded random brand colors', () => {
         // mulberry32: a fixed seed keeps the sample stable across runs
         let seed = 0x5eed;

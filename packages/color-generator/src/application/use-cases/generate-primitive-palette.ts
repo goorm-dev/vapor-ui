@@ -109,7 +109,7 @@ export function generatePrimitiveColorPalette(options: ThemeOptions = {}): Theme
     for (const [name, row] of Object.entries(hueOverrides))
         hues[name] = { ...hues[name], ...checkHues('override', hues, name, row, COLOR_SCALES) };
 
-    const { light, dark, brandScale } = generateFromHues(hues, { brand });
+    const { light, dark, brandScale, yellow } = generateFromHues(hues, { brand });
     const gray = generateGray();
     const tokens = (mode: Mode, raw: RawPalette) => ({
         palettes: toPalettes({ ...raw, gray: gray[mode] }),
@@ -120,5 +120,6 @@ export function generatePrimitiveColorPalette(options: ThemeOptions = {}): Theme
         darkModeTokens: tokens('dark', dark),
         baseTokens: BASE_TOKENS,
         ...(brand && brandScale && { brand: { name: brand.name, scale: brandScale } }),
+        yellowFamily: Array.from(yellow),
     };
 }

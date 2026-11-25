@@ -19,14 +19,7 @@ import {
     TARGET_CONTRAST,
 } from '../constants';
 import { isMonotone } from '../engine/brand';
-import { anchorHues, anchorsFromHex } from '../engine/hue';
-import {
-    darkUpper,
-    getBaseCaps,
-    getBaseHueTable,
-    inYellowFamily,
-    maxChroma,
-} from '../engine/palette';
+import { darkUpper, getBaseCaps, inYellowFamily, maxChroma } from '../engine/palette';
 import { primaryAnchor, rawRow } from './get-semantic-tokens';
 
 const HUE_GAP_MIN = 5.5;
@@ -208,16 +201,10 @@ export function validatePalette(result: ThemeResult): PaletteCheck[] {
             monotone.push(`light ${brand.name}-${s} breaks the contrast order`);
     }
 
-    // The engine reads the yellow family off the hue table. A brand row's table comes from the
-    // brand HEX; every other row keeps an unpinned light 200, whose hue is the table's.
+    // The engine reads the yellow family off its hue table and names it in the result. Without
+    // that list, an unpinned light 200 carries the table's hue.
     const isYellow = (c: string) =>
-        inYellowFamily(
-            c === brand?.name
-                ? anchorHues(
-                      anchorsFromHex(rows.light[c][brand.scale as ColorScale], getBaseHueTable()),
-                  )['200']
-                : hexToOklch(rows.light[c]['200'])[2],
-        );
+        result.yellowFamily?.includes(c) ?? inYellowFamily(hexToOklch(rows.light[c]['200'])[2]);
 
     const primary = brand?.name ?? 'blue';
     const anchor = primaryAnchor(result, primary);

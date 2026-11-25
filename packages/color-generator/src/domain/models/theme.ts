@@ -49,6 +49,11 @@ export interface ThemeResult {
     baseTokens: Record<string, PaletteChip>;
     /** The light cell holding the brand HEX. */
     brand?: { name: string; scale: Scale };
+    /**
+     * Palettes the engine capped as yellow family, read off its hue table. `validatePalette`
+     * falls back to each palette's light 200 hue when this is absent.
+     */
+    yellowFamily?: string[];
 }
 
 /**

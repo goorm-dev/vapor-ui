@@ -214,7 +214,7 @@ export const generateFromHues = (
         dark[c]['300'] = at('300', (chromaOf(dark[c]['200']!) + chromaOf(dark[c]['400']!)) / 2);
     }
 
-    return { light, dark, brandScale };
+    return { light, dark, brandScale, yellow };
 };
 
 /** Gray: chroma 0 against the fixed backgrounds, 000–900. */
