@@ -18,13 +18,16 @@ const LIGHT_L = Object.fromEntries(
 ) as Record<ColorScale, number>;
 
 /**
- * Hue of every step from the three anchors: hues unwrapped around 050, joined over `LIGHT_L`
- * by a Fritsch–Carlson monotone cubic, so the curve never leaves the anchors' range.
+ * Hue of every step from the three anchors: each anchor unwrapped the short way from the one
+ * before (050→600, 600→900), joined over `LIGHT_L` by a Fritsch–Carlson monotone cubic, so the
+ * curve never leaves the anchors' range.
  */
 export const anchorHues = (anchors: HueAnchors): Record<ColorScale, number> => {
-    const pts = ANCHOR_SCALES.map(
-        (s) => [LIGHT_L[s], anchors['050'] + wrap(anchors[s] - anchors['050'])] as const,
-    ).sort((p, q) => p[0] - q[0]);
+    let prev = anchors['050'];
+    const pts = ANCHOR_SCALES.map((s) => {
+        prev += wrap(anchors[s] - prev);
+        return [LIGHT_L[s], prev] as const;
+    }).sort((p, q) => p[0] - q[0]);
     const xs = pts.map((p) => p[0]);
     const ys = pts.map((p) => p[1]);
     const d = [0, 1].map((i) => (ys[i + 1] - ys[i]) / (xs[i + 1] - xs[i]));

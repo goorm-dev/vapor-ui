@@ -132,6 +132,18 @@ describe('hueAnchors', () => {
         expect(failures(result)).toEqual([]);
     });
 
+    it('turns each anchor gap the short way', () => {
+        // 050→900 is 190° the long way; 600→900 is 20° the short way
+        const result = generatePrimitiveColorPalette({
+            hueAnchors: { red: { '050': 0, '600': 170, '900': 190 } },
+        });
+        for (const s of ['600', '700', '800', '900']) {
+            const h = hueOf(chip(result, 'light', 'red', s).hex);
+            expect(h, s).toBeGreaterThan(169.5);
+            expect(h, s).toBeLessThan(190.5);
+        }
+    });
+
     it('lets hueOverrides win over the anchor curve', () => {
         const result = generatePrimitiveColorPalette({
             hueAnchors: { red: { '600': 35 } },

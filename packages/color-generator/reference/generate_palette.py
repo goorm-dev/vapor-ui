@@ -218,10 +218,14 @@ def _wrap(d):
 LIGHT_L = {s: ((luminance(BG_LIGHT) + 0.05) / TARGET_LIGHT[s] - 0.05) ** (1 / 3) for s in SCALES}
 
 def anchor_hues(anchors):
-    """세 값 → 10칸 색조: 050 기준으로 색조를 펴고, LIGHT_L을 가로축으로
+    """세 값 → 10칸 색조: 050→600, 600→900 구간마다 가까운 방향으로 색조를 펴고, LIGHT_L을 가로축으로
     Fritsch–Carlson monotone cubic(가운데 기울기는 양옆 기울기의 조화 평균, 방향이 바뀌면 0)으로 이음
     → 곡선이 세 값 사이를 벗어나지 않음"""
-    pts = sorted((LIGHT_L[s], anchors["050"] + _wrap(anchors[s] - anchors["050"])) for s in ANCHOR_SCALES)
+    unwrapped, prev = {}, None
+    for s in ANCHOR_SCALES:
+        prev = anchors[s] if prev is None else prev + _wrap(anchors[s] - prev)
+        unwrapped[s] = prev
+    pts = sorted((LIGHT_L[s], unwrapped[s]) for s in ANCHOR_SCALES)
     xs, ys = [p[0] for p in pts], [p[1] for p in pts]
     d = [(ys[i + 1] - ys[i]) / (xs[i + 1] - xs[i]) for i in range(2)]
     m = [d[0], 0.0 if d[0] * d[1] <= 0 else 2 * d[0] * d[1] / (d[0] + d[1]), d[1]]
