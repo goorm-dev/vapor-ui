@@ -2,7 +2,7 @@
 
 Generates the Vapor primitive color palette for light and dark mode, and maps it to semantic tokens.
 
-The engine is a TypeScript port of the design team's reference script, [`reference/generate_palette.py`](./reference/generate_palette.py). With default input, the output matches the script's `palette.json` HEX for HEX. See [ADR-0003](../../docs/adr/0003-color-generator-ports-reference-script.md).
+The engine is a TypeScript port of the design team's reference script, [`reference/generate_palette.py`](./reference/generate_palette.py). With default input, the output matches the script's `palette.json` HEX for HEX. See [ADR-0003](../../docs/adr/0003-color-generator-hue-anchor-curve.md).
 
 ## Installation
 
@@ -37,11 +37,11 @@ validatePalette(theme).filter((check) => check.status === 'fail'); // []
 
 Every palette is computed against fixed backgrounds: light `#FFFFFF`, dark `#232323`.
 
-- **Hue.** Each color has three key colors. The hue of each scale is read from the white → keys → black OKLCH path at that scale's target contrast.
+- **Hue.** Each color has three light hue anchors, at 050, 600 and 900 (`HUE_ANCHORS`). A monotone cubic (Fritsch–Carlson) joins them, with each scale placed by the lightness its light target contrast gives on white, so every step's hue stays within the anchors' range. The dark warm anchors (red 900, orange 600 and 900, yellow 900) carry the design team's corrections.
 - **Lightness.** Each cell is solved to its target contrast against the background (`TARGET_CONTRAST`, one table per mode).
 - **Chroma.**
     - Light 050–200 share one chroma cap per scale, computed from the 11 base colors only. Yellow-family colors (200 hue in 60–150°) use their own cap.
-    - Light 400–900 use the largest chroma sRGB can express. 300 sits halfway between 200 and 400.
+    - Light 400–900 use the largest chroma sRGB can express. From 500 to 900, in order, a chroma above 1.1× its neighbours' mean (900: 1.1× of 800) is solved again at that limit, so one step cannot spike. 300 sits halfway between 200 and 400.
     - Dark 400–900 take the chroma and hue of the light curve at the same lightness, with dark 400 at ×0.9.
     - Dark 050–300 use the dark 400 hue and the same cap rule as light.
 - **Gray.** Chroma 0, 000–900 in both modes. Dark 000 sits darker than the background.
@@ -54,6 +54,7 @@ Palettes come out in this order: the 11 base colors, `basicColors`, the brand co
 generatePrimitiveColorPalette({
     basicColors?: KeyColor[]; // KeyColor = { name: string; hexcode: Hexcode }
     brandColor?: KeyColor;
+    hueAnchors?: Record<string, Partial<HueAnchors>>; // { [name]: { '050' | '600' | '900': hue } }
     hueOverrides?: HueOverrides; // { [name]: { [scale]: hue in degrees } }
 }): ThemeResult;
 ```
@@ -62,7 +63,7 @@ generatePrimitiveColorPalette({
 
 Adds colors, or replaces a base color of the same name. Palettes come out in array order. Names are lowercased first, so `Teal` makes the palette `teal`. A name used twice (`Blue` and `blue` count as one), here or by `brandColor`, throws, and so does `gray`.
 
-The HEX borrows the key colors of the base color with the nearest 500 hue, rotates them to the input hue, and puts the input HEX in place of the key nearest in lightness.
+The HEX borrows the hue anchors of the base color with the nearest 500 hue and shifts all three by the hue difference.
 
 The input only shapes the hue curve, so it may not appear in the palette. Other colors never change: the 050–200 chroma caps always come from the default base colors.
 
@@ -72,9 +73,13 @@ The brand HEX becomes a palette of its own (or replaces a base color of the same
 
 Dark derives from the pinned light curve. The brand HEX is never pinned in dark.
 
+### `hueAnchors`
+
+Replaces any of a palette's three hue anchors, keyed by lowercase palette name (base, `basicColors` or brand): `{ red: { '900': 30 } }`. Missing anchors keep the default or HEX-derived value, and every step follows the curve through the three. Hues wrap, so `-10` means `350`. An unknown name, `gray`, a key other than `050`, `600` or `900`, or a non-finite hue throws.
+
 ### `hueOverrides`
 
-Sets the light OKLCH hue of single cells, keyed by lowercase palette name (base, `basicColors` or brand) and scale: `{ blue: { '500': 270 } }`. The cell keeps its role: lightness is still solved to the target contrast and chroma still follows the scale's rule at the new hue. Dark derives from the overridden light curve as usual.
+Sets the light OKLCH hue of single cells after the anchor curve, keyed by lowercase palette name (base, `basicColors` or brand) and scale: `{ blue: { '500': 270 } }`. The cell keeps its role: lightness is still solved to the target contrast and chroma still follows the scale's rule at the new hue. Dark derives from the overridden light curve as usual.
 
 `gray`, unknown names and the pinned brand cell ignore their overrides.
 
@@ -119,8 +124,9 @@ The `chroma` check reruns the engine's rule, not an approximation of it: a brand
 
 - `generatePrimitiveColorPalette`, `getSemanticDependentTokens`, `validatePalette`
 - `BASE_TOKENS`: `color-white` and `color-black` chips
-- `LEONARDO_KEYS`: key colors of the 11 base colors
-- Types: `ThemeOptions`, `ThemeResult`, `PrimitiveColorTokens`, `PrimitivePalette`, `PaletteChip`, `Scale`, `SemanticTokens`, `SemanticResult`, `PaletteCheck`, `KeyColor`, `Hexcode`
+- `HUE_ANCHORS`: default light hue anchors of the 11 base colors
+- `LEONARDO_KEYS`: former key colors of the 11 base colors; they shape no hue, and the Figma plugin reads the middle key as each base color's default HEX
+- Types: `ThemeOptions`, `ThemeResult`, `HueAnchors`, `HueOverrides`, `PrimitiveColorTokens`, `PrimitivePalette`, `PaletteChip`, `Scale`, `SemanticTokens`, `SemanticResult`, `PaletteCheck`, `KeyColor`, `Hexcode`
 
 ## Changing the rules
 
