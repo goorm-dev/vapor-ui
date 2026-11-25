@@ -1,6 +1,6 @@
 import type { KeyColor } from './color';
 import type { PaletteChip, PrimitiveColorTokens } from './palette';
-import type { Scale } from './scale';
+import type { AnchorScale, Scale } from './scale';
 
 /**
  * Palette name (lowercase, brand name included) → scale → absolute light-mode OKLCH hue in
@@ -8,22 +8,25 @@ import type { Scale } from './scale';
  */
 export type HueOverrides = Record<string, Partial<Record<Scale, number>>>;
 
+/** Light-mode OKLCH hue in degrees, [0, 360), at the three steps that anchor a color's hue curve. */
+export type HueAnchors = Record<AnchorScale, number>;
+
 /**
  * Options of `generatePrimitiveColorPalette`.
  */
 export interface ThemeOptions {
     /**
-     * Extra colors, or replacements for a base color of the same name. One HEX derives key
-     * colors from the nearest base color; three HEX are the key colors as-is. The HEX only
-     * shapes the hue curve, so it may not appear in the palette.
+     * Extra colors, or replacements for a base color of the same name. The HEX picks the base
+     * color whose 500 hue is nearest and shifts its hue anchors by the hue difference. The HEX
+     * only shapes the hue curve, so it may not appear in the palette.
      */
     basicColors?: KeyColor[];
     /** Pinned into one light cell as-is; the rest of its palette follows from it. */
     brandColor?: KeyColor;
     /**
-     * Light hues to use instead of the generated ones. Each overridden cell keeps its contrast
-     * target and chroma rule, and dark follows from the overridden light curve. `gray`, unknown
-     * names and the pinned brand cell ignore their overrides.
+     * Light hues of single steps, applied over the anchor curve. Each overridden cell keeps its
+     * contrast target and chroma rule, and dark follows from the overridden light curve.
+     * `gray`, unknown names and the pinned brand cell ignore their overrides.
      */
     hueOverrides?: HueOverrides;
 }

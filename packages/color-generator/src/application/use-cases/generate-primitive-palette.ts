@@ -3,7 +3,7 @@ import { hexToOklch } from '../../domain/color-math';
 import type { Mode } from '../../domain/models/scale';
 import { BASE_TOKENS } from '../constants';
 import type { HueTable } from '../engine/hue';
-import { keysFromHex, leonardoHues } from '../engine/hue';
+import { anchorHues, anchorsFromHex } from '../engine/hue';
 import type { RawPalette } from '../engine/palette';
 import { generateFromHues, generateGray, getBaseHueTable } from '../engine/palette';
 import { isValidColorName, toRawHex } from '../utils';
@@ -53,12 +53,12 @@ export function generatePrimitiveColorPalette(options: ThemeOptions = {}): Theme
     };
 
     for (const { name, hexcode } of basicColors)
-        hues[claim(name)] = leonardoHues(keysFromHex(toRawHex(hexcode), baseHues));
+        hues[claim(name)] = anchorHues(anchorsFromHex(toRawHex(hexcode), baseHues));
 
     let brand: { name: string; hex: string } | undefined;
     if (brandColor) {
         brand = { name: claim(brandColor.name), hex: toRawHex(brandColor.hexcode) };
-        hues[brand.name] = leonardoHues(keysFromHex(brand.hex, baseHues));
+        hues[brand.name] = anchorHues(anchorsFromHex(brand.hex, baseHues));
     }
 
     // Copy, never mutate: base rows are the cached base hue table. `hues` has no gray row.

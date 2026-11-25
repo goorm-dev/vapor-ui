@@ -1,4 +1,5 @@
 import type { PaletteCheck, ThemeResult } from '../../domain';
+import type { Oklch } from '../../domain/color-math';
 import {
     contrast,
     gamutChroma,
@@ -9,10 +10,23 @@ import {
 } from '../../domain/color-math';
 import type { ColorScale, Mode } from '../../domain/models/scale';
 import { COLOR_SCALES, MODES } from '../../domain/models/scale';
-import { A11Y_RULES, BG, CAPPED_SCALES, EXPRESSIBLE_MAX, TARGET_CONTRAST } from '../constants';
+import {
+    A11Y_RULES,
+    BG,
+    CAPPED_SCALES,
+    CHROMA_SPIKE_FACTOR,
+    EXPRESSIBLE_MAX,
+    TARGET_CONTRAST,
+} from '../constants';
 import { isMonotone } from '../engine/brand';
-import { keysFromHex, leonardoHues } from '../engine/hue';
-import { darkUpper, getBaseCaps, getBaseHueTable, inYellowFamily } from '../engine/palette';
+import { anchorHues, anchorsFromHex } from '../engine/hue';
+import {
+    darkUpper,
+    getBaseCaps,
+    getBaseHueTable,
+    inYellowFamily,
+    maxChroma,
+} from '../engine/palette';
 import { primaryAnchor, rawRow } from './get-semantic-tokens';
 
 const HUE_GAP_MIN = 5.5;
@@ -93,6 +107,22 @@ const a11y = (rows: Rows): PaletteCheck => {
 };
 
 /**
+ * Chroma limit of light 500–900 at `COLOR_SCALES[i]`, as the engine applies it: the previous
+ * cell's final chroma, and the next cell's chroma before its own limit (the expressible maximum
+ * at its hue).
+ */
+const spikeLimit = (P: Record<ColorScale, Oklch>, i: number) => {
+    const prev = P[COLOR_SCALES[i - 1]][1];
+    const next = COLOR_SCALES[i + 1];
+    if (!next) return CHROMA_SPIKE_FACTOR * prev;
+    return (
+        (CHROMA_SPIKE_FACTOR *
+            (prev + maxChroma(TARGET_CONTRAST.light[next], BG.light, P[next][2], true))) /
+        2
+    );
+};
+
+/**
  * Each cell's chroma follows its scale's rule, recomputed at the cell's own lightness and hue.
  * Dark 400–900 are rederived from the light row as the engine does, at the engine's unrounded
  * lightness: a HEX-rounded lightness lands elsewhere on a steep light curve. The brand cell is a pinned HEX, so it is exempt, and so is a light 300 next to it, whose
@@ -115,10 +145,15 @@ const chroma = (
                 m === 'dark' ? darkUpper(rows.light[c], DARK_UPPER) : {};
             for (const s of COLOR_SCALES) {
                 if (isBrandCell(m, c, s)) continue;
+                const i = COLOR_SCALES.indexOf(s);
+                const capped = m === 'light' && i > COLOR_SCALES.indexOf('400');
+                // A neighbour's rule input moved with the pin: light 300 reads 200 and 400, a
+                // capped 500–900 reads the cells on either side.
                 if (
                     m === 'light' &&
-                    s === '300' &&
-                    (isBrandCell(m, c, '200') || isBrandCell(m, c, '400'))
+                    (s === '300' || capped) &&
+                    (isBrandCell(m, c, COLOR_SCALES[i - 1]) ||
+                        isBrandCell(m, c, COLOR_SCALES[i + 1]))
                 )
                     continue;
                 const [L, C, H] = P[s];
@@ -129,7 +164,9 @@ const chroma = (
                         ? caps[m][s][yellow ? 'yellow' : 'normal']
                         : s === '300'
                           ? (P['200'][1] + P['400'][1]) / 2
-                          : EXPRESSIBLE_MAX;
+                          : capped
+                            ? Math.min(EXPRESSIBLE_MAX, spikeLimit(P, i))
+                            : EXPRESSIBLE_MAX;
                     expect = [gamutChroma(L, want, H), upperMaxChroma(L, want, H)].reduce((a, b) =>
                         Math.abs(b - C) < Math.abs(a - C) ? b : a,
                     );
@@ -176,8 +213,8 @@ export function validatePalette(result: ThemeResult): PaletteCheck[] {
     const isYellow = (c: string) =>
         inYellowFamily(
             c === brand?.name
-                ? leonardoHues(
-                      keysFromHex(rows.light[c][brand.scale as ColorScale], getBaseHueTable()),
+                ? anchorHues(
+                      anchorsFromHex(rows.light[c][brand.scale as ColorScale], getBaseHueTable()),
                   )['200']
                 : hexToOklch(rows.light[c]['200'])[2],
         );

@@ -1,79 +1,59 @@
-import {
-    clampedLuminance,
-    gamutChroma,
-    hexToOklch,
-    luminance,
-    oklchToLinRgb,
-    pyMod,
-    pyRound2,
-    toHex,
-} from '../../domain/color-math';
+import { hexToOklch, luminance, pyMod, pyRound2 } from '../../domain/color-math';
 import type { ColorScale } from '../../domain/models/scale';
-import { COLOR_SCALES } from '../../domain/models/scale';
-import { BASE_COLORS, BG, LEONARDO_KEYS, TARGET_CONTRAST } from '../constants/palette-rules';
+import { ANCHOR_SCALES, COLOR_SCALES } from '../../domain/models/scale';
+import type { HueAnchors } from '../../domain/models/theme';
+import { BASE_COLORS, BG, HUE_ANCHORS, TARGET_CONTRAST } from '../constants/palette-rules';
 
 /** Hue (degrees) per color per scale. Everything after this table reads only the table. */
 export type HueTable = Record<string, Record<ColorScale, number>>;
 
-type Node = [L: number, C: number, H: number | null];
+const wrap = (d: number) => pyMod(d + 180, 360) - 180;
 
-const interpLch = (a: Node, b: Node, t: number): Node => {
-    let ha = a[2];
-    let hb = b[2];
-    if (ha === null) ha = hb;
-    if (hb === null) hb = ha;
-    const h =
-        ha === null || hb === null ? null : pyMod(ha + (pyMod(hb - ha + 180, 360) - 180) * t, 360);
-    return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, h];
-};
+/** Curve x axis: OKLab L of the neutral that hits each light target on white, the same for every color. */
+const LIGHT_L = Object.fromEntries(
+    COLOR_SCALES.map((s) => [
+        s,
+        ((luminance(BG.light) + 0.05) / TARGET_CONTRAST.light[s] - 0.05) ** (1 / 3),
+    ]),
+) as Record<ColorScale, number>;
 
-/** Hue at each light target contrast along white → keys (lightest first) → black. */
-export const leonardoHues = (keys: string[]): Record<ColorScale, number> => {
-    const sorted = keys.map((k): Node => hexToOklch(k)).sort((p, q) => q[0] - p[0]);
-    const nodes: Node[] = [[1, 0, null], ...sorted, [0, 0, null]];
-    const n = nodes.length - 1;
-    const at = (u: number) => {
-        const x = Math.min(Math.max(u, 0), 1) * n;
-        const i = Math.min(Math.trunc(x), n - 1);
-        return interpLch(nodes[i], nodes[i + 1], x - i);
-    };
+/**
+ * Hue of every step from the three anchors: hues unwrapped around 050, joined over `LIGHT_L`
+ * by a Fritsch–Carlson monotone cubic, so the curve never leaves the anchors' range.
+ */
+export const anchorHues = (anchors: HueAnchors): Record<ColorScale, number> => {
+    const pts = ANCHOR_SCALES.map(
+        (s) => [LIGHT_L[s], anchors['050'] + wrap(anchors[s] - anchors['050'])] as const,
+    ).sort((p, q) => p[0] - q[0]);
+    const xs = pts.map((p) => p[0]);
+    const ys = pts.map((p) => p[1]);
+    const d = [0, 1].map((i) => (ys[i + 1] - ys[i]) / (xs[i + 1] - xs[i]));
+    const m = [d[0], d[0] * d[1] <= 0 ? 0 : (2 * d[0] * d[1]) / (d[0] + d[1]), d[1]];
     const out = {} as Record<ColorScale, number>;
     for (const s of COLOR_SCALES) {
-        const yt = (luminance(BG.light) + 0.05) / TARGET_CONTRAST.light[s] - 0.05;
-        let lo = 0;
-        let hi = 1;
-        for (let i = 0; i < 50; i++) {
-            const mid = (lo + hi) / 2;
-            const [L, C, H] = at(mid);
-            if (clampedLuminance(oklchToLinRgb(L, C, H || 0)) > yt) lo = mid;
-            else hi = mid;
-        }
-        out[s] = pyRound2(pyMod(at((lo + hi) / 2)[2] ?? 0, 360));
+        const x = LIGHT_L[s];
+        const i = x <= xs[1] ? 0 : 1;
+        const h = xs[i + 1] - xs[i];
+        const t = (x - xs[i]) / h;
+        const t2 = t * t;
+        const t3 = t2 * t;
+        const y =
+            (2 * t3 - 3 * t2 + 1) * ys[i] +
+            (t3 - 2 * t2 + t) * h * m[i] +
+            (-2 * t3 + 3 * t2) * ys[i + 1] +
+            (t3 - t2) * h * m[i + 1];
+        out[s] = pyRound2(pyMod(y, 360));
     }
     return out;
 };
 
-/** Hue table for named key-color sets; hue corrections are out of scope, so this is the plain Leonardo hue. */
-export const buildHueTable = (keys: Record<string, string[]>): HueTable =>
-    Object.fromEntries(Object.entries(keys).map(([name, k]) => [name, leonardoHues(k)]));
-
-/**
- * Key colors from one HEX: borrow the keys of the base color whose 500 hue is nearest,
- * rotate them by the hue difference, then swap the key nearest in lightness for the HEX.
- */
-export const keysFromHex = (hex: string, baseHues: HueTable): string[] => {
+/** Anchors from one HEX: the anchors of the base color whose 500 hue is nearest, shifted by the hue difference. */
+export const anchorsFromHex = (hex: string, baseHues: HueTable): HueAnchors => {
     const h = hexToOklch(hex)[2];
-    const hueGap = (c: string) => Math.abs(pyMod(baseHues[c]['500'] - h + 180, 360) - 180);
+    const hueGap = (c: string) => Math.abs(wrap(baseHues[c]['500'] - h));
     const near = BASE_COLORS.reduce((best, c) => (hueGap(c) < hueGap(best) ? c : best));
-    const d = pyMod(h - baseHues[near]['500'] + 180, 360) - 180;
-    const keys = LEONARDO_KEYS[near].map((k) => {
-        const [L, C, H] = hexToOklch(k);
-        const H2 = pyMod(H + d, 360);
-        return toHex(oklchToLinRgb(L, gamutChroma(L, C, H2), H2));
-    });
-    const L0 = hexToOklch(hex)[0];
-    const gap = (i: number) => Math.abs(hexToOklch(keys[i])[0] - L0);
-    const li = keys.reduce((best, _, i) => (gap(i) < gap(best) ? i : best), 0);
-    keys[li] = hex;
-    return keys;
+    const d = wrap(h - baseHues[near]['500']);
+    return Object.fromEntries(
+        ANCHOR_SCALES.map((s) => [s, pyMod(HUE_ANCHORS[near][s] + d, 360)]),
+    ) as HueAnchors;
 };

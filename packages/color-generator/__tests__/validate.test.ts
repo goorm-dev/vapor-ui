@@ -17,8 +17,10 @@ describe('validatePalette', () => {
     });
 
     it('fails a cell off its target contrast', () => {
-        // red-500 in the red-600 cell: same chroma rule, wrong contrast
-        expect(statuses(withHex(defaults, 'light', 'red', '600', light.red['500']))).toMatchObject({
+        // green-500 in the green-600 cell: within the chroma rule, wrong contrast
+        expect(
+            statuses(withHex(defaults, 'light', 'green', '600', light.green['500'])),
+        ).toMatchObject({
             'target-contrast': 'fail',
             a11y: 'ok',
             chroma: 'ok',
@@ -38,7 +40,11 @@ describe('validatePalette', () => {
     });
 
     it('warns on close hues with one line per pair naming both cells', () => {
-        const { status, details } = validatePalette(defaults).find((c) => c.id === 'hue-gap')!;
+        const red700 = hexToOklch(light.red['700'])[2];
+        const close = generatePrimitiveColorPalette({
+            hueOverrides: { orange: { '700': red700 + 1 } },
+        });
+        const { status, details } = validatePalette(close).find((c) => c.id === 'hue-gap')!;
         expect(status).toBe('warn');
         expect(details.length).toBeGreaterThan(0);
         for (const detail of details)

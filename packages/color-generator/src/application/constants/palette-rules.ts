@@ -3,6 +3,7 @@
  * Change the script first, then these values and the fixtures.
  */
 import type { ColorScale, Mode, Scale } from '../../domain/models/scale';
+import type { HueAnchors } from '../../domain/models/theme';
 
 /** Fixed reference backgrounds, 6-digit uppercase HEX without `#`. */
 export const BG: Record<Mode, string> = { light: 'FFFFFF', dark: '232323' };
@@ -127,7 +128,31 @@ export const A11Y_RULES: A11yRule[] = [
     },
 ];
 
-/** Key colors of the 11 base colors. Hues come from white → keys → black interpolation. */
+/**
+ * Light hues (degrees) at 050, 600 and 900 of the 11 base colors; the other steps follow the
+ * curve through them. Dark warm steps carry the designer's corrections (red 900, orange 600 and
+ * 900, yellow 900).
+ */
+export const HUE_ANCHORS: Record<string, HueAnchors> = {
+    red: { '050': 20.46, '600': 24.35, '900': 23.0 },
+    orange: { '050': 45.9, '600': 35.9, '900': 40.1 },
+    yellow: { '050': 84.5, '600': 61.28, '900': 49.3 },
+    pink: { '050': 1.66, '600': 1.74, '900': 15.78 },
+    grape: { '050': 319.05, '600': 318.69, '900': 315.66 },
+    violet: { '050': 305.18, '600': 290.03, '900': 289.98 },
+    blue: { '050': 242.82, '600': 261.07, '900': 264.21 },
+    cobalt: { '050': 260.28, '600': 261.88, '900': 270.78 },
+    cyan: { '050': 212.77, '600': 225.72, '900': 240.55 },
+    green: { '050': 167.48, '600': 162.73, '900': 152.19 },
+    lime: { '050': 129.92, '600': 139.16, '900': 140.86 },
+};
+
+export const BASE_COLORS = Object.keys(HUE_ANCHORS);
+
+/**
+ * Former Leonardo key colors of the base colors. They no longer shape any hue; the Figma plugin
+ * still reads the middle key as each base color's default input HEX.
+ */
 export const LEONARDO_KEYS: Record<string, [string, string, string]> = {
     red: ['F8636A', 'BB1225', '9E0006'],
     orange: ['EF6F25', 'B72100', '9E0000'],
@@ -142,7 +167,8 @@ export const LEONARDO_KEYS: Record<string, [string, string, string]> = {
     lime: ['9AD84A', '71B61A', '115A00'],
 };
 
-export const BASE_COLORS = Object.keys(LEONARDO_KEYS);
+/** Light 500–900 chroma stays within this multiple of its neighbours' mean (900: of 800). */
+export const CHROMA_SPIKE_FACTOR = 1.1;
 
 /** A color whose 200 hue falls in this range (degrees) belongs to the yellow family. */
 export const YELLOW_FAMILY_RANGE: [number, number] = [60, 150];

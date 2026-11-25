@@ -13,16 +13,17 @@ import {
     BASE_COLORS,
     BG,
     CAPPED_SCALES,
+    CHROMA_SPIKE_FACTOR,
     DARK_400_CHROMA_FACTOR,
     EXPRESSIBLE_MAX,
-    LEONARDO_KEYS,
+    HUE_ANCHORS,
     TARGET_CONTRAST,
     YELLOW_FAMILY_RANGE,
     isDarkerThanBg,
 } from '../constants/palette-rules';
 import { assignCell } from './brand';
 import type { HueTable } from './hue';
-import { buildHueTable } from './hue';
+import { anchorHues } from './hue';
 
 /** HEX (6 uppercase digits, no `#`) per color per scale. */
 export type RawPalette = Record<string, Partial<Record<Scale, string>>>;
@@ -87,7 +88,18 @@ const lightColor = (hue: Record<ColorScale, number>, cap: (s: ColorScale) => num
     const at = (s: ColorScale, chroma: number) =>
         solve(TARGET_CONTRAST.light[s], BG.light, chroma, hue[s], true).hex;
     for (const s of CAPPED_SCALES) out[s] = at(s, cap(s));
-    for (const s of COLOR_SCALES.slice(4)) out[s] = at(s, EXPRESSIBLE_MAX);
+    const upper = COLOR_SCALES.slice(4);
+    for (const s of upper) out[s] = at(s, EXPRESSIBLE_MAX);
+    // 500–900 in order: a chroma above the spike limit is solved again at the limit
+    const ch = upper.map((s) => chromaOf(out[s]!));
+    for (let i = 1; i < upper.length; i++) {
+        const ref = i === upper.length - 1 ? ch[i - 1] : (ch[i - 1] + ch[i + 1]) / 2;
+        const limit = CHROMA_SPIKE_FACTOR * ref;
+        if (ch[i] > limit) {
+            out[upper[i]] = at(upper[i], limit);
+            ch[i] = chromaOf(out[upper[i]]!);
+        }
+    }
     out['300'] = at('300', (chromaOf(out['200']!) + chromaOf(out['400']!)) / 2);
     return out;
 };
@@ -141,7 +153,10 @@ const capFor = (caps: Caps, yellow: boolean) => (s: ColorScale) =>
 
 let baseHueTable: HueTable | undefined;
 /** Hue table of the 11 base colors. */
-export const getBaseHueTable = () => (baseHueTable ??= buildHueTable(LEONARDO_KEYS));
+export const getBaseHueTable = () =>
+    (baseHueTable ??= Object.fromEntries(
+        Object.entries(HUE_ANCHORS).map(([name, anchors]) => [name, anchorHues(anchors)]),
+    ));
 
 let baseCaps: Record<Mode, Caps> | undefined;
 /**
