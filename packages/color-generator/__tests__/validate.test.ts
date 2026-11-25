@@ -11,9 +11,30 @@ const light = table(defaults, 'light');
 const statuses = (result: typeof defaults) =>
     Object.fromEntries(validatePalette(result).map((c) => [c.id, c.status]));
 
+const STEPS = ['400', '500', '600', '700', '800', '900'];
+/**
+ * Light 500–800 cells whose chroma passes their neighbours' mean by more than 0.03. Triples
+ * holding the pinned brand cell are skipped: that HEX is user input, not generated, and a
+ * low-chroma pin makes its generated neighbours read as spikes (41 such cells in the sweep).
+ */
+const chromaSpikes = (result: typeof defaults) =>
+    Object.entries(table(result, 'light')).flatMap(([color, row]) => {
+        const c = (i: number) => hexToOklch(row[STEPS[i]])[1];
+        const pinned = (i: number) =>
+            color === result.brand?.name && Math.abs(STEPS.indexOf(result.brand.scale) - i) <= 1;
+        return [1, 2, 3, 4]
+            .filter((i) => !pinned(i) && c(i) - (c(i - 1) + c(i + 1)) / 2 > 0.03)
+            .map((i) => `light ${color}-${STEPS[i]} chroma spike`);
+    });
+
 describe('validatePalette', () => {
     it('finds no failure in the default palette', () => {
         expect(validatePalette(defaults).filter((c) => c.status === 'fail')).toEqual([]);
+    });
+
+    it('finds no hue gap and no light chroma spike in the default palette', () => {
+        expect(validatePalette(defaults).find((c) => c.id === 'hue-gap')!.details).toEqual([]);
+        expect(chromaSpikes(defaults)).toEqual([]);
     });
 
     it('fails a cell off its target contrast', () => {
@@ -81,7 +102,7 @@ describe('validatePalette', () => {
         },
     );
 
-    it('passes the chroma rule for seeded random brand colors', () => {
+    it('passes the chroma rule with no light chroma spike for seeded random brand colors', () => {
         // mulberry32: a fixed seed keeps the sample stable across runs
         let seed = 0x5eed;
         const random = () => {
@@ -90,6 +111,7 @@ describe('validatePalette', () => {
             t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
             return ((t ^ (t >>> 14)) >>> 0) / 2 ** 32;
         };
+        let hueGaps = 0;
         const failures = Array.from({ length: SWEEP }, () => {
             const hexcode = `#${Math.floor(random() * 0x1000000)
                 .toString(16)
@@ -97,9 +119,12 @@ describe('validatePalette', () => {
             const result = generatePrimitiveColorPalette({
                 brandColor: { name: 'brand', hexcode },
             });
-            const { details } = validatePalette(result).find((c) => c.id === 'chroma')!;
-            return details.map((d) => `${hexcode} ${d}`);
+            const checks = validatePalette(result);
+            hueGaps += checks.find((c) => c.id === 'hue-gap')!.details.length;
+            const { details } = checks.find((c) => c.id === 'chroma')!;
+            return [...details, ...chromaSpikes(result)].map((d) => `${hexcode} ${d}`);
         }).flat();
+        console.info(`brand sweep: ${hueGaps} hue-gap warnings over ${SWEEP} brand colors`);
         expect(failures).toEqual([]);
     }, 60_000); // 200 generations take ~11s, past the 5s default
 

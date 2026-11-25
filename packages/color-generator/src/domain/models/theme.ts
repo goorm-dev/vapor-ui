@@ -8,7 +8,7 @@ import type { AnchorScale, Scale } from './scale';
  */
 export type HueOverrides = Record<string, Partial<Record<Scale, number>>>;
 
-/** Light-mode OKLCH hue in degrees, [0, 360), at the three steps that anchor a color's hue curve. */
+/** Light-mode OKLCH hue in degrees at the three steps that anchor a color's hue curve. */
 export type HueAnchors = Record<AnchorScale, number>;
 
 /**
@@ -23,6 +23,13 @@ export interface ThemeOptions {
     basicColors?: KeyColor[];
     /** Pinned into one light cell as-is; the rest of its palette follows from it. */
     brandColor?: KeyColor;
+    /**
+     * Palette name (lowercase, brand name included) → hue anchors replacing the default or
+     * HEX-derived ones; missing anchors keep theirs, and every step follows the curve through
+     * the three, before `hueOverrides`. An unknown name, `gray`, an anchor key other than `050`,
+     * `600`, `900`, or a non-finite hue throws. Hues wrap, so -10 means 350.
+     */
+    hueAnchors?: Record<string, Partial<HueAnchors>>;
     /**
      * Light hues of single steps, applied over the anchor curve. Each overridden cell keeps its
      * contrast target and chroma rule, and dark follows from the overridden light curve.

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import type { ThemeResult } from '../src';
-import { generatePrimitiveColorPalette, validatePalette } from '../src';
+import type { ThemeOptions, ThemeResult } from '../src';
+import { HUE_ANCHORS, generatePrimitiveColorPalette, validatePalette } from '../src';
 import { hexToOklch, pyMod } from '../src/domain/color-math';
 import { table } from './helpers';
 
@@ -102,5 +102,56 @@ describe('hueOverrides', () => {
         expect(generatePrimitiveColorPalette({ hueOverrides: {} })).toEqual(defaults);
         expect(generatePrimitiveColorPalette({ hueOverrides: { blue: {} } })).toEqual(defaults);
         expect(generatePrimitiveColorPalette({ hueOverrides: undefined })).toEqual(defaults);
+    });
+});
+
+describe('hueAnchors', () => {
+    it('puts each given anchor step at its hue', () => {
+        const result = generatePrimitiveColorPalette({
+            hueAnchors: { red: { '900': 30 }, violet: { '050': 300, '600': 285 } },
+        });
+        expect(hueDiff(hueOf(chip(result, 'light', 'red', '900').hex), 30)).toBeLessThan(0.5);
+        // 050 chroma is low enough that 8-bit HEX moves its hue by up to ~2°
+        expect(hueDiff(hueOf(chip(result, 'light', 'violet', '050').hex), 300)).toBeLessThan(2);
+        expect(hueDiff(hueOf(chip(result, 'light', 'violet', '600').hex), 285)).toBeLessThan(0.5);
+        expect(table(result, 'light').red['700']).not.toBe(table(defaults, 'light').red['700']);
+        expect(failures(result)).toEqual([]);
+    });
+
+    it('lets hueOverrides win over the anchor curve', () => {
+        const result = generatePrimitiveColorPalette({
+            hueAnchors: { red: { '600': 35 } },
+            hueOverrides: { red: { '600': 15 } },
+        });
+        expect(hueDiff(hueOf(chip(result, 'light', 'red', '600').hex), 15)).toBeLessThan(0.5);
+    });
+
+    it('anchors a basicColors palette by its lowercase name', () => {
+        const result = generatePrimitiveColorPalette({
+            basicColors: [{ name: 'Mint', hexcode: '#3CC8B4' }],
+            hueAnchors: { mint: { '900': 200 } },
+        });
+        expect(hueDiff(hueOf(chip(result, 'light', 'mint', '900').hex), 200)).toBeLessThan(0.5);
+    });
+
+    it('matches the baseline with no anchors or the default ones', () => {
+        expect(generatePrimitiveColorPalette({ hueAnchors: {} })).toEqual(defaults);
+        expect(generatePrimitiveColorPalette({ hueAnchors: { blue: {} } })).toEqual(defaults);
+        expect(generatePrimitiveColorPalette({ hueAnchors: { red: HUE_ANCHORS.red } })).toEqual(
+            defaults,
+        );
+    });
+
+    it.each([
+        [{ nope: { '600': 10 } }, /Unknown palette/],
+        [{ gray: { '600': 10 } }, /Unknown palette/],
+        [{ red: { '500': 10 } }, /Invalid hue anchor step/],
+        [{ red: { '600': Number.NaN } }, /must be a finite number/],
+        [{ red: { '900': Infinity } }, /must be a finite number/],
+        [{ red: { '900': '30' } }, /must be a finite number/],
+    ])('rejects %j', (hueAnchors, message) => {
+        expect(() =>
+            generatePrimitiveColorPalette({ hueAnchors } as unknown as ThemeOptions),
+        ).toThrow(message);
     });
 });
