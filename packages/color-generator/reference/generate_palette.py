@@ -2,24 +2,26 @@
 Vapor Primitive 컬러 팔레트 기준 스크립트
 
 - 이 스크립트의 출력이 최종 팔레트 값의 기준(정답)임
-- 입력값(목표 명암비, Leonardo 키 컬러, 옐로우 계열 범위, dark 400 채도 계수)만 바꾸면 전체 팔레트가 다시 계산됨
+- 입력값(목표 명암비, 색조 세 값, 옐로우 계열 범위, dark 400 채도 계수, 채도 상한 배수)만 바꾸면 전체 팔레트가 다시 계산됨
 - 실행: python3 generate_palette.py  → palette.json 생성
 - 명암비: 반올림 전 색으로 목표 명암비를 맞추고, HEX는 각 칸 마지막에 한 번만 반올림함 (반올림 방식)
   → HEX 명암비는 목표와 셋째 자리에서 조금 다를 수 있음, 표기는 항상 실제 명암비를 소수점 셋째 자리까지
 - gray는 이 스크립트 대상이 아님 (명암비로 별도 정의된 고정값)
 
 계산 순서
-1. 색조: LEONARDO_KEYS(색마다 키 컬러) → 흰색·키 컬러·검정을 OKLCH로 보간 → 각 칸 light 목표 명암비 지점의 색조
+1. 색조: HUE_ANCHORS(색마다 050·600·900 세 값) → light 목표 명암비의 무채색 명도를 가로축으로 monotone cubic 곡선
+   → 각 칸 색조, 그 위에 HUE_CORRECTION(칸 단위 보정)
 2. light 050~200: 기준 11색 공통 최대 채도(옐로우 계열은 따로) → 목표 명암비가 되는 명도 → HEX 확정
 3. light 400~900: 표현 가능한 최대 채도 → 명도 → HEX 확정
+   500~900은 400부터 차례로, 채도가 이웃 평균(900은 800)의 1.1배를 넘으면 그 상한으로 다시 계산
 4. light 300: 확정된 200·400 HEX의 중간 채도 → 명도 → HEX 확정
 5. dark 400~900: 확정된 light HEX에서 같은 명도의 채도·색조를 가져옴 (400은 채도 ×0.9) → HEX 확정
 6. dark 050~300: dark 400의 색조 + 공통 채도 규칙 → HEX 확정
 7. 검사 (아래)
 
-시각 보정은 이 스크립트에 넣지 않음
-- 스크립트 출력은 항상 시각 보정 전 팔레트
-- 시각 보정은 출력과 검사 결과를 본 뒤 디자이너가 스크립트 밖(Figma)에서 하고, 디자인 의사결정 노트에 기록
+시각 보정
+- 진한 warm 색(red·orange·yellow)의 색조 보정은 HUE_ANCHORS 기본값에 들어 있음
+- 그 밖의 시각 보정은 출력과 검사 결과를 본 뒤 디자이너가 스크립트 밖(Figma)에서 하고, 디자인 의사결정 노트에 기록
 - 보정한 값은 실행 중에 입력하거나 파일로 넘겨서 7단계 검사를 다시 받음 (값은 스크립트에 저장하지 않음)
   - 실행 후 "시각 보정한 값을 검사할까요?"에 y → 보정한 칸을 한 줄씩 입력 (예: light orange 800 701800)
   - 파일로 검사: python3 generate_palette.py --check 보정.json
@@ -27,10 +29,10 @@ Vapor Primitive 컬러 팔레트 기준 스크립트
   - 검사 통과 후 저장하면 palette_corrected.json으로 따로 저장 (palette.json은 그대로), 실패 항목이 있으면 저장하지 않음
 
 새 색 추가
-- NEW_COLORS에 이름과 HEX 하나를 넣고 실행 (키 컬러 목록을 직접 넣어도 됨)
+- NEW_COLORS에 이름과 HEX 하나를 넣고 실행 (세 값을 직접 넣어도 됨)
   - 파일을 고치지 않고 실행할 때만 넣으려면: python3 generate_palette.py --new teal=00838F
-    (키 컬러 3개: --new teal=9ED8FF,0068F4,001A6E, 여러 색은 --new를 여러 번)
-  - HEX 하나면: 500 색조가 가장 가까운 기준 색의 키 컬러를 색조만 돌려서 쓰고, 명도가 가장 가까운 키를 입력 HEX로 바꿈
+    (여러 색은 --new를 여러 번)
+  - HEX 하나면: 500 색조가 가장 가까운 기준 색의 세 값을 HEX 색조와의 차이만큼 평행 이동해 씀
 - 검사에서 경고가 나온 칸은 스크립트 밖(Figma)에서 시각 보정하고 이유를 기록
 - 050~200 최대 채도는 기준 11색(BASE_COLORS)으로만 정해져 고정됨 → 새 색을 넣어도 기존 색 값은 바뀌지 않음
 - 실행하면 검사 결과가 함께 출력됨
@@ -56,30 +58,31 @@ TARGET_DARK = dict(zip(SCALES, [1.120, 1.350, 1.750, 2.300, 3.420, 5.250, 6.800,
 BG_LIGHT = "FFFFFF"
 BG_DARK = "232323"
 
-# ---- 색조: Leonardo 키 컬러 ----
-# 색마다 Leonardo 키 컬러 (흰색 → 키 컬러 → 검정을 OKLCH로 보간, 각 칸 목표 명암비 지점의 색조가 기본 색조)
-# 기존 11색 키 컬러는 Foundation 2.0(예전 Leonardo 출력)에서 역추정한 값, 원래 설정값은 아님
-LEONARDO_KEYS = {
-    "red":    ["F8636A", "BB1225", "9E0006"],
-    "orange": ["EF6F25", "B72100", "9E0000"],
-    "yellow": ["FBBD05", "8D4F00", "4D1100"],
-    "pink":   ["F26394", "B5135D", "550016"],
-    "grape":  ["D06BEA", "9A1CB7", "62007E"],
-    "violet": ["D9B9FF", "805CEC", "4805A3"],
-    "blue":   ["8DCDFF", "2A72E5", "000E84"],
-    "cobalt": ["136EFC", "0009C2", "17008A"],
-    "cyan":   ["1BB3CC", "04819C", "002941"],
-    "green":  ["75D9B4", "058765", "002E13"],
-    "lime":   ["9AD84A", "71B61A", "115A00"],
+# ---- 색조: 세 값(hue anchor) ----
+# 색마다 050·600·900 세 칸의 light 색조(°), 나머지 칸은 세 값을 이은 곡선에서 정함 (anchor_hues)
+# 050·600·900은 예전 Leonardo 키 컬러 보간 색조, 진한 warm 색은 디자이너 시각 보정값
+# (red 900, orange 600·900, yellow 900: 진한 쪽 색조가 서로 겹치지 않고 갈색으로 흐르지 않게)
+ANCHOR_SCALES = ["050", "600", "900"]
+HUE_ANCHORS = {
+    "red":    {"050": 20.46,  "600": 24.35,  "900": 23.0},
+    "orange": {"050": 45.9,   "600": 35.9,   "900": 40.1},
+    "yellow": {"050": 84.5,   "600": 61.28,  "900": 49.3},
+    "pink":   {"050": 1.66,   "600": 1.74,   "900": 15.78},
+    "grape":  {"050": 319.05, "600": 318.69, "900": 315.66},
+    "violet": {"050": 305.18, "600": 290.03, "900": 289.98},
+    "blue":   {"050": 242.82, "600": 261.07, "900": 264.21},
+    "cobalt": {"050": 260.28, "600": 261.88, "900": 270.78},
+    "cyan":   {"050": 212.77, "600": 225.72, "900": 240.55},
+    "green":  {"050": 167.48, "600": 162.73, "900": 152.19},
+    "lime":   {"050": 129.92, "600": 139.16, "900": 140.86},
 }
-# 시각 보정은 이 스크립트에 넣지 않음 (스크립트 출력 = 시각 보정 전 팔레트)
+# 세 값 곡선 위에 칸 하나씩 덮는 보정 (비워 둔 상태가 기본, 값을 넣으면 출력에 반영됨)
 # 시각 보정 값과 이유는 Figma 디자인 의사결정 노트에 따로 기록함
-# 아래 두 항목은 비워 둔 상태로 유지 (값을 넣으면 출력에 반영됨)
-HUE_CORRECTION = {}       # {색: {스케일: ±°}}
+HUE_CORRECTION = {}       # {색: {스케일: ±°}}, 곡선 색조에 더함
 HUE_CORRECTION_NOTE = {}
 HEX_OVERRIDE = {}         # {(모드, 색, 스케일): HEX}
 HEX_OVERRIDE_NOTE = {}
-# 새 색: 이름 → HEX 하나(키 컬러 자동) 또는 키 컬러 목록
+# 새 색: 이름 → HEX 하나(세 값 자동) 또는 세 값 {"050": °, "600": °, "900": °}
 NEW_COLORS = {
     # "teal": "00838F",
 }
@@ -87,8 +90,10 @@ NEW_COLORS = {
 YELLOW_FAMILY_RANGE = (60.0, 150.0)  # 200 색조가 이 범위면 옐로우 계열
 
 # 최대 채도(050~200)를 정하는 기준 색, 새 색은 여기에 넣지 않음 (넣으면 기존 색 값이 바뀔 수 있음)
-BASE_COLORS = ["red", "orange", "yellow", "pink", "grape", "violet", "blue", "cobalt", "cyan", "green", "lime"]
+BASE_COLORS = list(HUE_ANCHORS)
 DARK_400_CHROMA_FACTOR = 0.9
+# light 500~900 채도 상한: 이웃 두 칸 평균(900은 800)의 이 배수, 한 칸만 튀는 채도를 막음
+CHROMA_SPIKE_FACTOR = 1.1
 
 # ---------------------------------------------------------------------------
 # 색 변환 (sRGB <-> OKLCH)
@@ -203,79 +208,69 @@ def to_hex(rgb):
     return "".join("%02X" % round(min(1, max(0, _gam(min(1, max(0, x))))) * 255) for x in rgb)
 
 # ---------------------------------------------------------------------------
-# 색조 계산 (Leonardo 기본 색조 + 시각 보정)
+# 색조 계산 (세 값 곡선 + 시각 보정)
 # ---------------------------------------------------------------------------
-def _interp_lch(a, b, t):
-    ha, hb = a[2], b[2]
-    if ha is None: ha = hb
-    if hb is None: hb = ha
-    h = None if ha is None else (ha + (((hb - ha + 180) % 360) - 180) * t) % 360
-    return (a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, h)
+def _wrap(d):
+    """색조 차이를 -180~180°로"""
+    return ((d + 180) % 360) - 180
 
-def leonardo_hues(keys):
-    """흰색 → 키 컬러(밝은 순) → 검정 경로에서 light 목표 명암비 지점의 색조"""
-    nodes = [(1.0, 0.0, None)] + sorted((tuple(hex_to_oklch(k)) for k in keys), key=lambda v: -v[0]) + [(0.0, 0.0, None)]
-    n = len(nodes) - 1
-    def at(u):
-        u = min(max(u, 0.0), 1.0) * n
-        i = min(int(u), n - 1)
-        return _interp_lch(nodes[i], nodes[i + 1], u - i)
+# 곡선의 가로축: 각 칸 light 목표 명암비가 되는 무채색의 OKLab 명도 (색과 상관없이 같음)
+LIGHT_L = {s: ((luminance(BG_LIGHT) + 0.05) / TARGET_LIGHT[s] - 0.05) ** (1 / 3) for s in SCALES}
+
+def anchor_hues(anchors):
+    """세 값 → 10칸 색조: 050 기준으로 색조를 펴고, LIGHT_L을 가로축으로
+    Fritsch–Carlson monotone cubic(가운데 기울기는 양옆 기울기의 조화 평균, 방향이 바뀌면 0)으로 이음
+    → 곡선이 세 값 사이를 벗어나지 않음"""
+    pts = sorted((LIGHT_L[s], anchors["050"] + _wrap(anchors[s] - anchors["050"])) for s in ANCHOR_SCALES)
+    xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+    d = [(ys[i + 1] - ys[i]) / (xs[i + 1] - xs[i]) for i in range(2)]
+    m = [d[0], 0.0 if d[0] * d[1] <= 0 else 2 * d[0] * d[1] / (d[0] + d[1]), d[1]]
     out = {}
     for s in SCALES:
-        yt = (luminance(BG_LIGHT) + 0.05) / TARGET_LIGHT[s] - 0.05
-        lo, hi = 0.0, 1.0
-        for _ in range(50):
-            mid = (lo + hi) / 2
-            L, C, H = at(mid)
-            r = [min(1, max(0, x)) for x in oklch_to_linrgb(L, C, H or 0.0)]
-            if 0.2126 * r[0] + 0.7152 * r[1] + 0.0722 * r[2] > yt:
-                lo = mid
-            else:
-                hi = mid
-        out[s] = round(at((lo + hi) / 2)[2] % 360, 2)
+        x = LIGHT_L[s]
+        i = 0 if x <= xs[1] else 1
+        h = xs[i + 1] - xs[i]
+        t = (x - xs[i]) / h
+        t2 = t * t
+        t3 = t2 * t
+        y = ((2 * t3 - 3 * t2 + 1) * ys[i] + (t3 - 2 * t2 + t) * h * m[i]
+             + (-2 * t3 + 3 * t2) * ys[i + 1] + (t3 - t2) * h * m[i + 1])
+        out[s] = round(y % 360, 2)
     return out
 
-def keys_from_hex(hx, base_hue):
-    """HEX 하나로 키 컬러 만들기: 500 색조가 가장 가까운 기준 색의 키 컬러를 색조만 돌려서 쓰고,
-    명도가 가장 가까운 키는 입력 HEX로 바꿈"""
+def anchors_from_hex(hx, base_hue):
+    """HEX 하나로 세 값 만들기: 500 색조가 가장 가까운 기준 색의 세 값을 색조 차이만큼 평행 이동"""
     h = hex_to_oklch(hx)[2]
-    near = min(BASE_COLORS, key=lambda c: abs(((base_hue[c]["500"] - h + 180) % 360) - 180))
-    d = ((h - base_hue[near]["500"] + 180) % 360) - 180
-    keys = []
-    for k in LEONARDO_KEYS[near]:
-        L, C, H = hex_to_oklch(k)
-        H2 = (H + d) % 360
-        keys.append(to_hex(oklch_to_linrgb(L, gamut_chroma(L, C, H2), H2)))
-    li = min(range(len(keys)), key=lambda i: abs(hex_to_oklch(keys[i])[0] - hex_to_oklch(hx)[0]))
-    keys[li] = hx
-    return keys, near
+    near = min(BASE_COLORS, key=lambda c: abs(_wrap(base_hue[c]["500"] - h)))
+    d = _wrap(h - base_hue[near]["500"])
+    return {s: (HUE_ANCHORS[near][s] + d) % 360 for s in ANCHOR_SCALES}, near
 
 def build_hue():
-    """반환: (최종 색조, Leonardo 기본 색조, 새 색 키 컬러·참고한 기준 색)"""
+    """반환: (최종 색조, 세 값 곡선 색조, 새 색의 세 값·참고한 기준 색)"""
     corr = lambda c, s: HUE_CORRECTION.get(c, {}).get(s, 0.0)
-    base = {c: leonardo_hues(LEONARDO_KEYS[c]) for c in BASE_COLORS}
+    base = {c: anchor_hues(HUE_ANCHORS[c]) for c in BASE_COLORS}
     hue = {c: {s: round((base[c][s] + corr(c, s)) % 360, 2) for s in SCALES} for c in BASE_COLORS}
-    new_keys = {}
+    new_anchors = {}
     for name, v in NEW_COLORS.items():
-        keys, near = keys_from_hex(v, hue) if isinstance(v, str) else (list(v), None)
-        new_keys[name] = (keys, near)
-        base[name] = leonardo_hues(keys)
+        anchors, near = anchors_from_hex(v, hue) if isinstance(v, str) else (dict(v), None)
+        new_anchors[name] = (anchors, near)
+        base[name] = anchor_hues(anchors)
         hue[name] = {s: round((base[name][s] + corr(name, s)) % 360, 2) for s in SCALES}
-    return hue, base, new_keys
+    return hue, base, new_anchors
 
 def _new_colors_from_argv():
-    """--new 이름=HEX 또는 --new 이름=키1,키2,키3 (여러 번 가능) → NEW_COLORS에 추가 (실행할 때만, 파일은 안 바뀜)"""
+    """--new 이름=HEX (여러 번 가능) → NEW_COLORS에 추가 (실행할 때만, 파일은 안 바뀜)"""
     args = sys.argv[1:]
     for i, a in enumerate(args):
         if a == "--new" and i + 1 < len(args) and "=" in args[i + 1]:
             name, val = args[i + 1].split("=", 1)
-            keys = [v.strip().lstrip("#").upper() for v in val.split(",") if v.strip()]
-            if not name or not keys or any(len(k) != 6 for k in keys):
-                sys.exit(f"--new 형식 오류: {args[i + 1]} (예: --new teal=00838F 또는 --new teal=9ED8FF,0068F4,001A6E)")
-            NEW_COLORS[name.strip().lower()] = keys[0] if len(keys) == 1 else keys
+            hx = val.strip().lstrip("#").upper()
+            if not name or len(hx) != 6:
+                sys.exit(f"--new 형식 오류: {args[i + 1]} (예: --new teal=00838F)")
+            NEW_COLORS[name.strip().lower()] = hx
 
 _new_colors_from_argv()
-HUE, HUE_BASE, NEW_KEYS = build_hue()
+HUE, HUE_BASE, NEW_ANCHORS = build_hue()
 
 # ---------------------------------------------------------------------------
 # 목표 명암비에 맞는 색 찾기
@@ -325,6 +320,15 @@ def generate():
     for s in SCALES[4:]:  # 2. 표현 가능한 최대 채도 (100%)
         for c in colors:
             light[c][s] = solve(TARGET_LIGHT[s], BG_LIGHT, EXPRESSIBLE_MAX, HUE[c][s], True)[0]
+    upper = SCALES[4:]
+    for c in colors:  # 2-1. 500~900 채도 상한: 400부터 차례로, 이웃 평균(900은 800)의 1.1배를 넘으면 상한으로 다시 계산
+        ch = [hex_to_oklch(light[c][s])[1] for s in upper]
+        for i in range(1, len(upper)):
+            ref = ch[i - 1] if i == len(upper) - 1 else (ch[i - 1] + ch[i + 1]) / 2
+            limit = CHROMA_SPIKE_FACTOR * ref
+            if ch[i] > limit:
+                light[c][upper[i]] = solve(TARGET_LIGHT[upper[i]], BG_LIGHT, limit, HUE[c][upper[i]], True)[0]
+                ch[i] = hex_to_oklch(light[c][upper[i]])[1]
     for c in colors:  # 3. 300 = 200과 400의 중간 (HEX 확정값 기준)
         mid = (hex_to_oklch(light[c]["200"])[1] + hex_to_oklch(light[c]["400"])[1]) / 2
         light[c]["300"] = solve(TARGET_LIGHT["300"], BG_LIGHT, mid, HUE[c]["300"], True)[0]
@@ -426,6 +430,16 @@ def _upper_max_chroma(L, C, H, step=0.0005):
             hi = mid
     return lo
 
+def _spike_limit(P, s):
+    """light 500~900 채도 상한 (generate 2-1과 같은 기준)
+    앞 칸은 확정 채도, 뒤 칸은 상한을 적용하기 전 채도(그 칸 색조에서 표현 가능한 최대)"""
+    i = SCALES.index(s)
+    prev = P[SCALES[i - 1]][1]
+    if s == "900":
+        return CHROMA_SPIKE_FACTOR * prev
+    nx = SCALES[i + 1]
+    return CHROMA_SPIKE_FACTOR * (prev + max_chroma(TARGET_LIGHT[nx], BG_LIGHT, P[nx][2], True)) / 2
+
 def chroma_rule(result):
     """채도 규칙의 고정값: 050~200 공통 최대 채도(기준 11색으로 정함), 옐로우 계열 목록"""
     yf = result["yellow_family"]
@@ -443,7 +457,7 @@ def chroma_rule(result):
 
 def chroma_check(palette, rule):
     """각 칸의 채도가 2~6단계 규칙대로인지 검사, 규칙과 다른 칸 목록 반환
-    - light 050~200: 공통 최대 채도 / 400~900: 표현 가능한 최대 / 300: 같은 색 200·400의 중간
+    - light 050~200: 공통 최대 채도 / 400~900: 표현 가능한 최대 (500~900은 이웃 상한 이하) / 300: 같은 색 200·400의 중간
     - dark 400~900: 같은 색 light 곡선에서 같은 명도의 채도 (400은 ×0.9) / 050~200: 공통 최대 / 300: 중간
     - 기대 채도는 그 칸 HEX의 명도·색조에서 다시 계산 (색조를 보정해도 채도 규칙은 지켜야 함)"""
     caps, yf = rule["caps"], rule["yellow_family"]
@@ -467,8 +481,10 @@ def chroma_check(palette, rule):
                     want, desc = caps[m][s][1 if c in yf else 0], "공통 최대 채도" + (" (옐로우 계열)" if c in yf else "")
                 elif s == "300":
                     want, desc = (P["200"][1] + P["400"][1]) / 2, "200·400 중간 채도"
-                elif m == "light":
+                elif m == "light" and s == "400":
                     want, desc = EXPRESSIBLE_MAX, "표현 가능한 최대 채도"
+                elif m == "light":
+                    want, desc = min(EXPRESSIBLE_MAX, _spike_limit(P, s)), "표현 가능한 최대 채도 (이웃 상한 이하)"
                 else:
                     k = DARK_400_CHROMA_FACTOR if s == "400" else 1.0
                     want, desc = light_c(L) * k, "light 같은 명도 채도" + (" ×0.9" if s == "400" else "")
@@ -660,8 +676,9 @@ if __name__ == "__main__":
     if new:
         print("새 색:", new)
         for n in new:
-            keys, near = NEW_KEYS[n]
-            print(f"  {n}: 키 컬러 {keys}" + (f" ({near} 키 컬러 기반)" if near else ""))
+            anchors, near = NEW_ANCHORS[n]
+            print(f"  {n}: 세 값 " + " ".join(f"{s}:{anchors[s]:.1f}" for s in ANCHOR_SCALES)
+                  + (f" ({near} 세 값 기반)" if near else ""))
             print("    기본 색조:", " ".join(f"{s}:{HUE_BASE[n][s]:.1f}" for s in SCALES))
     print()
     results = check(order, rule)
