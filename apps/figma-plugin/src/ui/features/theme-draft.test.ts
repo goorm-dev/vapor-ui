@@ -124,6 +124,83 @@ describe('theme draft', () => {
         expect(themeDraftReducer(draft, { type: 'clear-brand' }).brand).toBeNull();
     });
 
+    it('moves an anchor, wraps it, and resets it with null', () => {
+        const draft = run({ type: 'set-anchor', name: 'red', step: '900', hue: -10 });
+        expect(basic(draft, 'red')!.anchors).toEqual({ '900': 350 });
+        expect(draftToOptions(draft).hueAnchors).toEqual({ red: { '900': 350 } });
+        expect(generate(draft).hueAnchors!.red['900']).toBe(350);
+
+        const reset = themeDraftReducer(draft, {
+            type: 'set-anchor',
+            name: 'red',
+            step: '900',
+            hue: null,
+        });
+        expect(draftToOptions(reset)).toEqual(draftToOptions(initialDraft));
+    });
+
+    it('clears every per-step hue of one palette and keeps its anchors', () => {
+        const draft = run(
+            { type: 'set-anchor', name: 'red', step: '600', hue: 20 },
+            { type: 'set-hue', name: 'red', scale: '500', hue: 10 },
+            { type: 'set-hue', name: 'red', scale: '700', hue: 15 },
+            { type: 'set-hue', name: 'blue', scale: '500', hue: 250 },
+            { type: 'clear-hues', name: 'red' },
+        );
+        expect(basic(draft, 'red')).toMatchObject({ hues: {}, anchors: { '600': 20 } });
+        expect(basic(draft, 'blue')!.hues).toEqual({ '500': 250 });
+    });
+
+    it('a new HEX drops anchor edits too, after asking', () => {
+        const draft = run({ type: 'set-anchor', name: 'red', step: '050', hue: 20 });
+        const action: ThemeAction = { type: 'set-hex', name: 'red', hex: '#ff0000' };
+        expect(confirmationFor(draft, action)).toMatch(/red/);
+        expect(basic(themeDraftReducer(draft, action), 'red')!.anchors).toEqual({});
+
+        const brand = run(
+            { type: 'set-brand', name: 'acme', hex: '#7a3cff' },
+            { type: 'set-anchor', name: 'acme', step: '900', hue: 290 },
+        );
+        const recolor: ThemeAction = { type: 'set-brand', name: 'acme', hex: '#00a3a3' };
+        expect(confirmationFor(brand, recolor)).not.toBeNull();
+        expect(themeDraftReducer(brand, recolor).brand!.anchors).toEqual({});
+    });
+
+    it('drops brand edits on rename, so no edit names a palette that is gone', () => {
+        const draft = run(
+            { type: 'set-brand', name: 'acme', hex: '#7a3cff' },
+            { type: 'set-hue', name: 'acme', scale: '500', hue: 270 },
+            { type: 'set-anchor', name: 'acme', step: '900', hue: 290 },
+        );
+        const rename: ThemeAction = { type: 'set-brand', name: 'other', hex: '#7a3cff' };
+        expect(confirmationFor(draft, rename)).not.toBeNull();
+
+        const renamed = themeDraftReducer(draft, rename);
+        expect(renamed.brand).toMatchObject({ name: 'other', hues: {}, anchors: {} });
+        expect(draftToOptions(renamed)).toMatchObject({ hueOverrides: {}, hueAnchors: {} });
+        expect(() => generate(renamed)).not.toThrow();
+    });
+
+    it('passes edits only for palettes the engine builds', () => {
+        const draft = run(
+            { type: 'add-basic', name: 'teal', hex: '#00a3a3' },
+            { type: 'set-anchor', name: 'teal', step: '600', hue: 190 },
+            { type: 'set-hue', name: 'blue', scale: '500', hue: 250 },
+            { type: 'set-anchor', name: 'blue', step: '050', hue: 240 },
+            { type: 'set-brand', name: 'blue', hex: '#2255ee' },
+            { type: 'remove-basic', name: 'teal' },
+        );
+        expect(draftToOptions(draft)).toMatchObject({ hueOverrides: {}, hueAnchors: {} });
+        expect(() => generate(draft)).not.toThrow();
+
+        // The shadowed basic keeps its edits and gets them back once the brand is gone.
+        const restored = themeDraftReducer(draft, { type: 'clear-brand' });
+        expect(draftToOptions(restored)).toMatchObject({
+            hueOverrides: { blue: { '500': 250 } },
+            hueAnchors: { blue: { '050': 240 } },
+        });
+    });
+
     it('lets a brand replace a basic color of the same name without a duplicate', () => {
         const draft = run(
             { type: 'set-hex', name: 'blue', hex: '#0000ff' },

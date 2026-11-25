@@ -1,5 +1,5 @@
-import type { PaletteCheck, Scale, ThemeOptions } from '@vapor-ui/color-generator';
-import { LEONARDO_KEYS } from '@vapor-ui/color-generator';
+import type { HueAnchors, PaletteCheck, Scale, ThemeOptions } from '@vapor-ui/color-generator';
+import { BASE_COLOR_HEX } from '@vapor-ui/color-generator';
 
 /* -------------------------------------------------------------------------------------------------
  * Model
@@ -22,8 +22,17 @@ export const COLOR_SCALES = [
 /** Absolute light OKLCH hue per scale, only for the cells the designer rotated. */
 export type Hues = Partial<Record<Scale, number>>;
 
-export type PaletteDraft = { name: string; hex: string; preset: boolean; hues: Hues };
-export type BrandDraft = { name: string; hex: string; hues: Hues };
+/** Light hue anchors the designer moved, absolute and wrapped into 0–360. */
+export type Anchors = Partial<HueAnchors>;
+export type AnchorStep = keyof HueAnchors;
+export const ANCHOR_STEPS = ['050', '600', '900'] as const satisfies readonly AnchorStep[];
+
+/** A palette's hue edits: its anchors shape the whole curve, `hues` pin single cells on top. */
+type Edits = { hues: Hues; anchors: Anchors };
+const NO_EDITS: Edits = { hues: {}, anchors: {} };
+
+export type PaletteDraft = { name: string; hex: string; preset: boolean } & Edits;
+export type BrandDraft = { name: string; hex: string } & Edits;
 export type ThemeDraft = { basics: PaletteDraft[]; brand: BrandDraft | null };
 
 export type ThemeAction =
@@ -32,6 +41,9 @@ export type ThemeAction =
     | { type: 'remove-basic'; name: string }
     /** `hue: null` resets the cell to the generated hue. */
     | { type: 'set-hue'; name: string; scale: Scale; hue: number | null }
+    /** `hue: null` resets the anchor to the default or HEX-derived one. */
+    | { type: 'set-anchor'; name: string; step: AnchorStep; hue: number | null }
+    | { type: 'clear-hues'; name: string }
     | { type: 'set-brand'; name: string; hex: string }
     | { type: 'clear-brand' };
 
@@ -46,7 +58,7 @@ export const isValidName = (name: string) => NAME_PATTERN.test(name) && name !==
 export const isHex = (hex: string) => HEX_PATTERN.test(hex);
 
 const PRESET_HEX: Record<string, string> = Object.fromEntries(
-    Object.entries(LEONARDO_KEYS).map(([name, keys]) => [name, `#${keys[1]}`.toLowerCase()]),
+    Object.entries(BASE_COLOR_HEX).map(([name, hex]) => [name, hex.toLowerCase()]),
 );
 
 export const initialDraft: ThemeDraft = {
@@ -54,7 +66,7 @@ export const initialDraft: ThemeDraft = {
         name,
         hex,
         preset: true,
-        hues: {},
+        ...NO_EDITS,
     })),
     brand: null,
 };
@@ -63,19 +75,32 @@ export const initialDraft: ThemeDraft = {
  * Transitions
  * -----------------------------------------------------------------------------------------------*/
 
-const hasHues = (palette: { hues: Hues }) => Object.keys(palette.hues).length > 0;
+export const hasHues = (palette: { hues: Hues }) => Object.keys(palette.hues).length > 0;
+const hasEdits = (palette: Edits) => hasHues(palette) || Object.keys(palette.anchors).length > 0;
 
 export const normalizeHue = (hue: number) => ((hue % 360) + 360) % 360;
 
-const withHue = (hues: Hues, scale: Scale, hue: number | null): Hues => {
-    const { [scale]: _, ...rest } = hues;
-    return hue === null ? rest : { ...rest, [scale]: normalizeHue(hue) };
+const withHue = <K extends string>(
+    hues: Partial<Record<K, number>>,
+    key: K,
+    hue: number | null,
+): Partial<Record<K, number>> => {
+    const { [key]: _, ...rest } = hues;
+    return (hue === null ? rest : { ...rest, [key]: normalizeHue(hue) }) as Partial<
+        Record<K, number>
+    >;
 };
 
 const mapBasic = (draft: ThemeDraft, name: string, update: (p: PaletteDraft) => PaletteDraft) => ({
     ...draft,
     basics: draft.basics.map((p) => (p.name === name ? update(p) : p)),
 });
+
+/** Edits a palette's hues; the brand replaces a basic palette of the same name, so it wins. */
+const mapEdits = (draft: ThemeDraft, name: string, update: (e: Edits) => Edits): ThemeDraft =>
+    draft.brand?.name === name
+        ? { ...draft, brand: { ...draft.brand, ...update(draft.brand) } }
+        : mapBasic(draft, name, (p) => ({ ...p, ...update(p) }));
 
 export function themeDraftReducer(draft: ThemeDraft, action: ThemeAction): ThemeDraft {
     switch (action.type) {
@@ -84,17 +109,17 @@ export function themeDraftReducer(draft: ThemeDraft, action: ThemeAction): Theme
             if (!isHex(hex)) return draft;
             // A new base HEX moves the whole curve, so this palette's hue edits no longer apply.
             return mapBasic(draft, action.name, (p) =>
-                p.hex === hex ? p : { ...p, hex, hues: {} },
+                p.hex === hex ? p : { ...p, hex, ...NO_EDITS },
             );
         }
         case 'add-basic': {
             const hex = action.hex.toLowerCase();
             if (!isValidName(action.name) || !isHex(hex)) return draft;
             if (draft.basics.some((p) => p.name === action.name))
-                return mapBasic(draft, action.name, (p) => ({ ...p, hex, hues: {} }));
+                return mapBasic(draft, action.name, (p) => ({ ...p, hex, ...NO_EDITS }));
             return {
                 ...draft,
-                basics: [...draft.basics, { name: action.name, hex, preset: false, hues: {} }],
+                basics: [...draft.basics, { name: action.name, hex, preset: false, ...NO_EDITS }],
             };
         }
         case 'remove-basic':
@@ -103,24 +128,24 @@ export function themeDraftReducer(draft: ThemeDraft, action: ThemeAction): Theme
                 basics: draft.basics.filter((p) => p.preset || p.name !== action.name),
             };
         case 'set-hue':
-            // The brand replaces a basic palette of the same name, so its edits win.
-            if (draft.brand?.name === action.name)
-                return {
-                    ...draft,
-                    brand: {
-                        ...draft.brand,
-                        hues: withHue(draft.brand.hues, action.scale, action.hue),
-                    },
-                };
-            return mapBasic(draft, action.name, (p) => ({
-                ...p,
-                hues: withHue(p.hues, action.scale, action.hue),
+            return mapEdits(draft, action.name, (e) => ({
+                ...e,
+                hues: withHue(e.hues, action.scale, action.hue),
             }));
+        case 'set-anchor':
+            return mapEdits(draft, action.name, (e) => ({
+                ...e,
+                anchors: withHue(e.anchors, action.step, action.hue),
+            }));
+        case 'clear-hues':
+            return mapEdits(draft, action.name, (e) => ({ ...e, hues: {} }));
         case 'set-brand': {
             const hex = action.hex.toLowerCase();
             if (!isValidName(action.name) || !isHex(hex)) return draft;
-            const hues = draft.brand?.hex === hex ? draft.brand.hues : {};
-            return { ...draft, brand: { name: action.name, hex, hues } };
+            const { brand } = draft;
+            // Edits belong to one brand: a new HEX moves its curve, a new name is another palette.
+            const keep = brand?.hex === hex && brand.name === action.name;
+            return { ...draft, brand: { name: action.name, hex, ...(keep ? brand : NO_EDITS) } };
         }
         case 'clear-brand':
             return { ...draft, brand: null };
@@ -136,7 +161,7 @@ export function confirmationFor(draft: ThemeDraft, action: ThemeAction): string 
     switch (action.type) {
         case 'set-hex': {
             const p = basic(action.name);
-            return p && hasHues(p) && p.hex !== action.hex.toLowerCase()
+            return p && hasEdits(p) && p.hex !== action.hex.toLowerCase()
                 ? `${p.name}의 대표 색을 바꾸면 색조 편집이 초기화돼요.`
                 : null;
         }
@@ -146,12 +171,12 @@ export function confirmationFor(draft: ThemeDraft, action: ThemeAction): string 
                 : null;
         case 'set-brand':
             return draft.brand &&
-                hasHues(draft.brand) &&
-                draft.brand.hex !== action.hex.toLowerCase()
-                ? '브랜드 색을 바꾸면 브랜드 색조 편집이 초기화돼요.'
+                hasEdits(draft.brand) &&
+                (draft.brand.hex !== action.hex.toLowerCase() || draft.brand.name !== action.name)
+                ? '브랜드 색이나 이름을 바꾸면 브랜드 색조 편집이 초기화돼요.'
                 : null;
         case 'clear-brand':
-            return draft.brand && hasHues(draft.brand)
+            return draft.brand && hasEdits(draft.brand)
                 ? '브랜드를 지우면 브랜드 색조 편집도 사라져요.'
                 : null;
         default:
@@ -174,20 +199,30 @@ export function draftToOptions(draft: ThemeDraft): ThemeOptions {
     const basicColors = basics
         .filter((p) => !p.preset || p.hex !== PRESET_HEX[p.name])
         .map((p) => ({ name: p.name, hexcode: p.hex }));
-    const hueOverrides = Object.fromEntries(
-        [...basics, ...(brand ? [brand] : [])].filter(hasHues).map((p) => [p.name, p.hues]),
-    );
+    // Only palettes the engine builds: it throws on edits for any other name.
+    const built = [...basics, ...(brand ? [brand] : [])];
+    const editsOf = (key: keyof Edits) =>
+        Object.fromEntries(
+            built.filter((p) => Object.keys(p[key]).length > 0).map((p) => [p.name, p[key]]),
+        );
     return {
         basicColors,
-        hueOverrides,
+        hueAnchors: editsOf('anchors'),
+        hueOverrides: editsOf('hues'),
         ...(brand && { brandColor: { name: brand.name, hexcode: brand.hex } }),
     };
 }
 
-/** The same draft with every hue edit dropped: the theme each slider is centered on. */
+/** The same draft with every per-step hue dropped: the theme each step slider centers on. */
 export const withoutHues = (draft: ThemeDraft): ThemeDraft => ({
     basics: draft.basics.map((p) => ({ ...p, hues: {} })),
     brand: draft.brand && { ...draft.brand, hues: {} },
+});
+
+/** The same draft with no hue edits at all: its anchors are what each anchor slider resets to. */
+export const withoutEdits = (draft: ThemeDraft): ThemeDraft => ({
+    basics: draft.basics.map((p) => ({ ...p, ...NO_EDITS })),
+    brand: draft.brand && { ...draft.brand, ...NO_EDITS },
 });
 
 /* -------------------------------------------------------------------------------------------------
