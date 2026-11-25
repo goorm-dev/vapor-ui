@@ -1,9 +1,10 @@
 import type { PaletteChip } from '../../domain';
+import { deepFreeze } from '../utils/deep-freeze';
 
 /**
  * `color-white` and `color-black`.
  */
-export const BASE_TOKENS: Record<string, PaletteChip> = {
+export const BASE_TOKENS: Readonly<Record<string, Readonly<PaletteChip>>> = deepFreeze({
     'color-white': {
         name: 'color-white',
         hex: '#FFFFFF',
@@ -16,4 +17,4 @@ export const BASE_TOKENS: Record<string, PaletteChip> = {
         oklch: 'oklch(0 0 0)',
         codeSyntax: 'vapor-color-black',
     },
-};
+});

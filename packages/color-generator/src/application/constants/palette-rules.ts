@@ -4,6 +4,7 @@
  */
 import type { ColorScale, Mode, Scale } from '../../domain/models/scale';
 import type { HueAnchors } from '../../domain/models/theme';
+import { deepFreeze } from '../utils/deep-freeze';
 
 /** Fixed reference backgrounds, 6-digit uppercase HEX without `#`. */
 export const BG: Record<Mode, string> = { light: 'FFFFFF', dark: '232323' };
@@ -133,7 +134,7 @@ export const A11Y_RULES: A11yRule[] = [
  * curve through them. Dark warm steps carry the designer's corrections (red 900, orange 600 and
  * 900, yellow 900).
  */
-export const HUE_ANCHORS: Record<string, HueAnchors> = {
+export const HUE_ANCHORS: Readonly<Record<string, Readonly<HueAnchors>>> = deepFreeze({
     red: { '050': 20.46, '600': 24.35, '900': 23.0 },
     orange: { '050': 45.9, '600': 35.9, '900': 40.1 },
     yellow: { '050': 84.5, '600': 61.28, '900': 49.3 },
@@ -145,7 +146,7 @@ export const HUE_ANCHORS: Record<string, HueAnchors> = {
     cyan: { '050': 212.77, '600': 225.72, '900': 240.55 },
     green: { '050': 167.48, '600': 162.73, '900': 152.19 },
     lime: { '050': 129.92, '600': 139.16, '900': 140.86 },
-};
+});
 
 export const BASE_COLORS = Object.keys(HUE_ANCHORS);
 
@@ -153,19 +154,20 @@ export const BASE_COLORS = Object.keys(HUE_ANCHORS);
  * Former Leonardo key colors of the base colors. They no longer shape any hue; the Figma plugin
  * still reads the middle key as each base color's default input HEX.
  */
-export const LEONARDO_KEYS: Record<string, [string, string, string]> = {
-    red: ['F8636A', 'BB1225', '9E0006'],
-    orange: ['EF6F25', 'B72100', '9E0000'],
-    yellow: ['FBBD05', '8D4F00', '4D1100'],
-    pink: ['F26394', 'B5135D', '550016'],
-    grape: ['D06BEA', '9A1CB7', '62007E'],
-    violet: ['D9B9FF', '805CEC', '4805A3'],
-    blue: ['8DCDFF', '2A72E5', '000E84'],
-    cobalt: ['136EFC', '0009C2', '17008A'],
-    cyan: ['1BB3CC', '04819C', '002941'],
-    green: ['75D9B4', '058765', '002E13'],
-    lime: ['9AD84A', '71B61A', '115A00'],
-};
+export const LEONARDO_KEYS: Readonly<Record<string, readonly [string, string, string]>> =
+    deepFreeze({
+        red: ['F8636A', 'BB1225', '9E0006'],
+        orange: ['EF6F25', 'B72100', '9E0000'],
+        yellow: ['FBBD05', '8D4F00', '4D1100'],
+        pink: ['F26394', 'B5135D', '550016'],
+        grape: ['D06BEA', '9A1CB7', '62007E'],
+        violet: ['D9B9FF', '805CEC', '4805A3'],
+        blue: ['8DCDFF', '2A72E5', '000E84'],
+        cobalt: ['136EFC', '0009C2', '17008A'],
+        cyan: ['1BB3CC', '04819C', '002941'],
+        green: ['75D9B4', '058765', '002E13'],
+        lime: ['9AD84A', '71B61A', '115A00'],
+    });
 
 /** Light 500–900 chroma stays within this multiple of its neighbours' mean (900: of 800). */
 export const CHROMA_SPIKE_FACTOR = 1.1;
