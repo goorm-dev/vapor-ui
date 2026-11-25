@@ -20,4 +20,4 @@ export type {
     ThemeResult,
 } from './domain';
 
-export { BASE_TOKENS, HUE_ANCHORS, LEONARDO_KEYS } from './application/constants';
+export { BASE_COLOR_HEX, BASE_TOKENS, HUE_ANCHORS } from './application/constants';

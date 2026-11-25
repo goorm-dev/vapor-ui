@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 
 import type { SemanticResult, ThemeOptions, ThemeResult } from '@vapor-ui/color-generator';
 import {
-    LEONARDO_KEYS,
+    BASE_COLOR_HEX,
     generatePrimitiveColorPalette,
     getSemanticDependentTokens,
     validatePalette,
@@ -18,10 +18,7 @@ import { ColorInput } from '~/ui/components/color-input';
 import { LabeledInput } from '~/ui/components/labeled-input';
 import { Section } from '~/ui/components/section';
 
-// 각 기본 색상의 키 컬러 3개 중 가운데 값을 대표 HEX로 편집합니다.
-const DEFAULT_BASIC_COLORS = Object.fromEntries(
-    Object.entries(LEONARDO_KEYS).map(([name, keys]) => [name, `#${keys[1]}`]),
-);
+const DEFAULT_BASIC_COLORS: Record<string, string> = { ...BASE_COLOR_HEX };
 
 // HEX 하나는 키 컬러를 다시 유도하므로, 기본값과 다른 색상만 넘겨야 기본 팔레트가 유지됩니다.
 // primary는 brandColor로 따로 넘기므로 같은 이름을 basicColors에서 뺍니다(중복 이름은 throw).

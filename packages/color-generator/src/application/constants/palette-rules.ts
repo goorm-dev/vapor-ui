@@ -151,23 +151,22 @@ export const HUE_ANCHORS: Readonly<Record<string, Readonly<HueAnchors>>> = deepF
 export const BASE_COLORS = Object.keys(HUE_ANCHORS);
 
 /**
- * Former Leonardo key colors of the base colors. They no longer shape any hue; the Figma plugin
- * still reads the middle key as each base color's default input HEX.
+ * Representative HEX of each base color, shown as its default input in the Figma plugin. It
+ * shapes no hue: base colors are built from `HUE_ANCHORS`.
  */
-export const LEONARDO_KEYS: Readonly<Record<string, readonly [string, string, string]>> =
-    deepFreeze({
-        red: ['F8636A', 'BB1225', '9E0006'],
-        orange: ['EF6F25', 'B72100', '9E0000'],
-        yellow: ['FBBD05', '8D4F00', '4D1100'],
-        pink: ['F26394', 'B5135D', '550016'],
-        grape: ['D06BEA', '9A1CB7', '62007E'],
-        violet: ['D9B9FF', '805CEC', '4805A3'],
-        blue: ['8DCDFF', '2A72E5', '000E84'],
-        cobalt: ['136EFC', '0009C2', '17008A'],
-        cyan: ['1BB3CC', '04819C', '002941'],
-        green: ['75D9B4', '058765', '002E13'],
-        lime: ['9AD84A', '71B61A', '115A00'],
-    });
+export const BASE_COLOR_HEX: Readonly<Record<string, string>> = deepFreeze({
+    red: '#BB1225',
+    orange: '#B72100',
+    yellow: '#8D4F00',
+    pink: '#B5135D',
+    grape: '#9A1CB7',
+    violet: '#805CEC',
+    blue: '#2A72E5',
+    cobalt: '#0009C2',
+    cyan: '#04819C',
+    green: '#058765',
+    lime: '#71B61A',
+});
 
 /** Light 500–900 chroma stays within this multiple of its neighbours' mean (900: of 800). */
 export const CHROMA_SPIKE_FACTOR = 1.1;

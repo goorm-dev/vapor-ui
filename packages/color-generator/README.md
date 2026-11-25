@@ -127,7 +127,7 @@ The `chroma` check reruns the engine's rule, not an approximation of it: the yel
 - `generatePrimitiveColorPalette`, `getSemanticDependentTokens`, `validatePalette`
 - `BASE_TOKENS`: `color-white` and `color-black` chips
 - `HUE_ANCHORS`: default light hue anchors of the 11 base colors
-- `LEONARDO_KEYS`: former key colors of the 11 base colors; they shape no hue, and the Figma plugin reads the middle key as each base color's default HEX
+- `BASE_COLOR_HEX`: representative HEX of each of the 11 base colors (the Figma plugin's default input); it shapes no hue
 - Types: `ThemeOptions`, `ThemeResult`, `HueAnchors`, `HueOverrides`, `PrimitiveColorTokens`, `PrimitivePalette`, `PaletteChip`, `Scale`, `SemanticTokens`, `SemanticResult`, `PaletteCheck`, `KeyColor`, `Hexcode`
 
 ## Changing the rules

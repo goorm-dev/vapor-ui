@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import gray from '../reference/gray.figma.json';
 import reference from '../reference/palette.json';
 import referenceTeal from '../reference/palette.teal.json';
-import { BASE_TOKENS, HUE_ANCHORS, LEONARDO_KEYS, generatePrimitiveColorPalette } from '../src';
+import { BASE_COLOR_HEX, BASE_TOKENS, HUE_ANCHORS, generatePrimitiveColorPalette } from '../src';
 import { contrast, gamutChroma } from '../src/domain/color-math';
 import { table } from './helpers';
 
@@ -86,7 +86,7 @@ describe('exported tables', () => {
         const writes = [
             () => ((HUE_ANCHORS.red as Record<string, number>)['900'] = 200),
             () => ((HUE_ANCHORS as Record<string, unknown>).teal = HUE_ANCHORS.cyan),
-            () => ((LEONARDO_KEYS.red as unknown as string[])[1] = '000000'),
+            () => ((BASE_COLOR_HEX as Record<string, string>).red = '#000000'),
             () => ((BASE_TOKENS['color-white'] as { hex: string }).hex = '#000000'),
         ];
         for (const write of writes) expect(write).toThrow(TypeError);
