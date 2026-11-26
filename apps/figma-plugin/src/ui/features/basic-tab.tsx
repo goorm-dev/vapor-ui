@@ -16,7 +16,7 @@ interface BasicTabProps {
     theme: ThemeResult | null;
     baseline: ThemeResult | null;
     flags: Map<string, 'warn' | 'fail'>;
-    request: (action: ThemeAction) => void;
+    request: (action: ThemeAction, onApplied?: () => void) => void;
 }
 
 export const BasicTab = ({ draft, theme, baseline, flags, request }: BasicTabProps) => {
@@ -103,8 +103,9 @@ export const BasicTab = ({ draft, theme, baseline, flags, request }: BasicTabPro
                     variant="outline"
                     disabled={!isValidName(newName)}
                     onClick={() => {
-                        request({ type: 'add-basic', name: newName, hex: newHex });
-                        setNewName('');
+                        request({ type: 'add-basic', name: newName, hex: newHex }, () =>
+                            setNewName(''),
+                        );
                     }}
                 >
                     새 색 추가

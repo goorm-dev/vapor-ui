@@ -41,7 +41,11 @@ const generate = (options: ThemeOptions): Generated => {
 
 export const ColorSystemTab = () => {
     const [draft, dispatch] = useReducer(themeDraftReducer, initialDraft);
-    const [pending, setPending] = useState<{ message: string; action: ThemeAction } | null>(null);
+    const [pending, setPending] = useState<{
+        message: string;
+        action: ThemeAction;
+        onApplied?: () => void;
+    } | null>(null);
     const [collectionName, setCollectionName] = useState('Color Tokens');
     const [isCopying, setIsCopying] = useState(false);
 
@@ -53,10 +57,12 @@ export const ColorSystemTab = () => {
     const flags = useMemo(() => flaggedCells(checks), [checks]);
     const canExport = theme !== null && checks.every((check) => check.status !== 'fail');
 
-    const request = (action: ThemeAction) => {
+    /** Dispatches `action`, after a confirm when it loses edits; `onApplied` runs only once it does. */
+    const request = (action: ThemeAction, onApplied?: () => void) => {
         const message = confirmationFor(draft, action);
-        if (message) setPending({ message, action });
-        else dispatch(action);
+        if (message) return setPending({ message, action, onApplied });
+        dispatch(action);
+        onApplied?.();
     };
 
     const handleExport = () => {
@@ -161,7 +167,10 @@ export const ColorSystemTab = () => {
                 message={pending?.message ?? null}
                 onCancel={() => setPending(null)}
                 onConfirm={() => {
-                    if (pending) dispatch(pending.action);
+                    if (pending) {
+                        dispatch(pending.action);
+                        pending.onApplied?.();
+                    }
                     setPending(null);
                 }}
             />
