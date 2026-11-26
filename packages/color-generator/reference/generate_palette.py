@@ -636,6 +636,9 @@ def check_corrected(palette, rule, corr):
     print()
     for e in errors:
         print("  입력 오류: " + e)
+    if errors:
+        print("❌ 입력 오류가 있어 검사하지 않고 palette_corrected.json을 저장하지 않음, 오류를 고친 뒤 다시 검사")
+        return
     if not changed:
         print("바뀐 칸이 없어 검사하지 않음")
         return
