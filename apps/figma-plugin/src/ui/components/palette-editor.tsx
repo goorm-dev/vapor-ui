@@ -1,0 +1,303 @@
+import { useEffect, useState } from 'react';
+
+import type { Scale, ThemeResult } from '@vapor-ui/color-generator';
+import { Button, Collapsible, HStack, Text, VStack } from '@vapor-ui/core';
+import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
+
+import type { HueRecommendation } from '~/ui/features/hue-recommendation';
+import { searchHue } from '~/ui/features/hue-recommendation';
+import type { Hues, ThemeAction, ThemeDraft } from '~/ui/features/theme-draft';
+import { COLOR_SCALES, HUE_RANGE, hasHues, hueDelta, hueOf } from '~/ui/features/theme-draft';
+
+const GRAY_SCALES: readonly Scale[] = ['000', '025', ...COLOR_SCALES];
+const MODES = ['light', 'dark'] as const;
+
+const FLAG_RING = { warn: 'ring-2 ring-v-orange-500', fail: 'ring-2 ring-v-red-600' } as const;
+
+const chipsOf = (theme: ThemeResult, mode: (typeof MODES)[number], name: string) =>
+    (mode === 'light' ? theme.lightModeTokens : theme.darkModeTokens).palettes.find(
+        (p) => p.name === name,
+    )?.chips ?? {};
+
+interface HueSliderProps {
+    label: string;
+    baseHue: number;
+    /** The generated cell's `oklch(L C H)`, used for the track preview. */
+    baseOklch: string;
+    /** The edited hue, or `undefined` for the generated one. */
+    hue: number | undefined;
+    onChange: (hue: number | null) => void;
+}
+
+// The native track is invisible in the plugin, so draw it: thumb plus a hue gradient track.
+const SLIDER_CLASS = [
+    'flex-1 min-w-0 h-2 rounded-full appearance-none cursor-pointer',
+    '[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:size-4',
+    '[&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white',
+    '[&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-black/60',
+    '[&::-webkit-slider-thumb]:shadow',
+].join(' ');
+
+const HueSlider = ({ label, baseHue, baseOklch, hue, onChange }: HueSliderProps) => {
+    // Unwrapped around the baseline so a slider near 0°/360° stays continuous.
+    const value = baseHue + hueDelta(baseHue, hue ?? baseHue);
+    // Preview only: the engine re-solves L and C per hue, so the real cell can differ slightly.
+    const [l, c] = baseOklch.slice(6, -1).split(' ');
+    const stops = [-HUE_RANGE, -HUE_RANGE / 2, 0, HUE_RANGE / 2, HUE_RANGE].map(
+        (d) => `oklch(${l} ${c} ${baseHue + d})`,
+    );
+    return (
+        <>
+            <HStack $css={{ gap: '$050', alignItems: 'center' }}>
+                <Text typography="body3" foreground="hint-200" className="w-8 shrink-0">
+                    색조
+                </Text>
+                <input
+                    type="range"
+                    aria-label={`${label} 색조`}
+                    min={baseHue - HUE_RANGE}
+                    max={baseHue + HUE_RANGE}
+                    step={0.1}
+                    value={value}
+                    onChange={(e) => onChange(Number(e.target.value))}
+                    className={SLIDER_CLASS}
+                    style={{ background: `linear-gradient(to right, ${stops.join(', ')})` }}
+                />
+            </HStack>
+            <HStack $css={{ gap: '$050', alignItems: 'center' }}>
+                <span className="w-8 shrink-0" />
+                <Text typography="body3" className="flex-1 min-w-0 break-all">
+                    {label} · {(hue ?? baseHue).toFixed(1)}°
+                </Text>
+                <Button
+                    size="sm"
+                    variant="ghost"
+                    colorPalette="secondary"
+                    disabled={hue === undefined}
+                    onClick={() => onChange(null)}
+                >
+                    초기화
+                </Button>
+            </HStack>
+        </>
+    );
+};
+
+interface HueAdviceProps {
+    name: string;
+    scale: Scale;
+    draft: ThemeDraft;
+    request: (action: ThemeAction) => void;
+}
+
+/**
+ * The recommended hue for a cell with a hue-gap warning. Each search step generates the whole
+ * theme (~60 ms), so the search runs one step per task to keep the plugin responsive.
+ */
+const HueAdvice = ({ name, scale, draft, request }: HueAdviceProps) => {
+    const [result, setResult] = useState<{ draft: ThemeDraft; rec: HueRecommendation | null }>();
+
+    useEffect(() => {
+        const steps = searchHue(draft, { name, scale });
+        let timer = setTimeout(function tick() {
+            const step = steps.next();
+            if (step.done) setResult({ draft, rec: step.value });
+            else timer = setTimeout(tick);
+        });
+        return () => clearTimeout(timer);
+    }, [draft, name, scale]);
+
+    // `undefined` while searching: a result for an older draft is stale.
+    const rec = result?.draft === draft ? result.rec : undefined;
+    if (rec === null) return null;
+
+    const move = rec?.kind === 'move' ? rec : null;
+    const hue = move && `${move.hue.toFixed(1)}°`;
+    const message = !rec
+        ? '추천 색조 찾는 중…'
+        : rec.kind === 'none'
+          ? `범위 내 추천 불가 · ${rec.reason}`
+          : rec.name === name
+            ? `추천 ${hue}`
+            : `${rec.name}-${rec.scale}을 ${hue}로 조정 권장`;
+    return (
+        <HStack $css={{ gap: '$050', alignItems: 'center' }}>
+            <span className="w-8 shrink-0" />
+            <Text
+                typography="body3"
+                foreground={move ? undefined : 'hint-200'}
+                className="flex-1 min-w-0 break-all"
+            >
+                {message}
+            </Text>
+            {move && (
+                <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() =>
+                        request({
+                            type: 'set-hue',
+                            name: move.name,
+                            scale: move.scale,
+                            hue: move.hue,
+                        })
+                    }
+                >
+                    적용
+                </Button>
+            )}
+        </HStack>
+    );
+};
+
+interface PaletteEditorProps {
+    name: string;
+    theme: ThemeResult;
+    /** The same theme without hue edits; each slider is centered on its hue. */
+    baseline: ThemeResult;
+    hues: Hues;
+    /** Cells a check names, keyed `light blue-500`. */
+    flags: Map<string, 'warn' | 'fail'>;
+    /** Omit for a read-only palette. */
+    onHue?: (scale: Scale, hue: number | null) => void;
+    /** The pinned brand cell, which ignores hue edits. */
+    lockedScale?: Scale;
+    /** Enables a recommended hue for a flagged cell; it may move a cell in another palette. */
+    advice?: { draft: ThemeDraft; request: (action: ThemeAction) => void };
+}
+
+/**
+ * Light and dark rows of one palette. Picking a light cell opens its hue slider; dark follows
+ * the light curve, so it is read-only.
+ */
+export const PaletteEditor = ({
+    name,
+    theme,
+    baseline,
+    hues,
+    flags,
+    onHue,
+    lockedScale,
+    advice,
+}: PaletteEditorProps) => {
+    const [selected, setSelected] = useState<Scale | null>(null);
+    const [detailOpen, setDetailOpen] = useState(false);
+    // Per-step hues are absolute, so moving the curve under them would kink it.
+    const scales = name === 'gray' ? GRAY_SCALES : COLOR_SCALES;
+    const editable = (scale: Scale) => onHue !== undefined && scale !== lockedScale;
+
+    // The brand cell can move onto the selected scale when the brand HEX changes.
+    const active = selected && editable(selected) ? selected : null;
+    const baseChip = active && chipsOf(baseline, 'light', name)[active];
+    const baseHue = baseChip ? hueOf(baseChip.oklch) : null;
+    const edited = active ? hues[active] : undefined;
+    // Cheap pre-check; the search itself tells hue-gap apart from other warnings.
+    const flagged =
+        active !== null &&
+        (flags.has(`light ${name}-${active}`) || flags.has(`dark ${name}-${active}`));
+
+    return (
+        <VStack $css={{ gap: '$100' }}>
+            {MODES.map((mode) => {
+                const chips = chipsOf(theme, mode, name);
+                return (
+                    <HStack key={mode} $css={{ gap: '$050', alignItems: 'center' }}>
+                        <Text typography="body3" foreground="hint-200" className="w-8 shrink-0">
+                            {mode}
+                        </Text>
+                        {scales.map((scale) => {
+                            const chip = chips[scale];
+                            if (!chip) return null;
+                            const flag = flags.get(`${mode} ${name}-${scale}`);
+                            const canEdit = mode === 'light' && editable(scale);
+                            return (
+                                <button
+                                    key={scale}
+                                    type="button"
+                                    disabled={!canEdit}
+                                    onClick={() => {
+                                        setSelected(selected === scale ? null : scale);
+                                        setDetailOpen(true);
+                                    }}
+                                    title={`${chip.name} ${chip.hex} ${chip.oklch}${scale === lockedScale && mode === 'light' ? ' (브랜드 고정)' : ''}`}
+                                    aria-pressed={canEdit ? selected === scale : undefined}
+                                    className={[
+                                        'relative h-8 flex-1 min-w-0 rounded border border-black/10',
+                                        canEdit ? 'cursor-pointer' : 'cursor-default',
+                                        flag ? FLAG_RING[flag] : '',
+                                        canEdit && selected === scale
+                                            ? 'outline-2 outline-offset-1 outline-black'
+                                            : '',
+                                    ].join(' ')}
+                                    style={{ background: chip.hex }}
+                                >
+                                    {mode === 'light' && scale in hues && (
+                                        <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-white ring-1 ring-black" />
+                                    )}
+                                    {mode === 'light' && scale === lockedScale && (
+                                        <span className="absolute inset-0 grid place-items-center text-xs text-white mix-blend-difference">
+                                            ●
+                                        </span>
+                                    )}
+                                </button>
+                            );
+                        })}
+                    </HStack>
+                );
+            })}
+            <HStack $css={{ gap: '$050' }}>
+                <span className="w-8 shrink-0" />
+                {scales.map((scale) => (
+                    <Text
+                        key={scale}
+                        typography="body3"
+                        foreground="hint-200"
+                        className="flex-1 min-w-0 text-center"
+                    >
+                        {scale}
+                    </Text>
+                ))}
+            </HStack>
+
+            {onHue && (
+                <Collapsible.Root open={detailOpen} onOpenChange={setDetailOpen}>
+                    <Collapsible.Trigger className="group flex justify-between w-full items-center">
+                        <Text typography="body3">세부 조정</Text>
+                        <ChevronDownOutlineIcon className="transition-transform group-data-[panel-open]:rotate-180" />
+                    </Collapsible.Trigger>
+                    <Collapsible.Panel>
+                        <VStack $css={{ gap: '$100', paddingTop: '$100' }}>
+                            {active && baseChip && baseHue !== null ? (
+                                <HueSlider
+                                    label={`${name}-${active}`}
+                                    baseHue={baseHue}
+                                    baseOklch={baseChip.oklch}
+                                    hue={edited}
+                                    onChange={(hue) => onHue(active, hue)}
+                                />
+                            ) : (
+                                <Text typography="body3" foreground="hint-200">
+                                    light 칸을 골라 색조를 바꿔요.
+                                </Text>
+                            )}
+                            {active && flagged && advice && (
+                                <HueAdvice key={active} name={name} scale={active} {...advice} />
+                            )}
+                            {advice && (
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    colorPalette="secondary"
+                                    disabled={!hasHues({ hues })}
+                                    onClick={() => advice.request({ type: 'clear-hues', name })}
+                                >
+                                    칸별 색조 모두 초기화
+                                </Button>
+                            )}
+                        </VStack>
+                    </Collapsible.Panel>
+                </Collapsible.Root>
+            )}
+        </VStack>
+    );
+};

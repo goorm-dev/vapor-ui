@@ -26,14 +26,14 @@ export const AccessibilityWarning = ({ checks }: AccessibilityWarningProps) => {
                 {issues.map((check) => (
                     <VStack key={check.id} $css={{ gap: '$050' }}>
                         <Text
-                            typography="body3"
+                            typography="body2"
                             foreground={check.status === 'fail' ? 'danger-100' : 'warning-100'}
                             className="font-semibold"
                         >
                             {check.status.toUpperCase()} · {check.id}
                         </Text>
                         {check.details.map((detail) => (
-                            <Text key={detail} typography="body4" foreground="hint-200">
+                            <Text key={detail} typography="body3" foreground="hint-200">
                                 {detail}
                             </Text>
                         ))}

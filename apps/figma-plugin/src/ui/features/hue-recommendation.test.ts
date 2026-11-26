@@ -1,0 +1,128 @@
+import type { PaletteCheck, Scale } from '@vapor-ui/color-generator';
+import { generatePrimitiveColorPalette, validatePalette } from '@vapor-ui/color-generator';
+import { describe, expect, it } from 'vitest';
+
+import type { HueRecommendation } from './hue-recommendation';
+import { problemKeys, recommendHue } from './hue-recommendation';
+import type { ThemeAction, ThemeDraft } from './theme-draft';
+import {
+    draftToOptions,
+    flaggedCells,
+    hueOf,
+    initialDraft,
+    themeDraftReducer,
+} from './theme-draft';
+
+const run = (...actions: ThemeAction[]) => actions.reduce(themeDraftReducer, initialDraft);
+const checksOf = (draft: ThemeDraft) =>
+    validatePalette(generatePrimitiveColorPalette(draftToOptions(draft)));
+const hueGapFlags = (checks: PaletteCheck[]) =>
+    flaggedCells(checks.filter((c) => c.id === 'hue-gap'));
+const lightHue = (draft: ThemeDraft, name: string, scale: Scale) =>
+    hueOf(
+        generatePrimitiveColorPalette(draftToOptions(draft)).lightModeTokens.palettes.find(
+            (p) => p.name === name,
+        )!.chips[scale].oklch,
+    );
+
+/** Applies a move and checks the selected cell is clear with no new problems. */
+const expectResolves = (draft: ThemeDraft, cell: string, rec: HueRecommendation | null) => {
+    if (rec?.kind !== 'move') throw new Error(`expected a move, got ${JSON.stringify(rec)}`);
+    const { name, scale, hue } = rec;
+    const after = checksOf(themeDraftReducer(draft, { type: 'set-hue', name, scale, hue }));
+    const flags = hueGapFlags(after);
+    expect(flags.has(`light ${cell}`)).toBe(false);
+    expect(flags.has(`dark ${cell}`)).toBe(false);
+    const before = problemKeys(checksOf(draft));
+    expect([...problemKeys(after)].filter((k) => !before.has(k))).toEqual([]);
+    return rec;
+};
+
+// `#138aec` pins brand-400 4.8° from blue-400, in light only.
+const brand = run({ type: 'set-brand', name: 'brand', hex: '#138aec' });
+// `#cf6017` puts mint-800 4.0° from yellow-800 in light only.
+const mint = run({ type: 'add-basic', name: 'mint', hex: '#cf6017' });
+
+describe('recommendHue', () => {
+    it('returns null for a cell without a hue-gap warning', () => {
+        expect(hueGapFlags(checksOf(initialDraft)).has('light red-500')).toBe(false);
+        expect(recommendHue(initialDraft, { name: 'red', scale: '500' })).toBeNull();
+    });
+
+    it('resolves a hue gap between a new color and a default palette', () => {
+        expect(hueGapFlags(checksOf(mint)).has('light mint-800')).toBe(true);
+        expectResolves(mint, 'mint-800', recommendHue(mint, { name: 'mint', scale: '800' }));
+    });
+
+    it('never moves the brand cell', () => {
+        expect(generatePrimitiveColorPalette(draftToOptions(brand)).brand?.scale).toBe('400');
+        const rec = expectResolves(
+            brand,
+            'blue-400',
+            recommendHue(brand, { name: 'blue', scale: '400' }),
+        );
+        expect(rec.name).toBe('blue');
+    });
+
+    it('moves an untouched partner before a cell the designer edited', () => {
+        const edited = themeDraftReducer(mint, {
+            type: 'set-hue',
+            name: 'mint',
+            scale: '800',
+            hue: lightHue(mint, 'mint', '800'),
+        });
+        const rec = expectResolves(
+            edited,
+            'mint-800',
+            recommendHue(edited, { name: 'mint', scale: '800' }),
+        );
+        expect(rec).toMatchObject({ name: 'yellow', scale: '800' });
+    });
+
+    it('moves an edited cell when nothing else can move', () => {
+        const edited = themeDraftReducer(brand, {
+            type: 'set-hue',
+            name: 'blue',
+            scale: '400',
+            hue: lightHue(brand, 'blue', '400'),
+        });
+        const rec = expectResolves(
+            edited,
+            'blue-400',
+            recommendHue(edited, { name: 'blue', scale: '400' }),
+        );
+        expect(rec.name).toBe('blue');
+    });
+
+    // The search moves only the same-scale light cell, and dark 050–300 take the dark 400 hue,
+    // so light 050 cannot reach dark 050. Moving the anchors can.
+    it('reports none for a dark-only hue gap', { timeout: 30_000 }, () => {
+        const draft = run({ type: 'add-basic', name: 'mint', hex: '#179ecf' });
+        const flags = hueGapFlags(checksOf(draft));
+        expect(flags.has('dark mint-050')).toBe(true);
+        expect(flags.has('light mint-050')).toBe(false);
+        expect(recommendHue(draft, { name: 'mint', scale: '050' })).toMatchObject({ kind: 'none' });
+    });
+
+    // Slow: the whole ±30° range is searched. Dark moves about 1/10 of the light hue, so a
+    // 0.7° dark gap against the pinned brand cell cannot open.
+    it('reports none when no hue in range clears the gap', { timeout: 30_000 }, () => {
+        const draft = run({ type: 'set-brand', name: 'brand', hex: '#2a72e5' });
+        expect(recommendHue(draft, { name: 'blue', scale: '400' })).toEqual({
+            kind: 'none',
+            reason: '±30° 안에서 간격을 벌릴 수 없어요',
+        });
+    });
+
+    // Three close cyans: moving y-050 off x-050 must not open a gap to blue-050 or blue-900.
+    it('never trades one warning for another', { timeout: 60_000 }, () => {
+        const draft = run(
+            { type: 'add-basic', name: 'z', hex: '#1d9ec9' },
+            { type: 'add-basic', name: 'y', hex: '#1d8dc9' },
+            { type: 'add-basic', name: 'x', hex: '#1d81c9' },
+        );
+        const rec = recommendHue(draft, { name: 'x', scale: '050' });
+        if (rec?.kind === 'move') expectResolves(draft, 'x-050', rec);
+        else expect(rec).toMatchObject({ kind: 'none' });
+    });
+});

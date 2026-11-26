@@ -11,7 +11,7 @@ const SectionDescription = ({ description }: { description: string }) => {
     return (
         <span className="flex flex-col">
             {lines.map((line, index) => (
-                <Text key={index} typography="body3" foreground="hint-200">
+                <Text key={index} typography="body2" foreground="hint-200">
                     {line}
                 </Text>
             ))}

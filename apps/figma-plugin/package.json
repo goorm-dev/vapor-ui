@@ -13,10 +13,12 @@
         "dev:figma": "concurrently \"vite build --config vite.config.ui.ts --watch\" \"vite build --config vite.config.plugin.ts --watch\"",
         "lint": "eslint ./src",
         "preview": "vite preview",
+        "test": "vitest --run",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
         "@vapor-ui/color-generator": "workspace:*",
+        "@vapor-ui/composites": "^0.1.1",
         "@vapor-ui/core": "workspace:*",
         "@vapor-ui/css-generator": "workspace:*",
         "@vapor-ui/icons": "workspace:*",
@@ -38,6 +40,7 @@
         "tailwindcss": "^4.3.5",
         "typescript": "catalog:",
         "vite": "catalog:",
-        "vite-plugin-singlefile": "^2.3.4"
+        "vite-plugin-singlefile": "^2.3.4",
+        "vitest": "catalog:"
     }
 }

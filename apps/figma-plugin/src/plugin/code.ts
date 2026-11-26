@@ -41,7 +41,7 @@ async function initializePlugin(): Promise<void> {
 
         // UI 표시
         figma.showUI(__html__);
-        figma.ui.resize(450, 600);
+        figma.ui.resize(560, 760);
 
         Logger.info('Plugin initialized successfully');
     } catch (error) {
@@ -49,7 +49,7 @@ async function initializePlugin(): Promise<void> {
 
         // 에러가 발생해도 UI는 표시
         figma.showUI(__html__);
-        figma.ui.resize(450, 600);
+        figma.ui.resize(560, 760);
 
         // UI에 에러 알림
         figma.ui.postMessage({
@@ -69,9 +69,6 @@ figma.ui.onmessage = async (msg: UIMessage) => {
     switch (msg.type) {
         case 'palette-generation-started':
             figmaNoticeService.paletteCreating();
-            break;
-        case 'variable-generation-started':
-            figmaNoticeService.variableCreating();
             break;
         case 'create-unified-palette-sections':
             await unifiedController.createUnifiedPaletteSections(msg.data);

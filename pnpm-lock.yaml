@@ -116,6 +116,9 @@ importers:
       '@vapor-ui/color-generator':
         specifier: workspace:*
         version: link:../../packages/color-generator
+      '@vapor-ui/composites':
+        specifier: ^0.1.1
+        version: 0.1.1(@types/react@19.3.0)(@vapor-ui/core@packages+core)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@vapor-ui/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -177,6 +180,9 @@ importers:
       vite-plugin-singlefile:
         specifier: ^2.3.4
         version: 2.3.4(rollup@4.62.4)(vite@8.3.8(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))
+      vitest:
+        specifier: 'catalog:'
+        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@3.2.7)(happy-dom@20.11.2)(jsdom@29.0.2(@noble/hashes@1.8.0))(vite@8.3.8(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))
 
   apps/storybook:
     dependencies:
@@ -279,7 +285,7 @@ importers:
         version: link:../../packages/icons
       '@vercel/analytics':
         specifier: ^1.6.1
-        version: 1.6.1(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react@19.3.1)
+        version: 1.6.1(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react@19.3.1)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -288,16 +294,16 @@ importers:
         version: 3.1.3
       fumadocs-core:
         specifier: 16.15.5
-        version: 16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7)
+        version: 16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7)
       fumadocs-mdx:
         specifier: 14.3.2
-        version: 14.3.2(@types/mdast@4.0.4)(@types/mdx@2.0.14)(@types/react@19.3.0)(fumadocs-core@16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7))(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react@19.3.1)(supports-color@10.2.2)(vite@8.3.8(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))
+        version: 14.3.2(@types/mdast@4.0.4)(@types/mdx@2.0.14)(@types/react@19.3.0)(fumadocs-core@16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react@19.3.1)(supports-color@10.2.2)(vite@8.3.8(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))
       fumadocs-typescript:
         specifier: 5.2.6
-        version: 5.2.6(8cc8571eb5b7831e3175b77f202c328a)
+        version: 5.2.6(a5c449e95d6356aba4a02f95e56b5ea3)
       fumadocs-ui:
         specifier: npm:@fumadocs/base-ui@16.15.5
-        version: '@fumadocs/base-ui@16.15.5(@date-fns/tz@1.4.1)(@types/mdx@2.0.14)(@types/react@19.3.0)(fumadocs-core@16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7))(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.5)'
+        version: '@fumadocs/base-ui@16.15.5(@date-fns/tz@1.4.1)(@types/mdx@2.0.14)(@types/react@19.3.0)(fumadocs-core@16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.5)'
       fuse.js:
         specifier: ^7.5.0
         version: 7.5.0
@@ -309,7 +315,7 @@ importers:
         version: 3.0.4
       next:
         specifier: 16.4.6
-        version: 16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0)
+        version: 16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0)
       react:
         specifier: 'catalog:'
         version: 19.3.1
@@ -343,7 +349,7 @@ importers:
     devDependencies:
       '@fumadocs/mdx-remote':
         specifier: 1.4.10
-        version: 1.4.10(@types/mdx@2.0.14)(@types/react@19.3.0)(fumadocs-core@16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7))(react@19.3.1)(supports-color@10.2.2)
+        version: 1.4.10(@types/mdx@2.0.14)(@types/react@19.3.0)(fumadocs-core@16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7))(react@19.3.1)(supports-color@10.2.2)
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
@@ -443,13 +449,13 @@ importers:
         version: 9.39.5(jiti@2.7.0)(supports-color@10.2.2)
       jest:
         specifier: ^30.4.2
-        version: 30.4.2(@types/node@24.13.3)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3))
+        version: 30.4.2(@types/node@24.13.3)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3))
       rimraf:
         specifier: ^6.1.4
         version: 6.1.4
       ts-jest:
         specifier: ^29.4.15
-        version: 29.4.15(@babel/core@7.29.0(supports-color@10.2.2))(@jest/transform@30.4.1(supports-color@10.2.2))(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.29.0(supports-color@10.2.2))(supports-color@10.2.2))(esbuild@0.27.7)(jest-util@30.4.1)(jest@30.4.2(@types/node@24.13.3)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3)))(typescript@5.9.3)
+        version: 29.4.15(@babel/core@7.29.0(supports-color@10.2.2))(@jest/transform@30.4.1(supports-color@10.2.2))(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.29.0(supports-color@10.2.2))(supports-color@10.2.2))(esbuild@0.27.7)(jest-util@30.4.1)(jest@30.4.2(@types/node@24.13.3)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3)))(typescript@5.9.3)
       tsup:
         specifier: ^8.5.1
         version: 8.5.1(jiti@2.7.0)(postcss@8.5.32)(supports-color@10.2.2)(tsx@4.23.15)(typescript@5.9.3)(yaml@2.9.0)
@@ -482,7 +488,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: 'catalog:'
-        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@22.20.5)(happy-dom@20.11.2)(jsdom@29.0.2(@noble/hashes@1.8.0))(vite@8.3.8(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))
+        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@22.20.5)(happy-dom@20.11.2)(jsdom@29.0.2(@noble/hashes@1.8.0))(vite@8.3.8(@types/node@22.20.5)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))
 
   packages/composites:
     dependencies:
@@ -4635,12 +4641,6 @@ packages:
     peerDependencies:
       '@testing-library/dom': '>=7.21.4'
 
-  '@testing-library/user-event@14.6.8':
-    resolution: {integrity: sha512-vgSSqnANMnkcYR/vUNDbwS7aM3OErRLNUG8vCVVlj4oc6cKffUrccX7UAS5AmJQQNZTSibi9z5GvvRZ0aYgUCQ==}
-    engines: {node: '>=12', npm: '>=6'}
-    peerDependencies:
-      '@testing-library/dom': '>=7.21.4'
-
   '@trivago/prettier-plugin-sort-imports@5.2.2':
     resolution: {integrity: sha512-fYDQA9e6yTNmA13TLVSA+WMQRc5Bn/c0EUBditUHNfMMxN7M82c38b1kEggVE3pLpZ0FwkwJkUEKMiOi52JXFA==}
     engines: {node: '>18.12'}
@@ -5071,6 +5071,19 @@ packages:
     resolution: {integrity: sha512-mGk0YEan+NyeoxEO51LfxOdtw2JBI+Yb840FGg+zvG6tVU3YfDgKGPiGuk5oT8jqzfsm7H89DyjOVCpl6Bnn0w==}
     peerDependencies:
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
+
+  '@vapor-ui/composites@0.1.1':
+    resolution: {integrity: sha512-E1POtdSZMc2fC7oJPsAaGgW6zJNS1+lWcoFvw/YH7nBeIhiyKpM8cqg51gy9BG9q114hwW/XSW+ekjEKFBOIEw==}
+    peerDependencies:
+      '@vapor-ui/core': ^1.7.1
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  '@vapor-ui/icons@1.3.3':
+    resolution: {integrity: sha512-UZ+XBM9vHQ5PmpbPEPVK8P3yqIZChSBlYnGNlsCanRgvFU/kkCIsLB1hX7mzGOMRzWNMGKExUVG7pHLQ0gX7WA==}
+    peerDependencies:
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
 
   '@vercel/analytics@1.6.1':
     resolution: {integrity: sha512-oH9He/bEM+6oKlv3chWuOOcp8Y6fo6/PSro8hEkgCW3pu9/OiCXiUpRUogDh3Fs3LH2sosDrx8CxeOLBEE+afg==}
@@ -12520,14 +12533,14 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.3.0
 
-  '@fumadocs/base-ui@16.15.5(@date-fns/tz@1.4.1)(@types/mdx@2.0.14)(@types/react@19.3.0)(fumadocs-core@16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7))(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.5)':
+  '@fumadocs/base-ui@16.15.5(@date-fns/tz@1.4.1)(@types/mdx@2.0.14)(@types/react@19.3.0)(fumadocs-core@16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.5)':
     dependencies:
       '@base-ui/react': 1.8.0(@date-fns/tz@1.4.1)(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@fuma-translate/react': 1.0.2(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@fumadocs/tailwind': 0.1.1(tailwindcss@4.3.5)
       class-variance-authority: 0.7.1
       cnfast: 0.1.0
-      fumadocs-core: 16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7)
+      fumadocs-core: 16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7)
       lucide-react: 1.39.0(react@19.3.1)
       motion: 13.2.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       next-themes: 0.4.6(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -12541,16 +12554,16 @@ snapshots:
     optionalDependencies:
       '@types/mdx': 2.0.14
       '@types/react': 19.3.0
-      next: 16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0)
+      next: 16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0)
     transitivePeerDependencies:
       - '@date-fns/tz'
       - date-fns
       - tailwindcss
 
-  '@fumadocs/mdx-remote@1.4.10(@types/mdx@2.0.14)(@types/react@19.3.0)(fumadocs-core@16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7))(react@19.3.1)(supports-color@10.2.2)':
+  '@fumadocs/mdx-remote@1.4.10(@types/mdx@2.0.14)(@types/react@19.3.0)(fumadocs-core@16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7))(react@19.3.1)(supports-color@10.2.2)':
     dependencies:
       '@mdx-js/mdx': 3.1.1(supports-color@10.2.2)
-      fumadocs-core: 16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7)
+      fumadocs-core: 16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7)
       js-yaml: 4.1.1
       react: 19.3.1
       unified: 11.0.5
@@ -12845,7 +12858,7 @@ snapshots:
       jest-util: 30.4.1
       slash: 3.0.0
 
-  '@jest/core@30.4.2(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3))':
+  '@jest/core@30.4.2(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3))':
     dependencies:
       '@jest/console': 30.4.1
       '@jest/pattern': 30.4.0
@@ -12861,7 +12874,7 @@ snapshots:
       fast-json-stable-stringify: 2.1.0
       graceful-fs: 4.2.11
       jest-changed-files: 30.4.1
-      jest-config: 30.4.2(@types/node@22.20.5)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3))
+      jest-config: 30.4.2(@types/node@22.20.5)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3))
       jest-haste-map: 30.4.1
       jest-message-util: 30.4.1
       jest-regex-util: 30.4.0
@@ -14325,10 +14338,6 @@ snapshots:
     dependencies:
       '@testing-library/dom': 10.4.2
 
-  '@testing-library/user-event@14.6.8(@testing-library/dom@10.4.2)':
-    dependencies:
-      '@testing-library/dom': 10.4.2
-
   '@trivago/prettier-plugin-sort-imports@5.2.2(prettier@3.9.10)(supports-color@10.2.2)':
     dependencies:
       '@babel/generator': 7.28.3
@@ -14620,7 +14629,7 @@ snapshots:
       '@typescript-eslint/visitor-keys': 8.67.0
       debug: 4.4.3(supports-color@10.2.2)
       minimatch: 10.2.4
-      semver: 7.8.5
+      semver: 7.8.6
       tinyglobby: 0.2.17
       ts-api-utils: 2.5.0(typescript@5.9.3)
       typescript: 5.9.3
@@ -14869,9 +14878,26 @@ snapshots:
       - tsx
       - yaml
 
-  '@vercel/analytics@1.6.1(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react@19.3.1)':
+  '@vapor-ui/composites@0.1.1(@types/react@19.3.0)(@vapor-ui/core@packages+core)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+    dependencies:
+      '@base-ui/utils': 0.4.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@vapor-ui/core': link:packages/core
+      '@vapor-ui/icons': 1.3.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      clsx: 2.1.1
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
+    transitivePeerDependencies:
+      - '@types/react'
+
+  '@vapor-ui/icons@1.3.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+    dependencies:
+      clsx: 2.1.1
+      react: 19.3.1
+      react-dom: 19.3.1(react@19.3.1)
+
+  '@vercel/analytics@1.6.1(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react@19.3.1)':
     optionalDependencies:
-      next: 16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0)
+      next: 16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0)
       react: 19.3.1
 
   '@vitejs/plugin-react@5.2.0(supports-color@10.2.2)(vite@8.3.8(@types/node@24.13.3)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))':
@@ -14936,6 +14962,26 @@ snapshots:
       - utf-8-validate
       - vite
 
+  '@vitest/browser@3.2.7(playwright@1.62.1)(vite@8.3.8(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))(vitest@4.1.12)':
+    dependencies:
+      '@testing-library/dom': 10.4.2
+      '@testing-library/user-event': 14.6.10(@testing-library/dom@10.4.2)
+      '@vitest/mocker': 3.2.7(vite@8.3.8(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))
+      '@vitest/utils': 3.2.7
+      magic-string: 0.30.21
+      sirv: 3.0.2
+      tinyrainbow: 2.0.0
+      vitest: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@3.2.7)(happy-dom@20.11.2)(jsdom@29.0.2(@noble/hashes@1.8.0))(vite@8.3.8(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))
+      ws: 8.21.3
+    optionalDependencies:
+      playwright: 1.62.1
+    transitivePeerDependencies:
+      - bufferutil
+      - msw
+      - utf-8-validate
+      - vite
+    optional: true
+
   '@vitest/coverage-v8@3.2.7(@vitest/browser@3.2.7)(supports-color@10.2.2)(vitest@4.1.12)':
     dependencies:
       '@ampproject/remapping': 2.3.0
@@ -14951,9 +14997,9 @@ snapshots:
       std-env: 3.10.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@22.19.21)(@vitest/coverage-v8@3.2.7)(happy-dom@20.9.0)(jsdom@29.0.2(@noble/hashes@1.8.0))(vite@7.3.7(@types/node@22.19.21)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))
+      vitest: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@3.2.7)(happy-dom@20.11.2)(jsdom@29.0.2(@noble/hashes@1.8.0))(vite@8.3.8(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))
     optionalDependencies:
-      '@vitest/browser': 3.2.7(playwright@1.62.1)(vite@7.3.7(@types/node@22.19.21)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))(vitest@4.1.12)
+      '@vitest/browser': 3.2.7(playwright@1.62.1)(vite@8.3.8(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))(vitest@4.1.12)
     transitivePeerDependencies:
       - supports-color
 
@@ -15022,6 +15068,15 @@ snapshots:
     optionalDependencies:
       vite: 7.3.7(@types/node@22.20.5)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0)
 
+  '@vitest/mocker@3.2.7(vite@8.3.8(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))':
+    dependencies:
+      '@vitest/spy': 3.2.7
+      estree-walker: 3.0.3
+      magic-string: 0.30.21
+    optionalDependencies:
+      vite: 8.3.8(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0)
+    optional: true
+
   '@vitest/mocker@4.1.12(vite@7.3.7(@types/node@22.19.21)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))':
     dependencies:
       '@vitest/spy': 4.1.12
@@ -15045,6 +15100,14 @@ snapshots:
       magic-string: 0.30.21
     optionalDependencies:
       vite: 8.3.8(@types/node@20.19.43)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0)
+
+  '@vitest/mocker@4.1.12(vite@8.3.8(@types/node@22.20.5)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))':
+    dependencies:
+      '@vitest/spy': 4.1.12
+      estree-walker: 3.0.3
+      magic-string: 0.30.21
+    optionalDependencies:
+      vite: 8.3.8(@types/node@22.20.5)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0)
 
   '@vitest/mocker@4.1.12(vite@8.3.8(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))':
     dependencies:
@@ -16216,10 +16279,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@10.2.2):
+  esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@10.2.2):
     dependencies:
       debug: 4.4.3(supports-color@10.2.2)
-      esbuild: 0.27.7
+      esbuild: 0.28.2
     transitivePeerDependencies:
       - supports-color
     optional: true
@@ -16873,7 +16936,7 @@ snapshots:
   fsevents@2.3.3:
     optional: true
 
-  fumadocs-core@16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7):
+  fumadocs-core@16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7):
     dependencies:
       '@fumari/image-size': 0.1.0
       estree-util-value-to-estree: 3.5.0
@@ -16902,21 +16965,21 @@ snapshots:
       '@types/mdast': 4.0.4
       '@types/react': 19.3.0
       lucide-react: 1.39.0(react@19.3.1)
-      next: 16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0)
+      next: 16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0)
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
       zod: 4.6.7
     transitivePeerDependencies:
       - supports-color
 
-  fumadocs-mdx@14.3.2(@types/mdast@4.0.4)(@types/mdx@2.0.14)(@types/react@19.3.0)(fumadocs-core@16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7))(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react@19.3.1)(supports-color@10.2.2)(vite@8.3.8(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0)):
+  fumadocs-mdx@14.3.2(@types/mdast@4.0.4)(@types/mdx@2.0.14)(@types/react@19.3.0)(fumadocs-core@16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react@19.3.1)(supports-color@10.2.2)(vite@8.3.8(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0)):
     dependencies:
       '@mdx-js/mdx': 3.1.1(supports-color@10.2.2)
       '@standard-schema/spec': 1.1.0
       chokidar: 5.0.0
       esbuild: 0.28.2
       estree-util-value-to-estree: 3.5.0
-      fumadocs-core: 16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7)
+      fumadocs-core: 16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7)
       js-yaml: 4.1.1
       mdast-util-mdx: 3.0.0(supports-color@10.2.2)
       mdast-util-to-markdown: 2.1.2
@@ -16933,16 +16996,16 @@ snapshots:
       '@types/mdast': 4.0.4
       '@types/mdx': 2.0.14
       '@types/react': 19.3.0
-      next: 16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0)
+      next: 16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0)
       react: 19.3.1
       vite: 8.3.8(@types/node@24.13.3)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0)
     transitivePeerDependencies:
       - supports-color
 
-  fumadocs-typescript@5.2.6(8cc8571eb5b7831e3175b77f202c328a):
+  fumadocs-typescript@5.2.6(a5c449e95d6356aba4a02f95e56b5ea3):
     dependencies:
       estree-util-value-to-estree: 3.5.0
-      fumadocs-core: 16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7)
+      fumadocs-core: 16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7)
       hast-util-to-estree: 3.1.3(supports-color@10.2.2)
       hast-util-to-jsx-runtime: 2.3.6(supports-color@10.2.2)
       react: 19.3.1
@@ -16958,7 +17021,7 @@ snapshots:
       '@types/hast': 3.0.5
       '@types/mdast': 4.0.4
       '@types/react': 19.3.0
-      fumadocs-ui: '@fumadocs/base-ui@16.15.5(@date-fns/tz@1.4.1)(@types/mdx@2.0.14)(@types/react@19.3.0)(fumadocs-core@16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7))(next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.5)'
+      fumadocs-ui: '@fumadocs/base-ui@16.15.5(@date-fns/tz@1.4.1)(@types/mdx@2.0.14)(@types/react@19.3.0)(fumadocs-core@16.15.5(@mdx-js/mdx@3.1.1(supports-color@10.2.2))(@oramacloud/client@2.1.4)(@types/estree-jsx@1.0.5)(@types/hast@3.0.5)(@types/mdast@4.0.4)(@types/react@19.3.0)(lucide-react@1.39.0(react@19.3.1))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(supports-color@10.2.2)(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.5)'
     transitivePeerDependencies:
       - supports-color
 
@@ -17663,15 +17726,15 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  jest-cli@30.4.2(@types/node@24.13.3)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3)):
+  jest-cli@30.4.2(@types/node@24.13.3)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3)):
     dependencies:
-      '@jest/core': 30.4.2(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3))
+      '@jest/core': 30.4.2(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3))
       '@jest/test-result': 30.4.1
       '@jest/types': 30.4.1
       chalk: 4.1.2
       exit-x: 0.2.2
       import-local: 3.2.0
-      jest-config: 30.4.2(@types/node@24.13.3)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3))
+      jest-config: 30.4.2(@types/node@24.13.3)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3))
       jest-util: 30.4.1
       jest-validate: 30.4.1
       yargs: 17.7.2
@@ -17682,7 +17745,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  jest-config@30.4.2(@types/node@22.20.5)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3)):
+  jest-config@30.4.2(@types/node@22.20.5)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3)):
     dependencies:
       '@babel/core': 7.29.0(supports-color@10.2.2)
       '@jest/get-type': 30.1.0
@@ -17709,13 +17772,13 @@ snapshots:
       strip-json-comments: 3.1.1
     optionalDependencies:
       '@types/node': 22.20.5
-      esbuild-register: 3.6.0(esbuild@0.27.7)(supports-color@10.2.2)
+      esbuild-register: 3.6.0(esbuild@0.28.2)(supports-color@10.2.2)
       ts-node: 10.9.2(@types/node@24.13.3)(typescript@5.9.3)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
 
-  jest-config@30.4.2(@types/node@24.13.3)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3)):
+  jest-config@30.4.2(@types/node@24.13.3)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3)):
     dependencies:
       '@babel/core': 7.29.0(supports-color@10.2.2)
       '@jest/get-type': 30.1.0
@@ -17742,7 +17805,7 @@ snapshots:
       strip-json-comments: 3.1.1
     optionalDependencies:
       '@types/node': 24.13.3
-      esbuild-register: 3.6.0(esbuild@0.27.7)(supports-color@10.2.2)
+      esbuild-register: 3.6.0(esbuild@0.28.2)(supports-color@10.2.2)
       ts-node: 10.9.2(@types/node@24.13.3)(typescript@5.9.3)
     transitivePeerDependencies:
       - babel-plugin-macros
@@ -18001,12 +18064,12 @@ snapshots:
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
-  jest@30.4.2(@types/node@24.13.3)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3)):
+  jest@30.4.2(@types/node@24.13.3)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3)):
     dependencies:
-      '@jest/core': 30.4.2(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3))
+      '@jest/core': 30.4.2(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3))
       '@jest/types': 30.4.1
       import-local: 3.2.0
-      jest-cli: 30.4.2(@types/node@24.13.3)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3))
+      jest-cli: 30.4.2(@types/node@24.13.3)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3))
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -18678,7 +18741,7 @@ snapshots:
 
   micromark-factory-mdx-expression@2.0.3:
     dependencies:
-      '@types/estree': 1.0.9
+      '@types/estree': 1.0.10
       devlop: 1.1.0
       micromark-factory-space: 2.0.1
       micromark-util-character: 2.1.1
@@ -18742,7 +18805,7 @@ snapshots:
 
   micromark-util-events-to-acorn@2.0.3:
     dependencies:
-      '@types/estree': 1.0.9
+      '@types/estree': 1.0.10
       '@types/unist': 3.0.3
       devlop: 1.1.0
       estree-util-visit: 2.0.0
@@ -18928,7 +18991,7 @@ snapshots:
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
 
-  next@16.4.6(@babel/core@7.28.4(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0):
+  next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.13.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(sass@1.102.0):
     dependencies:
       '@next/env': 16.4.6
       '@swc/helpers': 0.5.23
@@ -18937,7 +19000,7 @@ snapshots:
       postcss: 8.5.23
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
-      styled-jsx: 5.1.6(@babel/core@7.28.4(supports-color@10.2.2))(react@19.3.1)
+      styled-jsx: 5.1.6(@babel/core@7.29.0(supports-color@10.2.2))(react@19.3.1)
     optionalDependencies:
       '@next/swc-darwin-arm64': 16.4.6
       '@next/swc-darwin-x64': 16.4.6
@@ -20149,7 +20212,7 @@ snapshots:
     dependencies:
       '@storybook/global': 5.0.0
       '@testing-library/jest-dom': 6.9.1
-      '@testing-library/user-event': 14.6.8(@testing-library/dom@10.4.2)
+      '@testing-library/user-event': 14.6.10(@testing-library/dom@10.4.2)
       '@vitest/expect': 3.2.4
       '@vitest/mocker': 3.2.4(vite@7.3.7(@types/node@22.19.21)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))
       '@vitest/spy': 3.2.4
@@ -20157,7 +20220,7 @@ snapshots:
       esbuild: 0.25.12
       esbuild-register: 3.6.0(esbuild@0.25.12)(supports-color@10.2.2)
       recast: 0.23.11
-      semver: 7.8.5
+      semver: 7.8.6
       ws: 8.21.3
     optionalDependencies:
       prettier: 3.9.10
@@ -20173,7 +20236,7 @@ snapshots:
     dependencies:
       '@storybook/global': 5.0.0
       '@testing-library/jest-dom': 6.9.1
-      '@testing-library/user-event': 14.6.8(@testing-library/dom@10.4.2)
+      '@testing-library/user-event': 14.6.10(@testing-library/dom@10.4.2)
       '@vitest/expect': 3.2.4
       '@vitest/mocker': 3.2.4(vite@7.3.7(@types/node@22.20.5)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))
       '@vitest/spy': 3.2.4
@@ -20181,7 +20244,7 @@ snapshots:
       esbuild: 0.25.12
       esbuild-register: 3.6.0(esbuild@0.25.12)(supports-color@10.2.2)
       recast: 0.23.11
-      semver: 7.8.5
+      semver: 7.8.6
       ws: 8.21.3
     optionalDependencies:
       prettier: 3.9.10
@@ -20197,7 +20260,7 @@ snapshots:
     dependencies:
       '@storybook/global': 5.0.0
       '@testing-library/jest-dom': 6.9.1
-      '@testing-library/user-event': 14.6.8(@testing-library/dom@10.4.2)
+      '@testing-library/user-event': 14.6.10(@testing-library/dom@10.4.2)
       '@vitest/expect': 3.2.4
       '@vitest/mocker': 3.2.4(vite@7.3.7(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.33.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))
       '@vitest/spy': 3.2.4
@@ -20205,7 +20268,7 @@ snapshots:
       esbuild: 0.25.12
       esbuild-register: 3.6.0(esbuild@0.25.12)(supports-color@10.2.2)
       recast: 0.23.11
-      semver: 7.8.5
+      semver: 7.8.6
       ws: 8.21.3
     optionalDependencies:
       prettier: 3.9.10
@@ -20221,7 +20284,7 @@ snapshots:
     dependencies:
       '@storybook/global': 5.0.0
       '@testing-library/jest-dom': 6.9.1
-      '@testing-library/user-event': 14.6.8(@testing-library/dom@10.4.2)
+      '@testing-library/user-event': 14.6.10(@testing-library/dom@10.4.2)
       '@vitest/expect': 3.2.4
       '@vitest/mocker': 3.2.4(vite@8.3.8(@types/node@24.13.3)(esbuild@0.25.12)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))
       '@vitest/spy': 3.2.4
@@ -20229,7 +20292,7 @@ snapshots:
       esbuild: 0.25.12
       esbuild-register: 3.6.0(esbuild@0.25.12)(supports-color@10.2.2)
       recast: 0.23.11
-      semver: 7.8.5
+      semver: 7.8.6
       ws: 8.21.3
     optionalDependencies:
       prettier: 3.9.10
@@ -20349,12 +20412,12 @@ snapshots:
     dependencies:
       inline-style-parser: 0.2.7
 
-  styled-jsx@5.1.6(@babel/core@7.28.4(supports-color@10.2.2))(react@19.3.1):
+  styled-jsx@5.1.6(@babel/core@7.29.0(supports-color@10.2.2))(react@19.3.1):
     dependencies:
       client-only: 0.0.1
       react: 19.3.1
     optionalDependencies:
-      '@babel/core': 7.28.4(supports-color@10.2.2)
+      '@babel/core': 7.29.0(supports-color@10.2.2)
 
   sucrase@3.35.0:
     dependencies:
@@ -20507,12 +20570,12 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  ts-jest@29.4.15(@babel/core@7.29.0(supports-color@10.2.2))(@jest/transform@30.4.1(supports-color@10.2.2))(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.29.0(supports-color@10.2.2))(supports-color@10.2.2))(esbuild@0.27.7)(jest-util@30.4.1)(jest@30.4.2(@types/node@24.13.3)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3)))(typescript@5.9.3):
+  ts-jest@29.4.15(@babel/core@7.29.0(supports-color@10.2.2))(@jest/transform@30.4.1(supports-color@10.2.2))(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.29.0(supports-color@10.2.2))(supports-color@10.2.2))(esbuild@0.27.7)(jest-util@30.4.1)(jest@30.4.2(@types/node@24.13.3)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3)))(typescript@5.9.3):
     dependencies:
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
       handlebars: 4.7.10
-      jest: 30.4.2(@types/node@24.13.3)(esbuild-register@3.6.0(esbuild@0.27.7)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3))
+      jest: 30.4.2(@types/node@24.13.3)(esbuild-register@3.6.0(esbuild@0.28.2)(supports-color@10.2.2))(supports-color@10.2.2)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3))
       json5: 2.2.3
       lodash.memoize: 4.1.2
       make-error: 1.3.6
@@ -21010,6 +21073,22 @@ snapshots:
       tsx: 4.23.15
       yaml: 2.9.0
 
+  vite@8.3.8(@types/node@22.20.5)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0):
+    dependencies:
+      lightningcss: 1.33.0
+      picomatch: 4.0.7
+      postcss: 8.5.32
+      rolldown: 1.2.18
+      tinyglobby: 0.2.17
+    optionalDependencies:
+      '@types/node': 22.20.5
+      esbuild: 0.27.7
+      fsevents: 2.3.3
+      jiti: 2.7.0
+      sass: 1.102.0
+      tsx: 4.23.15
+      yaml: 2.9.0
+
   vite@8.3.8(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0):
     dependencies:
       lightningcss: 1.33.0
@@ -21153,6 +21232,36 @@ snapshots:
       '@opentelemetry/api': 1.9.1
       '@types/node': 22.20.5
       '@vitest/coverage-v8': 3.2.7(@vitest/browser@3.2.7)(supports-color@10.2.2)(vitest@4.1.12)
+      happy-dom: 20.11.2
+      jsdom: 29.0.2(@noble/hashes@1.8.0)
+    transitivePeerDependencies:
+      - msw
+
+  vitest@4.1.12(@opentelemetry/api@1.9.1)(@types/node@22.20.5)(happy-dom@20.11.2)(jsdom@29.0.2(@noble/hashes@1.8.0))(vite@8.3.8(@types/node@22.20.5)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0)):
+    dependencies:
+      '@vitest/expect': 4.1.12
+      '@vitest/mocker': 4.1.12(vite@8.3.8(@types/node@22.20.5)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0))
+      '@vitest/pretty-format': 4.1.12
+      '@vitest/runner': 4.1.12
+      '@vitest/snapshot': 4.1.12
+      '@vitest/spy': 4.1.12
+      '@vitest/utils': 4.1.12
+      es-module-lexer: 2.1.0
+      expect-type: 1.3.0
+      magic-string: 0.30.21
+      obug: 2.1.4
+      pathe: 2.0.3
+      picomatch: 4.0.7
+      std-env: 4.3.0
+      tinybench: 2.9.0
+      tinyexec: 1.1.2
+      tinyglobby: 0.2.17
+      tinyrainbow: 3.2.0
+      vite: 8.3.8(@types/node@22.20.5)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.102.0)(tsx@4.23.15)(yaml@2.9.0)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@opentelemetry/api': 1.9.1
+      '@types/node': 22.20.5
       happy-dom: 20.11.2
       jsdom: 29.0.2(@noble/hashes@1.8.0)
     transitivePeerDependencies:

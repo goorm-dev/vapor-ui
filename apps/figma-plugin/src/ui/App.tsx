@@ -4,8 +4,8 @@ import { ColorSystemTab } from './features/color-system-tab';
 
 const App = () => {
     return (
-        <Box className="bg-white p-v-100">
-            <Box className="p-v-200">
+        <Box className="bg-white pt-v-100 px-v-250">
+            <Box className="pt-v-200">
                 <ColorSystemTab />
             </Box>
         </Box>
