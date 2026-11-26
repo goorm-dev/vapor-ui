@@ -151,21 +151,21 @@ export const HUE_ANCHORS: Readonly<Record<string, Readonly<HueAnchors>>> = deepF
 export const BASE_COLORS = Object.keys(HUE_ANCHORS);
 
 /**
- * Representative HEX of each base color, shown as its default input in the Figma plugin. It
- * shapes no hue: base colors are built from `HUE_ANCHORS`.
+ * Light 500 HEX of each base color's default palette: the Figma plugin's default input, read
+ * back as the 500 hue. Left unchanged, a base color is built from `HUE_ANCHORS` alone.
  */
 export const BASE_COLOR_HEX: Readonly<Record<string, string>> = deepFreeze({
-    red: '#BB1225',
-    orange: '#B72100',
-    yellow: '#8D4F00',
-    pink: '#B5135D',
-    grape: '#9A1CB7',
-    violet: '#805CEC',
-    blue: '#2A72E5',
-    cobalt: '#0009C2',
-    cyan: '#04819C',
-    green: '#058765',
-    lime: '#71B61A',
+    red: '#E10F2C',
+    orange: '#D03A00',
+    yellow: '#A46100',
+    pink: '#DD0070',
+    grape: '#BE02E3',
+    violet: '#8148FF',
+    blue: '#0069F0',
+    cobalt: '#1A67F5',
+    cyan: '#007B9A',
+    green: '#00815B',
+    lime: '#328200',
 });
 
 /** Light 500–900 chroma stays within this multiple of its neighbours' mean (900: of 800). */

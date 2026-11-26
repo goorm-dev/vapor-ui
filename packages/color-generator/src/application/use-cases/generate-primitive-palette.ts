@@ -7,7 +7,7 @@ import type {
 } from '../../domain';
 import { hexToOklch, pyMod } from '../../domain/color-math';
 import type { Mode } from '../../domain/models/scale';
-import { ANCHOR_SCALES, COLOR_SCALES } from '../../domain/models/scale';
+import { COLOR_SCALES } from '../../domain/models/scale';
 import { BASE_TOKENS, HUE_ANCHORS } from '../constants';
 import type { HueTable } from '../engine/hue';
 import { anchorHues, anchorsFromHex } from '../engine/hue';
@@ -41,33 +41,38 @@ const checkName = (name: string) => {
     if (!isValidColorName(name) || name === 'gray') throw new Error(`Invalid color name: ${name}`);
 };
 
+/** Below this OKLCH chroma a HEX has no reliable hue to build a palette from. */
+const MIN_KEY_CHROMA = 0.005;
+
+/** `hexcode` as raw HEX; throws when it is too grey to carry a hue. */
+const keyHex = (name: string, hexcode: string) => {
+    const hex = toRawHex(hexcode);
+    if (hexToOklch(hex)[1] < MIN_KEY_CHROMA)
+        throw new Error(`Color ${name} is too grey to take a hue from: ${hexcode}`);
+    return hex;
+};
+
 /**
- * Checks one palette's entry of `hueAnchors` or `hueOverrides`: the palette must exist (own key
- * only, so `constructor` is unknown), steps must be in `steps`, hues finite. Returns the hues
- * wrapped into 0–360.
+ * Checks one palette's `hueOverrides` row: the palette must exist (own key only, so
+ * `constructor` is unknown), steps must be 050–900, hues finite. Returns the hues wrapped into
+ * 0–360.
  */
-const checkHues = <S extends string>(
-    option: 'anchor' | 'override',
-    known: object,
-    name: string,
-    given: Record<string, unknown>,
-    steps: readonly S[],
-) => {
+const checkOverrides = (known: object, name: string, given: Record<string, unknown>) => {
     if (!Object.prototype.hasOwnProperty.call(known, name))
-        throw new Error(`Unknown palette for hue ${option}s: ${name}`);
+        throw new Error(`Unknown palette for hue overrides: ${name}`);
     return Object.fromEntries(
         Object.entries(given).map(([s, hue]) => {
-            if (!(steps as readonly string[]).includes(s))
+            if (!(COLOR_SCALES as readonly string[]).includes(s))
                 throw new Error(
-                    `Invalid hue ${option} step for ${name}: ${s} (use ${steps.join(', ')})`,
+                    `Invalid hue override step for ${name}: ${s} (use ${COLOR_SCALES.join(', ')})`,
                 );
             if (typeof hue !== 'number' || !Number.isFinite(hue))
                 throw new Error(
-                    `Hue ${option} ${name}-${s} must be a finite number: ${String(hue)}`,
+                    `Hue override ${name}-${s} must be a finite number: ${String(hue)}`,
                 );
             return [s, pyMod(hue, 360)];
         }),
-    ) as Partial<Record<S, number>>;
+    );
 };
 
 /**
@@ -75,7 +80,7 @@ const checkHues = <S extends string>(
  * color, and `gray`, all against the fixed backgrounds (light `#FFFFFF`, dark `#232323`).
  */
 export function generatePrimitiveColorPalette(options: ThemeOptions = {}): ThemeResult {
-    const { basicColors = [], brandColor, hueAnchors = {}, hueOverrides = {} } = options;
+    const { basicColors = [], brandColor, hueOverrides = {} } = options;
     const baseHues = getBaseHueTable();
     const anchors: Record<string, HueAnchors> = { ...HUE_ANCHORS };
     const seen = new Set<string>();
@@ -88,26 +93,24 @@ export function generatePrimitiveColorPalette(options: ThemeOptions = {}): Theme
         return name;
     };
 
-    for (const { name, hexcode } of basicColors)
-        anchors[claim(name)] = anchorsFromHex(toRawHex(hexcode), baseHues);
+    for (const { name, hexcode } of basicColors) {
+        const key = claim(name);
+        anchors[key] = anchorsFromHex(key, keyHex(key, hexcode), baseHues);
+    }
 
     let brand: { name: string; hex: string } | undefined;
     if (brandColor) {
-        brand = { name: claim(brandColor.name), hex: toRawHex(brandColor.hexcode) };
-        anchors[brand.name] = anchorsFromHex(brand.hex, baseHues);
+        const key = claim(brandColor.name);
+        brand = { name: key, hex: keyHex(key, brandColor.hexcode) };
+        anchors[key] = anchorsFromHex(key, brand.hex, baseHues);
     }
 
     // Order: anchors → curve → single-step overrides. `anchors` has no gray row.
-    for (const [name, given] of Object.entries(hueAnchors))
-        anchors[name] = {
-            ...anchors[name],
-            ...checkHues('anchor', anchors, name, given, ANCHOR_SCALES),
-        };
     const hues: HueTable = Object.fromEntries(
         Object.entries(anchors).map(([name, a]) => [name, anchorHues(a)]),
     );
     for (const [name, row] of Object.entries(hueOverrides))
-        hues[name] = { ...hues[name], ...checkHues('override', hues, name, row, COLOR_SCALES) };
+        hues[name] = { ...hues[name], ...checkOverrides(hues, name, row) };
 
     const { light, dark, brandScale, yellow } = generateFromHues(hues, { brand });
     const gray = generateGray();
@@ -121,8 +124,5 @@ export function generatePrimitiveColorPalette(options: ThemeOptions = {}): Theme
         baseTokens: BASE_TOKENS,
         ...(brand && brandScale && { brand: { name: brand.name, scale: brandScale } }),
         yellowFamily: Array.from(yellow),
-        hueAnchors: Object.fromEntries(
-            Object.entries(anchors).map(([name, a]) => [name, { ...a }]),
-        ),
     };
 }

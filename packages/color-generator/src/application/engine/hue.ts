@@ -50,11 +50,17 @@ export const anchorHues = (anchors: HueAnchors): Record<ColorScale, number> => {
     return out;
 };
 
-/** Anchors from one HEX: the anchors of the base color whose 500 hue is nearest, shifted by the hue difference. */
-export const anchorsFromHex = (hex: string, baseHues: HueTable): HueAnchors => {
+/**
+ * Anchors from one HEX, read as the 500 hue: a base color's own anchors, or for any other name
+ * those of the base color whose 500 hue is nearest, shifted by the hue difference. A base color
+ * keeps its own curve so a nudged HEX never swaps in a neighbour's corrected anchors.
+ */
+export const anchorsFromHex = (name: string, hex: string, baseHues: HueTable): HueAnchors => {
     const h = hexToOklch(hex)[2];
     const hueGap = (c: string) => Math.abs(wrap(baseHues[c]['500'] - h));
-    const near = BASE_COLORS.reduce((best, c) => (hueGap(c) < hueGap(best) ? c : best));
+    const near = BASE_COLORS.includes(name)
+        ? name
+        : BASE_COLORS.reduce((best, c) => (hueGap(c) < hueGap(best) ? c : best));
     const d = wrap(h - baseHues[near]['500']);
     return Object.fromEntries(
         ANCHOR_SCALES.map((s) => [s, pyMod(HUE_ANCHORS[near][s] + d, 360)]),

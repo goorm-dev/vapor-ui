@@ -16,20 +16,14 @@ export type HueAnchors = Record<AnchorScale, number>;
  */
 export interface ThemeOptions {
     /**
-     * Extra colors, or replacements for a base color of the same name. The HEX picks the base
-     * color whose 500 hue is nearest and shifts its hue anchors by the hue difference. The HEX
-     * only shapes the hue curve, so it may not appear in the palette.
+     * Extra colors, or replacements for a base color of the same name. The HEX is read as the
+     * 500 hue: a base color shifts its own hue anchors by the difference, any other name takes
+     * those of the base color whose 500 hue is nearest. The HEX only shapes the hue curve, so it
+     * may not appear in the palette. A HEX below OKLCH chroma 0.005 has no hue and throws.
      */
     basicColors?: KeyColor[];
     /** Pinned into one light cell as-is; the rest of its palette follows from it. */
     brandColor?: KeyColor;
-    /**
-     * Palette name (lowercase, brand name included) → hue anchors replacing the default or
-     * HEX-derived ones; missing anchors keep theirs, and every step follows the curve through
-     * the three, before `hueOverrides`. An unknown name, `gray`, an anchor key other than `050`,
-     * `600`, `900`, or a non-finite hue throws. Hues wrap, so -10 means 350.
-     */
-    hueAnchors?: Record<string, Partial<HueAnchors>>;
     /**
      * Light hues of single steps, applied over the anchor curve. Each overridden cell keeps its
      * contrast target and chroma rule, and dark follows from the overridden light curve. The
@@ -54,12 +48,6 @@ export interface ThemeResult {
      * falls back to each palette's light 200 hue when this is absent.
      */
     yellowFamily?: string[];
-    /**
-     * Palette name → the hue anchors its light curve was built from: the default or HEX-derived
-     * ones with `hueAnchors` applied, wrapped into 0–360 (no gray row). Passing them back as
-     * `hueAnchors` with the same colors rebuilds the same palettes.
-     */
-    hueAnchors?: Record<string, HueAnchors>;
 }
 
 /**

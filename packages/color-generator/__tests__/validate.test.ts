@@ -27,6 +27,11 @@ const chromaSpikes = (result: typeof defaults) =>
             .map((i) => `light ${color}-${STEPS[i]} chroma spike`);
     });
 
+const allSteps = (hue: number) =>
+    Object.fromEntries(
+        ['050', '100', '200', '300', '400', '500', '600', '700', '800', '900'].map((s) => [s, hue]),
+    );
+
 describe('validatePalette', () => {
     it('finds no failure in the default palette', () => {
         expect(validatePalette(defaults).filter((c) => c.status === 'fail')).toEqual([]);
@@ -92,28 +97,17 @@ describe('validatePalette', () => {
         ).toBe('warn');
     });
 
-    it.each(['#F0F0F0', '#5AED87', '#777777', '#93778F'])(
-        'passes the chroma rule with brand %s',
-        (hexcode) => {
-            const result = generatePrimitiveColorPalette({
-                brandColor: { name: 'brand', hexcode },
-            });
-            expect(validatePalette(result).find((c) => c.id === 'chroma')?.details).toEqual([]);
-        },
-    );
+    it.each(['#5AED87', '#93778F'])('passes the chroma rule with brand %s', (hexcode) => {
+        const result = generatePrimitiveColorPalette({
+            brandColor: { name: 'brand', hexcode },
+        });
+        expect(validatePalette(result).find((c) => c.id === 'chroma')?.details).toEqual([]);
+    });
 
     it.each([
-        [
-            'blue brand on yellow anchors',
-            '#3366ff',
-            { hueAnchors: { brand: { '050': 95, '600': 90, '900': 85 } } },
-        ],
+        ['blue brand on yellow hues', '#3366ff', { hueOverrides: { brand: allSteps(90) } }],
         ['blue brand with a yellow 200', '#3366ff', { hueOverrides: { brand: { '200': 100 } } }],
-        [
-            'yellow brand on blue anchors',
-            '#ffcc00',
-            { hueAnchors: { brand: { '050': 260, '600': 262, '900': 265 } } },
-        ],
+        ['yellow brand on blue hues', '#ffcc00', { hueOverrides: { brand: allSteps(262) } }],
     ])('passes the chroma rule for a %s', (_, hexcode, options) => {
         const result = generatePrimitiveColorPalette({
             brandColor: { name: 'brand', hexcode },

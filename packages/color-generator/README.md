@@ -54,7 +54,6 @@ Palettes come out in this order: the 11 base colors, `basicColors`, the brand co
 generatePrimitiveColorPalette({
     basicColors?: KeyColor[]; // KeyColor = { name: string; hexcode: Hexcode }
     brandColor?: KeyColor;
-    hueAnchors?: Record<string, Partial<HueAnchors>>; // { [name]: { '050' | '600' | '900': hue } }
     hueOverrides?: HueOverrides; // { [name]: { [scale]: hue in degrees } }
 }): ThemeResult;
 ```
@@ -63,7 +62,7 @@ generatePrimitiveColorPalette({
 
 Adds colors, or replaces a base color of the same name. Palettes come out in array order. Names are lowercased first, so `Teal` makes the palette `teal`. A name used twice (`Blue` and `blue` count as one), here or by `brandColor`, throws, and so does `gray`.
 
-The HEX borrows the hue anchors of the base color with the nearest 500 hue and shifts all three by the hue difference.
+The HEX is read as the 500 hue. A base color shifts its own three hue anchors by the difference from its default 500 hue, so its corrected curve keeps its shape. Any other name borrows the anchors of the base color with the nearest 500 hue and shifts them the same way. `BASE_COLOR_HEX` holds each base color's default light 500 HEX. A HEX below OKLCH chroma 0.005 carries no hue and throws.
 
 The input only shapes the hue curve, so it may not appear in the palette. Other colors never change: the 050–200 chroma caps always come from the default base colors.
 
@@ -72,12 +71,6 @@ The input only shapes the hue curve, so it may not appear in the palette. Other 
 The brand HEX becomes a palette of its own (or replaces a base color of the same name) and is pinned into one light cell as-is. The cell is found by walking scales in order of log-contrast distance to the HEX. The first scale wins if it passes every accessibility rule for that scale and keeps the contrast order with its neighbours. `ThemeResult.brand` names the cell.
 
 Dark derives from the pinned light curve. The brand HEX is never pinned in dark.
-
-### `hueAnchors`
-
-Replaces any of a palette's three hue anchors, keyed by lowercase palette name (base, `basicColors` or brand): `{ red: { '900': 30 } }`. Missing anchors keep the default or HEX-derived value, and every step follows the curve through the three. Hues wrap, so `-10` means `350`. An unknown name, `gray`, a key other than `050`, `600` or `900`, or a non-finite hue throws.
-
-`ThemeResult.hueAnchors` returns the three anchors every palette (gray excepted) was built from, with these replacements applied and wrapped into 0–360. Passing them back with the same colors rebuilds the same palettes.
 
 ### `hueOverrides`
 
@@ -127,7 +120,7 @@ The `chroma` check reruns the engine's rule, not an approximation of it: the yel
 - `generatePrimitiveColorPalette`, `getSemanticDependentTokens`, `validatePalette`
 - `BASE_TOKENS`: `color-white` and `color-black` chips
 - `HUE_ANCHORS`: default light hue anchors of the 11 base colors
-- `BASE_COLOR_HEX`: representative HEX of each of the 11 base colors (the Figma plugin's default input); it shapes no hue
+- `BASE_COLOR_HEX`: the default light 500 HEX of each of the 11 base colors (the Figma plugin's default input)
 - Types: `ThemeOptions`, `ThemeResult`, `HueAnchors`, `HueOverrides`, `PrimitiveColorTokens`, `PrimitivePalette`, `PaletteChip`, `Scale`, `SemanticTokens`, `SemanticResult`, `PaletteCheck`, `KeyColor`, `Hexcode`
 
 ## Changing the rules

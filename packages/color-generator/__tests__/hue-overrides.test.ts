@@ -1,8 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
 import type { ThemeOptions, ThemeResult } from '../src';
-import { HUE_ANCHORS, generatePrimitiveColorPalette, validatePalette } from '../src';
-import { hexToOklch, pyMod } from '../src/domain/color-math';
+import {
+    BASE_COLOR_HEX,
+    HUE_ANCHORS,
+    generatePrimitiveColorPalette,
+    validatePalette,
+} from '../src';
+import { anchorHues } from '../src/application/engine/hue';
+import { gamutChroma, hexToOklch, oklchToLinRgb, pyMod, toHex } from '../src/domain/color-math';
 import { table } from './helpers';
 
 const defaults = generatePrimitiveColorPalette();
@@ -119,84 +125,56 @@ describe('hueOverrides', () => {
     });
 });
 
-describe('hueAnchors', () => {
-    it('returns the anchors each palette was built from, and they rebuild it', () => {
-        expect(defaults.hueAnchors).toEqual(HUE_ANCHORS);
+describe('key HEX', () => {
+    // A HEX with the 500 cell's lightness and chroma, its hue turned by `by` degrees.
+    const turned = (name: string, by: number) => {
+        const [L, C, H] = hexToOklch(chip(defaults, 'light', name, '500').hex.slice(1));
+        return `#${toHex(oklchToLinRgb(L, gamutChroma(L, C, H + by), H + by))}`;
+    };
 
-        const options: ThemeOptions = {
-            basicColors: [{ name: 'Mint', hexcode: '#3CC8B4' }],
-            brandColor: { name: 'acme', hexcode: '#FF6B00' },
-        };
-        const result = generatePrimitiveColorPalette({
-            ...options,
-            hueAnchors: { red: { '900': -10 }, mint: { '600': 170 } },
-        });
-        const anchors = result.hueAnchors!;
-        expect(Object.keys(anchors)).toEqual([...Object.keys(HUE_ANCHORS), 'mint', 'acme']);
-        expect(anchors.red).toEqual({ ...HUE_ANCHORS.red, '900': 350 });
-        expect(anchors.mint['600']).toBe(170);
-        expect(generatePrimitiveColorPalette({ ...options, hueAnchors: anchors })).toEqual(result);
-    });
-
-    it('puts each given anchor step at its hue', () => {
-        const result = generatePrimitiveColorPalette({
-            hueAnchors: { red: { '900': 30 }, violet: { '050': 300, '600': 285 } },
-        });
-        expect(hueDiff(hueOf(chip(result, 'light', 'red', '900').hex), 30)).toBeLessThan(0.5);
-        // 050 chroma is low enough that 8-bit HEX moves its hue by up to ~2°
-        expect(hueDiff(hueOf(chip(result, 'light', 'violet', '050').hex), 300)).toBeLessThan(2);
-        expect(hueDiff(hueOf(chip(result, 'light', 'violet', '600').hex), 285)).toBeLessThan(0.5);
-        expect(table(result, 'light').red['700']).not.toBe(table(defaults, 'light').red['700']);
-        expect(failures(result)).toEqual([]);
-    });
-
-    it('turns each anchor gap the short way', () => {
-        // 050→900 is 190° the long way; 600→900 is 20° the short way
-        const result = generatePrimitiveColorPalette({
-            hueAnchors: { red: { '050': 0, '600': 170, '900': 190 } },
-        });
-        for (const s of ['600', '700', '800', '900']) {
-            const h = hueOf(chip(result, 'light', 'red', s).hex);
-            expect(h, s).toBeGreaterThan(169.5);
-            expect(h, s).toBeLessThan(190.5);
+    it('keeps the default palette for each base color given its own BASE_COLOR_HEX', () => {
+        for (const [name, hexcode] of Object.entries(BASE_COLOR_HEX)) {
+            expect(chip(defaults, 'light', name, '500').hex.toUpperCase(), name).toBe(hexcode);
+            const result = generatePrimitiveColorPalette({ basicColors: [{ name, hexcode }] });
+            for (const s of ['050', '600', '900'])
+                expect(
+                    hueDiff(
+                        hueOf(chip(result, 'light', name, s).hex),
+                        hueOf(chip(defaults, 'light', name, s).hex),
+                    ),
+                    `${name}-${s}`,
+                ).toBeLessThan(2);
         }
     });
 
-    it('lets hueOverrides win over the anchor curve', () => {
-        const result = generatePrimitiveColorPalette({
-            hueAnchors: { red: { '600': 35 } },
-            hueOverrides: { red: { '600': 15 } },
-        });
-        expect(hueDiff(hueOf(chip(result, 'light', 'red', '600').hex), 15)).toBeLessThan(0.5);
-    });
+    it('turns a base color along its own curve, even when another base 500 is nearer', () => {
+        // red turned -12° sits nearer pink's 500, yet keeps red's corrected 900
+        const hexcode = turned('red', -12);
+        const result = generatePrimitiveColorPalette({ basicColors: [{ name: 'red', hexcode }] });
+        const d = hueOf(chip(result, 'light', 'red', '600').hex) - HUE_ANCHORS.red['600'];
+        expect(
+            hueDiff(hueOf(chip(result, 'light', 'red', '900').hex), HUE_ANCHORS.red['900'] + d),
+        ).toBeLessThan(0.5);
 
-    it('anchors a basicColors palette by its lowercase name', () => {
-        const result = generatePrimitiveColorPalette({
-            basicColors: [{ name: 'Mint', hexcode: '#3CC8B4' }],
-            hueAnchors: { mint: { '900': 200 } },
-        });
-        expect(hueDiff(hueOf(chip(result, 'light', 'mint', '900').hex), 200)).toBeLessThan(0.5);
-    });
-
-    it('matches the baseline with no anchors or the default ones', () => {
-        expect(generatePrimitiveColorPalette({ hueAnchors: {} })).toEqual(defaults);
-        expect(generatePrimitiveColorPalette({ hueAnchors: { blue: {} } })).toEqual(defaults);
-        expect(generatePrimitiveColorPalette({ hueAnchors: { red: HUE_ANCHORS.red } })).toEqual(
-            defaults,
-        );
+        const other = generatePrimitiveColorPalette({ basicColors: [{ name: 'ruby', hexcode }] });
+        expect(table(other, 'light').ruby).not.toEqual(table(result, 'light').red);
     });
 
     it.each([
-        [{ nope: { '600': 10 } }, /Unknown palette/],
-        [{ gray: { '600': 10 } }, /Unknown palette/],
-        [{ constructor: { '900': 30 } }, /Unknown palette/],
-        [{ red: { '500': 10 } }, /Invalid hue anchor step/],
-        [{ red: { '600': Number.NaN } }, /must be a finite number/],
-        [{ red: { '900': Infinity } }, /must be a finite number/],
-        [{ red: { '900': '30' } }, /must be a finite number/],
-    ])('rejects %j', (hueAnchors, message) => {
-        expect(() =>
-            generatePrimitiveColorPalette({ hueAnchors } as unknown as ThemeOptions),
-        ).toThrow(message);
+        ['basic', { basicColors: [{ name: 'ash', hexcode: '#808080' }] }],
+        ['brand', { brandColor: { name: 'ash', hexcode: '#777' } }],
+    ])('rejects a %s HEX too grey to carry a hue', (_, options) => {
+        expect(() => generatePrimitiveColorPalette(options)).toThrow(/too grey/);
+    });
+});
+
+describe('anchor curve', () => {
+    it('turns each anchor gap the short way', () => {
+        // 050→900 is 190° the long way; 600→900 is 20° the short way
+        const hues = anchorHues({ '050': 0, '600': 170, '900': 190 });
+        for (const s of ['600', '700', '800', '900'] as const) {
+            expect(hues[s], s).toBeGreaterThan(169.5);
+            expect(hues[s], s).toBeLessThan(190.5);
+        }
     });
 });
