@@ -53,6 +53,15 @@ describe('validatePalette', () => {
         });
     });
 
+    it('fails a cell on the wrong side of the background', () => {
+        // #181818 is within tolerance of the dark 050 ratio, but darker than #232323
+        const { status, details } = validatePalette(
+            withHex(defaults, 'dark', 'red', '050', '181818'),
+        ).find((c) => c.id === 'target-contrast')!;
+        expect(status).toBe('fail');
+        expect(details.some((d) => d.startsWith('dark red-050:'))).toBe(true);
+    });
+
     it('fails a cell under its accessibility floor', () => {
         expect(statuses(withHex(defaults, 'light', 'red', '500', light.red['400'])).a11y).toBe(
             'fail',
@@ -77,7 +86,9 @@ describe('validatePalette', () => {
             expect(detail).toMatch(
                 /^(light|dark) [a-z-]+-(\d{3}) · \1 [a-z-]+-\2: hue gap \d+\.\d° \(min 5\.5°\)$/,
             );
-        expect(details.some((d) => d.startsWith('light red-700 · light orange-700:'))).toBe(true);
+        expect(
+            details.filter((d) => d.startsWith('light red-700 · light orange-700:')),
+        ).toHaveLength(1);
     });
 
     it('exempts blue and cobalt from the hue gap', () => {

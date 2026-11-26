@@ -109,8 +109,15 @@ export function generatePrimitiveColorPalette(options: ThemeOptions = {}): Theme
     const hues: HueTable = Object.fromEntries(
         Object.entries(anchors).map(([name, a]) => [name, anchorHues(a)]),
     );
-    for (const [name, row] of Object.entries(hueOverrides))
-        hues[name] = { ...hues[name], ...checkOverrides(hues, name, row) };
+    const overrides = Object.fromEntries(
+        Object.entries(hueOverrides).map(([name, row]) => [name, checkOverrides(hues, name, row)]),
+    );
+    // The pinned brand cell ignores its override: find that cell on the curve before overrides.
+    if (brand && overrides[brand.name]) {
+        const { brandScale } = generateFromHues({ [brand.name]: hues[brand.name] }, { brand });
+        delete overrides[brand.name][brandScale!];
+    }
+    for (const [name, row] of Object.entries(overrides)) hues[name] = { ...hues[name], ...row };
 
     const { light, dark, brandScale, yellow } = generateFromHues(hues, { brand });
     const gray = generateGray();
