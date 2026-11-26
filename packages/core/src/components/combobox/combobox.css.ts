@@ -238,6 +238,9 @@ export const empty = componentStyle([
     {
         paddingBlock: vars.size.space['050'],
         paddingInline: vars.size.space['150'],
+        selectors: {
+            '&:empty': { padding: 0 },
+        },
     },
 ]);
 

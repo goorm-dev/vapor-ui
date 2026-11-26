@@ -132,6 +132,24 @@ describe('Combobox', () => {
         });
     });
 
+    describe('empty', () => {
+        it('renders no text while options match, and the message once none do', async () => {
+            render(
+                <TestCombobox>
+                    <Combobox.Empty data-testid="empty">No results</Combobox.Empty>
+                    {renderItem}
+                </TestCombobox>,
+            );
+            const input = screen.getByRole('combobox');
+
+            await userEvent.click(input);
+            expect(screen.getByTestId('empty')).toBeEmptyDOMElement();
+
+            await userEvent.type(input, 'zz');
+            expect(screen.getByTestId('empty')).toHaveTextContent('No results');
+        });
+    });
+
     describe('groups', () => {
         const groups = [
             { value: 'Fruit', items: ['Apple', 'Banana'] },
@@ -179,10 +197,85 @@ describe('Combobox', () => {
             expect(screen.queryByRole('button', { name: 'Clear' })).not.toBeInTheDocument();
         });
 
+        it('is not rendered while read-only, even with a selected value', () => {
+            render(<TestCombobox readOnly defaultValue="Banana" />);
+
+            expect(screen.getByRole('combobox')).toHaveValue('Banana');
+            expect(screen.queryByRole('button', { name: 'Clear' })).not.toBeInTheDocument();
+        });
+
         it('is not rendered while nothing is selected', () => {
             render(<TestCombobox />);
 
             expect(screen.queryByRole('button', { name: 'Clear' })).not.toBeInTheDocument();
+        });
+    });
+
+    describe('trigger', () => {
+        it('has a default accessible name', () => {
+            render(<TestCombobox />);
+
+            expect(screen.getByRole('button', { name: 'Open popup' })).toBeInTheDocument();
+        });
+
+        it('lets aria-label override the default name', () => {
+            render(
+                <Combobox.Root items={fruits} aria-label="Fruit">
+                    <Combobox.InputGroupPrimitive>
+                        <Combobox.InputPrimitive />
+                        <Combobox.TriggerPrimitive aria-label="Show fruits" />
+                    </Combobox.InputGroupPrimitive>
+                </Combobox.Root>,
+            );
+
+            expect(screen.getByRole('button', { name: 'Show fruits' })).toBeInTheDocument();
+            expect(screen.queryByRole('button', { name: 'Open popup' })).not.toBeInTheDocument();
+        });
+    });
+
+    describe('icons', () => {
+        const Custom = ({ testId }: { testId: string }) => (
+            <svg data-testid={testId} width="10" height="12" />
+        );
+
+        it('sizes the default icons to fill their button', () => {
+            render(<TestCombobox defaultValue="Apple" />);
+
+            const icon = screen.getByRole('button', { name: 'Open popup' }).querySelector('svg');
+            expect(icon).toHaveAttribute('width', '100%');
+            expect(icon).toHaveAttribute('height', '100%');
+        });
+
+        it('keeps the size of icons passed as children', async () => {
+            render(
+                <Combobox.Root items={fruits} aria-label="Fruit" defaultValue="Apple" defaultOpen>
+                    <Combobox.InputGroupPrimitive>
+                        <Combobox.InputPrimitive />
+                        <Combobox.ClearPrimitive>
+                            <Custom testId="clear-icon" />
+                        </Combobox.ClearPrimitive>
+                        <Combobox.TriggerPrimitive>
+                            <Custom testId="trigger-icon" />
+                        </Combobox.TriggerPrimitive>
+                    </Combobox.InputGroupPrimitive>
+                    <Combobox.Popup>
+                        {(fruit: string) => (
+                            <Combobox.ItemPrimitive key={fruit} value={fruit}>
+                                {fruit}
+                                <Combobox.ItemIndicatorPrimitive>
+                                    <Custom testId="indicator-icon" />
+                                </Combobox.ItemIndicatorPrimitive>
+                            </Combobox.ItemPrimitive>
+                        )}
+                    </Combobox.Popup>
+                </Combobox.Root>,
+            );
+
+            for (const id of ['clear-icon', 'trigger-icon', 'indicator-icon']) {
+                const icon = await screen.findByTestId(id);
+                expect(icon).toHaveAttribute('width', '10');
+                expect(icon).toHaveAttribute('height', '12');
+            }
         });
     });
 

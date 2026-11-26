@@ -38,6 +38,12 @@ const withCollections = (nodes: unknown[]) =>
         ),
     );
 
+/**
+ * Applies the full-size rule only to the default icon, so an icon passed as a child keeps its own size.
+ */
+const defaultIconProps = (children: ReactNode) =>
+    isValidElement(children) ? undefined : { width: '100%', height: '100%' };
+
 /* -------------------------------------------------------------------------------------------------
  * Combobox.Root
  * -----------------------------------------------------------------------------------------------*/
@@ -50,13 +56,14 @@ export const ComboboxRoot = <Value,>(props: ComboboxRoot.Props<Value>) => {
         'size',
         'invalid',
         'placeholder',
+        'readOnly',
         'aria-label',
         'aria-labelledby',
     ]);
 
     return (
         <ComboboxProvider value={contextProps}>
-            <BaseCombobox.Root {...otherProps} multiple={false} />
+            <BaseCombobox.Root {...otherProps} readOnly={contextProps.readOnly} multiple={false} />
         </ComboboxProvider>
     );
 };
@@ -136,13 +143,15 @@ export const ComboboxClearPrimitive = forwardRef<HTMLButtonElement, ComboboxClea
             ...componentProps
         } = resolveStyles(props);
 
-        const { size } = useComboboxContext();
+        const { size, readOnly } = useComboboxContext();
 
         const childrenRender = createRender(childrenProp, <CloseOutlineIcon />);
         const children = useRenderElement({
             render: childrenRender,
-            props: { width: '100%', height: '100%' },
+            props: defaultIconProps(childrenProp),
         });
+
+        if (readOnly) return null;
 
         return (
             <BaseCombobox.Clear
@@ -169,19 +178,25 @@ export const ComboboxTriggerPrimitive = forwardRef<
     HTMLButtonElement,
     ComboboxTriggerPrimitive.Props
 >((props, ref) => {
-    const { className, children: childrenProp, ...componentProps } = resolveStyles(props);
+    const {
+        'aria-label': ariaLabel = 'Open popup',
+        className,
+        children: childrenProp,
+        ...componentProps
+    } = resolveStyles(props);
 
     const { size } = useComboboxContext();
 
     const childrenRender = createRender(childrenProp, <ChevronDownOutlineIcon />);
     const children = useRenderElement({
         render: childrenRender,
-        props: { width: '100%', height: '100%' },
+        props: defaultIconProps(childrenProp),
     });
 
     return (
         <BaseCombobox.Trigger
             ref={ref}
+            aria-label={ariaLabel}
             className={cn(styles.iconButton({ size }), className)}
             {...componentProps}
         >
@@ -370,7 +385,7 @@ export const ComboboxItemIndicatorPrimitive = forwardRef<
     const childrenRender = createRender(childrenProp, <ConfirmOutlineIcon />);
     const children = useRenderElement({
         render: childrenRender,
-        props: { width: '100%', height: '100%' },
+        props: defaultIconProps(childrenProp),
     });
 
     return (
@@ -487,7 +502,10 @@ ComboboxEmpty.displayName = 'Combobox.Empty';
 
 type ComboboxVariants = InputGroupVariants;
 type ComboboxContext = ComboboxVariants &
-    Pick<ComboboxRoot.Props<unknown>, 'placeholder' | 'aria-label' | 'aria-labelledby'>;
+    Pick<
+        ComboboxRoot.Props<unknown>,
+        'placeholder' | 'readOnly' | 'aria-label' | 'aria-labelledby'
+    >;
 
 export interface ComboboxRootProps<Value = unknown>
     extends ComboboxVariants, Omit<BaseCombobox.Root.Props<Value, false>, 'multiple'> {
