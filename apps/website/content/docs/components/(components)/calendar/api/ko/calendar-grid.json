@@ -1,0 +1,37 @@
+{
+    "name": "CalendarGrid",
+    "description": "표시 중인 달의 격자. 요일 이름 행과 그 아래 여섯 주의 날짜 버튼으로 이루어집니다. 화살표 키, Home, End, PageUp, PageDown으로 날짜 사이에서 포커스를 옮깁니다. 각 날짜를 직접 렌더링하려면 자식으로 함수를 전달하세요. 보통 `Calendar.DayPrimitive`를 사용합니다. `<table>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "children",
+            "type": ["function"],
+            "detailedType": "((date: Date) => ReactNode) | undefined",
+            "required": false,
+            "description": "격자의 하루를 렌더링합니다. 기본값은 `Calendar.DayPrimitive`입니다."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Calendar.Grid.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Calendar.Grid.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Calendar.Grid.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "Calendar.Grid.State": "{\n\n}"
+    }
+}

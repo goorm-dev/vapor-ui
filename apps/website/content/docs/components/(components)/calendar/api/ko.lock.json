@@ -1,0 +1,266 @@
+{
+    "calendar-day-primitive": {
+        "description": {
+            "source": "7cd5bf2202ad6651",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.date": {
+            "source": "1bd61faf87699b68",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "calendar-grid": {
+        "description": {
+            "source": "c44e137d3fa8a206",
+            "guide": 2,
+            "terms": "04933093843eefea"
+        },
+        "props.children": {
+            "source": "6db3fc4b4b88ceca",
+            "guide": 2,
+            "terms": "b01d06383280049d"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "calendar-header": {
+        "description": {
+            "source": "a8960e5c5097932d",
+            "guide": 2,
+            "terms": "1a6f83e43baea56f"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "calendar-next-primitive": {
+        "description": {
+            "source": "ba5caabfd521f84d",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.colorPalette": {
+            "source": "795e529a6b9ac5b9",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.focusableWhenDisabled": {
+            "source": "2aedce00ed5b519e",
+            "guide": 2,
+            "terms": "63afee4cf0610e2a"
+        },
+        "props.nativeButton": {
+            "source": "cad78bc9f7fe7490",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.shape": {
+            "source": "0663412f96ea8ed3",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.size": {
+            "source": "19b0218aac93dd71",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.variant": {
+            "source": "77828d3c3c04ef14",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        }
+    },
+    "calendar-previous-primitive": {
+        "description": {
+            "source": "91339ca71812a909",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.colorPalette": {
+            "source": "795e529a6b9ac5b9",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.focusableWhenDisabled": {
+            "source": "2aedce00ed5b519e",
+            "guide": 2,
+            "terms": "63afee4cf0610e2a"
+        },
+        "props.nativeButton": {
+            "source": "cad78bc9f7fe7490",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.shape": {
+            "source": "0663412f96ea8ed3",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.size": {
+            "source": "19b0218aac93dd71",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.variant": {
+            "source": "77828d3c3c04ef14",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        }
+    },
+    "calendar-root": {
+        "description": {
+            "source": "6da7554a2ce5cbdd",
+            "guide": 2,
+            "terms": "3f97d30ff500acb9"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.defaultMonth": {
+            "source": "4c37e0ee299dffde",
+            "guide": 2,
+            "terms": "b01d06383280049d"
+        },
+        "props.defaultValue": {
+            "source": "a629717ca69c5df3",
+            "guide": 2,
+            "terms": "61806d551a58f35c"
+        },
+        "props.disabled": {
+            "source": "5a15947597978341",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.locale": {
+            "source": "e6f4ffd6404cf582",
+            "guide": 2,
+            "terms": "8518674c00398286"
+        },
+        "props.mode": {
+            "source": "66689df4817afe52",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.onValueChange": {
+            "source": "13fd4485cfe68621",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.value": {
+            "source": "497c3b6d7df801dc",
+            "guide": 2,
+            "terms": "3dc9ff164840b150"
+        },
+        "props.weekStartsOn": {
+            "source": "73fa8e4d60399ac8",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        }
+    },
+    "calendar-title-primitive": {
+        "description": {
+            "source": "edc60871c78a00aa",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    }
+}

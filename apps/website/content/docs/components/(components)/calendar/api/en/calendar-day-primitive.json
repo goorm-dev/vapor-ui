@@ -1,0 +1,34 @@
+{
+    "name": "CalendarDayPrimitive",
+    "description": "Button for one day in `Calendar.Grid`. Selects the day when pressed. Days of the previous and next month are shown dimmed and can't be pressed. Its accessible name is the full date, such as \"2026년 11월 26일 목요일\". Renders a `<button>` element.",
+    "props": [
+        {
+            "name": "date",
+            "type": ["Date"],
+            "detailedType": "Date",
+            "required": true,
+            "description": "Day this button selects."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: CalendarDayPrimitive.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: CalendarDayPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: CalendarDayPrimitive.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ]
+}

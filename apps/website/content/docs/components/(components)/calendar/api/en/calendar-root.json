@@ -1,0 +1,90 @@
+{
+    "name": "CalendarRoot",
+    "description": "Root of the Calendar compound component, a month view for picking one date or a range of dates. Holds the selected value, the shown month, and the keyboard focus, and passes them to `Calendar.Header` and `Calendar.Grid`. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "defaultValue",
+            "type": ["Date", "CalendarRange", "null"],
+            "detailedType": "Date | CalendarRange | null | undefined",
+            "required": false,
+            "description": "Day, or `{ start, end }` when `mode` is `range`, selected on first render. Use when the component is not controlled."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["function"],
+            "detailedType": "((value: Date | null, eventDetails: Calendar.Root.ChangeEventDetails) => void) | ((value: CalendarRange, eventDetails: Calendar.Root.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "Called when a day is pressed, with the new day, or the new `{ start, end }` when `mode` is `range`. Call `eventDetails.cancel()` to keep the current value."
+        },
+        {
+            "name": "value",
+            "type": ["Date", "CalendarRange", "null"],
+            "detailedType": "Date | CalendarRange | null | undefined",
+            "required": false,
+            "description": "Selected day, or `{ start, end }` when `mode` is `range`. Use when the component is controlled."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: CalendarRoot.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "defaultMonth",
+            "type": ["Date"],
+            "detailedType": "Date | undefined",
+            "required": false,
+            "description": "Month shown on first render. Defaults to the month of the selected value, or the current month."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Disables the calendar, blocking day selection and month navigation.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "locale",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "BCP 47 locale used for the month title, weekday names, and day labels.",
+            "defaultValue": "ko-KR"
+        },
+        {
+            "name": "mode",
+            "type": ["range", "single"],
+            "detailedType": "\"range\" | \"single\" | undefined",
+            "required": false,
+            "description": "`single` picks one day. `range` picks a first and a last day: the first press sets `start`, the second sets `end` (swapping them if needed), and the next press starts a new range.",
+            "defaultValue": "single"
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: CalendarRoot.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "weekStartsOn",
+            "type": ["0", "1", "2", "4", "3", "5", "6"],
+            "detailedType": "0 | 1 | 2 | 4 | 3 | 5 | 6 | undefined",
+            "required": false,
+            "description": "First day of the week, from `0` (Sunday) to `6` (Saturday).",
+            "defaultValue": "0"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: CalendarRoot.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Calendar.Root.ChangeEventDetails": "{\n  reason: \"day-press\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: HTMLElement | undefined;\n}"
+    }
+}
