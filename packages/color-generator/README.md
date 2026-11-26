@@ -62,7 +62,7 @@ generatePrimitiveColorPalette({
 
 Adds colors, or replaces a base color of the same name. Palettes come out in array order. Names are lowercased first, so `Teal` makes the palette `teal`. A name used twice (`Blue` and `blue` count as one), here or by `brandColor`, throws, and so does `gray`.
 
-The HEX is read as the 500 hue. A base color shifts its own three hue anchors by the difference from its default 500 hue, so its corrected curve keeps its shape. Any other name borrows the anchors of the base color with the nearest 500 hue and shifts them the same way. `BASE_COLOR_HEX` holds each base color's default light 500 HEX. A HEX below OKLCH chroma 0.005 carries no hue and throws.
+The HEX is read as the 500 hue. A base color shifts its own three hue anchors by the hue difference from its `BASE_COLOR_HEX`, so its corrected curve keeps its shape and its own `BASE_COLOR_HEX` rebuilds the default palette exactly. Any other name borrows the anchors of the base color with the nearest 500 hue and shifts them the same way. `BASE_COLOR_HEX` holds each base color's default light 500 HEX. A HEX below OKLCH chroma 0.005 carries no hue and throws.
 
 The input only shapes the hue curve, so it may not appear in the palette. Other colors never change: the 050–200 chroma caps always come from the default base colors.
 

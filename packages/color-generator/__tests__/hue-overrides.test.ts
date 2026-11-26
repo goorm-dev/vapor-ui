@@ -132,19 +132,22 @@ describe('key HEX', () => {
         return `#${toHex(oklchToLinRgb(L, gamutChroma(L, C, H + by), H + by))}`;
     };
 
-    it('keeps the default palette for each base color given its own BASE_COLOR_HEX', () => {
-        for (const [name, hexcode] of Object.entries(BASE_COLOR_HEX)) {
-            expect(chip(defaults, 'light', name, '500').hex.toUpperCase(), name).toBe(hexcode);
-            const result = generatePrimitiveColorPalette({ basicColors: [{ name, hexcode }] });
-            for (const s of ['050', '600', '900'])
-                expect(
-                    hueDiff(
-                        hueOf(chip(result, 'light', name, s).hex),
-                        hueOf(chip(defaults, 'light', name, s).hex),
-                    ),
-                    `${name}-${s}`,
-                ).toBeLessThan(2);
-        }
+    it.each(Object.entries(BASE_COLOR_HEX))(
+        'rebuilds the default %s palette from its own BASE_COLOR_HEX',
+        (name, hexcode) => {
+            expect(chip(defaults, 'light', name, '500').hex.toUpperCase()).toBe(hexcode);
+            expect(generatePrimitiveColorPalette({ basicColors: [{ name, hexcode }] })).toEqual(
+                defaults,
+            );
+        },
+    );
+
+    it('rebuilds a base palette from its BASE_COLOR_HEX as a brand too', () => {
+        const result = generatePrimitiveColorPalette({
+            brandColor: { name: 'violet', hexcode: BASE_COLOR_HEX.violet },
+        });
+        expect(table(result, 'light').violet).toEqual(table(defaults, 'light').violet);
+        expect(table(result, 'dark').violet).toEqual(table(defaults, 'dark').violet);
     });
 
     it('turns a base color along its own curve, even when another base 500 is nearer', () => {

@@ -2,7 +2,13 @@ import { hexToOklch, luminance, pyMod, pyRound2 } from '../../domain/color-math'
 import type { ColorScale } from '../../domain/models/scale';
 import { ANCHOR_SCALES, COLOR_SCALES } from '../../domain/models/scale';
 import type { HueAnchors } from '../../domain/models/theme';
-import { BASE_COLORS, BG, HUE_ANCHORS, TARGET_CONTRAST } from '../constants/palette-rules';
+import {
+    BASE_COLORS,
+    BASE_COLOR_HEX,
+    BG,
+    HUE_ANCHORS,
+    TARGET_CONTRAST,
+} from '../constants/palette-rules';
 
 /** Hue (degrees) per color per scale. Everything after this table reads only the table. */
 export type HueTable = Record<string, Record<ColorScale, number>>;
@@ -61,7 +67,10 @@ export const anchorsFromHex = (name: string, hex: string, baseHues: HueTable): H
     const near = BASE_COLORS.includes(name)
         ? name
         : BASE_COLORS.reduce((best, c) => (hueGap(c) < hueGap(best) ? c : best));
-    const d = wrap(h - baseHues[near]['500']);
+    // A base color measures from its own 500 HEX, so that HEX turns it by exactly 0.
+    const from =
+        near === name ? hexToOklch(BASE_COLOR_HEX[name].slice(1))[2] : baseHues[near]['500'];
+    const d = wrap(h - from);
     return Object.fromEntries(
         ANCHOR_SCALES.map((s) => [s, pyMod(HUE_ANCHORS[near][s] + d, 360)]),
     ) as HueAnchors;
