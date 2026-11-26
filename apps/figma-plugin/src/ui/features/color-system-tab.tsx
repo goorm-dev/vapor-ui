@@ -121,7 +121,7 @@ export const ColorSystemTab = () => {
 
             <VStack
                 $css={{ gap: '$200' }}
-                className="sticky bottom-0 py-v-150 bg-white border-t border-gray-300"
+                className="sticky bottom-0 max-h-80 py-v-150 bg-white border-t border-gray-300"
             >
                 {error && (
                     <Box

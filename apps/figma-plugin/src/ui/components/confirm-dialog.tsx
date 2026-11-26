@@ -1,4 +1,4 @@
-import { AlertDialog, Button } from '@vapor-ui/core';
+import { AlertDialog } from '@vapor-ui/composites';
 
 interface ConfirmDialogProps {
     /** Open while set. */
@@ -9,22 +9,13 @@ interface ConfirmDialogProps {
 
 /** In-page confirm. The plugin iframe blocks `window.confirm`. */
 export const ConfirmDialog = ({ message, onConfirm, onCancel }: ConfirmDialogProps) => (
-    <AlertDialog.Root open={message !== null} onOpenChange={(open) => !open && onCancel()}>
-        <AlertDialog.Popup>
-            <AlertDialog.Header>
-                <AlertDialog.Title>계속할까요?</AlertDialog.Title>
-            </AlertDialog.Header>
-            <AlertDialog.Body>
-                <AlertDialog.Description>{message}</AlertDialog.Description>
-            </AlertDialog.Body>
-            <AlertDialog.Footer>
-                <AlertDialog.Close render={<Button colorPalette="secondary" variant="outline" />}>
-                    취소
-                </AlertDialog.Close>
-                <Button colorPalette="danger" onClick={onConfirm}>
-                    계속
-                </Button>
-            </AlertDialog.Footer>
-        </AlertDialog.Popup>
-    </AlertDialog.Root>
+    <AlertDialog.Root
+        type="critical"
+        cancel={<AlertDialog.Cancel>취소</AlertDialog.Cancel>}
+        action={<AlertDialog.Action onClick={onConfirm}>계속</AlertDialog.Action>}
+        description={message}
+        title="계속할까요?"
+        open={message !== null}
+        onOpenChange={(open) => !open && onCancel()}
+    />
 );
