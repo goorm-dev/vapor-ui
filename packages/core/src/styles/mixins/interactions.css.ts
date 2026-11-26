@@ -50,16 +50,6 @@ export const interaction = componentRecipe({
                         boxShadow: `inset 0 0 0 0.0625rem ${vars.color.border.primary}`,
                     },
                 },
-
-                '@media': {
-                    '(hover: hover)': {
-                        selectors: {
-                            '&:hover:not(:focus-within)': {
-                                boxShadow: `inset 0 0 0 0.0625rem color-mix(in srgb, ${vars.color.gray[900]} 32%, transparent)`,
-                            },
-                        },
-                    },
-                },
             },
         },
     ],
@@ -102,7 +92,8 @@ export const interaction = componentRecipe({
                 '@media': {
                     '(hover: hover)': {
                         selectors: {
-                            '&:hover:not(:focus)': {
+                            // :focus-within equals :focus on an input, and also covers a wrapper whose child has focus.
+                            '&:hover:not(:focus-within)': {
                                 boxShadow: `inset 0 0 0 0.0625rem color-mix(in srgb, ${vars.color.gray[900]} 32%, transparent)`,
                             },
                         },
