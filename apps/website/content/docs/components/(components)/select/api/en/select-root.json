@@ -136,11 +136,11 @@
         {
             "name": "items",
             "type": [
+                "readonly Group<any>[]",
                 "Record<string, ReactNode>",
-                "readonly { label: React.ReactNode; value: any; }[]",
-                "readonly Group<any>[]"
+                "readonly { label: React.ReactNode; value: any; }[]"
             ],
-            "detailedType": "Record<string, ReactNode> | readonly { label: React.ReactNode; value: any; }[] | readonly Group<any>[] | undefined",
+            "detailedType": "readonly Group<any>[] | Record<string, ReactNode> | readonly { label: React.ReactNode; value: any; }[] | undefined",
             "required": false,
             "description": "Data structure of the items rendered in the select popup.\nWhen specified, `<Select.Value>` renders the label of the selected item instead of the raw value."
         },
