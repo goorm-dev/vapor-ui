@@ -37,8 +37,13 @@ const partnersOf = (checks: PaletteCheck[], { name, scale }: Cell) => {
     return [...new Set(names)];
 };
 
-const problemCount = (checks: PaletteCheck[]) =>
-    checks.reduce((n, c) => n + (c.status === 'ok' ? 0 : c.details.length), 0);
+/** Each warning or failure, keyed by check and cells so its measured value can change. */
+export const problemKeys = (checks: PaletteCheck[]) =>
+    new Set(
+        checks.flatMap((c) =>
+            c.status === 'ok' ? [] : c.details.map((d) => `${c.id} ${d.split(':')[0]}`),
+        ),
+    );
 
 const lightHue = (theme: ThemeResult, { name, scale }: Cell) =>
     hueOf(theme.lightModeTokens.palettes.find((p) => p.name === name)!.chips[scale].oklch);
@@ -58,8 +63,8 @@ const checksFor = (draft: ThemeDraft) => {
 
 /**
  * Searches, from each candidate's current light hue, in 0.5° steps within ±HUE_RANGE of its
- * generated hue, for a hue that clears `cell` from the hue-gap check without adding problems
- * elsewhere, plus one more step of margin. Candidates are `cell` and its hue-gap partners at the
+ * generated hue, for a hue that clears `cell` from the hue-gap check without adding any warning
+ * or failure elsewhere, plus one more step of margin. Candidates are `cell` and its hue-gap partners at the
  * same scale. The brand cell never moves, and cells the designer already edited move only when
  * nothing else works. Yields after each palette generation (~60 ms) so a UI can run it in
  * slices; returns `null` when `cell` has no hue-gap warning.
@@ -75,14 +80,14 @@ export function* searchHue(
     yield;
 
     const baseline = generatePrimitiveColorPalette(draftToOptions(withoutHues(draft)));
-    const limit = problemCount(checks);
+    const known = problemKeys(checks);
     let worse = false;
 
     function* passes(c: Cell, hue: number) {
         yield;
         const next = checksFor(themeDraftReducer(draft, { type: 'set-hue', ...c, hue }));
         if (!next || partnersOf(next, cell).length > 0) return false;
-        if (problemCount(next) <= limit) return true;
+        if ([...problemKeys(next)].every((k) => known.has(k))) return true;
         worse = true;
         return false;
     }

@@ -3,7 +3,7 @@ import { generatePrimitiveColorPalette, validatePalette } from '@vapor-ui/color-
 import { describe, expect, it } from 'vitest';
 
 import type { HueRecommendation } from './hue-recommendation';
-import { recommendHue } from './hue-recommendation';
+import { problemKeys, recommendHue } from './hue-recommendation';
 import type { ThemeAction, ThemeDraft } from './theme-draft';
 import {
     draftToOptions,
@@ -18,8 +18,6 @@ const checksOf = (draft: ThemeDraft) =>
     validatePalette(generatePrimitiveColorPalette(draftToOptions(draft)));
 const hueGapFlags = (checks: PaletteCheck[]) =>
     flaggedCells(checks.filter((c) => c.id === 'hue-gap'));
-const problems = (checks: PaletteCheck[]) =>
-    checks.reduce((n, c) => n + (c.status === 'ok' ? 0 : c.details.length), 0);
 const lightHue = (draft: ThemeDraft, name: string, scale: Scale) =>
     hueOf(
         generatePrimitiveColorPalette(draftToOptions(draft)).lightModeTokens.palettes.find(
@@ -35,7 +33,8 @@ const expectResolves = (draft: ThemeDraft, cell: string, rec: HueRecommendation 
     const flags = hueGapFlags(after);
     expect(flags.has(`light ${cell}`)).toBe(false);
     expect(flags.has(`dark ${cell}`)).toBe(false);
-    expect(problems(after)).toBeLessThanOrEqual(problems(checksOf(draft)));
+    const before = problemKeys(checksOf(draft));
+    expect([...problemKeys(after)].filter((k) => !before.has(k))).toEqual([]);
     return rec;
 };
 
@@ -113,5 +112,17 @@ describe('recommendHue', () => {
             kind: 'none',
             reason: '±30° 안에서 간격을 벌릴 수 없어요',
         });
+    });
+
+    // Three close cyans: moving y-050 off x-050 must not open a gap to blue-050 or blue-900.
+    it('never trades one warning for another', { timeout: 60_000 }, () => {
+        const draft = run(
+            { type: 'add-basic', name: 'z', hex: '#1d9ec9' },
+            { type: 'add-basic', name: 'y', hex: '#1d8dc9' },
+            { type: 'add-basic', name: 'x', hex: '#1d81c9' },
+        );
+        const rec = recommendHue(draft, { name: 'x', scale: '050' });
+        if (rec?.kind === 'move') expectResolves(draft, 'x-050', rec);
+        else expect(rec).toMatchObject({ kind: 'none' });
     });
 });
