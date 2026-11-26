@@ -1,20 +1,13 @@
 import { useEffect, useState } from 'react';
 
-import type { HueAnchors, Scale, ThemeResult } from '@vapor-ui/color-generator';
-import { Button, Collapsible, HStack, Text, TextInput, VStack } from '@vapor-ui/core';
+import type { Scale, ThemeResult } from '@vapor-ui/color-generator';
+import { Button, Collapsible, HStack, Text, VStack } from '@vapor-ui/core';
 import { ChevronDownOutlineIcon } from '@vapor-ui/icons';
 
 import type { HueRecommendation } from '~/ui/features/hue-recommendation';
 import { searchHue } from '~/ui/features/hue-recommendation';
-import type { Anchors, Hues, ThemeAction, ThemeDraft } from '~/ui/features/theme-draft';
-import {
-    ANCHOR_STEPS,
-    COLOR_SCALES,
-    HUE_RANGE,
-    hasHues,
-    hueDelta,
-    hueOf,
-} from '~/ui/features/theme-draft';
+import type { Hues, ThemeAction, ThemeDraft } from '~/ui/features/theme-draft';
+import { COLOR_SCALES, HUE_RANGE, hasHues, hueDelta, hueOf } from '~/ui/features/theme-draft';
 
 const GRAY_SCALES: readonly Scale[] = ['000', '025', ...COLOR_SCALES];
 const MODES = ['light', 'dark'] as const;
@@ -87,59 +80,6 @@ const HueSlider = ({ label, baseHue, baseOklch, hue, onChange }: HueSliderProps)
                 </Button>
             </HStack>
         </>
-    );
-};
-
-interface AnchorInputProps {
-    label: string;
-    step: string;
-    /** The anchor with no edit: shown when `hue` is unset, and what 초기화 returns to. */
-    defaultHue: number;
-    hue: number | undefined;
-    onChange: (hue: number | null) => void;
-    disabled: boolean;
-}
-
-/** One anchor hue in degrees. Commits on blur or Enter; an empty field resets it. */
-const AnchorInput = ({ label, step, defaultHue, hue, onChange, disabled }: AnchorInputProps) => {
-    const shown = (hue ?? defaultHue).toFixed(2);
-    const commit = (text: string) => {
-        if (text.trim() === '') return onChange(null);
-        const next = Number(text);
-        if (Number.isFinite(next) && next.toFixed(2) !== shown) onChange(next);
-    };
-    return (
-        <VStack $css={{ gap: '$025' }} className="flex-1 min-w-0">
-            <HStack $css={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text typography="body3" className={hue === undefined ? '' : 'font-semibold'}>
-                    {step}
-                </Text>
-                <Button
-                    size="sm"
-                    variant="ghost"
-                    colorPalette="secondary"
-                    disabled={disabled || hue === undefined}
-                    onClick={() => onChange(null)}
-                >
-                    초기화
-                </Button>
-            </HStack>
-            {/* Remounts on each committed value, so a rejected entry snaps back to it. */}
-            <TextInput
-                key={shown}
-                type={'number' as TextInput.Props['type']}
-                step={0.01}
-                size="sm"
-                aria-label={`${label} 기준 색조(°)`}
-                defaultValue={shown}
-                disabled={disabled}
-                onBlur={(e) => commit(e.currentTarget.value)}
-                onKeyDown={(e) => {
-                    if (e.key === 'Enter') commit(e.currentTarget.value);
-                }}
-                className="w-full"
-            />
-        </VStack>
     );
 };
 
@@ -224,12 +164,6 @@ interface PaletteEditorProps {
     lockedScale?: Scale;
     /** Enables a recommended hue for a flagged cell; it may move a cell in another palette. */
     advice?: { draft: ThemeDraft; request: (action: ThemeAction) => void };
-    /** Anchor inputs: the edits, the anchors they reset to (none hides them), and a dispatcher. */
-    anchors?: {
-        edits: Anchors;
-        defaults: HueAnchors | undefined;
-        request: (action: ThemeAction) => void;
-    };
 }
 
 /**
@@ -245,13 +179,10 @@ export const PaletteEditor = ({
     onHue,
     lockedScale,
     advice,
-    anchors,
 }: PaletteEditorProps) => {
     const [selected, setSelected] = useState<Scale | null>(null);
     const [detailOpen, setDetailOpen] = useState(false);
     // Per-step hues are absolute, so moving the curve under them would kink it.
-    const anchorsLocked = hasHues({ hues });
-    const anchorDefaults = anchors?.defaults;
     const scales = name === 'gray' ? GRAY_SCALES : COLOR_SCALES;
     const editable = (scale: Scale) => onHue !== undefined && scale !== lockedScale;
 
@@ -328,33 +259,6 @@ export const PaletteEditor = ({
                 ))}
             </HStack>
 
-            {anchors && anchorDefaults && (
-                <HStack $css={{ gap: '$050', alignItems: 'flex-start' }}>
-                    <Text typography="body3" foreground="hint-200" className="w-8 shrink-0 pt-1">
-                        색조
-                    </Text>
-                    {ANCHOR_STEPS.map((step) => (
-                        <AnchorInput
-                            key={step}
-                            label={`${name}-${step}`}
-                            step={step}
-                            defaultHue={anchorDefaults[step]}
-                            hue={anchors.edits[step]}
-                            onChange={(hue) =>
-                                anchors.request({ type: 'set-anchor', name, step, hue })
-                            }
-                            disabled={anchorsLocked}
-                        />
-                    ))}
-                </HStack>
-            )}
-            {anchorDefaults && anchorsLocked && (
-                <Text typography="body3" foreground="hint-200">
-                    칸별 색조를 편집한 팔레트예요. 세부 조정을 초기화하면 기준 색조를 바꿀 수
-                    있어요.
-                </Text>
-            )}
-
             {onHue && (
                 <Collapsible.Root open={detailOpen} onOpenChange={setDetailOpen}>
                     <Collapsible.Trigger className="group flex justify-between w-full items-center">
@@ -379,13 +283,13 @@ export const PaletteEditor = ({
                             {active && flagged && advice && (
                                 <HueAdvice key={active} name={name} scale={active} {...advice} />
                             )}
-                            {anchors && (
+                            {advice && (
                                 <Button
                                     size="sm"
                                     variant="outline"
                                     colorPalette="secondary"
-                                    disabled={!anchorsLocked}
-                                    onClick={() => anchors.request({ type: 'clear-hues', name })}
+                                    disabled={!hasHues({ hues })}
+                                    onClick={() => advice.request({ type: 'clear-hues', name })}
                                 >
                                     칸별 색조 모두 초기화
                                 </Button>

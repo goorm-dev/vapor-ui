@@ -26,7 +26,6 @@ import {
     initialDraft,
     primaryName,
     themeDraftReducer,
-    withoutEdits,
     withoutHues,
 } from './theme-draft';
 
@@ -49,12 +48,6 @@ export const ColorSystemTab = () => {
     // Hue edits never move the baseline, so slider drags reuse it instead of generating twice.
     const baselineKey = JSON.stringify(draftToOptions(withoutHues(draft)));
     const baseline = useMemo(() => generate(JSON.parse(baselineKey)).theme, [baselineKey]);
-    // Likewise anchor edits never move the defaults; only a HEX or palette change does.
-    const defaultsKey = JSON.stringify(draftToOptions(withoutEdits(draft)));
-    const anchorDefaults = useMemo(
-        () => generate(JSON.parse(defaultsKey)).theme?.hueAnchors,
-        [defaultsKey],
-    );
     const { theme, error } = useMemo(() => generate(draftToOptions(draft)), [draft]);
     const checks = useMemo(() => (theme ? validatePalette(theme) : []), [theme]);
     const flags = useMemo(() => flaggedCells(checks), [checks]);
@@ -103,7 +96,7 @@ export const ColorSystemTab = () => {
         }
     };
 
-    const tabProps = { draft, theme, baseline, anchorDefaults, flags, request };
+    const tabProps = { draft, theme, baseline, flags, request };
 
     return (
         <VStack $css={{ gap: '$300' }}>

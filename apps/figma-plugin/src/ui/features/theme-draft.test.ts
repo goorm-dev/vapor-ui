@@ -9,6 +9,7 @@ import {
     flaggedCells,
     hueOf,
     initialDraft,
+    isValidName,
     primaryName,
     themeDraftReducer,
 } from './theme-draft';
@@ -124,110 +125,93 @@ describe('theme draft', () => {
         expect(themeDraftReducer(draft, { type: 'clear-brand' }).brand).toBeNull();
     });
 
-    it('moves an anchor, wraps it, and resets it with null', () => {
-        const draft = run({ type: 'set-anchor', name: 'red', step: '900', hue: -10 });
-        expect(basic(draft, 'red')!.anchors).toEqual({ '900': 350 });
-        expect(draftToOptions(draft).hueAnchors).toEqual({ red: { '900': 350 } });
-        expect(generate(draft).hueAnchors!.red['900']).toBe(350);
-
-        const reset = themeDraftReducer(draft, {
-            type: 'set-anchor',
-            name: 'red',
-            step: '900',
-            hue: null,
-        });
-        expect(draftToOptions(reset)).toEqual(draftToOptions(initialDraft));
-    });
-
-    it('builds the same palettes as the engine given the same anchors', () => {
+    it('builds the same palettes as the engine given the same options', () => {
         // Untouched, the plugin draft builds the engine's default palettes exactly.
         expect(generate(initialDraft)).toEqual(generatePrimitiveColorPalette());
 
-        const brandColor = { name: 'acme', hexcode: '#7a3cff' };
-        // Untouched base colors take HUE_ANCHORS, so only the new color is a basic color.
-        const basicColors = [{ name: 'teal', hexcode: '#00838f' }];
-        const hueAnchors = {
-            red: { '050': 18.5, '900': 30 },
-            teal: { '600': 200.25 },
-            acme: { '050': 300, '600': 285.5, '900': 275 },
-        };
         const draft = run(
+            { type: 'set-hex', name: 'red', hex: '#E8202F' },
             { type: 'add-basic', name: 'teal', hex: '#00838F' },
             { type: 'set-brand', name: 'acme', hex: '#7A3CFF' },
-            ...Object.entries(hueAnchors).flatMap(([name, row]) =>
-                Object.entries(row).map(([step, hue]): ThemeAction => ({
-                    type: 'set-anchor',
-                    name,
-                    step: step as '050' | '600' | '900',
-                    hue,
-                })),
-            ),
+            { type: 'set-hue', name: 'teal', scale: '700', hue: 200.25 },
+            { type: 'set-hue', name: 'acme', scale: '900', hue: 275 },
         );
-        const engine = generatePrimitiveColorPalette({ basicColors, brandColor, hueAnchors });
+        const engine = generatePrimitiveColorPalette({
+            basicColors: [
+                { name: 'red', hexcode: '#e8202f' },
+                { name: 'teal', hexcode: '#00838f' },
+            ],
+            brandColor: { name: 'acme', hexcode: '#7a3cff' },
+            hueOverrides: { teal: { '700': 200.25 }, acme: { '900': 275 } },
+        });
         expect(generate(draft)).toEqual(engine);
-        expect(engine.hueAnchors).toMatchObject(hueAnchors);
     });
 
-    it('clears every per-step hue of one palette and keeps its anchors', () => {
+    it('shows each base color its own light 500 HEX by default', () => {
+        const theme = generate(initialDraft);
+        for (const p of initialDraft.basics)
+            expect(chip(theme, 'light', p.name, '500').hex, p.name).toBe(p.hex);
+    });
+
+    it('clears every per-step hue of one palette', () => {
         const draft = run(
-            { type: 'set-anchor', name: 'red', step: '600', hue: 20 },
             { type: 'set-hue', name: 'red', scale: '500', hue: 10 },
             { type: 'set-hue', name: 'red', scale: '700', hue: 15 },
             { type: 'set-hue', name: 'blue', scale: '500', hue: 250 },
             { type: 'clear-hues', name: 'red' },
         );
-        expect(basic(draft, 'red')).toMatchObject({ hues: {}, anchors: { '600': 20 } });
+        expect(basic(draft, 'red')!.hues).toEqual({});
         expect(basic(draft, 'blue')!.hues).toEqual({ '500': 250 });
     });
 
-    it('a new HEX drops anchor edits too, after asking', () => {
-        const draft = run({ type: 'set-anchor', name: 'red', step: '050', hue: 20 });
-        const action: ThemeAction = { type: 'set-hex', name: 'red', hex: '#ff0000' };
-        expect(confirmationFor(draft, action)).toMatch(/red/);
-        expect(basic(themeDraftReducer(draft, action), 'red')!.anchors).toEqual({});
+    it('asks before removing an added color that has hue edits', () => {
+        const remove: ThemeAction = { type: 'remove-basic', name: 'teal' };
+        const plain = run({ type: 'add-basic', name: 'teal', hex: '#00838f' });
+        expect(confirmationFor(plain, remove)).toBeNull();
 
-        const brand = run(
-            { type: 'set-brand', name: 'acme', hex: '#7a3cff' },
-            { type: 'set-anchor', name: 'acme', step: '900', hue: 290 },
-        );
-        const recolor: ThemeAction = { type: 'set-brand', name: 'acme', hex: '#00a3a3' };
-        expect(confirmationFor(brand, recolor)).not.toBeNull();
-        expect(themeDraftReducer(brand, recolor).brand!.anchors).toEqual({});
+        const edited = themeDraftReducer(plain, {
+            type: 'set-hue',
+            name: 'teal',
+            scale: '600',
+            hue: 200,
+        });
+        expect(confirmationFor(edited, remove)).toMatch(/teal/);
+        expect(basic(themeDraftReducer(edited, remove), 'teal')).toBeUndefined();
+    });
+
+    it.each(['constructor', 'gray', 'Teal', '1st'])('rejects the name %s', (name) => {
+        expect(isValidName(name)).toBe(false);
+        expect(run({ type: 'add-basic', name, hex: '#00838f' })).toEqual(initialDraft);
     });
 
     it('drops brand edits on rename, so no edit names a palette that is gone', () => {
         const draft = run(
             { type: 'set-brand', name: 'acme', hex: '#7a3cff' },
             { type: 'set-hue', name: 'acme', scale: '500', hue: 270 },
-            { type: 'set-anchor', name: 'acme', step: '900', hue: 290 },
         );
         const rename: ThemeAction = { type: 'set-brand', name: 'other', hex: '#7a3cff' };
         expect(confirmationFor(draft, rename)).not.toBeNull();
 
         const renamed = themeDraftReducer(draft, rename);
-        expect(renamed.brand).toMatchObject({ name: 'other', hues: {}, anchors: {} });
-        expect(draftToOptions(renamed)).toMatchObject({ hueOverrides: {}, hueAnchors: {} });
+        expect(renamed.brand).toMatchObject({ name: 'other', hues: {} });
+        expect(draftToOptions(renamed).hueOverrides).toEqual({});
         expect(() => generate(renamed)).not.toThrow();
     });
 
     it('passes edits only for palettes the engine builds', () => {
         const draft = run(
             { type: 'add-basic', name: 'teal', hex: '#00a3a3' },
-            { type: 'set-anchor', name: 'teal', step: '600', hue: 190 },
+            { type: 'set-hue', name: 'teal', scale: '600', hue: 190 },
             { type: 'set-hue', name: 'blue', scale: '500', hue: 250 },
-            { type: 'set-anchor', name: 'blue', step: '050', hue: 240 },
             { type: 'set-brand', name: 'blue', hex: '#2255ee' },
             { type: 'remove-basic', name: 'teal' },
         );
-        expect(draftToOptions(draft)).toMatchObject({ hueOverrides: {}, hueAnchors: {} });
+        expect(draftToOptions(draft).hueOverrides).toEqual({});
         expect(() => generate(draft)).not.toThrow();
 
         // The shadowed basic keeps its edits and gets them back once the brand is gone.
         const restored = themeDraftReducer(draft, { type: 'clear-brand' });
-        expect(draftToOptions(restored)).toMatchObject({
-            hueOverrides: { blue: { '500': 250 } },
-            hueAnchors: { blue: { '050': 240 } },
-        });
+        expect(draftToOptions(restored).hueOverrides).toEqual({ blue: { '500': 250 } });
     });
 
     it('lets a brand replace a basic color of the same name without a duplicate', () => {

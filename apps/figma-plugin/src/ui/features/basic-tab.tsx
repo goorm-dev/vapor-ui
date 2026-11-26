@@ -15,20 +15,11 @@ interface BasicTabProps {
     draft: ThemeDraft;
     theme: ThemeResult | null;
     baseline: ThemeResult | null;
-    /** Each palette's anchors with no hue edits: where its anchor sliders reset to. */
-    anchorDefaults: ThemeResult['hueAnchors'];
     flags: Map<string, 'warn' | 'fail'>;
     request: (action: ThemeAction) => void;
 }
 
-export const BasicTab = ({
-    draft,
-    theme,
-    baseline,
-    anchorDefaults,
-    flags,
-    request,
-}: BasicTabProps) => {
+export const BasicTab = ({ draft, theme, baseline, flags, request }: BasicTabProps) => {
     const [newName, setNewName] = useState('');
     const [newHex, setNewHex] = useState('#888888');
     const nameError = newName && !isValidName(newName);
@@ -74,11 +65,6 @@ export const BasicTab = ({
                                     request({ type: 'set-hue', name: palette.name, scale, hue })
                                 }
                                 advice={{ draft, request }}
-                                anchors={{
-                                    edits: palette.anchors,
-                                    defaults: anchorDefaults?.[palette.name],
-                                    request,
-                                }}
                             />
                         )
                     )}
