@@ -97,6 +97,18 @@ describe('hueOverrides', () => {
         expect(table(out, 'light')).toEqual(table(base, 'light'));
     });
 
+    it('ignores the pinned brand cell override in the rest of the palette', () => {
+        // pinned at 200, which also decides the yellow family and the 300 chroma
+        const brandColor = { name: 'acme', hexcode: '#FFC96D' };
+        const base = generatePrimitiveColorPalette({ brandColor });
+        expect(base.brand!.scale).toBe('200');
+        const out = generatePrimitiveColorPalette({
+            brandColor,
+            hueOverrides: { acme: { '200': 240 } },
+        });
+        expect(out).toEqual(base);
+    });
+
     it('wraps hues into 0–360', () => {
         const wrapped = generatePrimitiveColorPalette({ hueOverrides: { yellow: { '200': 444 } } });
         const plain = generatePrimitiveColorPalette({ hueOverrides: { yellow: { '200': 84 } } });
