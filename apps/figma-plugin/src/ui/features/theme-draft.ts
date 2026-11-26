@@ -1,5 +1,6 @@
 import type { PaletteCheck, Scale, ThemeOptions } from '@vapor-ui/color-generator';
 import { BASE_COLOR_HEX } from '@vapor-ui/color-generator';
+import { converter } from 'culori';
 
 /* -------------------------------------------------------------------------------------------------
  * Model
@@ -46,6 +47,28 @@ const HEX_PATTERN = /^#[0-9a-f]{6}$/;
 export const isValidName = (name: string) =>
     NAME_PATTERN.test(name) && name !== 'gray' && !(name in Object.prototype);
 export const isHex = (hex: string) => HEX_PATTERN.test(hex);
+
+/** Parses `#rrggbb`, `rrggbb`, `#rgb` or `rgb` (any case) into lowercase `#rrggbb`. */
+export const parseHex = (text: string): string | null => {
+    const raw = text.trim().replace(/^#/, '').toLowerCase();
+    const full = /^[0-9a-f]{3}$/.test(raw) ? raw.replace(/./g, (c) => c + c) : raw;
+    return isHex(`#${full}`) ? `#${full}` : null;
+};
+
+const toOklch = converter('oklch');
+/** OKLCH chroma of a `#rrggbb`. */
+export const chromaOf = (hex: string) => toOklch(hex)?.c ?? 0;
+
+/** Below this chroma a HEX has no hue; the engine throws on it. */
+export const GREY_CHROMA = 0.005;
+/** Below this chroma the hue a HEX carries shifts with every small change. */
+export const LOW_CHROMA = 0.02;
+
+/** The HEX a typed entry commits, or `null` when it is no HEX or too grey to carry a hue. */
+export const commitHex = (text: string): string | null => {
+    const hex = parseHex(text);
+    return hex && chromaOf(hex) >= GREY_CHROMA ? hex : null;
+};
 
 const PRESET_HEX: Record<string, string> = Object.fromEntries(
     Object.entries(BASE_COLOR_HEX).map(([name, hex]) => [name, hex.toLowerCase()]),

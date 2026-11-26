@@ -21,7 +21,7 @@ interface BasicTabProps {
 
 export const BasicTab = ({ draft, theme, baseline, flags, request }: BasicTabProps) => {
     const [newName, setNewName] = useState('');
-    const [newHex, setNewHex] = useState('#888888');
+    const [newHex, setNewHex] = useState('#00838f');
     const nameError = newName && !isValidName(newName);
 
     return (

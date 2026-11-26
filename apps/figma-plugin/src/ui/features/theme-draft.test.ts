@@ -4,12 +4,14 @@ import { describe, expect, it } from 'vitest';
 
 import type { ThemeAction, ThemeDraft } from './theme-draft';
 import {
+    commitHex,
     confirmationFor,
     draftToOptions,
     flaggedCells,
     hueOf,
     initialDraft,
     isValidName,
+    parseHex,
     primaryName,
     themeDraftReducer,
 } from './theme-draft';
@@ -248,4 +250,38 @@ describe('flaggedCells', () => {
             'light orange-700': 'warn',
         });
     });
+});
+
+describe('HEX entry', () => {
+    it.each([
+        ['#00838F', '#00838f'],
+        ['00838f', '#00838f'],
+        [' #0AF ', '#00aaff'],
+        ['0af', '#00aaff'],
+        ['#00838', null],
+        ['#00838g', null],
+        ['', null],
+    ])('parses %j as %j', (text, hex) => {
+        expect(parseHex(text)).toBe(hex);
+    });
+
+    it('commits a coloured HEX and rejects one too grey to carry a hue', () => {
+        expect(commitHex('#00838f')).toBe('#00838f');
+        expect(commitHex('#888888')).toBeNull();
+        expect(commitHex('#777')).toBeNull();
+        expect(commitHex('nope')).toBeNull();
+    });
+
+    it.each(['#808080', '#7f8080', '#7f8081', '#ffffff', '#00838f'])(
+        'agrees with the engine on whether %s is too grey',
+        (hexcode) => {
+            let engineAccepts = true;
+            try {
+                generatePrimitiveColorPalette({ basicColors: [{ name: 'x', hexcode }] });
+            } catch {
+                engineAccepts = false;
+            }
+            expect(commitHex(hexcode) !== null).toBe(engineAccepts);
+        },
+    );
 });
