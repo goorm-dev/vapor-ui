@@ -1,0 +1,37 @@
+{
+    "name": "ComboboxListPrimitive",
+    "description": "Scrollable container for the options. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode", "function"],
+            "detailedType": "ReactNode | ((item: any, index: number) => ReactNode)",
+            "required": false,
+            "description": "Options in the list. Pass a function to render each item of `items` on `Combobox.Root`, or render `Combobox.Item` elements directly."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Combobox.ListPrimitive.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Combobox.ListPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Combobox.ListPrimitive.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Combobox.ListPrimitive.State": "{\n  empty: boolean;\n}"
+    }
+}

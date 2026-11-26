@@ -1,0 +1,75 @@
+{
+    "name": "ComboboxItemPrimitive",
+    "description": "Option in the list that the user can select. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "value",
+            "type": ["any"],
+            "detailedType": "any",
+            "required": false,
+            "description": "A unique value that identifies this item.",
+            "defaultValue": "null"
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Content shown inside the option, such as its label and `Combobox.ItemIndicatorPrimitive`."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Combobox.ItemPrimitive.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Combobox.ItemPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "index",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "The index of the item in the list. Improves performance when specified by avoiding the need to calculate the index automatically from the DOM."
+        },
+        {
+            "name": "nativeButton",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the component renders a native `<button>` element when replacing it\nvia the `render` prop.\nSet to `true` if the rendered element is a native button.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "onClick",
+            "type": ["function"],
+            "detailedType": "((event: BaseUIEvent<React.MouseEvent<HTMLDivElement, MouseEvent>>) => void) | undefined",
+            "required": false,
+            "description": "An optional click handler for the item when selected.\nIt fires when clicking the item with the pointer, as well as when pressing `Enter` with the keyboard if the item is highlighted when the `Input` or `List` element has focus."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Combobox.ItemPrimitive.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Combobox.ItemPrimitive.State": "{\n  disabled: boolean;\n  selected: boolean;\n  highlighted: boolean;\n}"
+    }
+}

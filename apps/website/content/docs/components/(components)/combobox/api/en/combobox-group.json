@@ -1,0 +1,44 @@
+{
+    "name": "ComboboxGroup",
+    "description": "Groups related options under a `Combobox.GroupLabel`. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "children",
+            "type": ["ComboboxChildren"],
+            "detailedType": "ComboboxChildren",
+            "required": false,
+            "description": "Group content, such as `Combobox.GroupLabel` and `Combobox.Item`. With the `items` prop, pass a function to render each item of the group so it is filtered."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Combobox.Group.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Combobox.Group.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "items",
+            "type": ["readonly any[]"],
+            "detailedType": "readonly any[] | undefined",
+            "required": false,
+            "description": "Items to be rendered within this group.\nWhen provided, child `Collection` components will use these items."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Combobox.Group.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Combobox.Group.State": "{\n\n}"
+    }
+}

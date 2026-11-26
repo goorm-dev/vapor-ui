@@ -1,0 +1,37 @@
+{
+    "name": "ComboboxInputGroup",
+    "description": "Combines `Combobox.InputGroupPrimitive`, `Combobox.InputPrimitive`, `Combobox.ClearPrimitive`, and `Combobox.TriggerPrimitive` into a single part. Use the primitives to change what it holds. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Not rendered: the group always holds the input, clear button, and trigger. Use `Combobox.InputGroupPrimitive` to compose custom content."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Combobox.InputGroup.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Combobox.InputGroup.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Combobox.InputGroup.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Combobox.InputGroup.State": "{\n  open: boolean;\n  disabled: boolean;\n  readOnly: boolean;\n  popupSide: \"bottom\" | \"left\" | \"right\" | \"top\" | \"inline-end\" | \"inline-start\" | null;\n  listEmpty: boolean;\n  placeholder: boolean;\n  touched: boolean;\n  dirty: boolean;\n  valid: boolean | null;\n  filled: boolean;\n  focused: boolean;\n}"
+    }
+}
