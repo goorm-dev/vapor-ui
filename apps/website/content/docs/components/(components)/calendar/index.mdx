@@ -28,6 +28,23 @@ description: 'Calendar는 월 달력에서 날짜 하나 또는 날짜 범위를
 
 <Demo file="components/(components)/calendar/demos/calendar-locale.tsx" />
 
+## Accessibility
+
+---
+
+날짜 칸은 하나만 Tab 순서에 들어가고, 그리드 안에서는 키보드로 이동합니다.
+
+| 키                            | 동작                          |
+| ----------------------------- | ----------------------------- |
+| `←` `→`                       | 하루 앞뒤로 이동              |
+| `↑` `↓`                       | 한 주 앞뒤로 이동             |
+| `Home` `End`                  | 그 주의 첫날·마지막 날로 이동 |
+| `PageUp` `PageDown`           | 이전·다음 달로 이동           |
+| `Shift` + `PageUp`/`PageDown` | 이전·다음 해로 이동           |
+| `Enter` `Space`               | 날짜 선택                     |
+
+월이 바뀌면 제목을, 범위의 시작일만 고른 동안에는 종료일을 고르라는 안내를 스크린 리더에 알립니다.
+
 ## Props Table
 
 ---

@@ -1,7 +1,7 @@
 'use client';
 
-import type { KeyboardEvent, MouseEvent, ReactNode } from 'react';
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import type { FocusEvent, KeyboardEvent, MouseEvent, PointerEvent, ReactNode } from 'react';
+import { forwardRef, useEffect, useId, useMemo, useRef, useState } from 'react';
 
 import { useControlled } from '@base-ui/utils/useControlled';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
@@ -63,6 +63,7 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
         locale = 'ko-KR',
         weekStartsOn = 0,
         disabled = false,
+        children,
         ...componentProps
     } = resolveStyles(props as CalendarRootBaseProps & CalendarSelectionProps);
 
@@ -93,6 +94,7 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
     const [previewDate, setPreviewDate] = useState<Date | null>(null);
 
     const shouldFocusRef = useRef(false);
+    const titleId = useId();
 
     const moveFocus = useStableCallback((date: Date) => {
         shouldFocusRef.current = true;
@@ -107,9 +109,11 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
 
     const select = useStableCallback((date: Date, event: Event) => {
         const details = createChangeEventDetails('day-press', event);
+        setFocusedDate(date);
 
         if (mode === 'single') {
-            setValue(date, details);
+            // ponytail: pressing the selected day again keeps it; add a toggle if deselecting is needed.
+            if (!isSameDay(value as Date | null, date)) setValue(date, details);
             return;
         }
 
@@ -126,6 +130,9 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
         setValue({ start, end }, details);
     });
 
+    const range = mode === 'range' ? (value as CalendarRange | null) : null;
+    const pickingEnd = !!range?.start && !range.end;
+
     const state: CalendarRoot.State = useMemo(() => ({ disabled }), [disabled]);
 
     const element = useRenderElement({
@@ -135,6 +142,15 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
         props: {
             className: cn(styles.root, className),
             'data-disabled': disabled ? '' : undefined,
+            children: (
+                <>
+                    {children}
+                    {/* Tells screen readers that the start is picked and the end is next. */}
+                    <span aria-live="polite" className={styles.status}>
+                        {pickingEnd ? rangeStatus(locale) : ''}
+                    </span>
+                </>
+            ),
             ...componentProps,
         },
     });
@@ -147,8 +163,10 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
             month,
             changeMonth,
             focusedDate,
+            setFocusedDate,
             moveFocus,
             shouldFocusRef,
+            titleId,
             previewDate,
             setPreviewDate,
             today,
@@ -164,6 +182,7 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
             changeMonth,
             focusedDate,
             moveFocus,
+            titleId,
             previewDate,
             today,
             locale,
@@ -210,8 +229,10 @@ CalendarHeader.displayName = 'Calendar.Header';
 
 const createNavigationButton = (direction: 'previous' | 'next') => {
     const Component = forwardRef<HTMLElement, CalendarPreviousPrimitive.Props>((props, ref) => {
-        const { children, ...componentProps } = props;
-        const { changeMonth, locale, disabled } = useCalendarContext();
+        const { children, disabled: disabledProp, ...componentProps } = props;
+        const { changeMonth, locale, disabled: contextDisabled } = useCalendarContext();
+
+        const disabled = disabledProp || contextDisabled;
 
         const handleClick: IconButton.Props['onClick'] = (event) => {
             componentProps.onClick?.(event);
@@ -225,8 +246,8 @@ const createNavigationButton = (direction: 'previous' | 'next') => {
                 variant="ghost"
                 colorPalette="secondary"
                 aria-label={navigationLabel(locale, direction)}
-                disabled={disabled}
                 {...componentProps}
+                disabled={disabled}
                 onClick={handleClick}
             >
                 {children ??
@@ -264,7 +285,7 @@ CalendarNextPrimitive.displayName = 'Calendar.NextPrimitive';
 export const CalendarTitlePrimitive = forwardRef<HTMLDivElement, CalendarTitlePrimitive.Props>(
     (props, ref) => {
         const { render, className, ...componentProps } = resolveStyles(props);
-        const { month, locale } = useCalendarContext();
+        const { month, locale, titleId } = useCalendarContext();
 
         const title = useMemo(
             () => new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long' }).format(month),
@@ -275,6 +296,7 @@ export const CalendarTitlePrimitive = forwardRef<HTMLDivElement, CalendarTitlePr
             ref,
             render,
             props: {
+                id: titleId,
                 'aria-live': 'polite',
                 className: cn(styles.title, className),
                 children: title,
@@ -293,8 +315,9 @@ CalendarTitlePrimitive.displayName = 'Calendar.TitlePrimitive';
  * Grid of the shown month: a row of weekday names, then six weeks of day buttons. Arrow keys, Home, End, PageUp, and PageDown move the focus between days. Pass a function as children to render each day yourself, usually with `Calendar.DayPrimitive`. Renders a `<table>` element.
  */
 export const CalendarGrid = forwardRef<HTMLTableElement, CalendarGrid.Props>((props, ref) => {
-    const { render, className, children, ...componentProps } = resolveStyles(props);
-    const { month, locale, weekStartsOn, setPreviewDate } = useCalendarContext();
+    const { render, className, children, onPointerLeave, onBlur, ...componentProps } =
+        resolveStyles(props);
+    const { month, locale, weekStartsOn, setPreviewDate, titleId } = useCalendarContext();
 
     const weeks = useMemo(() => getWeeks(month, weekStartsOn), [month, weekStartsOn]);
     const weekdays = useMemo(() => {
@@ -311,8 +334,16 @@ export const CalendarGrid = forwardRef<HTMLTableElement, CalendarGrid.Props>((pr
         defaultTagName: 'table',
         props: {
             role: 'grid',
+            'aria-labelledby': titleId,
             className: cn(styles.grid, className),
-            onPointerLeave: () => setPreviewDate(null),
+            onPointerLeave: (event: PointerEvent<HTMLTableElement>) => {
+                onPointerLeave?.(event);
+                setPreviewDate(null);
+            },
+            onBlur: (event: FocusEvent<HTMLTableElement>) => {
+                onBlur?.(event);
+                if (!event.currentTarget.contains(event.relatedTarget)) setPreviewDate(null);
+            },
             children: (
                 <>
                     <thead>
@@ -343,9 +374,15 @@ export const CalendarGrid = forwardRef<HTMLTableElement, CalendarGrid.Props>((pr
 });
 CalendarGrid.displayName = 'Calendar.Grid';
 
+const rangeStatus = (locale: string) =>
+    locale.startsWith('ko')
+        ? '시작일을 선택했습니다. 종료일을 선택하세요.'
+        : 'Start date selected. Choose an end date.';
+
 /** `gridcell` that carries `aria-selected`, which is not allowed on the button inside it. */
 const CalendarCell = ({ date, children }: { date: Date; children: ReactNode }) => {
-    const { selected, outsideMonth } = useDayState(date);
+    // The hover or focus preview is not a selection, so it stays out of aria-selected.
+    const { selected, outsideMonth } = useDayState(date, false);
 
     return (
         <td
@@ -367,23 +404,43 @@ const CalendarCell = ({ date, children }: { date: Date; children: ReactNode }) =
  */
 export const CalendarDayPrimitive = forwardRef<HTMLButtonElement, CalendarDayPrimitive.Props>(
     (props, ref) => {
-        const { date, render, className, ...componentProps } = resolveStyles(props);
-        const context = useCalendarContext();
-        const { focusedDate, moveFocus, shouldFocusRef, select, setPreviewDate, locale, mode } =
-            context;
-        const weekStartsOn = context.weekStartsOn;
+        const {
+            date,
+            render,
+            className,
+            disabled: disabledProp,
+            onClick,
+            onKeyDown,
+            onPointerEnter,
+            onFocus,
+            ...componentProps
+        } = resolveStyles(props);
+        const {
+            focusedDate,
+            setFocusedDate,
+            moveFocus,
+            shouldFocusRef,
+            select,
+            setPreviewDate,
+            locale,
+            mode,
+            weekStartsOn,
+        } = useCalendarContext();
 
         const state = useDayState(date);
-        const { outsideMonth, disabled } = state;
+        const { outsideMonth } = state;
+        const disabled = outsideMonth || state.disabled || !!disabledProp;
         const focused = isSameDay(date, focusedDate) && !outsideMonth;
 
         const buttonRef = useRef<HTMLButtonElement | null>(null);
+        // focusedDate is a new object on every keyboard move, so a move onto the same day
+        // (Home on the first day of the week) still runs this and clears the flag.
         useEffect(() => {
             if (focused && shouldFocusRef.current) {
                 shouldFocusRef.current = false;
                 buttonRef.current?.focus();
             }
-        }, [focused, shouldFocusRef]);
+        }, [focused, focusedDate, shouldFocusRef]);
 
         const label = useMemo(
             () => new Intl.DateTimeFormat(locale, { dateStyle: 'full' }).format(date),
@@ -391,12 +448,12 @@ export const CalendarDayPrimitive = forwardRef<HTMLButtonElement, CalendarDayPri
         );
 
         const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-            componentProps.onClick?.(event);
+            onClick?.(event);
             select(startOfDay(date), event.nativeEvent);
         };
 
         const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
-            componentProps.onKeyDown?.(event);
+            onKeyDown?.(event);
 
             const next = getKeyboardTarget(event, date, weekStartsOn);
             if (!next) return;
@@ -410,6 +467,18 @@ export const CalendarDayPrimitive = forwardRef<HTMLButtonElement, CalendarDayPri
             if (mode === 'range' && !outsideMonth) setPreviewDate(startOfDay(date));
         };
 
+        const handlePointerEnter = (event: PointerEvent<HTMLButtonElement>) => {
+            onPointerEnter?.(event);
+            showPreview();
+        };
+
+        const handleFocus = (event: FocusEvent<HTMLButtonElement>) => {
+            onFocus?.(event);
+            // Keeps the roving tab stop on the day the user last reached, by mouse or keyboard.
+            if (!isSameDay(date, focusedDate)) setFocusedDate(startOfDay(date));
+            showPreview();
+        };
+
         return useRenderElement({
             ref: [ref, buttonRef],
             render,
@@ -418,17 +487,17 @@ export const CalendarDayPrimitive = forwardRef<HTMLButtonElement, CalendarDayPri
             props: {
                 type: 'button',
                 tabIndex: focused ? 0 : -1,
-                disabled: outsideMonth || disabled,
                 'aria-label': label,
                 'aria-current': state.current ? 'date' : undefined,
                 className: cn(styles.day, className),
                 children: date.getDate(),
                 ...dataAttributes(state),
                 ...componentProps,
+                disabled,
                 onClick: handleClick,
                 onKeyDown: handleKeyDown,
-                onPointerEnter: showPreview,
-                onFocus: showPreview,
+                onPointerEnter: handlePointerEnter,
+                onFocus: handleFocus,
             },
         });
     },
@@ -470,7 +539,7 @@ const getKeyboardTarget = (event: KeyboardEvent, date: Date, weekStartsOn: numbe
 /**
  * Works out how one day looks: selected, inside a range (including the hover or focus preview while only the start is picked), today, or outside the shown month.
  */
-const useDayState = (date: Date): CalendarDayPrimitive.State => {
+const useDayState = (date: Date, withPreview = true): CalendarDayPrimitive.State => {
     const { mode, value, previewDate, month, today, disabled } = useCalendarContext();
 
     const outsideMonth = !isSameMonth(date, month);
@@ -494,7 +563,7 @@ const useDayState = (date: Date): CalendarDayPrimitive.State => {
     const range = (value as CalendarRange | null) ?? EMPTY_RANGE;
     if (!range.start) return base;
 
-    const otherEnd = range.end ?? previewDate ?? range.start;
+    const otherEnd = range.end ?? (withPreview ? previewDate : null) ?? range.start;
     const [start, end] =
         compareDay(otherEnd, range.start) < 0 ? [otherEnd, range.start] : [range.start, otherEnd];
 
@@ -528,8 +597,10 @@ interface CalendarContext {
     month: Date;
     changeMonth: (amount: number) => void;
     focusedDate: Date;
+    setFocusedDate: (date: Date) => void;
     moveFocus: (date: Date) => void;
     shouldFocusRef: { current: boolean };
+    titleId: string;
     previewDate: Date | null;
     setPreviewDate: (date: Date | null) => void;
     today: Date;
@@ -610,7 +681,11 @@ export namespace CalendarHeader {
 
 export namespace CalendarPreviousPrimitive {
     export type State = IconButton.State;
-    export type Props = Partial<IconButton.Props>;
+    // Size and look are fixed so the arrows always match the 40px day cells.
+    export type Props = Omit<
+        Partial<IconButton.Props>,
+        'size' | 'variant' | 'colorPalette' | 'shape'
+    >;
 }
 
 export namespace CalendarNextPrimitive {

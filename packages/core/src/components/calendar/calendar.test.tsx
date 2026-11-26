@@ -239,4 +239,109 @@ describe('<Calendar />', () => {
         expect(day(rendered, '2026년 11월 12일 목요일')).toBeDisabled();
         expect(rendered.getByRole('button', { name: '다음 달' })).toBeDisabled();
     });
+
+    describe('regressions', () => {
+        it('does not steal focus from the arrows after a keyboard move onto the same day', async () => {
+            const rendered = render(<SingleCalendar defaultValue={new Date(2026, 10, 1)} />);
+
+            // Nov 1 2026 is a Sunday, so Home keeps the focus where it is.
+            day(rendered, '2026년 11월 1일 일요일').focus();
+            await userEvent.keyboard('{Home}');
+
+            const next = rendered.getByRole('button', { name: '다음 달' });
+            await userEvent.click(next);
+            expect(next).toHaveFocus();
+        });
+
+        it('moves the tab stop to the pressed day', async () => {
+            const rendered = render(<SingleCalendar />);
+
+            await userEvent.click(day(rendered, '2026년 11월 18일 수요일'));
+
+            expect(day(rendered, '2026년 11월 18일 수요일')).toHaveAttribute('tabindex', '0');
+        });
+
+        it('keeps the hover preview out of aria-selected and announces that the end is next', async () => {
+            const rendered = render(
+                <Calendar.Root mode="range" defaultMonth={NOV_2026}>
+                    <Calendar.Header />
+                    <Calendar.Grid />
+                </Calendar.Root>,
+            );
+
+            await userEvent.click(day(rendered, '2026년 11월 12일 목요일'));
+            fireEvent.pointerEnter(day(rendered, '2026년 11월 14일 토요일'));
+
+            const previewed = day(rendered, '2026년 11월 13일 금요일');
+            expect(previewed).toHaveAttribute('data-selected');
+            expect(previewed.closest('td')).toHaveAttribute('aria-selected', 'false');
+            expect(
+                rendered.getByText('시작일을 선택했습니다. 종료일을 선택하세요.'),
+            ).toBeInTheDocument();
+        });
+
+        it('makes a one-day range when the same day is pressed twice (uncontrolled)', async () => {
+            const onValueChange = vi.fn();
+            const rendered = render(
+                <Calendar.Root mode="range" defaultMonth={NOV_2026} onValueChange={onValueChange}>
+                    <Calendar.Grid />
+                </Calendar.Root>,
+            );
+
+            await userEvent.click(day(rendered, '2026년 11월 12일 목요일'));
+            await userEvent.click(day(rendered, '2026년 11월 12일 목요일'));
+
+            expect(onValueChange).toHaveBeenLastCalledWith(
+                { start: new Date(2026, 10, 12), end: new Date(2026, 10, 12) },
+                expect.anything(),
+            );
+        });
+
+        it('keeps a range that crosses into the next month', async () => {
+            const onValueChange = vi.fn();
+            const rendered = render(
+                <Calendar.Root mode="range" defaultMonth={NOV_2026} onValueChange={onValueChange}>
+                    <Calendar.Header />
+                    <Calendar.Grid />
+                </Calendar.Root>,
+            );
+
+            await userEvent.click(day(rendered, '2026년 11월 28일 토요일'));
+            await userEvent.click(rendered.getByRole('button', { name: '다음 달' }));
+            await userEvent.click(day(rendered, '2026년 12월 3일 목요일'));
+
+            expect(day(rendered, '2026년 12월 1일 화요일')).toHaveAttribute('data-selected');
+            expect(onValueChange).toHaveBeenLastCalledWith(
+                { start: new Date(2026, 10, 28), end: new Date(2026, 11, 3) },
+                expect.anything(),
+            );
+        });
+
+        it('jumps a year with Shift+PageDown and respects weekStartsOn for Home', async () => {
+            const rendered = render(
+                <Calendar.Root
+                    defaultMonth={NOV_2026}
+                    defaultValue={new Date(2026, 10, 12)}
+                    weekStartsOn={1}
+                >
+                    <Calendar.Header />
+                    <Calendar.Grid />
+                </Calendar.Root>,
+            );
+
+            day(rendered, '2026년 11월 12일 목요일').focus();
+            await userEvent.keyboard('{Home}');
+            expect(day(rendered, '2026년 11월 9일 월요일')).toHaveFocus();
+
+            await userEvent.keyboard('{Shift>}{PageDown}{/Shift}');
+            expect(rendered.getByText('2027년 11월')).toBeInTheDocument();
+            expect(day(rendered, '2027년 11월 9일 화요일')).toHaveFocus();
+        });
+
+        it('labels the grid with the month title', () => {
+            const rendered = render(<SingleCalendar />);
+
+            expect(rendered.getByRole('grid', { name: '2026년 11월' })).toBeInTheDocument();
+        });
+    });
 });

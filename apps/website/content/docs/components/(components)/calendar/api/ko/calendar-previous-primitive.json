@@ -3,38 +3,6 @@
     "description": "이전 달을 표시하는 버튼. 접근 가능한 이름은 기본적으로 한국어 로캘에서는 \"이전 달\", 그 외에는 \"Previous month\"입니다. `<button>` 요소로 렌더링됩니다.",
     "props": [
         {
-            "name": "colorPalette",
-            "type": ["primary", "secondary", "success", "warning", "danger", "contrast"],
-            "detailedType": "\"primary\" | \"secondary\" | \"success\" | \"warning\" | \"danger\" | \"contrast\" | undefined",
-            "required": false,
-            "description": "버튼의 컬러 팔레트. `variant`에 따라 배경, 텍스트, 테두리에 적용됩니다.",
-            "defaultValue": "primary"
-        },
-        {
-            "name": "shape",
-            "type": ["circle", "square"],
-            "detailedType": "\"circle\" | \"square\" | undefined",
-            "required": false,
-            "description": "아이콘 버튼의 모서리 스타일.",
-            "defaultValue": "square"
-        },
-        {
-            "name": "size",
-            "type": ["sm", "md", "lg", "xl"],
-            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
-            "required": false,
-            "description": "버튼의 크기. 높이, 패딩, 타이포그래피를 결정합니다.",
-            "defaultValue": "md"
-        },
-        {
-            "name": "variant",
-            "type": ["fill", "outline", "ghost"],
-            "detailedType": "\"fill\" | \"outline\" | \"ghost\" | undefined",
-            "required": false,
-            "description": "버튼의 시각적 스타일.",
-            "defaultValue": "fill"
-        },
-        {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Calendar.PreviousPrimitive.State) => (string | undefined)) | undefined",

@@ -2,6 +2,7 @@ import { interaction } from '~/styles/mixins/interactions.css';
 import { componentStyle } from '~/styles/mixins/layer-style.css';
 import { when } from '~/styles/mixins/logical-states';
 import { typography } from '~/styles/mixins/typography.css';
+import { visuallyHidden } from '~/styles/mixins/visually-hidden.css';
 import { vars } from '~/styles/themes.css';
 
 // ponytail: no face of its own, so a Popover or a page can host it without a doubled surface.
@@ -42,6 +43,8 @@ export const weekday = componentStyle([
 ]);
 
 export const cell = componentStyle({ padding: 0 });
+
+export const status = visuallyHidden;
 
 export const day = componentStyle([
     interaction({ scale: 'light' }),

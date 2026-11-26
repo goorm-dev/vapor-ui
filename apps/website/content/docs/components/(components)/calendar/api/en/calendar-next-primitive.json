@@ -3,38 +3,6 @@
     "description": "Button that shows the next month. Its accessible name defaults to \"다음 달\" for Korean locales and \"Next month\" otherwise. Renders a `<button>` element.",
     "props": [
         {
-            "name": "colorPalette",
-            "type": ["primary", "secondary", "success", "warning", "danger", "contrast"],
-            "detailedType": "\"primary\" | \"secondary\" | \"success\" | \"warning\" | \"danger\" | \"contrast\" | undefined",
-            "required": false,
-            "description": "Color palette of the button, applied to its background, text, and border according to `variant`.",
-            "defaultValue": "primary"
-        },
-        {
-            "name": "shape",
-            "type": ["circle", "square"],
-            "detailedType": "\"circle\" | \"square\" | undefined",
-            "required": false,
-            "description": "Corner style of the icon button.",
-            "defaultValue": "square"
-        },
-        {
-            "name": "size",
-            "type": ["sm", "md", "lg", "xl"],
-            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
-            "required": false,
-            "description": "Size of the button, controlling height, padding, and typography.",
-            "defaultValue": "md"
-        },
-        {
-            "name": "variant",
-            "type": ["fill", "outline", "ghost"],
-            "detailedType": "\"fill\" | \"outline\" | \"ghost\" | undefined",
-            "required": false,
-            "description": "Visual style of the button.",
-            "defaultValue": "fill"
-        },
-        {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: Calendar.NextPrimitive.State) => (string | undefined)) | undefined",
