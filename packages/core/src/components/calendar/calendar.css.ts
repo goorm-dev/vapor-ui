@@ -93,5 +93,18 @@ export const day = componentStyle([
             // Days and the arrow buttons dim themselves; the title stays as is (Figma 💙Calendar, Disabled).
             [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
         },
+
+        // Forced colors drop the background, so mark selected days with a line instead.
+        '@media': {
+            '(forced-colors: active)': {
+                selectors: {
+                    '&[data-selected]': { outline: '1px solid CanvasText', outlineOffset: '-1px' },
+                    '&[data-selection-start], &[data-selection-end]': {
+                        outline: '2px solid Highlight',
+                        outlineOffset: '-2px',
+                    },
+                },
+            },
+        },
     },
 ]);

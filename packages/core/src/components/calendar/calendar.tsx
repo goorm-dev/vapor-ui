@@ -1,13 +1,14 @@
 'use client';
 
 import type { FocusEvent, KeyboardEvent, MouseEvent, PointerEvent, ReactNode } from 'react';
-import { forwardRef, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useControlled } from '@base-ui/utils/useControlled';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { ChevronLeftOutlineIcon, ChevronRightOutlineIcon } from '@vapor-ui/icons';
 
 import { useRenderElement } from '~/hooks/use-render-element';
+import { useVaporId } from '~/hooks/use-vapor-id';
 import { createContext } from '~/libs/create-context';
 import { cn } from '~/utils/cn';
 import type { MakeChangeEventDetails } from '~/utils/create-event-details';
@@ -36,6 +37,14 @@ const [CalendarProvider, useCalendarContext] = createContext<CalendarContext>({
 });
 
 const EMPTY_RANGE: CalendarRange = { start: null, end: null };
+
+// An uncontrolled value can be left over from the other mode when `mode` changes, so read it by shape.
+const asDate = (value: CalendarValue) => (value instanceof Date ? value : null);
+const asRange = (value: CalendarValue) => (value && !(value instanceof Date) ? value : EMPTY_RANGE);
+
+// The grid walks Gregorian months, so labels stay Gregorian even for a `-u-ca-` locale.
+const format = (locale: string, options: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat(locale, { ...options, calendar: 'gregory' });
 
 /** Korean defaults; any other locale falls back to its English-like label. */
 const navigationLabel = (locale: string, direction: 'previous' | 'next') => {
@@ -84,7 +93,7 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
         },
     );
 
-    const anchorDate = mode === 'range' ? (value as CalendarRange | null)?.start : (value as Date);
+    const anchorDate = mode === 'range' ? asRange(value).start : asDate(value);
     const [today] = useState(() => startOfDay(new Date()));
     const [month, setMonth] = useState(() => startOfMonth(defaultMonth ?? anchorDate ?? today));
     const [focusedDate, setFocusedDate] = useState(() => {
@@ -94,7 +103,7 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
     const [previewDate, setPreviewDate] = useState<Date | null>(null);
 
     const shouldFocusRef = useRef(false);
-    const titleId = useId();
+    const titleId = useVaporId();
 
     const moveFocus = useStableCallback((date: Date) => {
         shouldFocusRef.current = true;
@@ -113,11 +122,11 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
 
         if (mode === 'single') {
             // ponytail: pressing the selected day again keeps it; add a toggle if deselecting is needed.
-            if (!isSameDay(value as Date | null, date)) setValue(date, details);
+            if (!isSameDay(asDate(value), date)) setValue(date, details);
             return;
         }
 
-        const range = (value as CalendarRange | null) ?? EMPTY_RANGE;
+        const range = asRange(value);
 
         if (!range.start || range.end) {
             setValue({ start: date, end: null }, details);
@@ -130,8 +139,8 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
         setValue({ start, end }, details);
     });
 
-    const range = mode === 'range' ? (value as CalendarRange | null) : null;
-    const pickingEnd = !!range?.start && !range.end;
+    const range = asRange(value);
+    const pickingEnd = mode === 'range' && !!range.start && !range.end;
 
     const state: CalendarRoot.State = useMemo(() => ({ disabled }), [disabled]);
 
@@ -288,7 +297,7 @@ export const CalendarTitlePrimitive = forwardRef<HTMLDivElement, CalendarTitlePr
         const { month, locale, titleId } = useCalendarContext();
 
         const title = useMemo(
-            () => new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long' }).format(month),
+            () => format(locale, { year: 'numeric', month: 'long' }).format(month),
             [locale, month],
         );
 
@@ -296,7 +305,7 @@ export const CalendarTitlePrimitive = forwardRef<HTMLDivElement, CalendarTitlePr
             ref,
             render,
             props: {
-                id: titleId,
+                id: titleId || undefined,
                 'aria-live': 'polite',
                 className: cn(styles.title, className),
                 children: title,
@@ -317,12 +326,12 @@ CalendarTitlePrimitive.displayName = 'Calendar.TitlePrimitive';
 export const CalendarGrid = forwardRef<HTMLTableElement, CalendarGrid.Props>((props, ref) => {
     const { render, className, children, onPointerLeave, onBlur, ...componentProps } =
         resolveStyles(props);
-    const { month, locale, weekStartsOn, setPreviewDate, titleId } = useCalendarContext();
+    const { month, locale, weekStartsOn, setPreviewDate, titleId, mode } = useCalendarContext();
 
     const weeks = useMemo(() => getWeeks(month, weekStartsOn), [month, weekStartsOn]);
     const weekdays = useMemo(() => {
-        const short = new Intl.DateTimeFormat(locale, { weekday: 'short' });
-        const long = new Intl.DateTimeFormat(locale, { weekday: 'long' });
+        const short = format(locale, { weekday: 'short' });
+        const long = format(locale, { weekday: 'long' });
         return weeks[0].map((date) => ({ short: short.format(date), long: long.format(date) }));
     }, [weeks, locale]);
 
@@ -334,7 +343,8 @@ export const CalendarGrid = forwardRef<HTMLTableElement, CalendarGrid.Props>((pr
         defaultTagName: 'table',
         props: {
             role: 'grid',
-            'aria-labelledby': titleId,
+            'aria-labelledby': titleId || undefined,
+            'aria-multiselectable': mode === 'range' || undefined,
             className: cn(styles.grid, className),
             onPointerLeave: (event: PointerEvent<HTMLTableElement>) => {
                 onPointerLeave?.(event);
@@ -429,7 +439,9 @@ export const CalendarDayPrimitive = forwardRef<HTMLButtonElement, CalendarDayPri
 
         const state = useDayState(date);
         const { outsideMonth } = state;
-        const disabled = outsideMonth || state.disabled || !!disabledProp;
+        const dayDisabled = state.disabled || !!disabledProp;
+        const disabled = outsideMonth || dayDisabled;
+        const dayState: CalendarDayPrimitive.State = { ...state, disabled: dayDisabled };
         const focused = isSameDay(date, focusedDate) && !outsideMonth;
 
         const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -443,12 +455,14 @@ export const CalendarDayPrimitive = forwardRef<HTMLButtonElement, CalendarDayPri
         }, [focused, focusedDate, shouldFocusRef]);
 
         const label = useMemo(
-            () => new Intl.DateTimeFormat(locale, { dateStyle: 'full' }).format(date),
+            () => format(locale, { dateStyle: 'full' }).format(date),
             [locale, date],
         );
 
         const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
             onClick?.(event);
+            // A custom `render` element (a link, say) ignores the native disabled attribute.
+            if (disabled) return;
             select(startOfDay(date), event.nativeEvent);
         };
 
@@ -483,15 +497,15 @@ export const CalendarDayPrimitive = forwardRef<HTMLButtonElement, CalendarDayPri
             ref: [ref, buttonRef],
             render,
             defaultTagName: 'button',
-            state,
+            state: dayState,
             props: {
                 type: 'button',
                 tabIndex: focused ? 0 : -1,
                 'aria-label': label,
-                'aria-current': state.current ? 'date' : undefined,
+                'aria-current': dayState.current ? 'date' : undefined,
                 className: cn(styles.day, className),
                 children: date.getDate(),
-                ...dataAttributes(state),
+                ...dataAttributes(dayState),
                 ...componentProps,
                 disabled,
                 onClick: handleClick,
@@ -556,11 +570,11 @@ const useDayState = (date: Date, withPreview = true): CalendarDayPrimitive.State
 
     // A single selection is drawn as a range that starts and ends on the same day.
     if (mode === 'single') {
-        const selected = isSameDay(value as Date | null, date);
+        const selected = isSameDay(asDate(value), date);
         return { ...base, selected, selectionStart: selected, selectionEnd: selected };
     }
 
-    const range = (value as CalendarRange | null) ?? EMPTY_RANGE;
+    const range = asRange(value);
     if (!range.start) return base;
 
     const otherEnd = range.end ?? (withPreview ? previewDate : null) ?? range.start;

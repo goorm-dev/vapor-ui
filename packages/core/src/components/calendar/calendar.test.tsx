@@ -344,4 +344,62 @@ describe('<Calendar />', () => {
             expect(rendered.getByRole('grid', { name: '2026년 11월' })).toBeInTheDocument();
         });
     });
+
+    describe('review follow-ups', () => {
+        it('does not crash when mode changes with an uncontrolled value', async () => {
+            const rendered = render(
+                <Calendar.Root mode="range" defaultMonth={NOV_2026}>
+                    <Calendar.Grid />
+                </Calendar.Root>,
+            );
+            await userEvent.click(day(rendered, '2026년 11월 12일 목요일'));
+
+            rendered.rerender(
+                <Calendar.Root mode="single" defaultMonth={NOV_2026}>
+                    <Calendar.Grid />
+                </Calendar.Root>,
+            );
+
+            expect(rendered.getByRole('grid')).toBeInTheDocument();
+        });
+
+        it('marks the grid multiselectable only in range mode', () => {
+            const rendered = render(
+                <Calendar.Root mode="range" defaultMonth={NOV_2026}>
+                    <Calendar.Grid />
+                </Calendar.Root>,
+            );
+
+            expect(rendered.getByRole('grid')).toHaveAttribute('aria-multiselectable', 'true');
+        });
+
+        it('keeps Gregorian labels for a locale with another calendar', () => {
+            const rendered = render(
+                <Calendar.Root locale="ko-KR-u-ca-islamic" defaultMonth={NOV_2026}>
+                    <Calendar.Header />
+                    <Calendar.Grid />
+                </Calendar.Root>,
+            );
+
+            expect(rendered.getByText('2026년 11월')).toBeInTheDocument();
+        });
+
+        it('dims and blocks a single day disabled through a custom renderer', async () => {
+            const onValueChange = vi.fn();
+            const rendered = render(
+                <Calendar.Root defaultMonth={NOV_2026} onValueChange={onValueChange}>
+                    <Calendar.Grid>
+                        {(date) => (
+                            <Calendar.DayPrimitive date={date} disabled={date.getDate() === 15} />
+                        )}
+                    </Calendar.Grid>
+                </Calendar.Root>,
+            );
+
+            const blocked = day(rendered, '2026년 11월 15일 일요일');
+            expect(blocked).toHaveAttribute('data-disabled');
+            await userEvent.click(blocked);
+            expect(onValueChange).not.toHaveBeenCalled();
+        });
+    });
 });

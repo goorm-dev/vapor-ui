@@ -28,11 +28,18 @@ export const Default: StoryObj<typeof Calendar.Root> = {
 };
 
 export const Range: StoryObj<typeof Calendar.Root> = {
-    render: () => {
+    render: ({ locale, weekStartsOn, disabled }) => {
         const [range, setRange] = useState<CalendarRange>({ start: null, end: null });
 
         return (
-            <Calendar.Root mode="range" value={range} onValueChange={setRange}>
+            <Calendar.Root
+                locale={locale}
+                weekStartsOn={weekStartsOn}
+                disabled={disabled}
+                mode="range"
+                value={range}
+                onValueChange={setRange}
+            >
                 <Calendar.Header />
                 <Calendar.Grid />
             </Calendar.Root>
