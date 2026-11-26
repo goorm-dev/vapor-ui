@@ -8,10 +8,6 @@ import { vars } from '~/styles/themes.css';
 export const root = componentStyle({
     display: 'inline-flex',
     flexDirection: 'column',
-
-    selectors: {
-        [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
-    },
 });
 
 export const header = componentStyle({
@@ -90,6 +86,9 @@ export const day = componentStyle([
                 pointerEvents: 'none',
                 color: vars.color.foreground.hint,
             },
+
+            // Days and the arrow buttons dim themselves; the title stays as is (Figma 💙Calendar, Disabled).
+            [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
         },
     },
 ]);
