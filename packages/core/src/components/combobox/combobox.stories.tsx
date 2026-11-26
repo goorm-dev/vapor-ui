@@ -52,12 +52,83 @@ export const Default: StoryObj<ComboboxProps> = {
 };
 
 const stack = { display: 'flex', flexDirection: 'column', gap: '16px' } as const;
-const openCell = { height: '340px' } as const;
+// Open examples sit in the first row so their popups fit the 720px VRT viewport and never flip upward.
+const openCell = { height: '400px' } as const;
 
 export const TestBed = {
     render: () => {
         return (
             <Box $css={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+                <Grid.Root $css={{ gap: '40px' }} templateColumns="repeat(4, 240px)">
+                    <Grid.Item $css={openCell}>
+                        <Combobox.Root
+                            items={fonts}
+                            placeholder="Placeholder"
+                            aria-label="Open selected font"
+                            defaultValue="Monospace"
+                            defaultOpen
+                        >
+                            <Combobox.InputGroup />
+                            <Combobox.Popup>{renderItem}</Combobox.Popup>
+                        </Combobox.Root>
+                    </Grid.Item>
+
+                    <Grid.Item $css={openCell}>
+                        <Combobox.Root
+                            items={fonts}
+                            placeholder="Placeholder"
+                            aria-label="Open empty font"
+                            defaultInputValue="zzz"
+                            defaultOpen
+                        >
+                            <Combobox.InputGroup />
+                            <Combobox.Popup>
+                                <Combobox.Empty>No results found</Combobox.Empty>
+                                {renderItem}
+                            </Combobox.Popup>
+                        </Combobox.Root>
+                    </Grid.Item>
+
+                    <Grid.Item $css={openCell}>
+                        <Combobox.Root placeholder="Grouped" aria-label="Open grouped" defaultOpen>
+                            <Combobox.InputGroup />
+                            <Combobox.Popup>
+                                <Combobox.Group>
+                                    <Combobox.GroupLabel>Font</Combobox.GroupLabel>
+                                    {fonts.map(renderItem)}
+                                </Combobox.Group>
+                                <Combobox.Separator />
+                                <Combobox.Group>
+                                    <Combobox.GroupLabel>Language</Combobox.GroupLabel>
+                                    {languages.slice(0, 2).map(renderItem)}
+                                </Combobox.Group>
+                            </Combobox.Popup>
+                        </Combobox.Root>
+                    </Grid.Item>
+
+                    <Grid.Item $css={openCell}>
+                        <Combobox.Root
+                            placeholder="Items"
+                            aria-label="Open item states"
+                            defaultOpen
+                        >
+                            <Combobox.InputGroup />
+                            <Combobox.Popup>
+                                {fonts.map((font) => (
+                                    <Combobox.Item
+                                        key={font}
+                                        value={font}
+                                        disabled={font === 'Serif'}
+                                    >
+                                        <HomeOutlineIcon width="16" height="16" />
+                                        {font}
+                                    </Combobox.Item>
+                                ))}
+                            </Combobox.Popup>
+                        </Combobox.Root>
+                    </Grid.Item>
+                </Grid.Root>
+
                 <Grid.Root $css={{ gap: '150px' }} templateColumns="repeat(auto-fit, 240px)">
                     <Grid.Item $css={stack}>
                         {(['sm', 'md', 'lg', 'xl'] as const).map((size) => (
@@ -114,127 +185,6 @@ export const TestBed = {
                                 <Combobox.InputGroup />
                             </Combobox.Root>
                         ))}
-                    </Grid.Item>
-                </Grid.Root>
-
-                <Grid.Root $css={{ gap: '150px' }} templateColumns="repeat(auto-fit, 240px)">
-                    <Grid.Item $css={openCell}>
-                        <Combobox.Root
-                            items={fonts}
-                            placeholder="Placeholder"
-                            aria-label="Open font"
-                            defaultOpen
-                        >
-                            <Combobox.InputGroup />
-                            <Combobox.Popup>{renderItem}</Combobox.Popup>
-                        </Combobox.Root>
-                    </Grid.Item>
-
-                    <Grid.Item $css={openCell}>
-                        <Combobox.Root
-                            items={fonts}
-                            placeholder="Placeholder"
-                            aria-label="Open selected font"
-                            defaultValue="Monospace"
-                            defaultOpen
-                        >
-                            <Combobox.InputGroup />
-                            <Combobox.Popup>{renderItem}</Combobox.Popup>
-                        </Combobox.Root>
-                    </Grid.Item>
-
-                    <Grid.Item $css={openCell}>
-                        <Combobox.Root
-                            items={fonts}
-                            placeholder="Placeholder"
-                            aria-label="Open empty font"
-                            defaultInputValue="zzz"
-                            defaultOpen
-                        >
-                            <Combobox.InputGroup />
-                            <Combobox.Popup>
-                                <Combobox.Empty>No results found</Combobox.Empty>
-                                {renderItem}
-                            </Combobox.Popup>
-                        </Combobox.Root>
-                    </Grid.Item>
-
-                    <Grid.Item $css={openCell}>
-                        <Combobox.Root
-                            items={[
-                                { value: 'Font', items: fonts },
-                                { value: 'Language', items: languages },
-                            ]}
-                            placeholder="Grouped"
-                            aria-label="Open grouped"
-                            defaultOpen
-                        >
-                            <Combobox.InputGroup />
-                            <Combobox.Popup>
-                                {(group: { value: string; items: string[] }) => (
-                                    <Combobox.Group key={group.value} items={group.items}>
-                                        <Combobox.GroupLabel>{group.value}</Combobox.GroupLabel>
-                                        {renderItem}
-                                    </Combobox.Group>
-                                )}
-                            </Combobox.Popup>
-                        </Combobox.Root>
-                    </Grid.Item>
-
-                    <Grid.Item $css={openCell}>
-                        <Combobox.Root
-                            placeholder="Separator"
-                            aria-label="Open separator"
-                            defaultOpen
-                        >
-                            <Combobox.InputGroup />
-                            <Combobox.Popup>
-                                <Combobox.Group>
-                                    <Combobox.GroupLabel>Font</Combobox.GroupLabel>
-                                    {fonts.map(renderItem)}
-                                </Combobox.Group>
-                                <Combobox.Separator />
-                                <Combobox.Group>
-                                    <Combobox.GroupLabel>Language</Combobox.GroupLabel>
-                                    {languages.slice(0, 2).map(renderItem)}
-                                </Combobox.Group>
-                            </Combobox.Popup>
-                        </Combobox.Root>
-                    </Grid.Item>
-
-                    <Grid.Item $css={openCell}>
-                        <Combobox.Root
-                            placeholder="Disabled item"
-                            aria-label="Open disabled item"
-                            defaultOpen
-                        >
-                            <Combobox.InputGroup />
-                            <Combobox.Popup>
-                                <Combobox.Item value="Sans-serif">Sans-serif</Combobox.Item>
-                                <Combobox.Item value="Serif" disabled>
-                                    Serif
-                                </Combobox.Item>
-                                <Combobox.Item value="Monospace">Monospace</Combobox.Item>
-                            </Combobox.Popup>
-                        </Combobox.Root>
-                    </Grid.Item>
-
-                    <Grid.Item $css={openCell}>
-                        <Combobox.Root
-                            placeholder="Leading icon"
-                            aria-label="Open leading icon"
-                            defaultOpen
-                        >
-                            <Combobox.InputGroup />
-                            <Combobox.Popup>
-                                {fonts.map((font) => (
-                                    <Combobox.Item key={font} value={font}>
-                                        <HomeOutlineIcon width="16" height="16" />
-                                        {font}
-                                    </Combobox.Item>
-                                ))}
-                            </Combobox.Popup>
-                        </Combobox.Root>
                     </Grid.Item>
                 </Grid.Root>
             </Box>
