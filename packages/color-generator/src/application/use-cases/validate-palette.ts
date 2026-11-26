@@ -5,6 +5,7 @@ import {
     gamutChroma,
     hexToOklch,
     inGamut,
+    luminance,
     oklchToLinRgb,
     pyMod,
 } from '../../domain/color-math';
@@ -17,6 +18,7 @@ import {
     CHROMA_SPIKE_FACTOR,
     EXPRESSIBLE_MAX,
     TARGET_CONTRAST,
+    isDarkerThanBg,
 } from '../constants';
 import { isMonotone } from '../engine/brand';
 import { darkUpper, getBaseCaps, inYellowFamily, maxChroma } from '../engine/palette';
@@ -79,7 +81,12 @@ const targetContrast = (rows: Rows, isBrandCell: IsBrandCell): PaletteCheck => {
                 if (isBrandCell(m, c, s)) continue;
                 const r = contrast(row[s], BG[m]);
                 const target = TARGET_CONTRAST[m][s];
-                if (Math.abs(r / target - 1) > TARGET_TOLERANCE)
+                const darker = luminance(row[s]) < luminance(BG[m]);
+                if (darker !== isDarkerThanBg(m, s))
+                    details.push(
+                        `${m} ${c}-${s}: ${darker ? 'darker' : 'lighter'} than the background`,
+                    );
+                else if (Math.abs(r / target - 1) > TARGET_TOLERANCE)
                     details.push(`${m} ${c}-${s}: ${r.toFixed(3)} (target ${target.toFixed(3)})`);
             }
     return { id: 'target-contrast', status: status(details, 'fail'), details };
