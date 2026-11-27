@@ -60,7 +60,12 @@ export const weekday = componentStyle([
     },
 ]);
 
-export const cell = componentStyle({ padding: 0 });
+export const cell = componentStyle({
+    padding: 0,
+    selectors: {
+        'tbody > tr + tr > &': { paddingTop: vars.size.space['050'] },
+    },
+});
 
 export const status = visuallyHidden;
 
