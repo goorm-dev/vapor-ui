@@ -157,6 +157,7 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
 
     const select = useStableCallback((date: Date, event: Event) => {
         const details = createChangeEventDetails('day-press', event);
+        shouldFocusRef.current = true;
         setFocusedDate(date);
 
         if (mode === 'single') {

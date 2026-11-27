@@ -604,5 +604,41 @@ describe('<Calendar />', () => {
                 '2027년 3월 20일 토요일',
             ]);
         });
+
+        it('keeps keyboard focus on the day a parent picks instead of the pressed one', async () => {
+            const Snapping = () => {
+                const [value, setValue] = useState<Date | null>(null);
+                return (
+                    <Calendar.Root
+                        defaultMonth={new Date(2027, 0, 1)}
+                        value={value}
+                        onValueChange={(next) => {
+                            if (!next) return setValue(null);
+                            const shift = next.getDay() === 6 ? 2 : next.getDay() === 0 ? 1 : 0;
+                            setValue(
+                                new Date(
+                                    next.getFullYear(),
+                                    next.getMonth(),
+                                    next.getDate() + shift,
+                                ),
+                            );
+                        }}
+                    >
+                        <Calendar.Header />
+                        <Calendar.Grid />
+                    </Calendar.Root>
+                );
+            };
+            const rendered = render(<Snapping />);
+
+            day(rendered, '2027년 1월 23일 토요일').focus();
+            await userEvent.keyboard('{Enter}');
+            expect(day(rendered, '2027년 1월 25일 월요일')).toHaveFocus();
+
+            day(rendered, '2027년 1월 30일 토요일').focus();
+            await userEvent.keyboard('{Enter}');
+            expect(rendered.getByRole('grid', { name: '2027년 2월' })).toBeInTheDocument();
+            expect(day(rendered, '2027년 2월 1일 월요일')).toHaveFocus();
+        });
     });
 });
