@@ -494,6 +494,23 @@ describe('<Calendar />', () => {
             expect(day(rendered, '2026년 11월 16일 월요일')).toHaveFocus();
         });
 
+        it('picks Korean labels by the language subtag, ignoring case', () => {
+            const labels = (locale: string) => {
+                const rendered = render(
+                    <Calendar.Root locale={locale} defaultMonth={NOV_2026}>
+                        <Calendar.Header />
+                    </Calendar.Root>,
+                );
+                const names = rendered
+                    .getAllByRole('button')
+                    .map((button) => button.getAttribute('aria-label'));
+                rendered.unmount();
+                return names;
+            };
+            expect(labels('KO-KR')).toEqual(['이전 달', '다음 달']);
+            expect(labels('kok-IN')).toEqual(['Previous month', 'Next month']);
+        });
+
         it('treats an invalid Date as no value instead of crashing', () => {
             const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const single = render(

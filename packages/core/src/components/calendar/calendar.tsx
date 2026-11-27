@@ -59,6 +59,8 @@ const warnInvalidDates = (value: CalendarValue, defaultMonth: Date | undefined) 
     }
 };
 
+const isKorean = (locale: string) => locale.split('-')[0].toLowerCase() === 'ko';
+
 const gregorianFormat = (locale: string, options: Intl.DateTimeFormatOptions) =>
     new Intl.DateTimeFormat(locale, { ...options, calendar: 'gregory' });
 
@@ -68,7 +70,7 @@ const gregorianFormat = (locale: string, options: Intl.DateTimeFormatOptions) =>
 
  */
 const navigationLabel = (locale: string, direction: 'previous' | 'next') => {
-    const korean = locale.startsWith('ko');
+    const korean = isKorean(locale);
     if (direction === 'previous') return korean ? '이전 달' : 'Previous month';
     return korean ? '다음 달' : 'Next month';
 };
@@ -432,7 +434,7 @@ export const CalendarGrid = forwardRef<HTMLTableElement, CalendarGrid.Props>((pr
 CalendarGrid.displayName = 'Calendar.Grid';
 
 const rangeStatus = (locale: string) =>
-    locale.startsWith('ko')
+    isKorean(locale)
         ? '시작일을 선택했습니다. 종료일을 선택하세요.'
         : 'Start date selected. Choose an end date.';
 
@@ -449,7 +451,7 @@ const describeSelection = (
 
 const selectionStatus = (locale: string, start: Date, end?: Date) => {
     const full = gregorianFormat(locale, { dateStyle: 'full' });
-    const korean = locale.startsWith('ko');
+    const korean = isKorean(locale);
 
     if (!end)
         return korean ? `${full.format(start)}을 선택했습니다.` : `Selected ${full.format(start)}.`;
