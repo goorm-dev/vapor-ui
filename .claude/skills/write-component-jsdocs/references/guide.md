@@ -170,9 +170,9 @@ The JSDoc block directly above `export const X = forwardRef(...)`. The extractor
 
 ### Rules
 
-**1. Write the summary on a single line**
+**1. Write the summary on one line, or one sentence per line**
 
-No line breaks inside the summary. Separate sentences with `.` only.
+Never break a line inside a sentence. Keep the whole summary on one line, or start each sentence on its own line.
 
 ```tsx
 /**
@@ -487,7 +487,7 @@ export namespace Badge {
 
 **Summary**
 
-- [ ] Summary is a single line (no line breaks)
+- [ ] Summary is one line, or one sentence per line (no line breaks inside a sentence)
 - [ ] Summary is a complete sentence describing what the component is
 - [ ] No internal implementation terms (`memoized`, `wrapper`, `token`, etc.)
 - [ ] Rendered HTML element is stated with backtick-wrapped tag (``Renders a `<x>` element.`` or `Doesn't render its own HTML element.`)

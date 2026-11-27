@@ -38,7 +38,7 @@ Placement depends on the component pattern. See [references/guide.md](references
 
 ## Component summary rules
 
-1. One single line — no line breaks inside the summary
+1. One line, or one sentence per line — never break a line inside a sentence
 2. User perspective: what it is → when to use it
 3. No internal terms (`memoized`, `wrapper`, `token-based`, etc.)
 4. End with the rendered HTML element using backticks around the tag: "Renders a `<button>` element." or "Doesn't render its own HTML element.".
@@ -63,7 +63,7 @@ See the full checklist in [references/guide.md](references/guide.md#checklist).
 
 - [ ] All JSDoc in English
 - [ ] `/**` on its own line, text starts on the next line, no one-line `/** */` blocks
-- [ ] Summary is one line, complete sentence, HTML element in backticks (e.g. `` `<button>` ``)
+- [ ] Summary is one line or one sentence per line, complete sentences, HTML element in backticks (e.g. `` `<button>` ``)
 - [ ] Combined parts start with "Combines …" and name their `xxxElement` props
 - [ ] No prop name repetition in descriptions
 - [ ] `children` says what goes in the slot
