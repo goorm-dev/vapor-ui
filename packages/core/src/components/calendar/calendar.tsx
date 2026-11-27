@@ -406,7 +406,7 @@ export const CalendarGrid = forwardRef<HTMLTableElement, CalendarGrid.Props>((pr
             children: (
                 <>
                     <thead>
-                        <tr className={styles.weekdays}>
+                        <tr>
                             {weekdays.map(({ short, long }) => (
                                 <th key={long} scope="col" abbr={long} className={styles.weekday}>
                                     {short}

@@ -1,9 +1,32 @@
+import { createGlobalVar, globalStyle } from '@vanilla-extract/css';
+
+import { layers } from '~/styles/layers.css';
 import { interaction } from '~/styles/mixins/interactions.css';
 import { componentStyle } from '~/styles/mixins/layer-style.css';
 import { when } from '~/styles/mixins/logical-states';
 import { typography } from '~/styles/mixins/typography.css';
 import { visuallyHidden } from '~/styles/mixins/visually-hidden.css';
 import { vars } from '~/styles/themes.css';
+
+const tokens = {
+    dayBackgroundInRange: createGlobalVar('vapor-color-calendar-day-background-inRange'),
+};
+
+globalStyle(`:root, [data-vapor-theme='light']`, {
+    '@layer': {
+        [layers.theme]: {
+            vars: { [tokens.dayBackgroundInRange]: vars.color.blue['050'] },
+        },
+    },
+});
+
+globalStyle(`[data-vapor-theme='dark']`, {
+    '@layer': {
+        [layers.theme]: {
+            vars: { [tokens.dayBackgroundInRange]: vars.color.blue['200'] },
+        },
+    },
+});
 
 export const root = componentStyle({
     display: 'inline-flex',
@@ -14,6 +37,7 @@ export const header = componentStyle({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    height: vars.size.dimension[400],
 });
 
 export const title = componentStyle([
@@ -24,10 +48,6 @@ export const title = componentStyle([
 export const grid = componentStyle({
     borderCollapse: 'collapse',
     borderSpacing: 0,
-});
-
-export const weekdays = componentStyle({
-    boxShadow: `inset 0 -1px 0 ${vars.color.border.normal}`,
 });
 
 export const weekday = componentStyle([
@@ -64,7 +84,7 @@ export const day = componentStyle([
 
             '&[data-selected]': {
                 borderRadius: 0,
-                backgroundColor: vars.color.background['primary-weak'],
+                backgroundColor: tokens.dayBackgroundInRange,
                 color: vars.color.foreground['primary-strong'],
             },
             '&[data-selection-start], &[data-selection-end]': {
