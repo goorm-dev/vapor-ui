@@ -444,23 +444,6 @@ describe('<Calendar />', () => {
             expect(rendered.queryByText(/13일 금요일을 선택했습니다/)).not.toBeInTheDocument();
         });
 
-        it('announces a controlled selection only once the parent takes the value', async () => {
-            const Controlled = ({ value }: { value: Date | null }) => (
-                <Calendar.Root defaultMonth={NOV_2026} value={value} onValueChange={() => {}}>
-                    <Calendar.Grid />
-                </Calendar.Root>
-            );
-            const rendered = render(<Controlled value={null} />);
-
-            await userEvent.click(day(rendered, '2026년 11월 12일 목요일'));
-            expect(rendered.queryByText(/12일 목요일을 선택했습니다/)).not.toBeInTheDocument();
-
-            rendered.rerender(<Controlled value={new Date(2026, 10, 12)} />);
-            expect(
-                rendered.getByText('2026년 11월 12일 목요일을 선택했습니다.'),
-            ).toBeInTheDocument();
-        });
-
         it('announces the selected range', async () => {
             const rendered = render(
                 <Calendar.Root mode="range" defaultMonth={NOV_2026}>
@@ -639,6 +622,46 @@ describe('<Calendar />', () => {
             await userEvent.keyboard('{Enter}');
             expect(rendered.getByRole('grid', { name: '2027년 2월' })).toBeInTheDocument();
             expect(day(rendered, '2027년 2월 1일 월요일')).toHaveFocus();
+            expect(rendered.getByText('2027년 2월 1일 월요일을 선택했습니다.')).toBeInTheDocument();
+        });
+
+        it('announces only presses, never a later outside change to the same day', async () => {
+            const Controlled = ({ value }: { value: Date | null }) => (
+                <Calendar.Root defaultMonth={NOV_2026} value={value} onValueChange={() => {}}>
+                    <Calendar.Grid />
+                </Calendar.Root>
+            );
+            const rejected = render(<Controlled value={null} />);
+            await userEvent.click(day(rejected, '2026년 11월 12일 목요일'));
+            rejected.rerender(<Controlled value={new Date(2026, 10, 20)} />);
+            rejected.rerender(<Controlled value={new Date(2026, 10, 12)} />);
+            expect(rejected.queryByText(/선택했습니다/)).not.toBeInTheDocument();
+            rejected.unmount();
+
+            const Undoable = () => {
+                const [value, setValue] = useState<Date | null>(null);
+                return (
+                    <>
+                        <button onClick={() => setValue(new Date(2026, 10, 20))}>preset</button>
+                        <button onClick={() => setValue(new Date(2026, 10, 12))}>undo</button>
+                        <Calendar.Root
+                            defaultMonth={NOV_2026}
+                            value={value}
+                            onValueChange={setValue}
+                        >
+                            <Calendar.Grid />
+                        </Calendar.Root>
+                    </>
+                );
+            };
+            const undoable = render(<Undoable />);
+            await userEvent.click(day(undoable, '2026년 11월 12일 목요일'));
+            expect(
+                undoable.getByText('2026년 11월 12일 목요일을 선택했습니다.'),
+            ).toBeInTheDocument();
+            await userEvent.click(undoable.getByRole('button', { name: 'preset' }));
+            await userEvent.click(undoable.getByRole('button', { name: 'undo' }));
+            expect(undoable.queryByText(/선택했습니다/)).not.toBeInTheDocument();
         });
     });
 });

@@ -59,12 +59,6 @@ const warnInvalidDates = (value: CalendarValue, defaultMonth: Date | undefined) 
     }
 };
 
-const isSameValue = (a: CalendarValue, b: CalendarValue) =>
-    a instanceof Date || b instanceof Date
-        ? isSameDay(asDate(a), asDate(b))
-        : isSameDay(asRange(a).start, asRange(b).start) &&
-          isSameDay(asRange(a).end, asRange(b).end);
-
 const format = (locale: string, options: Intl.DateTimeFormatOptions) =>
     new Intl.DateTimeFormat(locale, { ...options, calendar: 'gregory' });
 
@@ -124,21 +118,28 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
         return isSameMonth(preferred, month) ? startOfDay(preferred) : month;
     });
     const [previewDate, setPreviewDate] = useState<Date | null>(null);
-    const [announcement, setAnnouncement] = useState<{ value: CalendarValue; text: string } | null>(
-        null,
-    );
+    const [picked, setPicked] = useState(false);
+    const [announcement, setAnnouncement] = useState('');
 
     const endDate = mode === 'range' ? asRange(value).end : null;
     const startTime = dayTime(anchorDate);
     const endTime = dayTime(endDate);
     const [prevTimes, setPrevTimes] = useState({ start: startTime, end: endTime });
-    if (startTime !== prevTimes.start || endTime !== prevTimes.end) {
+    const valueChanged = startTime !== prevTimes.start || endTime !== prevTimes.end;
+    if (valueChanged) {
         setPrevTimes({ start: startTime, end: endTime });
         const target = startTime !== prevTimes.start ? anchorDate : endDate;
         if (target) {
             if (!isSameMonth(target, month)) setMonth(startOfMonth(target));
             setFocusedDate(startOfDay(target));
         }
+    }
+
+    if (picked) {
+        setPicked(false);
+        setAnnouncement(valueChanged ? describeSelection(locale, anchorDate, endDate, mode) : '');
+    } else if (valueChanged && announcement) {
+        setAnnouncement('');
     }
 
     const shouldFocusRef = useRef(false);
@@ -163,7 +164,7 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
         if (mode === 'single') {
             if (isSameDay(asDate(value), date)) return;
             setValue(date, details);
-            setAnnouncement({ value: date, text: selectionStatus(locale, date) });
+            setPicked(true);
             return;
         }
 
@@ -178,18 +179,13 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
         }
 
         setValue(next, details);
-        setAnnouncement(
-            next.start && next.end
-                ? { value: next, text: selectionStatus(locale, next.start, next.end) }
-                : null,
-        );
+        if (next.end) setPicked(true);
     });
 
     const range = asRange(value);
     const pickingEnd = mode === 'range' && !!range.start && !range.end;
 
-    const announced = announcement && isSameValue(value, announcement.value);
-    const liveStatus = pickingEnd ? rangeStatus(locale) : announced ? announcement.text : '';
+    const liveStatus = pickingEnd ? rangeStatus(locale) : announcement;
 
     const state: CalendarRoot.State = useMemo(() => ({ disabled }), [disabled]);
 
@@ -423,6 +419,17 @@ const rangeStatus = (locale: string) =>
     locale.startsWith('ko')
         ? '시작일을 선택했습니다. 종료일을 선택하세요.'
         : 'Start date selected. Choose an end date.';
+
+const describeSelection = (
+    locale: string,
+    start: Date | null,
+    end: Date | null,
+    mode: 'single' | 'range',
+) => {
+    if (!start) return '';
+    if (mode === 'single') return selectionStatus(locale, start);
+    return end ? selectionStatus(locale, start, end) : '';
+};
 
 const selectionStatus = (locale: string, start: Date, end?: Date) => {
     const full = format(locale, { dateStyle: 'full' });
