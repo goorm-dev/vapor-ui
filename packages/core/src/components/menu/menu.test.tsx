@@ -1076,6 +1076,37 @@ describe('<Menu.RadioGroupItem>', () => {
     });
 });
 
+describe('<Menu.SubmenuTriggerItem>', () => {
+    afterEach(cleanup);
+
+    it('keeps a callback ref attached across rerenders', () => {
+        const cleanupRef = vi.fn();
+        const ref = vi.fn((node: HTMLElement | null) => (node ? cleanupRef : undefined));
+
+        const MenuWithRef = ({ label }: { label: string }) => (
+            <Menu.Root open modal={false}>
+                <Menu.Trigger>Open Menu</Menu.Trigger>
+                <Menu.Popup>
+                    <Menu.SubmenuRoot>
+                        <Menu.SubmenuTriggerItem ref={ref}>{label}</Menu.SubmenuTriggerItem>
+                    </Menu.SubmenuRoot>
+                </Menu.Popup>
+            </Menu.Root>
+        );
+
+        const rendered = render(<MenuWithRef label="a" />);
+        const attachedOnMount = ref.mock.calls.length;
+        const cleanedOnMount = cleanupRef.mock.calls.length;
+
+        rendered.rerender(<MenuWithRef label="b" />);
+        rendered.rerender(<MenuWithRef label="c" />);
+
+        expect(attachedOnMount).toBeGreaterThan(0);
+        expect(ref).toHaveBeenCalledTimes(attachedOnMount);
+        expect(cleanupRef).toHaveBeenCalledTimes(cleanedOnMount);
+    });
+});
+
 // TODO
 // - If isJSDOM is used repeatedly in other files, consider separating it into a utility flag
 // - currently, radio-group.test.tsx, menu.test.tsx

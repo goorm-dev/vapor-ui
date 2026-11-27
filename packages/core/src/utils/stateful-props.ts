@@ -28,6 +28,18 @@ export const resolveClassName = <State>(className: ClassNameParams<State>, state
 type InputProps = { className?: string; style?: React.CSSProperties };
 type ExternalProps<State> = { className?: ClassNameParams<State>; style?: StyleParams<State> };
 
+/**
+ * Lays a possibly stateful style over a static one. Keeps the result a function when the
+ * external style is one, so Base UI can still call it with its own state.
+ */
+const mergeStatefulStyle = <State>(
+    inputStyle: CSSProperties | undefined,
+    externalStyle: StyleParams<State>,
+): StyleParams<State> =>
+    typeof externalStyle === 'function'
+        ? (state: State) => ({ ...inputStyle, ...resolveStyle(externalStyle, state) })
+        : { ...inputStyle, ...externalStyle };
+
 export const mergeStatefulProps = <State>(
     inputProps: InputProps,
     externalProps: ExternalProps<State>,
@@ -40,10 +52,7 @@ export const mergeStatefulProps = <State>(
             ? (state: State) => clsx(inputClassName, resolveClassName(externalClassName, state))
             : clsx(inputClassName, externalClassName);
 
-    const style =
-        typeof externalStyle === 'function'
-            ? (state: State) => ({ ...inputStyle, ...resolveStyle(externalStyle, state) })
-            : { ...inputStyle, ...externalStyle };
+    const style = mergeStatefulStyle(inputStyle, externalStyle);
 
     return {
         ...mergeProps(inputProps, externalProps),
