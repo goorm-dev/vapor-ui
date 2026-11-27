@@ -1,0 +1,37 @@
+{
+    "name": "CalendarGrid",
+    "description": "Grid of the shown month: a row of weekday names, then six weeks of day buttons.\nArrow keys, Home, End, PageUp, and PageDown move the focus between days.\nPass a function as children to render each day yourself, usually with `Calendar.DayPrimitive`. Renders a `<table>` element.",
+    "props": [
+        {
+            "name": "children",
+            "type": ["function"],
+            "detailedType": "((date: Date) => ReactNode) | undefined",
+            "required": false,
+            "description": "Renders one day of the grid. Defaults to `Calendar.DayPrimitive`."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Calendar.Grid.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Calendar.Grid.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Calendar.Grid.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Calendar.Grid.State": "{\n\n}"
+    }
+}

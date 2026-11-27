@@ -1,0 +1,34 @@
+{
+    "name": "CalendarDayPrimitive",
+    "description": "`Calendar.Grid`에서 하루를 나타내는 버튼. 누르면 해당 날짜를 선택합니다.\n이전 달과 다음 달의 날짜는 흐리게 표시되고, 누를 수 없으며, 선택된 범위 안에 있어도 선택 상태를 표시하지 않습니다.\n접근 가능한 이름은 \"Thursday, November 26, 2026\"처럼 전체 날짜입니다. `<button>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "date",
+            "type": ["Date"],
+            "detailedType": "Date",
+            "required": true,
+            "description": "이 버튼이 선택하는 날짜."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: CalendarDayPrimitive.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: CalendarDayPrimitive.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: CalendarDayPrimitive.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ]
+}

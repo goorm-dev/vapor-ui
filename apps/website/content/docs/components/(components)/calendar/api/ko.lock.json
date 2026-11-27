@@ -1,0 +1,236 @@
+{
+    "calendar-day-primitive": {
+        "description": {
+            "source": "0b11f467b969c864",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.date": {
+            "source": "1bd61faf87699b68",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "calendar-grid": {
+        "description": {
+            "source": "fcab1942167d065d",
+            "guide": 2,
+            "terms": "04933093843eefea"
+        },
+        "props.children": {
+            "source": "6db3fc4b4b88ceca",
+            "guide": 2,
+            "terms": "b01d06383280049d"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "calendar-header": {
+        "description": {
+            "source": "2100496177f5920c",
+            "guide": 2,
+            "terms": "65f6d9e1c27ec78b"
+        },
+        "props.children": {
+            "source": "aef5f6374706bc0a",
+            "guide": 2,
+            "terms": "24553c32f0c78530"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "calendar-next-primitive": {
+        "description": {
+            "source": "b9d59cbbb93350df",
+            "guide": 2,
+            "terms": "9e0e05eac046ab84"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.focusableWhenDisabled": {
+            "source": "2aedce00ed5b519e",
+            "guide": 2,
+            "terms": "63afee4cf0610e2a"
+        },
+        "props.nativeButton": {
+            "source": "cad78bc9f7fe7490",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "calendar-previous-primitive": {
+        "description": {
+            "source": "bad6248c42268630",
+            "guide": 2,
+            "terms": "9e0e05eac046ab84"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.focusableWhenDisabled": {
+            "source": "2aedce00ed5b519e",
+            "guide": 2,
+            "terms": "63afee4cf0610e2a"
+        },
+        "props.nativeButton": {
+            "source": "cad78bc9f7fe7490",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    },
+    "calendar-root": {
+        "description": {
+            "source": "d01581d62d96c637",
+            "guide": 2,
+            "terms": "3f97d30ff500acb9"
+        },
+        "props.children": {
+            "source": "80956d0170c08cc7",
+            "guide": 2,
+            "terms": "24553c32f0c78530"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.defaultMonth": {
+            "source": "4c37e0ee299dffde",
+            "guide": 2,
+            "terms": "b01d06383280049d"
+        },
+        "props.defaultValue": {
+            "source": "a629717ca69c5df3",
+            "guide": 2,
+            "terms": "61806d551a58f35c"
+        },
+        "props.disabled": {
+            "source": "5a15947597978341",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.locale": {
+            "source": "be5566bd83e1e4b7",
+            "guide": 2,
+            "terms": "0ba950976125855a"
+        },
+        "props.mode": {
+            "source": "66689df4817afe52",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.onValueChange": {
+            "source": "13fd4485cfe68621",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.value": {
+            "source": "497c3b6d7df801dc",
+            "guide": 2,
+            "terms": "3dc9ff164840b150"
+        },
+        "props.weekStartsOn": {
+            "source": "73fa8e4d60399ac8",
+            "guide": 2,
+            "terms": "4f53cda18c2baa0c"
+        }
+    },
+    "calendar-title-primitive": {
+        "description": {
+            "source": "60c97e379d610aa0",
+            "guide": 2,
+            "terms": "f1d9231016bbfbcc"
+        },
+        "props.className": {
+            "source": "594324ed2c588d62",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        },
+        "props.render": {
+            "source": "65377c3eea346be4",
+            "guide": 2,
+            "terms": "2dd8dcdba2b16492"
+        },
+        "props.style": {
+            "source": "b21e70bdc0150841",
+            "guide": 2,
+            "terms": "345ff40e5505524c"
+        }
+    }
+}

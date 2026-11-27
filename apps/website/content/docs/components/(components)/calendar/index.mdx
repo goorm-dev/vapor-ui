@@ -1,0 +1,78 @@
+---
+title: 'Calendar'
+site_name: 'Calendar - Vapor Core'
+description: 'Calendar는 월 달력에서 날짜 하나 또는 날짜 범위를 선택하는 컴포넌트입니다. 이전·다음 달로 이동할 수 있고, 키보드 내비게이션과 접근성을 지원합니다.'
+---
+
+<Demo file="components/(components)/calendar/demos/default-calendar.tsx" />
+
+## Property
+
+---
+
+### Range
+
+`mode="range"`로 시작일과 종료일을 고릅니다. 첫 번째로 누른 날짜가 시작일, 두 번째로 누른 날짜가 종료일이 되며, 종료일을 고르기 전에는 마우스를 올린 날짜까지 범위를 미리 보여 줍니다.
+
+<Demo file="components/(components)/calendar/demos/calendar-range.tsx" />
+
+### Controlled State
+
+선택한 날짜를 외부에서 제어합니다.
+
+<Demo file="components/(components)/calendar/demos/calendar-controlled.tsx" />
+
+### Locale
+
+`locale`로 제목·요일·날짜 이름의 언어를, `weekStartsOn`으로 주의 첫 요일을 정합니다. 기본값은 `ko-KR`과 일요일(`0`)입니다.
+
+<Demo file="components/(components)/calendar/demos/calendar-locale.tsx" />
+
+## Accessibility
+
+---
+
+날짜 칸은 하나만 Tab 순서에 들어가고, 그리드 안에서는 키보드로 이동합니다.
+
+| 키                            | 동작                          |
+| ----------------------------- | ----------------------------- |
+| `←` `→`                       | 하루 앞뒤로 이동              |
+| `↑` `↓`                       | 한 주 앞뒤로 이동             |
+| `Home` `End`                  | 그 주의 첫날·마지막 날로 이동 |
+| `PageUp` `PageDown`           | 이전·다음 달로 이동           |
+| `Shift` + `PageUp`/`PageDown` | 이전·다음 해로 이동           |
+| `Enter` `Space`               | 날짜 선택                     |
+
+월이 바뀌면 제목을, 범위의 시작일만 고른 동안에는 종료일을 고르라는 안내를, 날짜나 범위를 고르면 고른 날짜를 스크린 리더에 알립니다.
+
+## Props Table
+
+---
+
+### Calendar.Root
+
+<ComponentPropsTable componentName="calendar-root" />
+
+### Calendar.Header
+
+<ComponentPropsTable componentName="calendar-header" />
+
+#### Calendar.PreviousPrimitive
+
+<ComponentPropsTable componentName="calendar-previous-primitive" />
+
+#### Calendar.TitlePrimitive
+
+<ComponentPropsTable componentName="calendar-title-primitive" />
+
+#### Calendar.NextPrimitive
+
+<ComponentPropsTable componentName="calendar-next-primitive" />
+
+### Calendar.Grid
+
+<ComponentPropsTable componentName="calendar-grid" />
+
+#### Calendar.DayPrimitive
+
+<ComponentPropsTable componentName="calendar-day-primitive" />

@@ -1,0 +1,97 @@
+{
+    "name": "CalendarRoot",
+    "description": "Calendar 복합 컴포넌트의 루트. 날짜 하나 또는 날짜 범위를 고르는 월 보기입니다.\n선택한 값, 표시된 달, 키보드 포커스를 관리하며 `Calendar.Header`와 `Calendar.Grid`에 전달합니다. `<div>` 요소로 렌더링됩니다.",
+    "props": [
+        {
+            "name": "defaultValue",
+            "type": ["Date", "CalendarRange", "null"],
+            "detailedType": "Date | CalendarRange | null | undefined",
+            "required": false,
+            "description": "처음 렌더링할 때 선택되어 있는 날짜. `mode`가 `range`이면 `{ start, end }`. 비제어 컴포넌트로 쓸 때 사용하세요."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["function"],
+            "detailedType": "((value: Date | null, eventDetails: Calendar.Root.ChangeEventDetails) => void) | ((value: CalendarRange, eventDetails: Calendar.Root.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "날짜를 누를 때 새 날짜와 함께 호출됩니다. `mode`가 `range`이면 새 `{ start, end }`와 함께 호출됩니다. 현재 값을 유지하려면 `eventDetails.cancel()`을 호출하세요."
+        },
+        {
+            "name": "value",
+            "type": ["Date", "CalendarRange", "null"],
+            "detailedType": "Date | CalendarRange | null | undefined",
+            "required": false,
+            "description": "선택된 날짜. `mode`가 `range`이면 `{ start, end }`. 제어 컴포넌트로 쓸 때 사용하세요."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Calendar의 파트. 보통 `Calendar.Header` 다음에 `Calendar.Grid`를 둡니다."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: CalendarRoot.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 CSS 클래스 또는 컴포넌트의 상태에 따라 클래스를 반환하는 함수."
+        },
+        {
+            "name": "defaultMonth",
+            "type": ["Date"],
+            "detailedType": "Date | undefined",
+            "required": false,
+            "description": "처음 렌더링할 때 표시할 달. 기본값은 선택된 값이 속한 달이며, 선택된 값이 없으면 현재 달입니다."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "캘린더를 비활성화합니다. 날짜 선택과 달 이동이 막힙니다.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "locale",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "월 제목, 요일 이름, 날짜 레이블에 쓰이는 BCP 47 locale.\n버튼 이름과 스크린 리더 안내는 한국어 locale에서는 한국어, 그 밖에는 영어로 제공됩니다. 화살표 버튼의 이름을 바꾸려면 버튼에 `aria-label`을 전달하세요.",
+            "defaultValue": "ko-KR"
+        },
+        {
+            "name": "mode",
+            "type": ["range", "single"],
+            "detailedType": "\"range\" | \"single\" | undefined",
+            "required": false,
+            "description": "`single`은 하루를 고릅니다. `range`는 첫날과 마지막 날을 고릅니다. 첫 번째로 누르면 `start`를, 두 번째로 누르면 `end`를 설정하고(필요하면 둘을 서로 바꿉니다), 그다음 누르면 새 범위를 시작합니다.",
+            "defaultValue": "single"
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: CalendarRoot.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "요소에 적용되는 스타일 또는 컴포넌트의 상태에 따라 스타일 객체를 반환하는 함수."
+        },
+        {
+            "name": "weekStartsOn",
+            "type": ["0", "1", "2", "4", "3", "5", "6"],
+            "detailedType": "0 | 1 | 2 | 4 | 3 | 5 | 6 | undefined",
+            "required": false,
+            "description": "한 주의 첫 요일. `0`(일요일)부터 `6`(토요일)까지.",
+            "defaultValue": "0"
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: CalendarRoot.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "컴포넌트의 HTML 요소를 다른 태그로 바꾸거나 다른 컴포넌트와 합성할 수 있습니다.\n\n`ReactElement` 또는 렌더링할 요소를 반환하는 함수를 받습니다."
+        }
+    ],
+    "typeRefs": {
+        "Calendar.Root.ChangeEventDetails": "{\n  reason: \"day-press\";\n  event: Event;\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: HTMLElement | undefined;\n}"
+    }
+}
