@@ -587,5 +587,22 @@ describe('<Calendar />', () => {
             expect(rendered.getByRole('grid', { name: '2026년 12월' })).toBeInTheDocument();
             expect(day(rendered, '2026년 12월 20일 일요일')).toHaveAttribute('tabindex', '0');
         });
+
+        it('moves the tab stop to an outside value in the shown month', () => {
+            const Controlled = ({ value }: { value: Date }) => (
+                <Calendar.Root value={value}>
+                    <Calendar.Grid />
+                </Calendar.Root>
+            );
+            const rendered = render(<Controlled value={new Date(2027, 2, 3)} />);
+
+            rendered.rerender(<Controlled value={new Date(2027, 2, 20)} />);
+            const tabStops = rendered
+                .getAllByRole('button')
+                .filter((button) => button.getAttribute('tabindex') === '0');
+            expect(tabStops.map((button) => button.getAttribute('aria-label'))).toEqual([
+                '2027년 3월 20일 토요일',
+            ]);
+        });
     });
 });

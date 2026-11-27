@@ -135,8 +135,8 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
     if (startTime !== prevTimes.start || endTime !== prevTimes.end) {
         setPrevTimes({ start: startTime, end: endTime });
         const target = startTime !== prevTimes.start ? anchorDate : endDate;
-        if (target && !isSameMonth(target, month)) {
-            setMonth(startOfMonth(target));
+        if (target) {
+            if (!isSameMonth(target, month)) setMonth(startOfMonth(target));
             setFocusedDate(startOfDay(target));
         }
     }
