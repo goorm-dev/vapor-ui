@@ -66,14 +66,14 @@ export function SidebarContent({
                             : 'top-(--fd-docs-row-2) h-[calc(var(--fd-docs-height)-var(--fd-docs-row-2))]',
                     )}
                 >
-                    {!!collapsed && <div className="absolute inset-y-0 start-0 w-4" {...rest} />}
+                    {!!collapsed && <div className="absolute inset-y-0 inset-s-0 w-4" {...rest} />}
                     <aside
                         ref={mergeRefs(ref, refProp, asideRef)}
                         data-collapsed={collapsed}
                         data-hovered={!!collapsed && hovered}
                         id="nd-sidebar"
                         className={clsx(
-                            'absolute inset-y-0 start-0 flex w-full flex-col items-end text-sm duration-250 *:w-(--fd-sidebar-width)',
+                            'absolute inset-y-0 inset-s-0 flex w-full flex-col items-end text-sm duration-250 *:w-(--fd-sidebar-width)',
                             navMode === 'auto' && 'bg-fd-card border-e',
                             collapsed && [
                                 'bg-fd-card inset-y-2 w-(--fd-sidebar-width) rounded-xl border transition-transform',
@@ -108,7 +108,7 @@ export function SidebarDrawer({
             <Base.SidebarDrawerOverlay className="data-[state=open]:animate-fd-fade-in data-[state=closed]:animate-fd-fade-out fixed inset-0 z-40 backdrop-blur-xs" />
             <Base.SidebarDrawerContent
                 className={clsx(
-                    'bg-fd-background data-[state=open]:animate-fd-sidebar-in data-[state=closed]:animate-fd-sidebar-out fixed inset-y-0 end-0 z-40 flex w-[85%] max-w-[380px] flex-col text-[0.9375rem] shadow-lg',
+                    'bg-fd-background data-[state=open]:animate-fd-sidebar-in data-[state=closed]:animate-fd-sidebar-out fixed inset-y-0 inset-e-0 z-40 flex w-[85%] max-w-95 flex-col text-[0.9375rem] shadow-lg',
                     className,
                 )}
                 {...props}
@@ -171,7 +171,7 @@ export function SidebarItem({
                 'text-fd-muted-foreground relative flex flex-row items-center gap-2 rounded-lg p-2 text-start [&_svg]:size-4 [&_svg]:shrink-0',
                 'hover:bg-fd-accent/50 hover:text-fd-accent-foreground/80 data-[active=true]:bg-fd-primary/10 data-[active=true]:text-fd-primary transition-colors hover:transition-none data-[active=true]:hover:transition-colors',
                 depth >= 1 &&
-                    "data-[active=true]:before:bg-fd-primary data-[active=true]:before:absolute data-[active=true]:before:inset-y-2.5 data-[active=true]:before:start-2.5 data-[active=true]:before:w-px data-[active=true]:before:content-['']",
+                    "data-[active=true]:before:bg-fd-primary data-[active=true]:before:absolute data-[active=true]:before:inset-y-2.5 data-[active=true]:before:inset-s-2.5 data-[active=true]:before:w-px data-[active=true]:before:content-['']",
                 className,
             )}
             style={{
@@ -228,7 +228,7 @@ export function SidebarFolderLink({
                 'w-full text-fd-muted-foreground relative flex flex-row items-center gap rounded-lg p-2 text-start [&_svg]:size-4 [&_svg]:shrink-0',
                 'hover:bg-fd-accent/50 hover:text-fd-accent-foreground/80 data-[active=true]:bg-fd-primary/10 data-[active=true]:text-fd-primary transition-colors hover:transition-none data-[active=true]:hover:transition-colors',
                 depth > 1
-                    ? 'data-[active=true]:before:bg-fd-primary data-[active=true]:before:absolute data-[active=true]:before:inset-y-2.5 data-[active=true]:before:start-2.5 data-[active=true]:before:w-px data-[active=true]:before:content-[""]'
+                    ? 'data-[active=true]:before:bg-fd-primary data-[active=true]:before:absolute data-[active=true]:before:inset-y-2.5 data-[active=true]:before:inset-s-2.5 data-[active=true]:before:w-px data-[active=true]:before:content-[""]'
                     : '',
                 className,
             )}
@@ -253,9 +253,9 @@ export function SidebarFolderContent({
     return (
         <Base.SidebarFolderContent
             className={clsx(
-                'text-fd-muted-foreground relative data-[state=open]:animate-fd-accordion-down data-[state=closed]:animate-fd-accordion-up flex flex-col overflow-hidden data-[state=closed]:animate-fd-collapsible-up data-[state=open]:animate-fd-collapsible-down before:content before:absolute before:w-px before:inset-y-1 before:bg-fd-border before:start-2.5',
+                'text-fd-muted-foreground relative data-[state=open]:animate-fd-accordion-down data-[state=closed]:animate-fd-accordion-up flex flex-col overflow-hidden data-[state=closed]:animate-fd-collapsible-up data-[state=open]:animate-fd-collapsible-down before:content before:absolute before:w-px before:inset-y-1 before:bg-fd-border before:inset-s-2.5',
                 depth === 1
-                    ? "data-[active=true]:before:bg-fd-primary data-[active=true]:before:absolute data-[active=true]:before:inset-y-2.5 data-[active=true]:before:start-2.5 data-[active=true]:before:w-px data-[active=true]:before:content-['']"
+                    ? "data-[active=true]:before:bg-fd-primary data-[active=true]:before:absolute data-[active=true]:before:inset-y-2.5 data-[active=true]:before:inset-s-2.5 data-[active=true]:before:w-px data-[active=true]:before:content-['']"
                     : '',
                 className,
             )}

@@ -1,0 +1,14 @@
+{
+    "name": "AlertDialogCancel",
+    "description": "AlertDialog의 동작을 취소시키는 요소",
+    "props": [
+        {
+            "name": "closeOnClick",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "클릭 시 다이얼로그를 자동으로 닫을지 여부.",
+            "defaultValue": "true"
+        }
+    ]
+}

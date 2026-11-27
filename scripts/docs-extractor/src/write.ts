@@ -15,11 +15,12 @@ function toKebabCase(str: string): string {
 }
 
 /**
- * Component folders documented on a page with another name, or (`null`) not
- * documented on a components page. Every other folder under `components/` is
- * documented on the page folder of the same name.
+ * Default — core components. Component folders documented on a page with another
+ * name, or (`null`) not documented on a components page. Every other folder under
+ * `components/` is documented on the page folder of the same name. A different
+ * input (e.g. composites) can pass its own map via `writeDocs`.
  */
-const PAGE_FOR_COMPONENT: Record<string, string | null> = {
+const DEFAULT_PAGE_FOR_COMPONENT: Record<string, string | null> = {
     // RadioGroup is documented on the Radio page.
     'radio-group': 'radio',
     // No page yet.
@@ -27,6 +28,8 @@ const PAGE_FOR_COMPONENT: Record<string, string | null> = {
     // Documented under /theme, which has no props tables.
     'theme-provider': null,
 };
+
+export type ComponentPageMap = Record<string, string | null>;
 
 /**
  * Hand-written JSON that lives next to the generated files in `en/` and is never removed
@@ -65,6 +68,7 @@ export function findApiDir(
     sourceFile: string,
     pagesDir: string,
     pageDirs: string[] = listPageDirs(pagesDir),
+    componentPageMap: ComponentPageMap = DEFAULT_PAGE_FOR_COMPONENT,
 ): string | null {
     const parts = path.resolve(sourceFile).split(path.sep);
     const at = parts.lastIndexOf('components');
@@ -73,7 +77,7 @@ export function findApiDir(
     }
 
     const folder = parts[at + 1];
-    const page = folder in PAGE_FOR_COMPONENT ? PAGE_FOR_COMPONENT[folder] : folder;
+    const page = folder in componentPageMap ? componentPageMap[folder] : folder;
     if (page === null) return null;
 
     const pageDir = pageDirs.find((dir) => toSlug(dir) === page);
@@ -81,7 +85,7 @@ export function findApiDir(
     if (!pageDir) {
         throw new ExtractorError(
             `No page for ${sourceFile}: no ${page}/index.mdx under ${pagesDir} (directly or in a route group). ` +
-                `Add the page, or map the component folder in PAGE_FOR_COMPONENT (src/write.ts).`,
+                `Add the page, or map the component folder in the --component-page-map JSON (or DEFAULT_PAGE_FOR_COMPONENT in src/write.ts).`,
         );
     }
 
@@ -228,12 +232,15 @@ export interface DocToWrite {
 export function writeDocs(
     pagesDir: string,
     docs: DocToWrite[],
-    { removeStale = false }: { removeStale?: boolean } = {},
+    {
+        removeStale = false,
+        componentPageMap,
+    }: { removeStale?: boolean; componentPageMap?: ComponentPageMap } = {},
 ): WriteResult {
     const root = path.resolve(pagesDir);
     const pageDirs = listPageDirs(root);
     const targets = docs.flatMap(({ doc, sourceFile }) => {
-        const apiDir = findApiDir(sourceFile, root, pageDirs);
+        const apiDir = findApiDir(sourceFile, root, pageDirs, componentPageMap);
         return apiDir
             ? [{ doc, apiDir, filePath: path.join(apiDir, 'en', `${toKebabCase(doc.name)}.json`) }]
             : [];

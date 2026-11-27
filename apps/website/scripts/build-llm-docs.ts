@@ -38,6 +38,30 @@ function readFrontmatter(raw: string, key: string): string | undefined {
     return value?.replace(/^(['"])(.*)\1$/, '$2');
 }
 
+/** Pages flagged `subpage: true` in frontmatter get folded into their sibling `index.mdx`. */
+function isSubpageFile(fullPath: string): boolean {
+    return readFrontmatter(fs.readFileSync(fullPath, 'utf8'), 'subpage') === 'true';
+}
+
+function siblingIndexOf(file: string): string {
+    return `${path.posix.dirname(file)}/index.mdx`;
+}
+
+async function renderFile(file: string): Promise<string> {
+    const fullPath = path.join(CONTENT_DIR, file);
+    const raw = fs.readFileSync(fullPath, 'utf8');
+    const slug = toSlug(file);
+    return toLLMText({
+        raw,
+        title: readFrontmatter(raw, 'title') ?? slug,
+        description: readFrontmatter(raw, 'description'),
+        url: `/docs/${slug === 'index' ? '' : slug}`.replace(/\/$/, ''),
+        path: file,
+        fullPath,
+        contentType: 'docs',
+    });
+}
+
 async function main() {
     const outDir = process.argv[2];
     if (!outDir) throw new Error('Usage: tsx scripts/build-llm-docs.ts <outDir>');
@@ -45,29 +69,35 @@ async function main() {
     const out = path.resolve(outDir);
     fs.rmSync(out, { recursive: true, force: true });
 
-    const files = fs.globSync('**/*.{md,mdx}', { cwd: CONTENT_DIR }).sort();
+    const allFiles = fs.globSync('**/*.{md,mdx}', { cwd: CONTENT_DIR }).sort();
+    const fileSet = new Set(allFiles);
 
-    for (const file of files) {
-        const fullPath = path.join(CONTENT_DIR, file);
-        const raw = fs.readFileSync(fullPath, 'utf8');
-        const slug = toSlug(file);
-
-        const text = await toLLMText({
-            raw,
-            title: readFrontmatter(raw, 'title') ?? slug,
-            description: readFrontmatter(raw, 'description'),
-            url: `/docs/${slug === 'index' ? '' : slug}`.replace(/\/$/, ''),
-            path: file,
-            fullPath,
-            contentType: 'docs',
-        });
-
-        const target = path.join(out, `${slug}.md`);
-        fs.mkdirSync(path.dirname(target), { recursive: true });
-        fs.writeFileSync(target, text);
+    const subpagesByParent = new Map<string, string[]>();
+    const parentFiles: string[] = [];
+    for (const file of allFiles) {
+        if (isSubpageFile(path.join(CONTENT_DIR, file))) {
+            const parent = siblingIndexOf(file);
+            const list = subpagesByParent.get(parent) ?? [];
+            list.push(file);
+            subpagesByParent.set(parent, list);
+            if (!fileSet.has(parent)) parentFiles.push(file);
+        } else {
+            parentFiles.push(file);
+        }
     }
 
-    console.log(`Wrote ${files.length} pages to ${out}`);
+    for (const file of parentFiles) {
+        const rendered = [await renderFile(file)];
+        for (const subpage of subpagesByParent.get(file) ?? []) {
+            rendered.push(await renderFile(subpage));
+        }
+
+        const target = path.join(out, `${toSlug(file)}.md`);
+        fs.mkdirSync(path.dirname(target), { recursive: true });
+        fs.writeFileSync(target, rendered.join('\n\n'));
+    }
+
+    console.log(`Wrote ${parentFiles.length} pages to ${out}`);
 }
 
 main().catch((error) => {

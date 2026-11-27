@@ -33,6 +33,9 @@ const slots = createSlots({
     action: Button,
 });
 
+/**
+ * 사용자의 확인이 반드시 필요한 경우 강한 알림 수단으로 사용하는 AlertDialog의 루트 요소
+ */
 export const AlertDialogRoot = ({
     // functions
     open,
@@ -232,6 +235,9 @@ const Footer = ({ action, cancel }: FooterProps) => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
+/**
+ * AlertDialog의 주요 액션을 발생시키는 요소
+ */
 export const AlertDialogAction = ({
     closeOnClick = true,
     onClick,
@@ -273,6 +279,9 @@ export namespace AlertDialogAction {
 
 /* -----------------------------------------------------------------------------------------------*/
 
+/**
+ * AlertDialog의 동작을 취소시키는 요소
+ */
 export const AlertDialogCancel = ({
     closeOnClick = true,
     onClick,
