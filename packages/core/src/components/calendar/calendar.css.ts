@@ -31,6 +31,7 @@ globalStyle(`[data-vapor-theme='dark']`, {
 export const root = componentStyle({
     display: 'inline-flex',
     flexDirection: 'column',
+    gap: vars.size.space['050'],
 });
 
 export const header = componentStyle({
@@ -51,7 +52,7 @@ export const grid = componentStyle({
 });
 
 export const weekday = componentStyle([
-    typography({ style: 'body2' }),
+    typography({ style: 'body3' }),
     {
         padding: 0,
         height: vars.size.dimension[500],
@@ -65,7 +66,7 @@ export const status = visuallyHidden;
 
 export const day = componentStyle([
     interaction({ scale: 'light' }),
-    typography({ style: 'body2' }),
+    typography({ style: 'subtitle1' }),
     {
         aspectRatio: '1 / 1',
         display: 'inline-flex',
