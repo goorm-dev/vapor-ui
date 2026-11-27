@@ -8,6 +8,7 @@ export * from './components/callout';
 export * from './components/card';
 export * from './components/checkbox';
 export * from './components/collapsible';
+export * from './components/combobox';
 export * from './components/dialog';
 export * from './components/field';
 export * from './components/flex';

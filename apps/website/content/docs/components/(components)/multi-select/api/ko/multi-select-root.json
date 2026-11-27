@@ -136,11 +136,11 @@
         {
             "name": "items",
             "type": [
+                "readonly Group<any>[]",
                 "Record<string, ReactNode>",
-                "readonly { label: React.ReactNode; value: any; }[]",
-                "readonly Group<any>[]"
+                "readonly { label: React.ReactNode; value: any; }[]"
             ],
-            "detailedType": "Record<string, ReactNode> | readonly { label: React.ReactNode; value: any; }[] | readonly Group<any>[] | undefined",
+            "detailedType": "readonly Group<any>[] | Record<string, ReactNode> | readonly { label: React.ReactNode; value: any; }[] | undefined",
             "required": false,
             "description": "Select 팝업에 렌더링되는 항목의 데이터 구조. 지정하면 `<Select.Value>`가 원시 값 대신 선택된 항목의 레이블을 렌더링합니다."
         },

@@ -1,0 +1,309 @@
+{
+    "name": "ComboboxRoot",
+    "description": "Root of the Combobox compound component, which lets the user type to filter a list in a popup and pick one option. Manages the selected value, input text, and open state, and passes `size`, `invalid`, `placeholder`, and the accessible name to its parts. Doesn't render its own HTML element.",
+    "props": [
+        {
+            "name": "invalid",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Marks the combobox as invalid, applying error styles. Sets `aria-invalid` on the `<input>` element.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+            "required": false,
+            "description": "Size of the combobox, controlling height, padding, typography, and icon size.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "defaultOpen",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the popup is initially open.\n\nTo render a controlled popup, use the `open` prop instead.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "defaultValue",
+            "type": ["Value", "null"],
+            "detailedType": "Value | null | undefined",
+            "required": false,
+            "description": "The uncontrolled selected value of the combobox when it's initially rendered.\n\nTo render a controlled combobox, use the `value` prop instead."
+        },
+        {
+            "name": "onInputValueChange",
+            "type": ["function"],
+            "detailedType": "((inputValue: string, eventDetails: Combobox.Root.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "Event handler called when the input value changes."
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["function"],
+            "detailedType": "((open: boolean, eventDetails: AriaCombobox.OpenChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "Event handler called when the popup is opened or closed."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["function"],
+            "detailedType": "((value: Value | null, eventDetails: Combobox.Root.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "Event handler called when the selected value of the combobox changes."
+        },
+        {
+            "name": "open",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the popup is currently open. Use when controlled."
+        },
+        {
+            "name": "value",
+            "type": ["Value", "null"],
+            "detailedType": "Value | null | undefined",
+            "required": false,
+            "description": "The selected value of the combobox. Use when controlled."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Parts of the combobox, such as `Combobox.InputGroup` and `Combobox.Popup`."
+        },
+        {
+            "name": "placeholder",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "Text shown in the input when it is empty."
+        },
+        {
+            "name": "actionsRef",
+            "type": ["React.RefObject<Combobox.Root.Actions | null>"],
+            "detailedType": "React.RefObject<Combobox.Root.Actions | null> | undefined",
+            "required": false,
+            "description": "A ref to imperative actions.\n- `unmount`: Ends the closing phase of the combobox after an externally controlled closing animation finishes.\nCall `preventUnmountOnClose()` in `onOpenChange` first, otherwise the combobox completes closing on its own.\nWhether it leaves the DOM is decided by `keepMounted` on the portal.\n- `close`: Closes the combobox imperatively when called."
+        },
+        {
+            "name": "autoComplete",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "Provides a hint to the browser for autofill."
+        },
+        {
+            "name": "autoHighlight",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the first matching item is highlighted automatically while filtering.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "defaultInputValue",
+            "type": ["string", "number", "readonly string[]"],
+            "detailedType": "string | number | readonly string[] | undefined",
+            "required": false,
+            "description": "The uncontrolled input value when initially rendered.\n\nTo render a controlled input, use the `inputValue` prop instead."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the component should ignore user interaction.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "filter",
+            "type": ["function", "null"],
+            "detailedType": "((item: Value, query: string, itemToString?: (item: Value) => string) => boolean) | null | undefined",
+            "required": false,
+            "description": "Filter function used to match items vs input query.\nReceives the source item, which is the derived value's item when `items` is a `createItems()`\ncollection, and the item itself otherwise."
+        },
+        {
+            "name": "filteredItems",
+            "type": ["readonly Value[]", "readonly Group<Value>[]"],
+            "detailedType": "readonly Value[] | readonly Group<Value>[] | undefined",
+            "required": false,
+            "description": "Filtered items to display in the list.\nWhen provided, the list uses these items instead of filtering the `items` prop internally.\nWhen `items` is also provided, this array must preserve its flat or grouped structure.\nWith a `createItems()` collection, pass source items rather than derived values.\nNullish entries are not supported, as in `items`.\nUse when you want to control filtering logic externally with the `useFilter()` hook."
+        },
+        {
+            "name": "form",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "Identifies the form that owns the internal input.\nUseful when the combobox is rendered outside the form."
+        },
+        {
+            "name": "grid",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether list items are presented in a grid layout.\nWhen enabled, arrow keys navigate across rows and columns inferred from DOM rows.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "highlightItemOnHover",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether moving the pointer over items should highlight them.\nDisabling this prop allows CSS `:hover` to be differentiated from the `:focus` (`data-highlighted`) state.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "The id of the component."
+        },
+        {
+            "name": "inline",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the list is rendered inline without using the component's own popup.\n\nSpecify `open` unconditionally in conjunction with this prop so the list is considered\nvisible: `<Combobox.Root inline open>`\n\nIn a `Combobox.Root` > `Dialog.Root` composition, bind the Combobox's `open` and\n`onOpenChange` props to the `Dialog`'s `open` and `onOpenChange` state instead so the\ncomponent resets its transient state (filter query, highlighted item, and input value) when\nthe dialog closes.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "inputRef",
+            "type": ["React.Ref<HTMLInputElement>"],
+            "detailedType": "React.Ref<HTMLInputElement> | undefined",
+            "required": false,
+            "description": "A ref to the hidden input element."
+        },
+        {
+            "name": "inputValue",
+            "type": ["string", "number", "readonly string[]"],
+            "detailedType": "string | number | readonly string[] | undefined",
+            "required": false,
+            "description": "The input value of the combobox. Use when controlled."
+        },
+        {
+            "name": "isItemEqualToValue",
+            "type": ["function"],
+            "detailedType": "((itemValue: Value, value: Value) => boolean) | undefined",
+            "required": false,
+            "description": "Custom comparison logic used to determine if a combobox item value matches the current selected value. Useful when item values are objects without matching referentially.\nWith a `createItems()` collection, both arguments are derived values.\nDefaults to `Object.is` comparison."
+        },
+        {
+            "name": "items",
+            "type": [
+                "readonly any[]",
+                "readonly Group<any>[]",
+                "ComboboxItemCollection<Value, Value>"
+            ],
+            "detailedType": "readonly any[] | readonly Group<any>[] | ComboboxItemCollection<Value, Value> | undefined",
+            "required": false,
+            "description": "The items to be displayed in the list.\nCan be a flat array of items, an array of groups with items, or a collection created by\nthe `createItems()` function, which derives each item's selection value and label.\nNullish entries are not supported: remove them from the data before passing it."
+        },
+        {
+            "name": "itemToStringLabel",
+            "type": ["function"],
+            "detailedType": "((itemValue: Value) => string) | undefined",
+            "required": false,
+            "description": "When the item values are objects (`<Combobox.Item value={object}>`), this function converts the object value to a string representation for display in the input.\nIf the shape of the object is `{ value, label }`, the label will be used automatically without needing to specify this prop.\nWith a `createItems()` collection, this receives the derived value, and the collection's\n`getLabel` takes precedence for values it can resolve."
+        },
+        {
+            "name": "itemToStringValue",
+            "type": ["function"],
+            "detailedType": "((itemValue: Value) => string) | undefined",
+            "required": false,
+            "description": "When the item values are objects (`<Combobox.Item value={object}>`), this function converts the object value to a string representation for form submission.\nIf the shape of the object is `{ value, label }`, the value will be used automatically without needing to specify this prop.\nWith a `createItems()` collection, this receives the derived value."
+        },
+        {
+            "name": "limit",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "The maximum number of items to display in the list.",
+            "defaultValue": "-1"
+        },
+        {
+            "name": "locale",
+            "type": ["Intl.LocalesArgument"],
+            "detailedType": "Intl.LocalesArgument",
+            "required": false,
+            "description": "The locale to use for string comparison.\nDefaults to the user's runtime locale."
+        },
+        {
+            "name": "loopFocus",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether to loop keyboard focus back to the input when the end of the list is reached while using the arrow keys. The first item can then be reached by pressing <kbd>ArrowDown</kbd> again from the input, or the last item can be reached by pressing <kbd>ArrowUp</kbd> from the input.\nThe input is always included in the focus loop per [ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).\nWhen disabled, focus does not move when on the last element and the user presses <kbd>ArrowDown</kbd>, or when on the first element and the user presses <kbd>ArrowUp</kbd>.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "modal",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Determines if the popup enters a modal state when open.\n- `true`: user interaction is limited to the popup: document page scroll is locked and pointer interactions on outside elements are disabled.\n- `false`: user interaction with the rest of the document is allowed.\n\nOn touch devices, a `true` modal blocks outside taps but leaves the page scrollable unless the popup spans nearly the full viewport width, matching native iOS behavior.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "name",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "Identifies the field when a form is submitted."
+        },
+        {
+            "name": "onItemHighlighted",
+            "type": ["function"],
+            "detailedType": "((highlightedValue: Value | undefined, eventDetails: AriaCombobox.HighlightEventDetails) => void) | undefined",
+            "required": false,
+            "description": "Callback fired when an item is highlighted or unhighlighted.\nReceives the highlighted item value (or `undefined` if no item is highlighted) and event details with a `reason` property describing why the highlight changed.\nThe `reason` can be:\n- `'keyboard'`: the highlight changed due to keyboard navigation.\n- `'pointer'`: the highlight changed due to pointer hovering. The event may be a `MouseEvent`\n  rather than a `PointerEvent`.\n- `'none'`: the highlight changed for another reason, such as typing, `autoHighlight`, the\n  item list changing, or the popup opening or closing."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["function"],
+            "detailedType": "((open: boolean) => void) | undefined",
+            "required": false,
+            "description": "Event handler called after any animations complete when the popup is opened or closed."
+        },
+        {
+            "name": "openOnInputClick",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the popup opens when clicking the input.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "readOnly",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the user should be unable to choose a different option from the popup.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "required",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the user must choose a value before submitting a form.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "virtualized",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Whether the items are being externally virtualized.",
+            "defaultValue": "false"
+        }
+    ],
+    "typeRefs": {
+        "Combobox.Root.Actions": "{\n  unmount: () => void;\n  close: () => void;\n}",
+        "Combobox.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"close-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"imperative-action\"; event: Event; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"item-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"clear-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"chip-remove-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"input-change\"; event: Event | InputEvent; }\n  | { reason: \"input-clear\"; event: Event | FocusEvent | InputEvent; }\n  | { reason: \"input-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"cancel-open\"; event: MouseEvent; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n  isItemPress?: boolean;\n}"
+    }
+}

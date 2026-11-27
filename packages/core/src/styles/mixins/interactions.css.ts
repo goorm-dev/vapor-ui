@@ -38,13 +38,30 @@ export const interaction = componentRecipe({
     defaultVariants: {
         scale: 'normal',
         type: 'default',
+        within: false,
     },
+
+    compoundVariants: [
+        {
+            variants: { type: 'form', within: true },
+            style: {
+                selectors: {
+                    '&:focus-within': {
+                        boxShadow: `inset 0 0 0 0.0625rem ${vars.color.border.primary}`,
+                    },
+                },
+            },
+        },
+    ],
 
     variants: {
         scale: {
             normal: {},
             light: { vars: { [ratio]: '0.04' } },
         },
+
+        /** With `type: 'form'`, draws the focus and hover lines on a wrapper whose focus lives on a child element. */
+        within: { true: {}, false: {} },
 
         type: {
             default: {
@@ -75,7 +92,8 @@ export const interaction = componentRecipe({
                 '@media': {
                     '(hover: hover)': {
                         selectors: {
-                            '&:hover:not(:focus)': {
+                            // :focus-within equals :focus on an input, and also covers a wrapper whose child has focus.
+                            '&:hover:not(:focus-within)': {
                                 boxShadow: `inset 0 0 0 0.0625rem color-mix(in srgb, ${vars.color.gray[900]} 32%, transparent)`,
                             },
                         },

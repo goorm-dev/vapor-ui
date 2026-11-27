@@ -1,0 +1,309 @@
+{
+    "name": "ComboboxRoot",
+    "description": "Combobox 복합 컴포넌트의 루트. 사용자가 입력해 팝업 안의 목록을 필터링하고 옵션 하나를 고르게 합니다. 선택한 값, 입력 텍스트, 열림 상태를 관리하고 `size`, `invalid`, `placeholder`, 접근 가능한 이름을 파트에 전달합니다. 자체 HTML 요소를 렌더링하지 않습니다.",
+    "props": [
+        {
+            "name": "invalid",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "Combobox를 유효하지 않은 상태로 표시하고 오류 스타일을 적용합니다. `<input>` 요소에 `aria-invalid`를 설정합니다.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "size",
+            "type": ["sm", "md", "lg", "xl"],
+            "detailedType": "\"sm\" | \"md\" | \"lg\" | \"xl\" | undefined",
+            "required": false,
+            "description": "Combobox의 크기. 높이, 패딩, 타이포그래피, 아이콘 크기를 결정합니다.",
+            "defaultValue": "md"
+        },
+        {
+            "name": "defaultOpen",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "팝업이 처음에 열려 있는지 여부.\n\n제어 컴포넌트로 렌더링하려면 대신 `open` prop을 사용하세요.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "defaultValue",
+            "type": ["Value", "null"],
+            "detailedType": "Value | null | undefined",
+            "required": false,
+            "description": "Combobox가 처음 렌더링될 때의 비제어 선택 값.\n\n제어 컴포넌트로 렌더링하려면 대신 `value` prop을 사용하세요."
+        },
+        {
+            "name": "onInputValueChange",
+            "type": ["function"],
+            "detailedType": "((inputValue: string, eventDetails: Combobox.Root.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "input 값이 바뀔 때 호출되는 이벤트 핸들러."
+        },
+        {
+            "name": "onOpenChange",
+            "type": ["function"],
+            "detailedType": "((open: boolean, eventDetails: AriaCombobox.OpenChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "팝업이 열리거나 닫힐 때 호출되는 이벤트 핸들러."
+        },
+        {
+            "name": "onValueChange",
+            "type": ["function"],
+            "detailedType": "((value: Value | null, eventDetails: Combobox.Root.ChangeEventDetails) => void) | undefined",
+            "required": false,
+            "description": "Combobox의 선택 값이 바뀔 때 호출되는 이벤트 핸들러."
+        },
+        {
+            "name": "open",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "팝업이 현재 열려 있는지 여부. 제어 컴포넌트로 쓸 때 사용하세요."
+        },
+        {
+            "name": "value",
+            "type": ["Value", "null"],
+            "detailedType": "Value | null | undefined",
+            "required": false,
+            "description": "Combobox의 선택 값. 제어 컴포넌트로 쓸 때 사용하세요."
+        },
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Combobox의 파트(예: `Combobox.InputGroup`, `Combobox.Popup`)."
+        },
+        {
+            "name": "placeholder",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "비어 있을 때 input에 표시되는 텍스트."
+        },
+        {
+            "name": "actionsRef",
+            "type": ["React.RefObject<Combobox.Root.Actions | null>"],
+            "detailedType": "React.RefObject<Combobox.Root.Actions | null> | undefined",
+            "required": false,
+            "description": "명령형 동작에 접근하는 ref.\n- `unmount`: 외부에서 제어하는 닫힘 애니메이션이 끝난 뒤 Combobox의 닫힘 단계를 끝냅니다. 먼저 `onOpenChange`에서 `preventUnmountOnClose()`를 호출하세요. 그렇지 않으면 Combobox가 스스로 닫힘을 완료합니다. DOM에서 제거할지는 포털의 `keepMounted`가 결정합니다.\n- `close`: 호출하면 Combobox를 명령형으로 닫습니다."
+        },
+        {
+            "name": "autoComplete",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "브라우저 자동 완성에 쓰이는 힌트."
+        },
+        {
+            "name": "autoHighlight",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "필터링하는 동안 처음 일치하는 항목을 자동으로 강조할지 여부.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "defaultInputValue",
+            "type": ["string", "number", "readonly string[]"],
+            "detailedType": "string | number | readonly string[] | undefined",
+            "required": false,
+            "description": "처음 렌더링될 때의 비제어 input 값.\n\n제어 컴포넌트로 렌더링하려면 대신 `inputValue` prop을 사용하세요."
+        },
+        {
+            "name": "disabled",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "컴포넌트가 사용자 상호작용을 무시할지 여부.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "filter",
+            "type": ["function", "null"],
+            "detailedType": "((item: Value, query: string, itemToString?: (item: Value) => string) => boolean) | null | undefined",
+            "required": false,
+            "description": "항목을 입력 쿼리와 비교해 일치시키는 필터 함수. `items`가 `createItems()` 컬렉션이면 파생된 값의 항목을, 그렇지 않으면 항목 자체를 원본 항목으로 받습니다."
+        },
+        {
+            "name": "filteredItems",
+            "type": ["readonly Value[]", "readonly Group<Value>[]"],
+            "detailedType": "readonly Value[] | readonly Group<Value>[] | undefined",
+            "required": false,
+            "description": "목록에 표시할 필터링된 항목. 지정하면 목록이 `items` prop을 내부에서 필터링하지 않고 이 항목을 사용합니다. `items`도 함께 지정하면 이 배열은 평탄한 구조 또는 그룹화된 구조를 그대로 유지해야 합니다. `createItems()` 컬렉션에서는 파생된 값이 아니라 원본 항목을 전달하세요. `items`와 마찬가지로 nullish 항목은 지원되지 않습니다. `useFilter()` 훅으로 필터링 로직을 외부에서 제어하려는 경우에 사용하세요."
+        },
+        {
+            "name": "form",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "내부 input이 속한 폼을 식별하는 값. Combobox를 폼 밖에서 렌더링할 때 유용합니다."
+        },
+        {
+            "name": "grid",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "목록 항목을 그리드 레이아웃으로 표시하는지 여부. 활성화하면 화살표 키가 DOM 행에서 추론한 행과 열 사이를 이동합니다.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "highlightItemOnHover",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "포인터를 항목 위로 옮기면 항목을 강조할지 여부. 이 prop을 비활성화하면 CSS `:hover`를 `:focus`(`data-highlighted`) 상태와 구분할 수 있습니다.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "id",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "컴포넌트의 id."
+        },
+        {
+            "name": "inline",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "목록을 컴포넌트 자체 팝업 없이 인라인으로 렌더링할지 여부입니다.\n\n목록이 보이는 것으로 처리되도록 이 prop과 함께 `open`을 항상 지정하세요: `<Combobox.Root inline open>`\n\n`Combobox.Root` > `Dialog.Root` 조합에서는 Combobox의 `open`과 `onOpenChange` prop 대신 `Dialog`의 `open`과 `onOpenChange` 상태에 연결하세요. 그래야 다이얼로그가 닫힐 때 컴포넌트가 일시적 상태(필터 쿼리, 강조된 항목, 입력값)를 초기화합니다.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "inputRef",
+            "type": ["React.Ref<HTMLInputElement>"],
+            "detailedType": "React.Ref<HTMLInputElement> | undefined",
+            "required": false,
+            "description": "숨겨진 input 요소를 가리키는 ref."
+        },
+        {
+            "name": "inputValue",
+            "type": ["string", "number", "readonly string[]"],
+            "detailedType": "string | number | readonly string[] | undefined",
+            "required": false,
+            "description": "Combobox의 input 값. 제어 컴포넌트로 쓸 때 사용하세요."
+        },
+        {
+            "name": "isItemEqualToValue",
+            "type": ["function"],
+            "detailedType": "((itemValue: Value, value: Value) => boolean) | undefined",
+            "required": false,
+            "description": "Combobox 항목 값이 현재 선택한 값과 일치하는지 판단하는 사용자 지정 비교 로직. 항목 값이 참조로는 일치하지 않는 객체일 때 유용합니다. `createItems()` 컬렉션에서는 두 인수 모두 파생된 값입니다. 기본값은 `Object.is` 비교입니다."
+        },
+        {
+            "name": "items",
+            "type": [
+                "readonly any[]",
+                "readonly Group<any>[]",
+                "ComboboxItemCollection<Value, Value>"
+            ],
+            "detailedType": "readonly any[] | readonly Group<any>[] | ComboboxItemCollection<Value, Value> | undefined",
+            "required": false,
+            "description": "목록에 표시할 항목. 항목의 평탄한 배열, 항목을 담은 그룹의 배열, 또는 각 항목의 선택 값과 레이블을 파생하는 `createItems()` 함수로 만든 컬렉션을 쓸 수 있습니다. nullish 항목은 지원되지 않으므로 전달하기 전에 데이터에서 제거하세요."
+        },
+        {
+            "name": "itemToStringLabel",
+            "type": ["function"],
+            "detailedType": "((itemValue: Value) => string) | undefined",
+            "required": false,
+            "description": "항목 값이 객체일 때(`<Combobox.Item value={object}>`) 이 함수가 객체 값을 입력창에 표시할 문자열로 변환합니다.\n객체의 형태가 `{ value, label }`이면 이 prop을 지정하지 않아도 label이 자동으로 쓰입니다.\n`createItems()` 컬렉션을 쓰면 파생된 값을 받으며, 값을 해석할 수 있는 경우에는 컬렉션의 `getLabel`이 우선합니다."
+        },
+        {
+            "name": "itemToStringValue",
+            "type": ["function"],
+            "detailedType": "((itemValue: Value) => string) | undefined",
+            "required": false,
+            "description": "항목 값이 객체일 때(`<Combobox.Item value={object}>`) 이 함수가 객체 값을 폼 제출에 쓸 문자열로 변환합니다. 객체의 형태가 `{ value, label }`이면 이 prop을 지정하지 않아도 value가 자동으로 사용됩니다. `createItems()` 컬렉션에서는 파생된 값을 받습니다."
+        },
+        {
+            "name": "limit",
+            "type": ["number"],
+            "detailedType": "number | undefined",
+            "required": false,
+            "description": "목록에 표시할 항목의 최대 개수.",
+            "defaultValue": "-1"
+        },
+        {
+            "name": "locale",
+            "type": ["Intl.LocalesArgument"],
+            "detailedType": "Intl.LocalesArgument",
+            "required": false,
+            "description": "문자열 비교에 사용할 로캘. 기본값은 사용자의 런타임 로캘입니다."
+        },
+        {
+            "name": "loopFocus",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "화살표 키로 목록 끝에 도달했을 때 키보드 포커스를 input으로 되돌릴지 여부. 이후 input에서 <kbd>ArrowDown</kbd>을 다시 누르면 첫 항목에, input에서 <kbd>ArrowUp</kbd>을 누르면 마지막 항목에 닿을 수 있습니다. input은 [ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)에 따라 항상 포커스 순환에 포함됩니다. 비활성화하면 마지막 요소에서 <kbd>ArrowDown</kbd>을 누르거나 첫 요소에서 <kbd>ArrowUp</kbd>을 눌러도 포커스를 옮기지 않습니다.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "modal",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "팝업이 열렸을 때 모달 상태가 되는지 여부.\n- `true`: 사용자 상호작용이 팝업으로 제한되어, 문서 페이지 스크롤이 잠기고 바깥 요소에 대한 포인터 상호작용이 비활성화됩니다.\n- `false`: 문서의 나머지 부분과 상호작용할 수 있습니다.\n\n터치 기기에서 `true` 모달은 바깥 탭을 막지만, 팝업이 뷰포트 너비를 거의 가득 채우지 않으면 페이지는 스크롤할 수 있습니다. 네이티브 iOS 동작과 같습니다.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "name",
+            "type": ["string"],
+            "detailedType": "string | undefined",
+            "required": false,
+            "description": "폼을 제출할 때 필드를 식별하는 이름."
+        },
+        {
+            "name": "onItemHighlighted",
+            "type": ["function"],
+            "detailedType": "((highlightedValue: Value | undefined, eventDetails: AriaCombobox.HighlightEventDetails) => void) | undefined",
+            "required": false,
+            "description": "항목이 강조되거나 강조 해제될 때 호출되는 콜백. 강조된 항목 값(강조된 항목이 없으면 `undefined`)과, 강조가 바뀐 이유를 나타내는 `reason` 속성이 있는 이벤트 상세를 받습니다.\n`reason`은 다음 중 하나입니다.\n- `'keyboard'`: 키보드 탐색으로 강조가 바뀌었습니다.\n- `'pointer'`: 포인터 호버로 강조가 바뀌었습니다. 이벤트가 `PointerEvent`가 아니라 `MouseEvent`일 수 있습니다.\n- `'none'`: 입력, `autoHighlight`, 항목 목록 변경, 팝업 열림·닫힘 같은 다른 이유로 강조가 바뀌었습니다."
+        },
+        {
+            "name": "onOpenChangeComplete",
+            "type": ["function"],
+            "detailedType": "((open: boolean) => void) | undefined",
+            "required": false,
+            "description": "팝업이 열리거나 닫힌 뒤 애니메이션이 모두 끝나면 호출되는 이벤트 핸들러."
+        },
+        {
+            "name": "openOnInputClick",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "input을 클릭하면 팝업이 열리는지 여부.",
+            "defaultValue": "true"
+        },
+        {
+            "name": "readOnly",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "사용자가 팝업에서 다른 옵션을 선택하지 못하게 할지 여부.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "required",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "폼을 제출하기 전에 사용자가 값을 반드시 선택해야 하는지 여부.",
+            "defaultValue": "false"
+        },
+        {
+            "name": "virtualized",
+            "type": ["boolean"],
+            "detailedType": "boolean | undefined",
+            "required": false,
+            "description": "항목을 외부에서 가상화하고 있는지 여부.",
+            "defaultValue": "false"
+        }
+    ],
+    "typeRefs": {
+        "Combobox.Root.Actions": "{\n  unmount: () => void;\n  close: () => void;\n}",
+        "Combobox.Root.ChangeEventDetails": "(\n  | { reason: \"trigger-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"outside-press\"; event: MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"escape-key\"; event: KeyboardEvent; }\n  | { reason: \"close-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"focus-out\"; event: FocusEvent | KeyboardEvent; }\n  | { reason: \"imperative-action\"; event: Event; }\n  | { reason: \"none\"; event: Event; }\n  | { reason: \"item-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"clear-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"chip-remove-press\"; event: KeyboardEvent | MouseEvent | PointerEvent; }\n  | { reason: \"input-change\"; event: Event | InputEvent; }\n  | { reason: \"input-clear\"; event: Event | FocusEvent | InputEvent; }\n  | { reason: \"input-press\"; event: KeyboardEvent | MouseEvent | TouchEvent | PointerEvent; }\n  | { reason: \"list-navigation\"; event: KeyboardEvent; }\n  | { reason: \"cancel-open\"; event: MouseEvent; }\n) & {\n  cancel: () => void;\n  allowPropagation: () => void;\n  isCanceled: boolean;\n  isPropagationAllowed: boolean;\n  trigger: Element | undefined;\n  isItemPress?: boolean;\n}"
+    }
+}

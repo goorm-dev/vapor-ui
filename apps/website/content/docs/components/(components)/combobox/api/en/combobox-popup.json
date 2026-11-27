@@ -1,0 +1,51 @@
+{
+    "name": "ComboboxPopup",
+    "description": "Combines `Combobox.PortalPrimitive`, `Combobox.PositionerPrimitive`, `Combobox.PopupPrimitive`, and `Combobox.ListPrimitive` into a single part that opens below the input group. Use the primitives to change the side, alignment, or container. Renders a `<div>` element.",
+    "props": [
+        {
+            "name": "children",
+            "type": ["ComboboxChildren"],
+            "detailedType": "ComboboxChildren",
+            "required": false,
+            "description": "Options shown in the list. Pass a function to render each item of `items` on `Combobox.Root` so the list is filtered, or render `Combobox.Item`, `Combobox.Group`, and `Combobox.Separator` elements directly. A direct child `Combobox.Empty` is placed above the list and may sit beside the function."
+        },
+        {
+            "name": "className",
+            "type": ["string", "function"],
+            "detailedType": "string | ((state: Combobox.Popup.State) => (string | undefined)) | undefined",
+            "required": false,
+            "description": "CSS class applied to the element, or a function that\nreturns a class based on the component's state."
+        },
+        {
+            "name": "style",
+            "type": ["React.CSSProperties", "function"],
+            "detailedType": "React.CSSProperties | ((state: Combobox.Popup.State) => (React.CSSProperties | undefined)) | undefined",
+            "required": false,
+            "description": "Style applied to the element, or a function that\nreturns a style object based on the component's state."
+        },
+        {
+            "name": "finalFocus",
+            "type": ["boolean", "React.RefObject<HTMLElement | null>", "function"],
+            "detailedType": "boolean | React.RefObject<HTMLElement | null> | ((closeType: \"\" | \"mouse\" | \"touch\" | \"pen\" | \"keyboard\") => (boolean | void | HTMLElement | null)) | undefined",
+            "required": false,
+            "description": "Determines the element to focus when the popup is closed.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (trigger or previously focused element).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, or `false`/`undefined` to do nothing."
+        },
+        {
+            "name": "initialFocus",
+            "type": ["boolean", "React.RefObject<HTMLElement | null>", "function"],
+            "detailedType": "boolean | React.RefObject<HTMLElement | null> | ((openType: \"\" | \"mouse\" | \"touch\" | \"pen\" | \"keyboard\") => (boolean | void | HTMLElement | null)) | undefined",
+            "required": false,
+            "description": "Determines the element to focus when the popup is opened.\n\n- `false`: Do not move focus.\n- `true`: Move focus based on the default behavior (first tabbable element or popup).\n- `RefObject`: Move focus to the ref element.\n- `function`: Called with the interaction type (`mouse`, `touch`, `pen`, or `keyboard`).\n  Return an element to focus, `true` to use the default behavior, or `false`/`undefined` to do nothing."
+        },
+        {
+            "name": "render",
+            "type": ["ReactElement", "function"],
+            "detailedType": "ReactElement | ((props: HTMLProps, state: Combobox.Popup.State) => ReactElement) | undefined",
+            "required": false,
+            "description": "Allows you to replace the component's HTML element\nwith a different tag, or compose it with another component.\n\nAccepts a `ReactElement` or a function that returns the element to render."
+        }
+    ],
+    "typeRefs": {
+        "Combobox.Popup.State": "{\n  open: boolean;\n  side: \"bottom\" | \"left\" | \"right\" | \"top\" | \"inline-end\" | \"inline-start\";\n  align: \"center\" | \"end\" | \"start\";\n  anchorHidden: boolean;\n  transitionStatus: \"starting\" | \"ending\" | \"idle\" | undefined;\n  empty: boolean;\n}"
+    }
+}
