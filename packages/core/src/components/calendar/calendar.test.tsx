@@ -565,5 +565,27 @@ describe('<Calendar />', () => {
             expect(warn).toHaveBeenCalledWith(expect.stringContaining('invalid Date'));
             warn.mockRestore();
         });
+
+        it('shows the month of an outside range change that keeps the start', async () => {
+            const Controlled = ({ value }: { value: CalendarRange }) => (
+                <Calendar.Root mode="range" value={value}>
+                    <Calendar.Header />
+                    <Calendar.Grid />
+                </Calendar.Root>
+            );
+            const rendered = render(
+                <Controlled value={{ start: new Date(2026, 10, 5), end: new Date(2026, 10, 8) }} />,
+            );
+            await userEvent.click(rendered.getByRole('button', { name: '다음 달' }));
+            await userEvent.click(rendered.getByRole('button', { name: '다음 달' }));
+
+            rendered.rerender(
+                <Controlled
+                    value={{ start: new Date(2026, 10, 5), end: new Date(2026, 11, 20) }}
+                />,
+            );
+            expect(rendered.getByRole('grid', { name: '2026년 12월' })).toBeInTheDocument();
+            expect(day(rendered, '2026년 12월 20일 일요일')).toHaveAttribute('tabindex', '0');
+        });
     });
 });

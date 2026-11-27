@@ -49,6 +49,8 @@ const asRange = (value: CalendarValue): CalendarRange => {
     return start ? { start, end: validDate(value.end) } : EMPTY_RANGE;
 };
 
+const dayTime = (date: Date | null) => (date ? startOfDay(date).getTime() : null);
+
 const warnInvalidDates = (value: CalendarValue, defaultMonth: Date | undefined) => {
     if (process.env.NODE_ENV === 'production') return;
     const dates = value instanceof Date ? [value] : [value?.start, value?.end];
@@ -126,13 +128,16 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
         null,
     );
 
-    const anchorTime = anchorDate ? startOfDay(anchorDate).getTime() : null;
-    const [prevAnchorTime, setPrevAnchorTime] = useState(anchorTime);
-    if (anchorTime !== prevAnchorTime) {
-        setPrevAnchorTime(anchorTime);
-        if (anchorDate && !isSameMonth(anchorDate, month)) {
-            setMonth(startOfMonth(anchorDate));
-            setFocusedDate(startOfDay(anchorDate));
+    const endDate = mode === 'range' ? asRange(value).end : null;
+    const startTime = dayTime(anchorDate);
+    const endTime = dayTime(endDate);
+    const [prevTimes, setPrevTimes] = useState({ start: startTime, end: endTime });
+    if (startTime !== prevTimes.start || endTime !== prevTimes.end) {
+        setPrevTimes({ start: startTime, end: endTime });
+        const target = startTime !== prevTimes.start ? anchorDate : endDate;
+        if (target && !isSameMonth(target, month)) {
+            setMonth(startOfMonth(target));
+            setFocusedDate(startOfDay(target));
         }
     }
 
