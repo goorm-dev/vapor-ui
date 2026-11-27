@@ -105,6 +105,17 @@ export const day = componentStyle([
                     },
                 },
             },
+
+            // The preview swaps ends, so the cell's aria-selected marks the clicked start.
+            '(prefers-reduced-motion: no-preference)': {
+                selectors: {
+                    'td[aria-selected="true"] > &[data-selection-start]': {
+                        transitionDuration: '100ms',
+                        transitionProperty: 'background-color, color',
+                        transitionTimingFunction: 'ease-out',
+                    },
+                },
+            },
         },
     },
 ]);
