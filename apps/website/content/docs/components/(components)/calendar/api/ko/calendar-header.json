@@ -1,6 +1,6 @@
 {
     "name": "CalendarHeader",
-    "description": "격자 위의 행. 이전 달 버튼, 월 제목, 다음 달 버튼이 들어갑니다. `Calendar.PreviousPrimitive`, `Calendar.TitlePrimitive`, `Calendar.NextPrimitive`를 직접 배치하려면 자식을 전달하세요. `<div>` 요소로 렌더링됩니다.",
+    "description": "그리드 위의 행. 이전 달 버튼, 월 제목, 다음 달 버튼이 들어 있습니다.\n`Calendar.PreviousPrimitive`, `Calendar.TitlePrimitive`, `Calendar.NextPrimitive`를 직접 배치하려면 자식을 전달하세요. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",

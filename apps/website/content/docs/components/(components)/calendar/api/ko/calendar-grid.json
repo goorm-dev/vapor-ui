@@ -1,6 +1,6 @@
 {
     "name": "CalendarGrid",
-    "description": "표시 중인 달의 격자. 요일 이름 행과 그 아래 여섯 주의 날짜 버튼으로 이루어집니다. 화살표 키, Home, End, PageUp, PageDown으로 날짜 사이에서 포커스를 옮깁니다. 각 날짜를 직접 렌더링하려면 자식으로 함수를 전달하세요. 보통 `Calendar.DayPrimitive`를 사용합니다. `<table>` 요소로 렌더링됩니다.",
+    "description": "표시된 달의 그리드. 요일 이름 행 하나와 날짜 버튼 여섯 주로 구성됩니다.\n화살표 키, Home, End, PageUp, PageDown으로 날짜 사이에서 포커스를 옮깁니다.\n각 날짜를 직접 렌더링하려면 자식으로 함수를 전달하세요. 보통 `Calendar.DayPrimitive`와 함께 사용합니다. `<table>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "children",

@@ -58,7 +58,8 @@ const navigationLabel = (locale: string, direction: 'previous' | 'next') => {
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Root of the Calendar compound component, a month view for picking one date or a range of dates. Holds the selected value, the shown month, and the keyboard focus, and passes them to `Calendar.Header` and `Calendar.Grid`. Renders a `<div>` element.
+ * Root of the Calendar compound component, a month view for picking one date or a range of dates.
+ * Holds the selected value, the shown month, and the keyboard focus, and passes them to `Calendar.Header` and `Calendar.Grid`. Renders a `<div>` element.
  */
 export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((props, ref) => {
     const {
@@ -121,7 +122,6 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
         setFocusedDate(date);
 
         if (mode === 'single') {
-            // ponytail: pressing the selected day again keeps it; add a toggle if deselecting is needed.
             if (!isSameDay(asDate(value), date)) setValue(date, details);
             return;
         }
@@ -209,7 +209,8 @@ CalendarRoot.displayName = 'Calendar.Root';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Row above the grid with the previous-month button, the month title, and the next-month button. Pass children to arrange `Calendar.PreviousPrimitive`, `Calendar.TitlePrimitive`, and `Calendar.NextPrimitive` yourself. Renders a `<div>` element.
+ * Row above the grid with the previous-month button, the month title, and the next-month button.
+ * Pass children to arrange `Calendar.PreviousPrimitive`, `Calendar.TitlePrimitive`, and `Calendar.NextPrimitive` yourself. Renders a `<div>` element.
  */
 export const CalendarHeader = forwardRef<HTMLDivElement, CalendarHeader.Props>((props, ref) => {
     const { render, className, children, ...componentProps } = resolveStyles(props);
@@ -321,7 +322,9 @@ CalendarTitlePrimitive.displayName = 'Calendar.TitlePrimitive';
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Grid of the shown month: a row of weekday names, then six weeks of day buttons. Arrow keys, Home, End, PageUp, and PageDown move the focus between days. Pass a function as children to render each day yourself, usually with `Calendar.DayPrimitive`. Renders a `<table>` element.
+ * Grid of the shown month: a row of weekday names, then six weeks of day buttons.
+ * Arrow keys, Home, End, PageUp, and PageDown move the focus between days.
+ * Pass a function as children to render each day yourself, usually with `Calendar.DayPrimitive`. Renders a `<table>` element.
  */
 export const CalendarGrid = forwardRef<HTMLTableElement, CalendarGrid.Props>((props, ref) => {
     const { render, className, children, onPointerLeave, onBlur, ...componentProps } =
@@ -410,7 +413,9 @@ const CalendarCell = ({ date, children }: { date: Date; children: ReactNode }) =
  * -----------------------------------------------------------------------------------------------*/
 
 /**
- * Button for one day in `Calendar.Grid`. Selects the day when pressed. Days of the previous and next month are shown dimmed and can't be pressed. Its accessible name is the full date, such as "2026년 11월 26일 목요일". Renders a `<button>` element.
+ * Button for one day in `Calendar.Grid`. Selects the day when pressed.
+ * Days of the previous and next month are shown dimmed and can't be pressed.
+ * Its accessible name is the full date, such as "2026년 11월 26일 목요일". Renders a `<button>` element.
  */
 export const CalendarDayPrimitive = forwardRef<HTMLButtonElement, CalendarDayPrimitive.Props>(
     (props, ref) => {

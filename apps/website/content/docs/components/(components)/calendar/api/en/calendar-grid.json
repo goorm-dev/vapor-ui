@@ -1,6 +1,6 @@
 {
     "name": "CalendarGrid",
-    "description": "Grid of the shown month: a row of weekday names, then six weeks of day buttons. Arrow keys, Home, End, PageUp, and PageDown move the focus between days. Pass a function as children to render each day yourself, usually with `Calendar.DayPrimitive`. Renders a `<table>` element.",
+    "description": "Grid of the shown month: a row of weekday names, then six weeks of day buttons.\nArrow keys, Home, End, PageUp, and PageDown move the focus between days.\nPass a function as children to render each day yourself, usually with `Calendar.DayPrimitive`. Renders a `<table>` element.",
     "props": [
         {
             "name": "children",

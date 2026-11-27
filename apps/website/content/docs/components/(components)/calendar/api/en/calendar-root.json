@@ -1,6 +1,6 @@
 {
     "name": "CalendarRoot",
-    "description": "Root of the Calendar compound component, a month view for picking one date or a range of dates. Holds the selected value, the shown month, and the keyboard focus, and passes them to `Calendar.Header` and `Calendar.Grid`. Renders a `<div>` element.",
+    "description": "Root of the Calendar compound component, a month view for picking one date or a range of dates.\nHolds the selected value, the shown month, and the keyboard focus, and passes them to `Calendar.Header` and `Calendar.Grid`. Renders a `<div>` element.",
     "props": [
         {
             "name": "defaultValue",

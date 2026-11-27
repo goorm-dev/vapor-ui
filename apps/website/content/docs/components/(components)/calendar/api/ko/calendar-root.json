@@ -1,6 +1,6 @@
 {
     "name": "CalendarRoot",
-    "description": "Calendar 복합 컴포넌트의 루트. 날짜 하나 또는 날짜 범위를 고르는 월 보기입니다. 선택한 값, 표시 중인 달, 키보드 포커스를 관리하며 이를 `Calendar.Header`와 `Calendar.Grid`에 전달합니다. `<div>` 요소로 렌더링됩니다.",
+    "description": "Calendar 복합 컴포넌트의 루트. 날짜 하나 또는 날짜 범위를 고르는 월 보기입니다.\n선택한 값, 표시된 달, 키보드 포커스를 관리하며 `Calendar.Header`와 `Calendar.Grid`에 전달합니다. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "defaultValue",

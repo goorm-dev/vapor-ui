@@ -1,6 +1,6 @@
 {
     "name": "CalendarHeader",
-    "description": "Row above the grid with the previous-month button, the month title, and the next-month button. Pass children to arrange `Calendar.PreviousPrimitive`, `Calendar.TitlePrimitive`, and `Calendar.NextPrimitive` yourself. Renders a `<div>` element.",
+    "description": "Row above the grid with the previous-month button, the month title, and the next-month button.\nPass children to arrange `Calendar.PreviousPrimitive`, `Calendar.TitlePrimitive`, and `Calendar.NextPrimitive` yourself. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",
