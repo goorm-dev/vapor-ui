@@ -47,19 +47,19 @@ export const Range: StoryObj<typeof Calendar.Root> = {
     },
 };
 
-const MAY_2020 = new Date(2020, 4, 1);
+const FIXED_MONTH = new Date(2020, 4, 1);
 
 export const TestBed: StoryObj<typeof Calendar.Root> = {
     render: () => (
         <HStack $css={{ gap: '$400', alignItems: 'flex-start' }}>
-            <Calendar.Root defaultMonth={MAY_2020} defaultValue={new Date(2020, 4, 25)}>
+            <Calendar.Root defaultMonth={FIXED_MONTH} defaultValue={new Date(2020, 4, 25)}>
                 <Calendar.Header />
                 <Calendar.Grid />
             </Calendar.Root>
 
             <Calendar.Root
                 mode="range"
-                defaultMonth={MAY_2020}
+                defaultMonth={FIXED_MONTH}
                 defaultValue={{ start: new Date(2020, 4, 12), end: new Date(2020, 4, 15) }}
             >
                 <Calendar.Header />
@@ -68,7 +68,7 @@ export const TestBed: StoryObj<typeof Calendar.Root> = {
 
             <Calendar.Root
                 mode="range"
-                defaultMonth={MAY_2020}
+                defaultMonth={FIXED_MONTH}
                 locale="en-US"
                 weekStartsOn={1}
                 defaultValue={{ start: new Date(2020, 4, 29), end: new Date(2020, 5, 3) }}
@@ -77,7 +77,7 @@ export const TestBed: StoryObj<typeof Calendar.Root> = {
                 <Calendar.Grid />
             </Calendar.Root>
 
-            <Calendar.Root defaultMonth={MAY_2020} disabled>
+            <Calendar.Root defaultMonth={FIXED_MONTH} disabled>
                 <Calendar.Header />
                 <Calendar.Grid />
             </Calendar.Root>

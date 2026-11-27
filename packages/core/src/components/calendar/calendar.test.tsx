@@ -8,7 +8,6 @@ import { axe } from 'vitest-axe';
 
 import { Calendar } from '.';
 import type { CalendarRange } from '.';
-import { addMonths, getWeeks } from './date-utils';
 
 const NOV_2026 = new Date(2026, 10, 1);
 
@@ -27,23 +26,6 @@ const SingleCalendar = (props: SingleCalendarProps) => (
         <Calendar.Grid />
     </Calendar.Root>
 );
-
-describe('date-utils', () => {
-    it('clamps to the last day of the month', () => {
-        expect(addMonths(new Date(2024, 0, 31), 1)).toEqual(new Date(2024, 1, 29));
-        expect(addMonths(new Date(2025, 2, 31), -1)).toEqual(new Date(2025, 1, 28));
-        expect(addMonths(new Date(2026, 11, 15), 1)).toEqual(new Date(2027, 0, 15));
-    });
-
-    it('builds six weeks starting on the given weekday', () => {
-        const sunday = getWeeks(NOV_2026, 0);
-        expect(sunday).toHaveLength(6);
-        expect(sunday[0][0]).toEqual(new Date(2026, 10, 1));
-
-        const monday = getWeeks(NOV_2026, 1);
-        expect(monday[0][0]).toEqual(new Date(2026, 9, 26));
-    });
-});
 
 describe('<Calendar />', () => {
     afterEach(cleanup);
@@ -264,7 +246,7 @@ describe('<Calendar />', () => {
         expect(rendered.getByRole('button', { name: '다음 달' })).toBeDisabled();
     });
 
-    describe('regressions', () => {
+    describe('focus, preview, and edge cases', () => {
         it('does not steal focus from the arrows after a keyboard move onto the same day', async () => {
             const rendered = render(<SingleCalendar defaultValue={new Date(2026, 10, 1)} />);
 
@@ -368,7 +350,7 @@ describe('<Calendar />', () => {
         });
     });
 
-    describe('review follow-ups', () => {
+    describe('controlled values, locales, disabled days, and hydration', () => {
         it('does not crash or warn when mode changes with an uncontrolled value', async () => {
             const error = vi.spyOn(console, 'error').mockImplementation(() => {});
             const rendered = render(

@@ -29,7 +29,11 @@ export const isSameDay = (a: Date | null | undefined, b: Date | null | undefined
 export const isSameMonth = (a: Date, b: Date) =>
     a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
 
-/** Negative when `a` is an earlier day than `b`, ignoring the time of day. */
+/**
+
+ * Negative when `a` is an earlier day than `b`, ignoring the time of day.
+
+ */
 export const compareDay = (a: Date, b: Date) => startOfDay(a).getTime() - startOfDay(b).getTime();
 
 /**
@@ -37,8 +41,7 @@ export const compareDay = (a: Date, b: Date) => startOfDay(a).getTime() - startO
  * `weekStartsOn` is 0 for Sunday through 6 for Saturday.
  */
 export const getWeeks = (month: Date, weekStartsOn: number) => {
-    const first = startOfMonth(month);
-    const start = addDays(first, -((first.getDay() - weekStartsOn + 7) % 7));
+    const start = getStartOfWeek(startOfMonth(month), weekStartsOn);
 
     return Array.from({ length: 6 }, (_, week) =>
         Array.from({ length: 7 }, (_, day) => addDays(start, week * 7 + day)),

@@ -36,7 +36,6 @@ export const weekday = componentStyle([
         padding: 0,
         height: vars.size.dimension[500],
         color: vars.color.foreground.hint,
-        fontWeight: 'inherit',
     },
 ]);
 

@@ -59,10 +59,14 @@ const warnInvalidDates = (value: CalendarValue, defaultMonth: Date | undefined) 
     }
 };
 
-const format = (locale: string, options: Intl.DateTimeFormatOptions) =>
+const gregorianFormat = (locale: string, options: Intl.DateTimeFormatOptions) =>
     new Intl.DateTimeFormat(locale, { ...options, calendar: 'gregory' });
 
-/** Korean defaults; any other locale falls back to its English-like label. */
+/**
+
+ * Korean defaults; any other locale falls back to its English-like label.
+
+ */
 const navigationLabel = (locale: string, direction: 'previous' | 'next') => {
     const korean = locale.startsWith('ko');
     if (direction === 'previous') return korean ? '이전 달' : 'Previous month';
@@ -257,8 +261,8 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
 CalendarRoot.displayName = 'Calendar.Root';
 
 /**
- * Row above the grid with the previous-month button, the month title, and the next-month button.
- * Pass children to arrange `Calendar.PreviousPrimitive`, `Calendar.TitlePrimitive`, and `Calendar.NextPrimitive` yourself. Renders a `<div>` element.
+ * Combines `Calendar.PreviousPrimitive`, `Calendar.TitlePrimitive`, and `Calendar.NextPrimitive` into a single part, the row above the grid.
+ * Pass children to arrange them yourself. Renders a `<div>` element.
  */
 export const CalendarHeader = forwardRef<HTMLDivElement, CalendarHeader.Props>((props, ref) => {
     const { render, className, children, ...componentProps } = resolveStyles(props);
@@ -318,19 +322,19 @@ const createNavigationButton = (direction: 'previous' | 'next') => {
 };
 
 /**
- * Button that shows the previous month. Its accessible name defaults to "이전 달" for Korean locales and "Previous month" otherwise. Renders a `<button>` element.
+ * Button that shows the previous month. Its accessible name defaults to a Korean label for Korean locales and to "Previous month" otherwise. Renders a `<button>` element.
  */
 export const CalendarPreviousPrimitive = createNavigationButton('previous');
 CalendarPreviousPrimitive.displayName = 'Calendar.PreviousPrimitive';
 
 /**
- * Button that shows the next month. Its accessible name defaults to "다음 달" for Korean locales and "Next month" otherwise. Renders a `<button>` element.
+ * Button that shows the next month. Its accessible name defaults to a Korean label for Korean locales and to "Next month" otherwise. Renders a `<button>` element.
  */
 export const CalendarNextPrimitive = createNavigationButton('next');
 CalendarNextPrimitive.displayName = 'Calendar.NextPrimitive';
 
 /**
- * Title of the shown month, such as "2026년 11월", formatted with the `locale` of `Calendar.Root`. Screen readers announce it when the month changes. Renders a `<div>` element.
+ * Title of the shown month, such as "November 2026", formatted with the `locale` of `Calendar.Root`. Screen readers announce it when the month changes. Renders a `<div>` element.
  */
 export const CalendarTitlePrimitive = forwardRef<HTMLDivElement, CalendarTitlePrimitive.Props>(
     (props, ref) => {
@@ -338,7 +342,7 @@ export const CalendarTitlePrimitive = forwardRef<HTMLDivElement, CalendarTitlePr
         const { month, locale, titleId } = useCalendarContext();
 
         const title = useMemo(
-            () => format(locale, { year: 'numeric', month: 'long' }).format(month),
+            () => gregorianFormat(locale, { year: 'numeric', month: 'long' }).format(month),
             [locale, month],
         );
 
@@ -369,10 +373,20 @@ export const CalendarGrid = forwardRef<HTMLTableElement, CalendarGrid.Props>((pr
 
     const weeks = useMemo(() => getWeeks(month, weekStartsOn), [month, weekStartsOn]);
     const weekdays = useMemo(() => {
-        const short = format(locale, { weekday: 'short' });
-        const long = format(locale, { weekday: 'long' });
+        const short = gregorianFormat(locale, { weekday: 'short' });
+        const long = gregorianFormat(locale, { weekday: 'long' });
         return weeks[0].map((date) => ({ short: short.format(date), long: long.format(date) }));
     }, [weeks, locale]);
+
+    const handlePointerLeave = (event: PointerEvent<HTMLTableElement>) => {
+        onPointerLeave?.(event);
+        setPreviewDate(null);
+    };
+
+    const handleBlur = (event: FocusEvent<HTMLTableElement>) => {
+        onBlur?.(event);
+        if (!event.currentTarget.contains(event.relatedTarget)) setPreviewDate(null);
+    };
 
     const renderDay = children ?? ((date: Date) => <CalendarDayPrimitive date={date} />);
 
@@ -385,14 +399,8 @@ export const CalendarGrid = forwardRef<HTMLTableElement, CalendarGrid.Props>((pr
             'aria-labelledby': titleId || undefined,
             'aria-multiselectable': mode === 'range' || undefined,
             className: cn(styles.grid, className),
-            onPointerLeave: (event: PointerEvent<HTMLTableElement>) => {
-                onPointerLeave?.(event);
-                setPreviewDate(null);
-            },
-            onBlur: (event: FocusEvent<HTMLTableElement>) => {
-                onBlur?.(event);
-                if (!event.currentTarget.contains(event.relatedTarget)) setPreviewDate(null);
-            },
+            onPointerLeave: handlePointerLeave,
+            onBlur: handleBlur,
             children: (
                 <>
                     <thead>
@@ -440,7 +448,7 @@ const describeSelection = (
 };
 
 const selectionStatus = (locale: string, start: Date, end?: Date) => {
-    const full = format(locale, { dateStyle: 'full' });
+    const full = gregorianFormat(locale, { dateStyle: 'full' });
     const korean = locale.startsWith('ko');
 
     if (!end)
@@ -450,9 +458,13 @@ const selectionStatus = (locale: string, start: Date, end?: Date) => {
         : `Selected ${full.format(start)} to ${full.format(end)}.`;
 };
 
-/** `gridcell` that carries `aria-selected`, which is not allowed on the button inside it. */
+/**
+
+ * `gridcell` that carries `aria-selected`, which is not allowed on the button inside it.
+
+ */
 const CalendarCell = ({ date, children }: { date: Date; children: ReactNode }) => {
-    const { selected, outsideMonth } = useDayState(date, false);
+    const { selected, outsideMonth } = useDayState(date, { withPreview: false });
 
     return (
         <td
@@ -467,8 +479,8 @@ const CalendarCell = ({ date, children }: { date: Date; children: ReactNode }) =
 
 /**
  * Button for one day in `Calendar.Grid`. Selects the day when pressed.
- * Days of the previous and next month are shown dimmed and can't be pressed.
- * Its accessible name is the full date, such as "2026년 11월 26일 목요일". Renders a `<button>` element.
+ * Days of the previous and next month are shown dimmed, can't be pressed, and never show the selection, even inside the selected range.
+ * Its accessible name is the full date, such as "Thursday, November 26, 2026". Renders a `<button>` element.
  */
 export const CalendarDayPrimitive = forwardRef<HTMLButtonElement, CalendarDayPrimitive.Props>(
     (props, ref) => {
@@ -498,8 +510,8 @@ export const CalendarDayPrimitive = forwardRef<HTMLButtonElement, CalendarDayPri
         const state = useDayState(date);
         const { outsideMonth } = state;
         const dayDisabled = state.disabled || !!disabledProp;
-        const disabled = outsideMonth || state.disabled;
-        const focusableDisabled = !!disabledProp && !disabled;
+        const nativeDisabled = outsideMonth || state.disabled;
+        const focusableDisabled = !!disabledProp && !nativeDisabled;
         const dayState: CalendarDayPrimitive.State = { ...state, disabled: dayDisabled };
         const focused = isSameDay(date, focusedDate) && !outsideMonth;
 
@@ -512,14 +524,14 @@ export const CalendarDayPrimitive = forwardRef<HTMLButtonElement, CalendarDayPri
         }, [focused, focusedDate, shouldFocusRef]);
 
         const label = useMemo(
-            () => format(locale, { dateStyle: 'full' }).format(date),
+            () => gregorianFormat(locale, { dateStyle: 'full' }).format(date),
             [locale, date],
         );
 
         const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
             onClick?.(event);
             // `aria-disabled` and a custom `render` element (a link, say) don't block the click natively.
-            if (disabled || focusableDisabled) return;
+            if (nativeDisabled || focusableDisabled) return;
             select(startOfDay(date), event.nativeEvent);
         };
 
@@ -563,7 +575,7 @@ export const CalendarDayPrimitive = forwardRef<HTMLButtonElement, CalendarDayPri
                 children: date.getDate(),
                 ...dataAttributes(dayState),
                 ...componentProps,
-                disabled,
+                disabled: nativeDisabled,
                 'aria-disabled': focusableDisabled || undefined,
                 onClick: handleClick,
                 onKeyDown: handleKeyDown,
@@ -610,7 +622,10 @@ const getKeyboardTarget = (event: KeyboardEvent, date: Date, weekStartsOn: numbe
 /**
  * Works out how one day looks: selected, inside a range (including the hover or focus preview while only the start is picked), today, or outside the shown month.
  */
-const useDayState = (date: Date, withPreview = true): CalendarDayPrimitive.State => {
+const useDayState = (
+    date: Date,
+    { withPreview = true }: { withPreview?: boolean } = {},
+): CalendarDayPrimitive.State => {
     const { mode, value, previewDate, month, today, disabled } = useCalendarContext();
 
     const outsideMonth = !isSameMonth(date, month);
@@ -652,9 +667,13 @@ type CalendarValueChangeHandler = (
 ) => void;
 
 export interface CalendarRange {
-    /** First day of the range, or `null` before any day is picked. */
+    /**
+     * First day of the range, or `null` before any day is picked.
+     */
     start: Date | null;
-    /** Last day of the range, or `null` while only the first day is picked. */
+    /**
+     * Last day of the range, or `null` while only the first day is picked.
+     */
     end: Date | null;
 }
 
@@ -687,32 +706,39 @@ export interface CalendarRootBaseProps extends Omit<
     defaultMonth?: Date;
     /**
      * BCP 47 locale used for the month title, weekday names, and day labels.
-     * @default 'ko-KR'
+     * Button names and screen reader announcements are in Korean for Korean locales and in English otherwise; pass `aria-label` to the arrow buttons to rename them.
      */
     locale?: string;
     /**
      * First day of the week, from `0` (Sunday) to `6` (Saturday).
-     * @default 0
      */
     weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
     /**
      * Disables the calendar, blocking day selection and month navigation.
-     * @default false
      */
     disabled?: boolean;
+    /**
+     * Parts of the calendar, usually `Calendar.Header` followed by `Calendar.Grid`.
+     */
+    children?: ReactNode;
 }
 
 export interface CalendarSingleProps {
     /**
      * `single` picks one day. `range` picks a first and a last day: the first press sets `start`, the second sets `end` (swapping them if needed), and the next press starts a new range.
-     * @default 'single'
      */
     mode?: 'single';
-    /** Selected day, or `{ start, end }` when `mode` is `range`. Use when the component is controlled. */
+    /**
+     * Selected day, or `{ start, end }` when `mode` is `range`. Use when the component is controlled.
+     */
     value?: Date | null;
-    /** Day, or `{ start, end }` when `mode` is `range`, selected on first render. Use when the component is not controlled. */
+    /**
+     * Day, or `{ start, end }` when `mode` is `range`, selected on first render. Use when the component is not controlled.
+     */
     defaultValue?: Date | null;
-    /** Called when a day is pressed, with the new day, or the new `{ start, end }` when `mode` is `range`. Call `eventDetails.cancel()` to keep the current value. */
+    /**
+     * Called when a day is pressed, with the new day, or the new `{ start, end }` when `mode` is `range`. Call `eventDetails.cancel()` to keep the current value.
+     */
     onValueChange?: (value: Date | null, eventDetails: CalendarRoot.ChangeEventDetails) => void;
 }
 
@@ -721,11 +747,17 @@ export interface CalendarRangeProps {
      * `single` picks one day. `range` picks a first and a last day: the first press sets `start`, the second sets `end` (swapping them if needed), and the next press starts a new range.
      */
     mode: 'range';
-    /** Selected day, or `{ start, end }` when `mode` is `range`. Use when the component is controlled. */
+    /**
+     * Selected day, or `{ start, end }` when `mode` is `range`. Use when the component is controlled.
+     */
     value?: CalendarRange;
-    /** Day, or `{ start, end }` when `mode` is `range`, selected on first render. Use when the component is not controlled. */
+    /**
+     * Day, or `{ start, end }` when `mode` is `range`, selected on first render. Use when the component is not controlled.
+     */
     defaultValue?: CalendarRange;
-    /** Called when a day is pressed, with the new day, or the new `{ start, end }` when `mode` is `range`. Call `eventDetails.cancel()` to keep the current value. */
+    /**
+     * Called when a day is pressed, with the new day, or the new `{ start, end }` when `mode` is `range`. Call `eventDetails.cancel()` to keep the current value.
+     */
     onValueChange?: (value: CalendarRange, eventDetails: CalendarRoot.ChangeEventDetails) => void;
 }
 
@@ -734,7 +766,9 @@ type CalendarSelectionProps = CalendarSingleProps | CalendarRangeProps;
 export namespace CalendarRoot {
     export interface State {
         [key: string]: unknown;
-        /** Whether the calendar ignores user interaction. */
+        /**
+         * Whether the calendar ignores user interaction.
+         */
         disabled: boolean;
     }
     export type Props = CalendarRootBaseProps & CalendarSelectionProps;
@@ -744,7 +778,12 @@ export namespace CalendarRoot {
 
 export namespace CalendarHeader {
     export type State = {};
-    export type Props = VaporUIComponentProps<'div', State>;
+    export interface Props extends VaporUIComponentProps<'div', State> {
+        /**
+         * Parts of the header, such as `Calendar.PreviousPrimitive`, `Calendar.TitlePrimitive`, and `Calendar.NextPrimitive`. Defaults to all three in that order.
+         */
+        children?: ReactNode;
+    }
 }
 
 export namespace CalendarPreviousPrimitive {
@@ -768,7 +807,9 @@ export namespace CalendarTitlePrimitive {
 export namespace CalendarGrid {
     export type State = {};
     export interface Props extends Omit<VaporUIComponentProps<'table', State>, 'children'> {
-        /** Renders one day of the grid. Defaults to `Calendar.DayPrimitive`. */
+        /**
+         * Renders one day of the grid. Defaults to `Calendar.DayPrimitive`.
+         */
         children?: (date: Date) => ReactNode;
     }
 }
@@ -776,21 +817,35 @@ export namespace CalendarGrid {
 export namespace CalendarDayPrimitive {
     export interface State {
         [key: string]: unknown;
-        /** Whether the day is selected: the selected day, or any day of the selected range. */
+        /**
+         * Whether the day is selected: the selected day, or any day of the selected range.
+         */
         selected: boolean;
-        /** Whether the day is the first selected day. A single selection is both the start and the end. */
+        /**
+         * Whether the day is the first selected day. A single selection is both the start and the end.
+         */
         selectionStart: boolean;
-        /** Whether the day is the last selected day. */
+        /**
+         * Whether the day is the last selected day.
+         */
         selectionEnd: boolean;
-        /** Whether the day is today. */
+        /**
+         * Whether the day is today.
+         */
         current: boolean;
-        /** Whether the day belongs to the previous or the next month. */
+        /**
+         * Whether the day belongs to the previous or the next month.
+         */
         outsideMonth: boolean;
-        /** Whether the calendar is disabled. */
+        /**
+         * Whether the day can't be pressed, because the calendar or the day is disabled.
+         */
         disabled: boolean;
     }
     export interface Props extends VaporUIComponentProps<'button', State> {
-        /** Day this button selects. */
+        /**
+         * Day this button selects.
+         */
         date: Date;
     }
 }
