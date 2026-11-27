@@ -97,7 +97,6 @@ describe('<Calendar />', () => {
         it('does not let days of other months be pressed', () => {
             const rendered = render(<SingleCalendar />);
 
-            // The grid of November 2026 ends with December 1–12.
             const outside = day(rendered, '2026년 12월 1일 화요일');
             expect(outside).toBeDisabled();
             expect(outside).toHaveAttribute('data-outside-month');
@@ -267,7 +266,6 @@ describe('<Calendar />', () => {
         it('does not steal focus from the arrows after a keyboard move onto the same day', async () => {
             const rendered = render(<SingleCalendar defaultValue={new Date(2026, 10, 1)} />);
 
-            // Nov 1 2026 is a Sunday, so Home keeps the focus where it is.
             day(rendered, '2026년 11월 1일 일요일').focus();
             await userEvent.keyboard('{Home}');
 
@@ -490,7 +488,6 @@ describe('<Calendar />', () => {
             expect(rendered.getByRole('grid', { name: '2027년 3월' })).toBeInTheDocument();
             expect(day(rendered, '2027년 3월 3일 수요일')).toHaveAttribute('tabindex', '0');
 
-            // The same day as a new Date object must not pull the user back from another month.
             await userEvent.click(rendered.getByRole('button', { name: '다음 달' }));
             rendered.rerender(<Controlled value={new Date(2027, 2, 3)} />);
             expect(rendered.getByRole('grid', { name: '2027년 4월' })).toBeInTheDocument();

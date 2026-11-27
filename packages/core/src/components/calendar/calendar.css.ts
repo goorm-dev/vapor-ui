@@ -5,7 +5,6 @@ import { typography } from '~/styles/mixins/typography.css';
 import { visuallyHidden } from '~/styles/mixins/visually-hidden.css';
 import { vars } from '~/styles/themes.css';
 
-// ponytail: no face of its own, so a Popover or a page can host it without a doubled surface.
 export const root = componentStyle({
     display: 'inline-flex',
     flexDirection: 'column',
@@ -27,7 +26,6 @@ export const grid = componentStyle({
     borderSpacing: 0,
 });
 
-// Divider under the weekday row. A box-shadow keeps it out of the row height.
 export const weekdays = componentStyle({
     boxShadow: `inset 0 -1px 0 ${vars.color.border.normal}`,
 });
@@ -65,7 +63,6 @@ export const day = componentStyle([
         selectors: {
             '&[data-current]': { color: vars.color.foreground.primary },
 
-            // Days between the ends join into one strip: weak face, no corners.
             '&[data-selected]': {
                 borderRadius: 0,
                 backgroundColor: vars.color.background['primary-weak'],
@@ -90,7 +87,6 @@ export const day = componentStyle([
                 color: vars.color.foreground.hint,
             },
 
-            // Days and the arrow buttons dim themselves; the title stays as is (Figma 💙Calendar, Disabled).
             [when.disabled()]: { opacity: 0.32, pointerEvents: 'none' },
         },
 
@@ -106,7 +102,6 @@ export const day = componentStyle([
                 },
             },
 
-            // The preview swaps ends, so the cell's aria-selected marks the clicked start.
             '(prefers-reduced-motion: no-preference)': {
                 selectors: {
                     'td[aria-selected="true"] > &[data-selection-start]': {

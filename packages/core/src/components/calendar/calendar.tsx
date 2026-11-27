@@ -38,7 +38,6 @@ const [CalendarProvider, useCalendarContext] = createContext<CalendarContext>({
 
 const EMPTY_RANGE: CalendarRange = { start: null, end: null };
 
-// An uncontrolled value can be left over from the other mode when `mode` changes, so read it by shape.
 const asDate = (value: CalendarValue) => (value instanceof Date ? value : null);
 const asRange = (value: CalendarValue) => (value && !(value instanceof Date) ? value : EMPTY_RANGE);
 
@@ -48,7 +47,6 @@ const isSameValue = (a: CalendarValue, b: CalendarValue) =>
         : isSameDay(asRange(a).start, asRange(b).start) &&
           isSameDay(asRange(a).end, asRange(b).end);
 
-// The grid walks Gregorian months, so labels stay Gregorian even for a `-u-ca-` locale.
 const format = (locale: string, options: Intl.DateTimeFormatOptions) =>
     new Intl.DateTimeFormat(locale, { ...options, calendar: 'gregory' });
 
@@ -58,10 +56,6 @@ const navigationLabel = (locale: string, direction: 'previous' | 'next') => {
     if (direction === 'previous') return korean ? '이전 달' : 'Previous month';
     return korean ? '다음 달' : 'Next month';
 };
-
-/* -------------------------------------------------------------------------------------------------
- * Calendar.Root
- * -----------------------------------------------------------------------------------------------*/
 
 /**
  * Root of the Calendar compound component, a month view for picking one date or a range of dates.
@@ -150,7 +144,6 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
         const range = asRange(value);
         let next: CalendarRange = { start: date, end: null };
 
-        // A second press closes the range; pressing an earlier day swaps the ends.
         if (range.start && !range.end) {
             next =
                 compareDay(date, range.start) < 0
@@ -169,7 +162,6 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
     const range = asRange(value);
     const pickingEnd = mode === 'range' && !!range.start && !range.end;
 
-    // A controlled parent can drop the change without `cancel()`, so announce only what `value` took.
     const announced = announcement && isSameValue(value, announcement.value);
     const liveStatus = pickingEnd ? rangeStatus(locale) : announced ? announcement.text : '';
 
@@ -234,10 +226,6 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
 });
 CalendarRoot.displayName = 'Calendar.Root';
 
-/* -------------------------------------------------------------------------------------------------
- * Calendar.Header
- * -----------------------------------------------------------------------------------------------*/
-
 /**
  * Row above the grid with the previous-month button, the month title, and the next-month button.
  * Pass children to arrange `Calendar.PreviousPrimitive`, `Calendar.TitlePrimitive`, and `Calendar.NextPrimitive` yourself. Renders a `<div>` element.
@@ -262,10 +250,6 @@ export const CalendarHeader = forwardRef<HTMLDivElement, CalendarHeader.Props>((
     });
 });
 CalendarHeader.displayName = 'Calendar.Header';
-
-/* -------------------------------------------------------------------------------------------------
- * Calendar.PreviousPrimitive / Calendar.NextPrimitive
- * -----------------------------------------------------------------------------------------------*/
 
 const createNavigationButton = (direction: 'previous' | 'next') => {
     const Component = forwardRef<HTMLElement, CalendarPreviousPrimitive.Props>((props, ref) => {
@@ -315,10 +299,6 @@ CalendarPreviousPrimitive.displayName = 'Calendar.PreviousPrimitive';
 export const CalendarNextPrimitive = createNavigationButton('next');
 CalendarNextPrimitive.displayName = 'Calendar.NextPrimitive';
 
-/* -------------------------------------------------------------------------------------------------
- * Calendar.TitlePrimitive
- * -----------------------------------------------------------------------------------------------*/
-
 /**
  * Title of the shown month, such as "2026년 11월", formatted with the `locale` of `Calendar.Root`. Screen readers announce it when the month changes. Renders a `<div>` element.
  */
@@ -346,10 +326,6 @@ export const CalendarTitlePrimitive = forwardRef<HTMLDivElement, CalendarTitlePr
     },
 );
 CalendarTitlePrimitive.displayName = 'Calendar.TitlePrimitive';
-
-/* -------------------------------------------------------------------------------------------------
- * Calendar.Grid
- * -----------------------------------------------------------------------------------------------*/
 
 /**
  * Grid of the shown month: a row of weekday names, then six weeks of day buttons.
@@ -435,7 +411,6 @@ const selectionStatus = (locale: string, start: Date, end?: Date) => {
 
 /** `gridcell` that carries `aria-selected`, which is not allowed on the button inside it. */
 const CalendarCell = ({ date, children }: { date: Date; children: ReactNode }) => {
-    // The hover or focus preview is not a selection, so it stays out of aria-selected.
     const { selected, outsideMonth } = useDayState(date, false);
 
     return (
@@ -448,10 +423,6 @@ const CalendarCell = ({ date, children }: { date: Date; children: ReactNode }) =
         </td>
     );
 };
-
-/* -------------------------------------------------------------------------------------------------
- * Calendar.DayPrimitive
- * -----------------------------------------------------------------------------------------------*/
 
 /**
  * Button for one day in `Calendar.Grid`. Selects the day when pressed.
@@ -492,8 +463,6 @@ export const CalendarDayPrimitive = forwardRef<HTMLButtonElement, CalendarDayPri
         const focused = isSameDay(date, focusedDate) && !outsideMonth;
 
         const buttonRef = useRef<HTMLButtonElement | null>(null);
-        // focusedDate is a new object on every keyboard move, so a move onto the same day
-        // (Home on the first day of the week) still runs this and clears the flag.
         useEffect(() => {
             if (focused && shouldFocusRef.current) {
                 shouldFocusRef.current = false;
@@ -535,7 +504,6 @@ export const CalendarDayPrimitive = forwardRef<HTMLButtonElement, CalendarDayPri
 
         const handleFocus = (event: FocusEvent<HTMLButtonElement>) => {
             onFocus?.(event);
-            // Keeps the roving tab stop on the day the user last reached, by mouse or keyboard.
             if (!isSameDay(date, focusedDate)) setFocusedDate(startOfDay(date));
             showPreview();
         };
@@ -616,7 +584,6 @@ const useDayState = (date: Date, withPreview = true): CalendarDayPrimitive.State
 
     if (outsideMonth) return base;
 
-    // A single selection is drawn as a range that starts and ends on the same day.
     if (mode === 'single') {
         const selected = isSameDay(asDate(value), date);
         return { ...base, selected, selectionStart: selected, selectionEnd: selected };
@@ -636,8 +603,6 @@ const useDayState = (date: Date, withPreview = true): CalendarDayPrimitive.State
         selectionEnd: isSameDay(date, end),
     };
 };
-
-/* -----------------------------------------------------------------------------------------------*/
 
 type CalendarValue = Date | CalendarRange | null;
 type CalendarValueChangeHandler = (
@@ -743,7 +708,6 @@ export namespace CalendarHeader {
 
 export namespace CalendarPreviousPrimitive {
     export type State = IconButton.State;
-    // Size and look are fixed so the arrows always match the 40px day cells.
     export type Props = Omit<
         Partial<IconButton.Props>,
         'size' | 'variant' | 'colorPalette' | 'shape'

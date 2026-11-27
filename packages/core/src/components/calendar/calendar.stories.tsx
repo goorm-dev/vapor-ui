@@ -47,7 +47,6 @@ export const Range: StoryObj<typeof Calendar.Root> = {
     },
 };
 
-// A fixed month far from today, so the today marker never shifts the visual baseline.
 const MAY_2020 = new Date(2020, 4, 1);
 
 export const TestBed: StoryObj<typeof Calendar.Root> = {
