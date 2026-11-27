@@ -425,6 +425,41 @@ describe('<Calendar />', () => {
             expect(onValueChange).not.toHaveBeenCalled();
         });
 
+        it('announces the selected day, but not a canceled change', async () => {
+            const rendered = render(
+                <SingleCalendar
+                    onValueChange={(value, details) => {
+                        if (value?.getDate() === 13) details.cancel();
+                    }}
+                />,
+            );
+
+            await userEvent.click(day(rendered, '2026년 11월 12일 목요일'));
+            expect(
+                rendered.getByText('2026년 11월 12일 목요일을 선택했습니다.'),
+            ).toBeInTheDocument();
+
+            await userEvent.click(day(rendered, '2026년 11월 13일 금요일'));
+            expect(rendered.queryByText(/13일 금요일을 선택했습니다/)).not.toBeInTheDocument();
+        });
+
+        it('announces the selected range', async () => {
+            const rendered = render(
+                <Calendar.Root mode="range" defaultMonth={NOV_2026}>
+                    <Calendar.Grid />
+                </Calendar.Root>,
+            );
+
+            await userEvent.click(day(rendered, '2026년 11월 15일 일요일'));
+            await userEvent.click(day(rendered, '2026년 11월 12일 목요일'));
+
+            expect(
+                rendered.getByText(
+                    '2026년 11월 12일 목요일부터 2026년 11월 15일 일요일까지 선택했습니다.',
+                ),
+            ).toBeInTheDocument();
+        });
+
         it('shows the month of a controlled value set from outside', async () => {
             const Controlled = ({ value }: { value: Date }) => (
                 <Calendar.Root value={value}>

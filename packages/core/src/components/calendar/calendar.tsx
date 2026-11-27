@@ -102,6 +102,7 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
         return isSameMonth(preferred, month) ? startOfDay(preferred) : month;
     });
     const [previewDate, setPreviewDate] = useState<Date | null>(null);
+    const [announcement, setAnnouncement] = useState('');
 
     const anchorTime = anchorDate ? startOfDay(anchorDate).getTime() : null;
     const [prevAnchorTime, setPrevAnchorTime] = useState(anchorTime);
@@ -132,25 +133,34 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
         setFocusedDate(date);
 
         if (mode === 'single') {
-            if (!isSameDay(asDate(value), date)) setValue(date, details);
+            if (isSameDay(asDate(value), date)) return;
+            setValue(date, details);
+            if (!details.isCanceled) setAnnouncement(selectionStatus(locale, date));
             return;
         }
 
         const range = asRange(value);
-
-        if (!range.start || range.end) {
-            setValue({ start: date, end: null }, details);
-            return;
-        }
+        let next: CalendarRange = { start: date, end: null };
 
         // A second press closes the range; pressing an earlier day swaps the ends.
-        const [start, end] =
-            compareDay(date, range.start) < 0 ? [date, range.start] : [range.start, date];
-        setValue({ start, end }, details);
+        if (range.start && !range.end) {
+            next =
+                compareDay(date, range.start) < 0
+                    ? { start: date, end: range.start }
+                    : { start: range.start, end: date };
+        }
+
+        setValue(next, details);
+        if (details.isCanceled) return;
+        setAnnouncement(
+            next.start && next.end ? selectionStatus(locale, next.start, next.end) : '',
+        );
     });
 
     const range = asRange(value);
     const pickingEnd = mode === 'range' && !!range.start && !range.end;
+
+    const liveStatus = pickingEnd ? rangeStatus(locale) : announcement;
 
     const state: CalendarRoot.State = useMemo(() => ({ disabled }), [disabled]);
 
@@ -164,9 +174,8 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
             children: (
                 <>
                     {children}
-                    {/* Tells screen readers that the start is picked and the end is next. */}
                     <span aria-live="polite" className={styles.status}>
-                        {pickingEnd ? rangeStatus(locale) : ''}
+                        {liveStatus}
                     </span>
                 </>
             ),
@@ -401,6 +410,17 @@ const rangeStatus = (locale: string) =>
     locale.startsWith('ko')
         ? '시작일을 선택했습니다. 종료일을 선택하세요.'
         : 'Start date selected. Choose an end date.';
+
+const selectionStatus = (locale: string, start: Date, end?: Date) => {
+    const full = format(locale, { dateStyle: 'full' });
+    const korean = locale.startsWith('ko');
+
+    if (!end)
+        return korean ? `${full.format(start)}을 선택했습니다.` : `Selected ${full.format(start)}.`;
+    return korean
+        ? `${full.format(start)}부터 ${full.format(end)}까지 선택했습니다.`
+        : `Selected ${full.format(start)} to ${full.format(end)}.`;
+};
 
 /** `gridcell` that carries `aria-selected`, which is not allowed on the button inside it. */
 const CalendarCell = ({ date, children }: { date: Date; children: ReactNode }) => {
