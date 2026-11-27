@@ -523,5 +523,44 @@ describe('<Calendar />', () => {
             await userEvent.keyboard('{ArrowRight}');
             expect(day(rendered, '2026년 11월 16일 월요일')).toHaveFocus();
         });
+
+        it('treats an invalid Date as no value instead of crashing', () => {
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+            const single = render(
+                <Calendar.Root value={new Date('not a date')} defaultMonth={NOV_2026}>
+                    <Calendar.Header />
+                    <Calendar.Grid />
+                </Calendar.Root>,
+            );
+            expect(single.getByRole('grid', { name: '2026년 11월' })).toBeInTheDocument();
+            expect(single.container.querySelector('[data-selected]')).toBeNull();
+            single.unmount();
+
+            const range = render(
+                <Calendar.Root
+                    mode="range"
+                    defaultMonth={new Date(NaN)}
+                    defaultValue={{ start: new Date(2026, 10, 5), end: new Date(NaN) }}
+                >
+                    <Calendar.Header />
+                    <Calendar.Grid />
+                </Calendar.Root>,
+            );
+            expect(range.getByRole('grid', { name: '2026년 11월' })).toBeInTheDocument();
+            expect(day(range, '2026년 11월 5일 목요일')).toHaveAttribute('data-selection-start');
+            expect(
+                range.getByText('시작일을 선택했습니다. 종료일을 선택하세요.'),
+            ).toBeInTheDocument();
+            range.unmount();
+
+            const emptyRange = render(
+                <Calendar.Root mode="range" defaultValue={{ start: new Date(NaN), end: null }}>
+                    <Calendar.Grid />
+                </Calendar.Root>,
+            );
+            expect(emptyRange.container.querySelector('[data-selected]')).toBeNull();
+            expect(warn).toHaveBeenCalledWith(expect.stringContaining('invalid Date'));
+            warn.mockRestore();
+        });
     });
 });

@@ -15,6 +15,7 @@ import type { MakeChangeEventDetails } from '~/utils/create-event-details';
 import { createChangeEventDetails } from '~/utils/create-event-details';
 import { resolveStyles } from '~/utils/resolve-styles';
 import type { VaporUIComponentProps } from '~/utils/types';
+import { warn } from '~/utils/warn';
 
 import { IconButton } from '../icon-button';
 import * as styles from './calendar.css';
@@ -38,8 +39,23 @@ const [CalendarProvider, useCalendarContext] = createContext<CalendarContext>({
 
 const EMPTY_RANGE: CalendarRange = { start: null, end: null };
 
-const asDate = (value: CalendarValue) => (value instanceof Date ? value : null);
-const asRange = (value: CalendarValue) => (value && !(value instanceof Date) ? value : EMPTY_RANGE);
+const isInvalidDate = (date: unknown) => date instanceof Date && Number.isNaN(date.getTime());
+const validDate = (date: Date | null | undefined) => (date && !isInvalidDate(date) ? date : null);
+
+const asDate = (value: CalendarValue) => (value instanceof Date ? validDate(value) : null);
+const asRange = (value: CalendarValue): CalendarRange => {
+    if (!value || value instanceof Date) return EMPTY_RANGE;
+    const start = validDate(value.start);
+    return start ? { start, end: validDate(value.end) } : EMPTY_RANGE;
+};
+
+const warnInvalidDates = (value: CalendarValue, defaultMonth: Date | undefined) => {
+    if (process.env.NODE_ENV === 'production') return;
+    const dates = value instanceof Date ? [value] : [value?.start, value?.end];
+    if ([...dates, defaultMonth].some(isInvalidDate)) {
+        warn('Calendar received an invalid Date. It is treated as no date.');
+    }
+};
 
 const isSameValue = (a: CalendarValue, b: CalendarValue) =>
     a instanceof Date || b instanceof Date
@@ -84,6 +100,8 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
         state: 'value',
     });
 
+    warnInvalidDates(value, defaultMonth);
+
     const onValueChange = useStableCallback(onValueChangeProp as CalendarValueChangeHandler);
 
     const setValue = useStableCallback(
@@ -96,7 +114,9 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
 
     const anchorDate = mode === 'range' ? asRange(value).start : asDate(value);
     const [today] = useState(() => startOfDay(new Date()));
-    const [month, setMonth] = useState(() => startOfMonth(defaultMonth ?? anchorDate ?? today));
+    const [month, setMonth] = useState(() =>
+        startOfMonth(validDate(defaultMonth) ?? anchorDate ?? today),
+    );
     const [focusedDate, setFocusedDate] = useState(() => {
         const preferred = anchorDate ?? today;
         return isSameMonth(preferred, month) ? startOfDay(preferred) : month;
