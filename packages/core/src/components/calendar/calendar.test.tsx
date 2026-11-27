@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { act, useState } from 'react';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server';
 
 import { cleanup, fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -662,6 +664,42 @@ describe('<Calendar />', () => {
             await userEvent.click(undoable.getByRole('button', { name: 'preset' }));
             await userEvent.click(undoable.getByRole('button', { name: 'undo' }));
             expect(undoable.queryByText(/선택했습니다/)).not.toBeInTheDocument();
+        });
+
+        it('hydrates without a mismatch when the server rendered on another day', async () => {
+            const calendar = (
+                <Calendar.Root>
+                    <Calendar.Header />
+                    <Calendar.Grid />
+                </Calendar.Root>
+            );
+            vi.useFakeTimers({ toFake: ['Date'] });
+            vi.setSystemTime(new Date(2026, 10, 26, 23, 59));
+            const html = renderToString(calendar);
+            vi.setSystemTime(new Date(2026, 10, 27, 0, 1));
+
+            const container = document.createElement('div');
+            container.innerHTML = html;
+            document.body.appendChild(container);
+            const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+            const root = await act(async () => hydrateRoot(container, calendar));
+
+            expect(error).not.toHaveBeenCalled();
+            const labels = (selector: string) =>
+                [...container.querySelectorAll(selector)].map((el) =>
+                    el.getAttribute('aria-label'),
+                );
+            expect(labels('[aria-current="date"]')).toEqual(['2026년 11월 27일 금요일']);
+
+            act(() =>
+                fireEvent.click(container.querySelector('[aria-label="2026년 11월 10일 화요일"]')!),
+            );
+            expect(labels('table button[tabindex="0"]')).toEqual(['2026년 11월 10일 화요일']);
+
+            act(() => root.unmount());
+            container.remove();
+            error.mockRestore();
+            vi.useRealTimers();
         });
     });
 });

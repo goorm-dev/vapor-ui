@@ -109,14 +109,22 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
     );
 
     const anchorDate = mode === 'range' ? asRange(value).start : asDate(value);
-    const [today] = useState(() => startOfDay(new Date()));
+    const [today, setToday] = useState<Date | null>(null);
     const [month, setMonth] = useState(() =>
-        startOfMonth(validDate(defaultMonth) ?? anchorDate ?? today),
+        startOfMonth(validDate(defaultMonth) ?? anchorDate ?? new Date()),
     );
-    const [focusedDate, setFocusedDate] = useState(() => {
-        const preferred = anchorDate ?? today;
-        return isSameMonth(preferred, month) ? startOfDay(preferred) : month;
-    });
+    const [focusedDate, setFocusedDate] = useState(() =>
+        anchorDate && isSameMonth(anchorDate, month) ? startOfDay(anchorDate) : month,
+    );
+    const defaultFocusRef = useRef(anchorDate ? null : focusedDate);
+
+    useEffect(() => {
+        const now = startOfDay(new Date());
+        setToday(now);
+        setFocusedDate((current) =>
+            current === defaultFocusRef.current && isSameMonth(now, current) ? now : current,
+        );
+    }, []);
     const [previewDate, setPreviewDate] = useState<Date | null>(null);
     const [picked, setPicked] = useState(false);
     const [announcement, setAnnouncement] = useState('');
@@ -663,7 +671,7 @@ interface CalendarContext {
     titleId: string;
     previewDate: Date | null;
     setPreviewDate: (date: Date | null) => void;
-    today: Date;
+    today: Date | null;
     locale: string;
     weekStartsOn: number;
     disabled: boolean;
