@@ -1,7 +1,7 @@
 {
     "calendar-day-primitive": {
         "description": {
-            "source": "a1790cff068bf7a5",
+            "source": "0b11f467b969c864",
             "guide": 2,
             "terms": "2dd8dcdba2b16492"
         },
@@ -55,9 +55,14 @@
     },
     "calendar-header": {
         "description": {
-            "source": "081637db0772bc3d",
+            "source": "2100496177f5920c",
             "guide": 2,
-            "terms": "1a6f83e43baea56f"
+            "terms": "65f6d9e1c27ec78b"
+        },
+        "props.children": {
+            "source": "aef5f6374706bc0a",
+            "guide": 2,
+            "terms": "24553c32f0c78530"
         },
         "props.className": {
             "source": "594324ed2c588d62",
@@ -77,9 +82,9 @@
     },
     "calendar-next-primitive": {
         "description": {
-            "source": "ba5caabfd521f84d",
+            "source": "b9d59cbbb93350df",
             "guide": 2,
-            "terms": "2dd8dcdba2b16492"
+            "terms": "9e0e05eac046ab84"
         },
         "props.className": {
             "source": "594324ed2c588d62",
@@ -109,9 +114,9 @@
     },
     "calendar-previous-primitive": {
         "description": {
-            "source": "91339ca71812a909",
+            "source": "bad6248c42268630",
             "guide": 2,
-            "terms": "2dd8dcdba2b16492"
+            "terms": "9e0e05eac046ab84"
         },
         "props.className": {
             "source": "594324ed2c588d62",
@@ -145,6 +150,11 @@
             "guide": 2,
             "terms": "3f97d30ff500acb9"
         },
+        "props.children": {
+            "source": "80956d0170c08cc7",
+            "guide": 2,
+            "terms": "24553c32f0c78530"
+        },
         "props.className": {
             "source": "594324ed2c588d62",
             "guide": 2,
@@ -166,9 +176,9 @@
             "terms": "4f53cda18c2baa0c"
         },
         "props.locale": {
-            "source": "e6f4ffd6404cf582",
+            "source": "be5566bd83e1e4b7",
             "guide": 2,
-            "terms": "8518674c00398286"
+            "terms": "0ba950976125855a"
         },
         "props.mode": {
             "source": "66689df4817afe52",
@@ -203,9 +213,9 @@
     },
     "calendar-title-primitive": {
         "description": {
-            "source": "edc60871c78a00aa",
+            "source": "60c97e379d610aa0",
             "guide": 2,
-            "terms": "2dd8dcdba2b16492"
+            "terms": "f1d9231016bbfbcc"
         },
         "props.className": {
             "source": "594324ed2c588d62",

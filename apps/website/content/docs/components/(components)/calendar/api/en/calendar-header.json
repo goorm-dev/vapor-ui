@@ -1,7 +1,14 @@
 {
     "name": "CalendarHeader",
-    "description": "Row above the grid with the previous-month button, the month title, and the next-month button.\nPass children to arrange `Calendar.PreviousPrimitive`, `Calendar.TitlePrimitive`, and `Calendar.NextPrimitive` yourself. Renders a `<div>` element.",
+    "description": "Combines `Calendar.PreviousPrimitive`, `Calendar.TitlePrimitive`, and `Calendar.NextPrimitive` into a single part, the row above the grid.\nPass children to arrange them yourself. Renders a `<div>` element.",
     "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Parts of the header, such as `Calendar.PreviousPrimitive`, `Calendar.TitlePrimitive`, and `Calendar.NextPrimitive`. Defaults to all three in that order."
+        },
         {
             "name": "className",
             "type": ["string", "function"],

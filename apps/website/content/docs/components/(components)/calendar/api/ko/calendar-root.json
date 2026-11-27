@@ -24,6 +24,13 @@
             "description": "선택된 날짜. `mode`가 `range`이면 `{ start, end }`. 제어 컴포넌트로 쓸 때 사용하세요."
         },
         {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Calendar의 파트. 보통 `Calendar.Header` 다음에 `Calendar.Grid`를 둡니다."
+        },
+        {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: CalendarRoot.State) => (string | undefined)) | undefined",
@@ -50,7 +57,7 @@
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "월 제목, 요일 이름, 날짜 레이블에 사용하는 BCP 47 로캘.",
+            "description": "월 제목, 요일 이름, 날짜 레이블에 쓰이는 BCP 47 locale.\n버튼 이름과 스크린 리더 안내는 한국어 locale에서는 한국어, 그 밖에는 영어로 제공됩니다. 화살표 버튼의 이름을 바꾸려면 버튼에 `aria-label`을 전달하세요.",
             "defaultValue": "ko-KR"
         },
         {

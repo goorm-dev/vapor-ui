@@ -24,6 +24,13 @@
             "description": "Selected day, or `{ start, end }` when `mode` is `range`. Use when the component is controlled."
         },
         {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "Parts of the calendar, usually `Calendar.Header` followed by `Calendar.Grid`."
+        },
+        {
             "name": "className",
             "type": ["string", "function"],
             "detailedType": "string | ((state: CalendarRoot.State) => (string | undefined)) | undefined",
@@ -50,7 +57,7 @@
             "type": ["string"],
             "detailedType": "string | undefined",
             "required": false,
-            "description": "BCP 47 locale used for the month title, weekday names, and day labels.",
+            "description": "BCP 47 locale used for the month title, weekday names, and day labels.\nButton names and screen reader announcements are in Korean for Korean locales and in English otherwise; pass `aria-label` to the arrow buttons to rename them.",
             "defaultValue": "ko-KR"
         },
         {

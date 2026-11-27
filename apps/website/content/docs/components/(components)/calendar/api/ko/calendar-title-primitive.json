@@ -1,6 +1,6 @@
 {
     "name": "CalendarTitlePrimitive",
-    "description": "표시 중인 달의 제목. \"2026년 11월\"처럼 `Calendar.Root`의 `locale`로 형식을 정합니다. 달이 바뀌면 스크린 리더가 이를 안내합니다. `<div>` 요소로 렌더링됩니다.",
+    "description": "\"November 2026\"처럼 표시 중인 월의 제목. `Calendar.Root`의 `locale`에 맞춰 형식이 정해집니다. 월이 바뀌면 스크린 리더가 이를 알립니다. `<div>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",

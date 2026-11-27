@@ -102,5 +102,9 @@
     {
         "en": "indeterminate",
         "ko": "indeterminate"
+    },
+    {
+        "en": "locale",
+        "ko": "locale"
     }
 ]

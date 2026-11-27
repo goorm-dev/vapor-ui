@@ -1,6 +1,6 @@
 {
     "name": "CalendarPreviousPrimitive",
-    "description": "이전 달을 표시하는 버튼. 접근 가능한 이름은 기본적으로 한국어 로캘에서는 \"이전 달\", 그 외에는 \"Previous month\"입니다. `<button>` 요소로 렌더링됩니다.",
+    "description": "이전 달을 표시하는 버튼. 접근 가능한 이름은 기본적으로 한국어 locale에서는 한국어 레이블, 그 밖에는 \"Previous month\"입니다. `<button>` 요소로 렌더링됩니다.",
     "props": [
         {
             "name": "className",

@@ -1,6 +1,6 @@
 {
     "name": "CalendarPreviousPrimitive",
-    "description": "Button that shows the previous month. Its accessible name defaults to \"이전 달\" for Korean locales and \"Previous month\" otherwise. Renders a `<button>` element.",
+    "description": "Button that shows the previous month. Its accessible name defaults to a Korean label for Korean locales and to \"Previous month\" otherwise. Renders a `<button>` element.",
     "props": [
         {
             "name": "className",

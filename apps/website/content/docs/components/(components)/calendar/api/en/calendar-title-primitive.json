@@ -1,6 +1,6 @@
 {
     "name": "CalendarTitlePrimitive",
-    "description": "Title of the shown month, such as \"2026년 11월\", formatted with the `locale` of `Calendar.Root`. Screen readers announce it when the month changes. Renders a `<div>` element.",
+    "description": "Title of the shown month, such as \"November 2026\", formatted with the `locale` of `Calendar.Root`. Screen readers announce it when the month changes. Renders a `<div>` element.",
     "props": [
         {
             "name": "className",

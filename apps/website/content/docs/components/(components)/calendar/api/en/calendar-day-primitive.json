@@ -1,6 +1,6 @@
 {
     "name": "CalendarDayPrimitive",
-    "description": "Button for one day in `Calendar.Grid`. Selects the day when pressed.\nDays of the previous and next month are shown dimmed and can't be pressed.\nIts accessible name is the full date, such as \"2026년 11월 26일 목요일\". Renders a `<button>` element.",
+    "description": "Button for one day in `Calendar.Grid`. Selects the day when pressed.\nDays of the previous and next month are shown dimmed, can't be pressed, and never show the selection, even inside the selected range.\nIts accessible name is the full date, such as \"Thursday, November 26, 2026\". Renders a `<button>` element.",
     "props": [
         {
             "name": "date",

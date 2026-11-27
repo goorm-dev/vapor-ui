@@ -1,7 +1,14 @@
 {
     "name": "CalendarHeader",
-    "description": "그리드 위의 행. 이전 달 버튼, 월 제목, 다음 달 버튼이 들어 있습니다.\n`Calendar.PreviousPrimitive`, `Calendar.TitlePrimitive`, `Calendar.NextPrimitive`를 직접 배치하려면 자식을 전달하세요. `<div>` 요소로 렌더링됩니다.",
+    "description": "`Calendar.PreviousPrimitive`, `Calendar.TitlePrimitive`, `Calendar.NextPrimitive`를 그리드 위의 행인 하나의 파트로 합칩니다.\n직접 배치하려면 자식을 전달하세요. `<div>` 요소로 렌더링됩니다.",
     "props": [
+        {
+            "name": "children",
+            "type": ["ReactNode"],
+            "detailedType": "ReactNode",
+            "required": false,
+            "description": "헤더의 파트. `Calendar.PreviousPrimitive`, `Calendar.TitlePrimitive`, `Calendar.NextPrimitive` 등이 있습니다. 기본값은 이 세 파트를 순서대로 모두 렌더링하는 것입니다."
+        },
         {
             "name": "className",
             "type": ["string", "function"],
