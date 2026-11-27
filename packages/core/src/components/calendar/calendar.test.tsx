@@ -220,6 +220,29 @@ describe('<Calendar />', () => {
             expect(rendered.getByText('2026년 11월')).toBeInTheDocument();
             expect(day(rendered, '2026년 11월 1일 일요일')).toHaveFocus();
         });
+
+        it('moves back by day, week, month, and year, and selects with Space', async () => {
+            const rendered = render(<SingleCalendar defaultValue={new Date(2026, 10, 12)} />);
+
+            day(rendered, '2026년 11월 12일 목요일').focus();
+
+            await userEvent.keyboard('{ArrowLeft}');
+            expect(day(rendered, '2026년 11월 11일 수요일')).toHaveFocus();
+
+            await userEvent.keyboard('{ArrowUp}');
+            expect(day(rendered, '2026년 11월 4일 수요일')).toHaveFocus();
+
+            await userEvent.keyboard('{PageDown}');
+            expect(rendered.getByText('2026년 12월')).toBeInTheDocument();
+            expect(day(rendered, '2026년 12월 4일 금요일')).toHaveFocus();
+
+            await userEvent.keyboard('{Shift>}{PageUp}{/Shift}');
+            expect(rendered.getByText('2025년 12월')).toBeInTheDocument();
+            expect(day(rendered, '2025년 12월 4일 목요일')).toHaveFocus();
+
+            await userEvent.keyboard(' ');
+            expect(day(rendered, '2025년 12월 4일 목요일')).toHaveAttribute('data-selected');
+        });
     });
 
     it('marks today with aria-current', () => {
