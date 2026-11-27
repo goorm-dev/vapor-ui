@@ -103,6 +103,16 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
     });
     const [previewDate, setPreviewDate] = useState<Date | null>(null);
 
+    const anchorTime = anchorDate ? startOfDay(anchorDate).getTime() : null;
+    const [prevAnchorTime, setPrevAnchorTime] = useState(anchorTime);
+    if (anchorTime !== prevAnchorTime) {
+        setPrevAnchorTime(anchorTime);
+        if (anchorDate && !isSameMonth(anchorDate, month)) {
+            setMonth(startOfMonth(anchorDate));
+            setFocusedDate(startOfDay(anchorDate));
+        }
+    }
+
     const shouldFocusRef = useRef(false);
     const titleId = useVaporId();
 

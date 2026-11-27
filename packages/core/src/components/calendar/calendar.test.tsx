@@ -425,6 +425,25 @@ describe('<Calendar />', () => {
             expect(onValueChange).not.toHaveBeenCalled();
         });
 
+        it('shows the month of a controlled value set from outside', async () => {
+            const Controlled = ({ value }: { value: Date }) => (
+                <Calendar.Root value={value}>
+                    <Calendar.Header />
+                    <Calendar.Grid />
+                </Calendar.Root>
+            );
+            const rendered = render(<Controlled value={new Date(2026, 10, 12)} />);
+
+            rendered.rerender(<Controlled value={new Date(2027, 2, 3)} />);
+            expect(rendered.getByRole('grid', { name: '2027년 3월' })).toBeInTheDocument();
+            expect(day(rendered, '2027년 3월 3일 수요일')).toHaveAttribute('tabindex', '0');
+
+            // The same day as a new Date object must not pull the user back from another month.
+            await userEvent.click(rendered.getByRole('button', { name: '다음 달' }));
+            rendered.rerender(<Controlled value={new Date(2027, 2, 3)} />);
+            expect(rendered.getByRole('grid', { name: '2027년 4월' })).toBeInTheDocument();
+        });
+
         it('lets the keyboard reach and pass a day disabled through a custom renderer', async () => {
             const onValueChange = vi.fn();
             const rendered = render(
