@@ -1,10 +1,12 @@
 'use client';
 
 import type { ReactElement, RefObject } from 'react';
-import { forwardRef, useEffect, useRef } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Meter as BaseMeter } from '@base-ui/react/meter';
 
+import { useRenderElement } from '~/hooks/use-render-element';
+import { useVaporId } from '~/hooks/use-vapor-id';
 import { createContext } from '~/libs/create-context';
 import { cn } from '~/utils/cn';
 import { createSplitProps } from '~/utils/create-split-props';
@@ -19,6 +21,7 @@ type MeterVariants = TrackVariants & IndicatorVariants;
 type MeterSharedProps = MeterVariants;
 
 type MeterContext = MeterSharedProps & {
+    registerDescription: (id: string) => () => void;
     /**
      * Set by `Meter.Label` so the root can warn when the meter has no accessible name.
      */
@@ -48,6 +51,13 @@ export const MeterRoot = forwardRef<HTMLDivElement, MeterRoot.Props>((props, ref
     const hasLabelRef = useRef(false);
     const ariaLabel = otherProps['aria-label'];
     const ariaLabelledBy = otherProps['aria-labelledby'];
+    const ariaDescribedByProp = otherProps['aria-describedby'];
+
+    const [descriptionIds, setDescriptionIds] = useState<string[]>([]);
+    const registerDescription = useCallback((id: string) => {
+        setDescriptionIds((ids) => (ids.includes(id) ? ids : [...ids, id]));
+        return () => setDescriptionIds((ids) => ids.filter((each) => each !== id));
+    }, []);
 
     useEffect(() => {
         if (process.env.NODE_ENV === 'production') return;
@@ -65,12 +75,22 @@ export const MeterRoot = forwardRef<HTMLDivElement, MeterRoot.Props>((props, ref
         }
     }, [min, max, ariaLabel, ariaLabelledBy]);
 
+    const { type, size } = variantProps;
+    const contextValue = useMemo<MeterContext>(
+        () => ({ size, type, registerDescription, hasLabelRef }),
+        [size, type, registerDescription],
+    );
+
+    const ariaDescribedBy =
+        [ariaDescribedByProp, ...descriptionIds].filter(Boolean).join(' ') || undefined;
+
     return (
-        <MeterProvider value={{ ...variantProps, hasLabelRef }}>
+        <MeterProvider value={contextValue}>
             <BaseMeter.Root
                 ref={ref}
                 min={min}
                 max={max}
+                aria-describedby={ariaDescribedBy}
                 className={cn(styles.root, className)}
                 {...otherProps}
             />
@@ -184,6 +204,36 @@ export const MeterValue = forwardRef<HTMLSpanElement, MeterValue.Props>((props, 
 });
 MeterValue.displayName = 'Meter.Value';
 
+/* -------------------------------------------------------------------------------------------------
+ * Meter.Description
+ * -----------------------------------------------------------------------------------------------*/
+
+/**
+ * Describes the meter's current state. Linked to the meter through `aria-describedby`, so screen readers announce it as plain text: the `meter` role makes its children presentational, which drops semantics such as links or emphasis. Renders a `<span>` element.
+ */
+export const MeterDescription = forwardRef<HTMLSpanElement, MeterDescription.Props>(
+    (props, ref) => {
+        const { id: idProp, render, className, ...componentProps } = resolveStyles(props);
+        const { type, registerDescription } = useMeterContext();
+
+        const id = useVaporId(idProp);
+
+        useEffect(() => registerDescription(id), [id, registerDescription]);
+
+        return useRenderElement({
+            ref,
+            render,
+            defaultTagName: 'span',
+            props: {
+                id,
+                className: cn(styles.description({ type }), className),
+                ...componentProps,
+            },
+        });
+    },
+);
+MeterDescription.displayName = 'Meter.Description';
+
 /* -----------------------------------------------------------------------------------------------*/
 
 export namespace MeterRoot {
@@ -226,4 +276,9 @@ export namespace MeterValue {
          */
         children?: BaseMeter.Value.Props['children'];
     }
+}
+
+export namespace MeterDescription {
+    export type State = {};
+    export type Props = VaporUIComponentProps<'span', State>;
 }

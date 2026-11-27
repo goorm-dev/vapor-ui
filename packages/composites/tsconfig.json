@@ -6,7 +6,7 @@
         "paths": {
             "~/*": ["./src/*"]
         },
-        "types": ["node", "vitest/globals", "@vitest/browser/context"]
+        "types": ["node", "vitest-axe/extend-expect", "vitest/globals", "@vitest/browser/context"]
     },
     "include": ["."],
     "exclude": ["dist", "build", "node_modules"]
