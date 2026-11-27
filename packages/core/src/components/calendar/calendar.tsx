@@ -95,7 +95,7 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
 
     const [value, setValueUnwrapped] = useControlled<CalendarValue>({
         controlled: valueProp,
-        default: defaultValue ?? (mode === 'range' ? EMPTY_RANGE : null),
+        default: defaultValue ?? null,
         name: 'Calendar',
         state: 'value',
     });

@@ -367,7 +367,8 @@ describe('<Calendar />', () => {
     });
 
     describe('review follow-ups', () => {
-        it('does not crash when mode changes with an uncontrolled value', async () => {
+        it('does not crash or warn when mode changes with an uncontrolled value', async () => {
+            const error = vi.spyOn(console, 'error').mockImplementation(() => {});
             const rendered = render(
                 <Calendar.Root mode="range" defaultMonth={NOV_2026}>
                     <Calendar.Grid />
@@ -382,6 +383,8 @@ describe('<Calendar />', () => {
             );
 
             expect(rendered.getByRole('grid')).toBeInTheDocument();
+            expect(error).not.toHaveBeenCalled();
+            error.mockRestore();
         });
 
         it('marks the grid multiselectable only in range mode', () => {
