@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, forwardRef, useContext, useMemo } from 'react';
 import type { ReactNode } from 'react';
 
 import { useControlled } from '@base-ui/utils/useControlled';
@@ -23,37 +23,49 @@ const rootSlots = createSlots({
     trigger: MenuPrimitives.Trigger,
 });
 
-const submenuSlots = createSlots({
-    trigger: MenuPrimitives.SubmenuTrigger,
-});
+export const MenuRoot = forwardRef<HTMLDivElement, MenuRoot.Props>((props, ref) => {
+    const { modal, ...componentProps } = props;
 
-export const MenuRoot = ({ modal, ...props }: MenuRoot.Props) => {
     const parent = useMenuContext();
     const contextValue = useMemo<MenuContextValue>(() => ({ nested: true }), []);
 
     const menu =
-        parent === undefined ? <ParentMenu modal={modal} {...props} /> : <Submenu {...props} />;
+        parent === undefined ? (
+            <ParentMenu modal={modal} ref={ref} {...componentProps} />
+        ) : (
+            <Submenu ref={ref} {...componentProps} />
+        );
 
     return <MenuContext.Provider value={contextValue}>{menu}</MenuContext.Provider>;
-};
+});
+MenuRoot.displayName = 'Menu.Root';
 
-const ParentMenu = ({
-    // functional
-    open,
-    defaultOpen,
-    onOpenChange,
-    modal,
-    actionsRef,
-    container,
+type ParentMenuProps = MenuRoot.Props;
 
-    // variants
-    side,
-    align,
+const ParentMenu = forwardRef<HTMLDivElement, ParentMenuProps>((props, ref) => {
+    const {
+        // functional
+        open,
+        defaultOpen,
+        onOpenChange,
+        modal,
+        actionsRef,
+        container,
 
-    // slots
-    trigger,
-    children,
-}: MenuRoot.Props) => {
+        // DOM
+        id,
+        className,
+        style,
+
+        // variants
+        side,
+        align,
+
+        // slots
+        trigger,
+        children,
+    } = props;
+
     return (
         <MenuPrimitives.Root
             open={open}
@@ -66,29 +78,45 @@ const ParentMenu = ({
 
             <MenuPrimitives.PortalPrimitive container={container}>
                 <MenuPrimitives.PositionerPrimitive side={side} align={align}>
-                    <MenuPrimitives.PopupPrimitive>{children}</MenuPrimitives.PopupPrimitive>
+                    <MenuPrimitives.PopupPrimitive
+                        ref={ref}
+                        {...(id && { id })}
+                        className={className}
+                        style={style}
+                    >
+                        {children}
+                    </MenuPrimitives.PopupPrimitive>
                 </MenuPrimitives.PositionerPrimitive>
             </MenuPrimitives.PortalPrimitive>
         </MenuPrimitives.Root>
     );
-};
+});
 
-const Submenu = ({
-    // functional
-    open,
-    defaultOpen,
-    onOpenChange,
-    actionsRef,
-    container,
+type SubmenuProps = Omit<MenuRoot.Props, 'modal'>;
 
-    // variants
-    side = 'right',
-    align,
+const Submenu = forwardRef<HTMLDivElement, SubmenuProps>((props, ref) => {
+    const {
+        // functional
+        open,
+        defaultOpen,
+        onOpenChange,
+        actionsRef,
+        container,
 
-    // slots
-    trigger,
-    children,
-}: Omit<MenuRoot.Props, 'modal'>) => {
+        // DOM
+        id,
+        className,
+        style,
+
+        // variants
+        side = 'right',
+        align,
+
+        // slots
+        trigger,
+        children,
+    } = props;
+
     return (
         <MenuPrimitives.SubmenuRoot
             open={open}
@@ -96,23 +124,30 @@ const Submenu = ({
             onOpenChange={onOpenChange}
             actionsRef={actionsRef}
         >
-            <submenuSlots.trigger render={trigger} />
+            {/* SubmenuItem이 SubmenuTrigger를 직접 렌더한다. slot으로 감싸면 trigger가 이중 등록된다. */}
+            {trigger}
 
             <MenuPrimitives.PortalPrimitive container={container}>
                 <MenuPrimitives.PositionerPrimitive side={side} sideOffset={8} align={align}>
-                    <MenuPrimitives.SubmenuPopupPrimitive>
+                    <MenuPrimitives.SubmenuPopupPrimitive
+                        ref={ref}
+                        {...(id && { id })}
+                        className={className}
+                        style={style}
+                    >
                         {children}
                     </MenuPrimitives.SubmenuPopupPrimitive>
                 </MenuPrimitives.PositionerPrimitive>
             </MenuPrimitives.PortalPrimitive>
         </MenuPrimitives.SubmenuRoot>
     );
-};
+});
 
-type RootSlots = SlotProps<typeof rootSlots | typeof submenuSlots>;
+type RootSlots = SlotProps<typeof rootSlots>;
 type RootProps = MenuPrimitives.Root.Props;
 type PositionerProps = MenuPrimitives.PositionerPrimitive.Props;
 type PortalProps = MenuPrimitives.PortalPrimitive.Props;
+type PopupProps = MenuPrimitives.PopupPrimitive.Props;
 
 export interface MenuRootProps {
     /**
@@ -170,9 +205,10 @@ export interface MenuRootProps {
     /**
      * 메뉴를 여는 진입 요소.
      * - 최상위 `Menu.Root`에서는 `Trigger`로 렌더링된다.
-     * - 다른 `Menu.Root` 하위에서 사용되면 부모 메뉴의 아이템으로 동작하는 `SubmenuTrigger`로 렌더링된다.
+     * - 중첩된 `Menu.Root` 하위에서 `Menu.SubmenuItem`을 추가하여 중첩 메뉴를 열 수 있다.
      * @example
      * <Menu.Root trigger={<Button>메뉴 열기</Button>} />
+     * <Menu.Root trigger={<Menu.SubmenuItem label="더보기" />} />
      */
     trigger?: RootSlots['trigger'];
 
@@ -180,6 +216,21 @@ export interface MenuRootProps {
      * 메뉴 내부에 표시할 요소.
      */
     children: ReactNode;
+
+    /**
+     * Popup DOM 노드의 id. 최상위 `Menu.Root`는 Popup, 중첩 `Menu.Root`는 SubmenuPopup에 적용된다.
+     */
+    id?: PopupProps['id'];
+
+    /**
+     * Popup DOM 노드에 추가할 className.
+     */
+    className?: PopupProps['className'];
+
+    /**
+     * Popup DOM 노드에 적용할 인라인 style.
+     */
+    style?: PopupProps['style'];
 }
 
 export namespace MenuRoot {
@@ -193,12 +244,14 @@ const groupSlots = createSlots({
     label: MenuPrimitives.GroupLabel,
 });
 
-export const MenuGroup = ({ label, children }: MenuGroup.Props) => {
+export const MenuGroup = forwardRef<HTMLDivElement, MenuGroup.Props>((props, ref) => {
+    const { label, id, className, style, children } = props;
+
     return (
         <>
             <Separator />
 
-            <MenuPrimitives.Group>
+            <MenuPrimitives.Group ref={ref} {...(id && { id })} className={className} style={style}>
                 <groupSlots.label render={label} />
                 {children}
             </MenuPrimitives.Group>
@@ -206,9 +259,11 @@ export const MenuGroup = ({ label, children }: MenuGroup.Props) => {
             <Separator />
         </>
     );
-};
+});
+MenuGroup.displayName = 'Menu.Group';
 
 type GroupSlots = SlotProps<typeof groupSlots, 'label'>;
+type GroupProps = MenuPrimitives.Group.Props;
 
 export interface MenuGroupProps {
     /**
@@ -220,6 +275,21 @@ export interface MenuGroupProps {
      * 그룹 내부에 표시할 요소.
      */
     children: ReactNode;
+
+    /**
+     * 그룹 DOM 노드의 id.
+     */
+    id?: GroupProps['id'];
+
+    /**
+     * 그룹 DOM 노드에 추가할 className.
+     */
+    className?: GroupProps['className'];
+
+    /**
+     * 그룹 DOM 노드에 적용할 인라인 style.
+     */
+    style?: GroupProps['style'];
 }
 
 export namespace MenuGroup {
@@ -260,20 +330,24 @@ const checkGroupSlots = createSlots({
     label: MenuPrimitives.GroupLabel,
 });
 
-export const MenuCheckGroup = (props: MenuCheckGroup.Props) => {
-    const { mode } = props;
+export const MenuCheckGroup = forwardRef<HTMLDivElement, MenuCheckGroup.Props>((props, ref) => {
+    if (props.mode === 'single') return <SingleCheckGroup {...props} ref={ref} />;
+    return <MultipleCheckGroup {...props} ref={ref} />;
+});
+MenuCheckGroup.displayName = 'Menu.CheckGroup';
 
-    if (mode === 'single') return <SingleCheckGroup {...props} />;
-    return <MultipleCheckGroup {...props} />;
-};
+const SingleCheckGroup = forwardRef<HTMLDivElement, MenuSingleCheckGroupProps>((props, ref) => {
+    const {
+        value: valueProp,
+        defaultValue,
+        onValueChange,
+        label,
+        id,
+        className,
+        style,
+        children,
+    } = props;
 
-const SingleCheckGroup = ({
-    value: valueProp,
-    defaultValue,
-    onValueChange,
-    label,
-    children,
-}: MenuSingleCheckGroupProps) => {
     const [value, setValueState] = useControlled<string | undefined>({
         name: 'MenuCheckGroup',
         controlled: valueProp,
@@ -296,7 +370,14 @@ const SingleCheckGroup = ({
         <MenuCheckGroupContext.Provider value={context}>
             <Separator />
 
-            <MenuPrimitives.RadioGroup value={value} onValueChange={handleValueChange}>
+            <MenuPrimitives.RadioGroup
+                ref={ref}
+                {...(id && { id })}
+                className={className}
+                style={style}
+                value={value}
+                onValueChange={handleValueChange}
+            >
                 <checkGroupSlots.label render={label} />
                 {children}
             </MenuPrimitives.RadioGroup>
@@ -304,15 +385,20 @@ const SingleCheckGroup = ({
             <Separator />
         </MenuCheckGroupContext.Provider>
     );
-};
+});
 
-const MultipleCheckGroup = ({
-    value: valueProp,
-    defaultValue,
-    onValueChange,
-    label,
-    children,
-}: MenuMultipleCheckGroupProps) => {
+const MultipleCheckGroup = forwardRef<HTMLDivElement, MenuMultipleCheckGroupProps>((props, ref) => {
+    const {
+        value: valueProp,
+        defaultValue,
+        onValueChange,
+        label,
+        id,
+        className,
+        style,
+        children,
+    } = props;
+
     const [value, setValueState] = useControlled<string[]>({
         name: 'MenuCheckGroup',
         controlled: valueProp,
@@ -339,7 +425,7 @@ const MultipleCheckGroup = ({
         <MenuCheckGroupContext.Provider value={context}>
             <Separator />
 
-            <MenuPrimitives.Group>
+            <MenuPrimitives.Group ref={ref} {...(id && { id })} className={className} style={style}>
                 <checkGroupSlots.label render={label} />
                 {children}
             </MenuPrimitives.Group>
@@ -347,9 +433,12 @@ const MultipleCheckGroup = ({
             <Separator />
         </MenuCheckGroupContext.Provider>
     );
-};
+});
 
 type CheckGroupSlots = SlotProps<typeof checkGroupSlots, 'label'>;
+
+type RadioGroupProps = MenuPrimitives.RadioGroup.Props;
+type CheckGroupMultipleProps = MenuPrimitives.Group.Props;
 
 export interface MenuSingleCheckGroupProps {
     /**
@@ -373,6 +462,21 @@ export interface MenuSingleCheckGroupProps {
      * <Menu.CheckGroup mode="single" onValueChange={(value) => setValue(value)} />
      */
     onValueChange?: (value: string) => void;
+
+    /**
+     * 단일 선택 그룹 DOM 노드의 id.
+     */
+    id?: RadioGroupProps['id'];
+
+    /**
+     * 단일 선택 그룹 DOM 노드에 추가할 className.
+     */
+    className?: RadioGroupProps['className'];
+
+    /**
+     * 단일 선택 그룹 DOM 노드에 적용할 인라인 style.
+     */
+    style?: RadioGroupProps['style'];
 
     /**
      * 그룹 상단에 표시되는 라벨. 스크린리더가 그룹 이름으로 낭독한다.
@@ -410,6 +514,21 @@ export interface MenuMultipleCheckGroupProps {
     onValueChange?: (value: string[]) => void;
 
     /**
+     * 다중 선택 그룹 DOM 노드의 id.
+     */
+    id?: CheckGroupMultipleProps['id'];
+
+    /**
+     * 다중 선택 그룹 DOM 노드에 추가할 className.
+     */
+    className?: CheckGroupMultipleProps['className'];
+
+    /**
+     * 다중 선택 그룹 DOM 노드에 적용할 인라인 style.
+     */
+    style?: CheckGroupMultipleProps['style'];
+
+    /**
      * 그룹 상단에 표시되는 라벨. 스크린리더가 그룹 이름으로 낭독한다.
      */
     label: CheckGroupSlots['label'];
@@ -427,17 +546,26 @@ export namespace MenuCheckGroup {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export const MenuItem = ({
-    isDisabled,
-    variant,
-    label,
-    description,
-    leading,
-    trailing,
-    onClick,
-}: MenuItem.Props) => {
+export const MenuItem = forwardRef<HTMLDivElement, MenuItem.Props>((props, ref) => {
+    const {
+        isDisabled,
+        variant,
+        label,
+        description,
+        leading,
+        trailing,
+        onClick,
+        id,
+        className,
+        style,
+    } = props;
+
     return (
         <MenuPrimitives.Item
+            ref={ref}
+            {...(id && { id })}
+            className={className}
+            style={style}
             disabled={isDisabled}
             onClick={onClick}
             $css={{
@@ -455,11 +583,27 @@ export const MenuItem = ({
             />
         </MenuPrimitives.Item>
     );
-};
+});
+MenuItem.displayName = 'Menu.Item';
 
 type ItemProps = MenuPrimitives.Item.Props;
 
 export interface MenuItemProps {
+    /**
+     * 메뉴 아이템 DOM 노드의 id.
+     */
+    id?: ItemProps['id'];
+
+    /**
+     * 메뉴 아이템 DOM 노드에 추가할 className.
+     */
+    className?: ItemProps['className'];
+
+    /**
+     * 메뉴 아이템 DOM 노드에 적용할 인라인 style.
+     */
+    style?: ItemProps['style'];
+
     /**
      * 항목 클릭 시 호출되는 이벤트 핸들러.
      * @example
@@ -506,15 +650,20 @@ export namespace MenuItem {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export const MenuCheckItem = ({
-    value: valueProp,
-    isDisabled,
-    onClick,
-    leading,
-    label,
-    description,
-    trailing,
-}: MenuCheckItem.Props) => {
+export const MenuCheckItem = forwardRef<HTMLDivElement, MenuCheckItem.Props>((props, ref) => {
+    const {
+        value: valueProp,
+        isDisabled,
+        onClick,
+        leading,
+        label,
+        description,
+        trailing,
+        id,
+        className,
+        style,
+    } = props;
+
     const context = useMenuCheckGroupContext();
     const { mode, hasSelection } = context;
     const itemLayout = getItemLayout({
@@ -526,6 +675,10 @@ export const MenuCheckItem = ({
     if (mode === 'single') {
         return (
             <MenuPrimitives.RadioItemPrimitive
+                ref={ref}
+                {...(id && { id })}
+                className={className}
+                style={style}
                 closeOnClick
                 disabled={isDisabled}
                 value={valueProp}
@@ -554,6 +707,10 @@ export const MenuCheckItem = ({
 
     return (
         <MenuPrimitives.CheckboxItemPrimitive
+            ref={ref}
+            {...(id && { id })}
+            className={className}
+            style={style}
             disabled={isDisabled}
             checked={checked}
             onCheckedChange={handleCheckedChange}
@@ -570,12 +727,28 @@ export const MenuCheckItem = ({
             />
         </MenuPrimitives.CheckboxItemPrimitive>
     );
-};
+});
+MenuCheckItem.displayName = 'Menu.CheckItem';
 
 type RadioItemProps = MenuPrimitives.RadioItemPrimitive.Props;
 type CheckboxItemProps = MenuPrimitives.CheckboxItemPrimitive.Props;
 
 export interface MenuCheckItemProps {
+    /**
+     * 체크 아이템 DOM 노드의 id.
+     */
+    id?: RadioItemProps['id'] | CheckboxItemProps['id'];
+
+    /**
+     * 체크 아이템 DOM 노드에 추가할 className.
+     */
+    className?: RadioItemProps['className'] | CheckboxItemProps['className'];
+
+    /**
+     * 체크 아이템 DOM 노드에 적용할 인라인 style.
+     */
+    style?: RadioItemProps['style'] | CheckboxItemProps['style'];
+
     /**
      * 항목이 대표하는 값. 그룹의 선택 상태 키로 사용된다.
      */
@@ -621,13 +794,9 @@ export namespace MenuCheckItem {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export const MenuSubmenuItem = ({
-    isDisabled,
-    leading,
-    description,
-    label,
-    trailing,
-}: MenuSubmenuItem.Props) => {
+export const MenuSubmenuItem = forwardRef<HTMLDivElement, MenuSubmenuItem.Props>((props, ref) => {
+    const { isDisabled, leading, description, label, trailing, id, className, style } = props;
+
     const itemLayout = getItemLayout({
         hasLeading: !!leading,
         hasTrailing: !!trailing,
@@ -636,6 +805,10 @@ export const MenuSubmenuItem = ({
 
     return (
         <MenuPrimitives.SubmenuTrigger
+            ref={ref}
+            {...(id && { id })}
+            className={className}
+            style={style}
             disabled={isDisabled}
             $css={{ display: 'grid', gap: '$000', ...itemLayout }}
         >
@@ -652,11 +825,27 @@ export const MenuSubmenuItem = ({
             />
         </MenuPrimitives.SubmenuTrigger>
     );
-};
+});
+MenuSubmenuItem.displayName = 'Menu.SubmenuItem';
 
 type SubmenuItemProps = MenuPrimitives.SubmenuTrigger.Props;
 
 export interface MenuSubmenuItemProps {
+    /**
+     * SubmenuTrigger DOM 노드의 id.
+     */
+    id?: SubmenuItemProps['id'];
+
+    /**
+     * SubmenuTrigger DOM 노드에 추가할 className.
+     */
+    className?: SubmenuItemProps['className'];
+
+    /**
+     * SubmenuTrigger DOM 노드에 적용할 인라인 style.
+     */
+    style?: SubmenuItemProps['style'];
+
     /**
      * 아이템을 비활성화한다. 비활성화된 트리거는 메뉴를 열 수 없다.
      * @default false

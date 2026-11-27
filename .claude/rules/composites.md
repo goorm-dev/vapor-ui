@@ -15,7 +15,7 @@ paths:
 4. [Primitive prop은 인터페이스 내부에서 재정의한다](#4-primitive-prop은-인터페이스-내부에서-재정의한다)
 5. [타입은 TypeScript `namespace`로 노출한다](#5-타입은-typescript-namespace로-노출한다)
 6. [서브 컴포넌트는 `index.parts.ts`로 분리한다](#6-서브-컴포넌트는-indexpartsts로-분리한다)
-7. [Preset wrapper는 primitive prop을 전체 상속한다 (§4 예외)](#7-preset-wrapper는-primitive-prop을-전체-상속한다-4-예외)
+7. [`ref`·`id`·`className`·`style` 기본 API](#7-refidclassnamestyle-기본-api)
 
 ---
 
@@ -97,7 +97,7 @@ export interface DialogProps {
 
 ## 3. 스타일은 `$css` prop으로 작성한다
 
-Composites는 `className` / `style` 오버라이드를 소비자에게 노출하지 않는다(→ [`CLAUDE.md §8`](../../packages/composites/CLAUDE.md)). 컴포넌트 내부 스타일은 `@vapor-ui/core` primitive가 제공하는 `$css` prop을 사용한다. `$css`는 디자인 토큰(`$300`, `$basic-gray-500` 등)을 지원하므로 하드코딩된 색상·간격 값을 사용하지 않는다.
+Composites는 `ref`·`id`·`className`·`style` 네 가지 DOM API를 Popup DOM 노드와 공개 서브컴포넌트에 한해 노출한다(→ [§7 `ref`·`id`·`className`·`style` 기본 API](#7-refidclassnamestyle-기본-api), [`CLAUDE.md §8`](../../packages/composites/CLAUDE.md)). 컴포넌트 내부 스타일은 `@vapor-ui/core` primitive가 제공하는 `$css` prop을 사용한다. `$css`는 디자인 토큰(`$300`, `$basic-gray-500` 등)을 지원하므로 하드코딩된 색상·간격 값을 사용하지 않는다.
 
 **규칙**
 
@@ -138,13 +138,14 @@ Composites는 `className` / `style` 오버라이드를 소비자에게 노출하
 
 ## 4. Primitive prop은 인터페이스 내부에서 재정의한다
 
-`@vapor-ui/core` primitive의 prop을 Composites 컴포넌트가 그대로 노출할 때는, primitive의 prop 타입을 로컬에서 별칭(alias)으로 잡은 뒤 `interface` 안에서 `Alias['propName']`으로 프로퍼티를 재선언한다. `extends`나 `Pick`으로 primitive의 인터페이스 전체를 상속하지 않는다.
+`@vapor-ui/core` primitive의 prop을 Composites 컴포넌트가 그대로 노출할 때는, primitive의 prop 타입을 로컬에서 별칭(alias)으로 잡은 뒤 `interface` 안에서 `Alias['propName']`으로 프로퍼티를 재선언한다. `extends`·`Pick`·`Omit`으로 primitive의 인터페이스를 상속하지 않는다. **예외는 없다.** preset 부품(`Dialog.Action` 등)도 노출할 prop만 골라 선언한다.
 
 **왜 이렇게 하는가**
 
 - Composites의 Public API는 primitive의 하위집합이다. `extends`는 원치 않는 prop까지 노출한다.
 - 재정의된 프로퍼티에는 Composites 문맥에 맞는 JSDoc을 별도로 붙일 수 있다(§2).
 - primitive prop 시그니처가 바뀌어도 재정의는 자동으로 따라간다.
+- preset key(`size`·`colorPalette`·`variant` 등)는 인터페이스에 선언하지 않는 것으로 봉인한다. 선언하지 않은 prop은 타입상 존재하지 않는다.
 
 **규칙**
 
@@ -206,7 +207,7 @@ const props: Dialog.Props = {/* ... */};
 Flat 컴포넌트가 기본이지만, 다음 두 경우에는 dot-notation 서브 컴포넌트를 노출한다.
 
 1. **아이템 반복 나열** — 사용자가 임의 개수의 아이템을 배치하는 컴포넌트(예: `Select` → `Select.Root`, `Select.Option`). (→ [`CLAUDE.md §3`](../../packages/composites/CLAUDE.md))
-2. **문맥 preset 부품 노출** — 부품이 고정 위치에 0~1회 렌더되지만, 컴포넌트 문맥에 맞는 스타일(size/colorPalette 등)이 사전 지정된 preset을 별도로 제공하는 컴포넌트(예: `Dialog` → `Dialog.Root`, `Dialog.Action`, `Dialog.Assistive`).
+2. **문맥 preset 부품 노출** — 부품이 고정 위치에 0~1회 렌더되지만, 컴포넌트 문맥에 맞는 스타일(size/colorPalette 등)이 사전 지정된 preset을 별도로 제공하는 컴포넌트(예: `Dialog` → `Dialog.Root`, `Dialog.Action`, `Dialog.Assistive`). 부품 props도 §4대로 직접 선택한다.
 
 두 경우 모두 core 패키지와 동일하게 `index.parts.ts`로 부분들을 재수출하고, `index.ts`에서 namespace 형태로 export한다.
 
@@ -260,50 +261,64 @@ import { Select } from '@vapor-ui/composites';
 
 위 두 경우에 해당하지 않는 flat 컴포넌트는 이 구조를 쓰지 않고 `export { <Component> } from './<component>';`처럼 공개할 이름만 적는다. `export * from`은 lint 오류다.
 
-## 7. Preset wrapper는 primitive prop을 전체 상속한다 (§4 예외)
+---
 
-§6의 두 번째 케이스("문맥 preset 부품")에 해당하고 아래 판정 기준을 **전부** 만족하는 컴포넌트는 §4의 cherry-pick 원칙에서 벗어나, primitive prop을 `Omit`으로 preset key만 봉인한 형태로 그대로 상속한다. `Dialog.Action`, `Dialog.Assistive`가 이 케이스다.
+## 7. `ref`·`id`·`className`·`style` 기본 API
 
-**판정 기준 (4개 모두 충족해야 예외 적용)**
+Composites는 소비자에게 **Popup DOM 노드**와 **공개 서브컴포넌트**에 한해 네 가지 DOM 접근 API를 노출한다.
 
-1. **Single-primitive** — 루트가 단일 `@vapor-ui/core` primitive를 그대로 렌더한다. 여러 primitive를 조합하지 않는다.
-2. **Defaults-only override** — `variant`, `size`, `colorPalette` 등 정적 default 값만 override한다. `onClick`, `ref`, `disabled`, `type` 같은 기능·상태 prop에는 개입하지 않는다.
-3. **Namespace-bound** — 부모 Composite의 dot-notation 부품으로만 노출한다. Top-level export 금지(`Dialog.Action`은 O, `DialogAction`을 별개 최상위 컴포넌트로 export하지 않는다).
-4. **No rename** — primitive prop을 Composites 도메인 이름으로 rename하지 않는다.
+- `ref` — DOM 노드 측정·포커스 이동 등에 사용.
+- `id` — `aria-controls` 연결, QA selector 매칭에 사용.
+- `className` — 외부 스타일링 유틸의 selector 사용. core 기본 클래스에 **덧붙여진다**(override 아님).
+- `style` — 인라인 스타일 지정. 컴포넌트 내부 스타일은 `$css`(클래스)로 들어가므로 같은 속성이면 `style`이 우선한다.
 
-하나라도 어긋나면 preset wrapper가 아니다. §4로 회귀해 cherry-pick한다.
+### 어디에 바인딩하나
 
-**타입 선언 — 봉인은 `Omit`으로**
+- **Root 컴포넌트** (`Dialog.Root`, `AlertDialog.Root`, `Menu.Root`): 실제 DOM 노드인 Popup primitive(`PopupPrimitive` / `SubmenuPopupPrimitive`)에 forwarding. Portal·Overlay·Positioner 중간 노드는 소비자가 접근할 필요가 없다.
+- **공개 서브컴포넌트** (`Dialog.Action`, `Dialog.Assistive`, `AlertDialog.Action`, `AlertDialog.Cancel`, `Menu.Item`, `Menu.CheckItem`, `Menu.SubmenuItem`, `Menu.Group`, `Menu.CheckGroup`): 각자가 렌더링하는 primitive의 DOM 노드에 forwarding.
+- **Trigger slot**: 추가 prop을 붙이지 않는다. 소비자가 `trigger={<Button ref={r} id="x" className="y"/>}` 형태로 slot render에 직접 지정한다(`style`도 같다).
+- **Group wrapper의 `<Separator/>`**: `Menu.Group`·`Menu.CheckGroup`은 `<><Separator/><Group/><Separator/></>` 형태라 `id`·`className`·`style`·`ref`는 **안쪽 Group/RadioGroup에만** 적용된다.
 
-컴포넌트가 소유한 preset key를 `Omit`으로 제거해, 소비자가 preset을 override하지 못하도록 봉인한다. 그 외 기능 prop은 primitive의 JSDoc을 그대로 상속한다.
+### 구현 패턴
 
-**예시**
+- `ref`를 전달해야 하는 모든 컴포넌트는 `forwardRef<HTMLElementType, Props>`로 선언한다. 일반 함수 컴포넌트에서 `ref`를 받는 패턴(React 19 ref-as-prop 등)은 쓰지 않는다.
+- `forwardRef`를 쓸 때는 **파라미터 구조분해 대신 함수 블록 안에서 `const { ... } = props;`로 분해**한다. 파라미터에서 바로 구조분해하면 `forwardRef(((prop1, prop2, ...), ref) => ...)` 처럼 depth 2를 넘는 구조가 생겨 가독성이 떨어진다.
+- `.displayName`을 `'Namespace.Part'` 형태로 설정한다.
+- `id`·`className`·`style`은 Props 인터페이스에 §4대로 primitive props에서 alias로 가져와 선언한다.
+- rest spread로 primitive에 넘기지 말고, 노출하기로 결정한 prop만 **명시적으로 발라내 전달**한다. `data-*`, `aria-*`, `on*Event` 등 소비자가 임의로 넘기는 HTML 속성은 자동으로 전달되지 않으므로, 필요한 것은 Props 인터페이스에 올려 통과시킨다.
 
-```tsx
-export const DialogAssistive = ({ children, ...props }: DialogAssistive.Props) => {
-    return (
-        <Button size="lg" colorPalette="secondary" variant="outline" {...props}>
-            {children}
-        </Button>
-    );
-};
+```ts
+type PopupProps = DialogPrimitives.PopupPrimitive.Props;
 
-export namespace DialogAssistive {
-    /**
-     * Dialog 문맥에 맞춰 `size`, `colorPalette`, `variant`를 고정한 보조 액션 버튼.
-     * 그 외 Button prop(`onClick`, `disabled`, `type`, `ref` 등)은 그대로 노출된다.
-     */
-    export type Props = Omit<Button.Props, 'size' | 'colorPalette' | 'variant'>;
+export interface DialogProps {
+    /** Popup DOM 노드의 id. aria-controls 연결, QA selector 등에 사용한다. */
+    id?: PopupProps['id'];
+    /** Popup DOM 노드에 추가할 className. */
+    className?: PopupProps['className'];
+    /** Popup DOM 노드에 적용할 인라인 style. */
+    style?: PopupProps['style'];
+    /* ...그 외 프로퍼티 */
 }
+
+export const DialogRoot = forwardRef<HTMLDivElement, DialogRoot.Props>((props, ref) => {
+    const { id, className, style /* , ...그 외 프로퍼티 */ } = props;
+
+    return (
+        <DialogPrimitives.Root /* ...그 외 프로퍼티 */>
+            <DialogPrimitives.PortalPrimitive>
+                <DialogPrimitives.PopupPrimitive ref={ref} {...(id && { id })} className={className} style={style}>
+                    {/* ... */}
+                </DialogPrimitives.PopupPrimitive>
+            </DialogPrimitives.PortalPrimitive>
+        </DialogPrimitives.Root>
+    );
+});
+DialogRoot.displayName = 'Dialog.Root';
 ```
 
-**왜 예외인가**
+### 범위 밖
 
-- §4는 "여러 primitive를 조합·재해석하는 Composite가 원치 않는 primitive prop을 소비자에게 노출하는 것"을 막기 위한 규칙이다. Preset wrapper는 primitive와 1:1이므로 primitive의 모든 기능 prop이 소비자에게도 의미가 있다.
-- 판정 기준 2·3·4가 "wrapper가 defaults 이상으로 확장되지 못한다"는 것을 구조적으로 강제한다. wrapper에 로직·rename·다중 primitive가 추가되는 순간 이 컴포넌트는 더 이상 preset wrapper가 아니며, 자동으로 §4의 cherry-pick 요건으로 돌아간다.
-- `Omit`으로 preset key를 봉인하기 때문에 "Dialog.Action이 사실상 다른 Button이 되어버리는" 무질서한 override는 타입 레벨에서 차단된다.
-
----
+- 이벤트 핸들러(`onFocus`, `onKeyDown` 등) — 역할별 cherry-pick 정책이 수립되기 전까지 컴포넌트별 전용 핸들러(`onOpenChange` 등)만 노출한다.
 
 ## 체크리스트
 
@@ -312,7 +327,11 @@ export namespace DialogAssistive {
 - [ ] 슬롯을 `createSlots`로 만들었고, 필수 슬롯 key를 `SlotProps` 두 번째 제네릭에 넘겼다.
 - [ ] 모든 prop에 JSDoc이 있다. 기본값이 있는 prop에는 `@default`가 붙어 있다.
 - [ ] 스타일은 `$css`로만 작성했고, 색상·간격은 토큰(`$...`)을 사용했다.
-- [ ] Primitive prop을 노출할 때 로컬 alias를 만들고 인터페이스 내부에서 `Alias['prop']`으로 인덱싱했다.
+- [ ] Primitive prop을 노출할 때 로컬 alias를 만들고 인터페이스 내부에서 `Alias['prop']`으로 골라 선언했다. `extends`·`Pick`·`Omit`으로 primitive props를 상속하지 않았다.
 - [ ] `export namespace <Component> { export type Props = ... }` 패턴으로 타입을 노출했다.
 - [ ] 서브 컴포넌트가 있는 컴포넌트라면 `index.parts.ts`를 두고 `index.ts`에서 namespace로 재수출했다.
-- [ ] Preset wrapper라면 §7의 판정 기준 4개를 모두 만족하고, `Omit`으로 preset key를 봉인했다.
+- [ ] Root는 Popup으로, 공개 서브컴포넌트는 자신이 렌더링하는 primitive로 `ref`·`id`·`className`·`style`을 forwarding했다(§7). Trigger slot에는 별도 prop을 추가하지 않았다.
+- [ ] `ref`를 노출하는 컴포넌트는 `forwardRef`를 사용했고, props는 파라미터가 아닌 함수 블록 안에서 `const { ... } = props;`로 분해했다(§7).
+- [ ] primitive로 rest spread 하지 않고, 노출하기로 결정한 prop만 명시적으로 발라내 전달했다. 소비자가 자주 요구할 만한 HTML 속성(`disabled`, `aria-*` 등)은 Props 인터페이스에 올려 통로를 열어 두었다(§7).
+- [ ] `ref` / `id` / `className` / `style`을 노출하는 공개 컴포넌트는 `~/utils/test-utils`의 `testConformance<T>(render, { refInstanceof })`로 검증했다. 인라인 ref·id·className·style 테스트를 서브마다 반복하지 않았다. `refInstanceof`는 Popup이면 `HTMLDivElement`, Button 기반이면 `HTMLButtonElement`로 지정했다.
+- [ ] Code Connect 템플릿은 [`code-connect-composites.md`](./code-connect-composites.md)의 체크리스트도 통과했다.

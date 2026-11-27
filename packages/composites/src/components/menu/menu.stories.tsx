@@ -60,7 +60,7 @@ export const Default: Story = {
                         onClick={() => alert('clicked item 3')}
                     />
 
-                    <Menu.Root trigger={<Menu.SubmenuItem label="Submenu Item" />}>
+                    <Menu.Root trigger={<Menu.SubmenuItem id="asdf" label="Submenu Item" />}>
                         <Menu.CheckGroup
                             mode="multiple"
                             label="multiple group"
