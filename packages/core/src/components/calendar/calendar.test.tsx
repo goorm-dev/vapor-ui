@@ -443,6 +443,23 @@ describe('<Calendar />', () => {
             expect(rendered.queryByText(/13일 금요일을 선택했습니다/)).not.toBeInTheDocument();
         });
 
+        it('announces a controlled selection only once the parent takes the value', async () => {
+            const Controlled = ({ value }: { value: Date | null }) => (
+                <Calendar.Root defaultMonth={NOV_2026} value={value} onValueChange={() => {}}>
+                    <Calendar.Grid />
+                </Calendar.Root>
+            );
+            const rendered = render(<Controlled value={null} />);
+
+            await userEvent.click(day(rendered, '2026년 11월 12일 목요일'));
+            expect(rendered.queryByText(/12일 목요일을 선택했습니다/)).not.toBeInTheDocument();
+
+            rendered.rerender(<Controlled value={new Date(2026, 10, 12)} />);
+            expect(
+                rendered.getByText('2026년 11월 12일 목요일을 선택했습니다.'),
+            ).toBeInTheDocument();
+        });
+
         it('announces the selected range', async () => {
             const rendered = render(
                 <Calendar.Root mode="range" defaultMonth={NOV_2026}>

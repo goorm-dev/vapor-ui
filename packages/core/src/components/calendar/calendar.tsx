@@ -42,6 +42,12 @@ const EMPTY_RANGE: CalendarRange = { start: null, end: null };
 const asDate = (value: CalendarValue) => (value instanceof Date ? value : null);
 const asRange = (value: CalendarValue) => (value && !(value instanceof Date) ? value : EMPTY_RANGE);
 
+const isSameValue = (a: CalendarValue, b: CalendarValue) =>
+    a instanceof Date || b instanceof Date
+        ? isSameDay(asDate(a), asDate(b))
+        : isSameDay(asRange(a).start, asRange(b).start) &&
+          isSameDay(asRange(a).end, asRange(b).end);
+
 // The grid walks Gregorian months, so labels stay Gregorian even for a `-u-ca-` locale.
 const format = (locale: string, options: Intl.DateTimeFormatOptions) =>
     new Intl.DateTimeFormat(locale, { ...options, calendar: 'gregory' });
@@ -102,7 +108,9 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
         return isSameMonth(preferred, month) ? startOfDay(preferred) : month;
     });
     const [previewDate, setPreviewDate] = useState<Date | null>(null);
-    const [announcement, setAnnouncement] = useState('');
+    const [announcement, setAnnouncement] = useState<{ value: CalendarValue; text: string } | null>(
+        null,
+    );
 
     const anchorTime = anchorDate ? startOfDay(anchorDate).getTime() : null;
     const [prevAnchorTime, setPrevAnchorTime] = useState(anchorTime);
@@ -135,7 +143,7 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
         if (mode === 'single') {
             if (isSameDay(asDate(value), date)) return;
             setValue(date, details);
-            if (!details.isCanceled) setAnnouncement(selectionStatus(locale, date));
+            setAnnouncement({ value: date, text: selectionStatus(locale, date) });
             return;
         }
 
@@ -151,16 +159,19 @@ export const CalendarRoot = forwardRef<HTMLDivElement, CalendarRoot.Props>((prop
         }
 
         setValue(next, details);
-        if (details.isCanceled) return;
         setAnnouncement(
-            next.start && next.end ? selectionStatus(locale, next.start, next.end) : '',
+            next.start && next.end
+                ? { value: next, text: selectionStatus(locale, next.start, next.end) }
+                : null,
         );
     });
 
     const range = asRange(value);
     const pickingEnd = mode === 'range' && !!range.start && !range.end;
 
-    const liveStatus = pickingEnd ? rangeStatus(locale) : announcement;
+    // A controlled parent can drop the change without `cancel()`, so announce only what `value` took.
+    const announced = announcement && isSameValue(value, announcement.value);
+    const liveStatus = pickingEnd ? rangeStatus(locale) : announced ? announcement.text : '';
 
     const state: CalendarRoot.State = useMemo(() => ({ disabled }), [disabled]);
 
