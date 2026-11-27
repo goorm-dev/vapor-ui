@@ -424,5 +424,36 @@ describe('<Calendar />', () => {
             await userEvent.click(blocked);
             expect(onValueChange).not.toHaveBeenCalled();
         });
+
+        it('lets the keyboard reach and pass a day disabled through a custom renderer', async () => {
+            const onValueChange = vi.fn();
+            const rendered = render(
+                <Calendar.Root
+                    defaultMonth={NOV_2026}
+                    defaultValue={new Date(2026, 10, 14)}
+                    onValueChange={onValueChange}
+                >
+                    <Calendar.Grid>
+                        {(date) => (
+                            <Calendar.DayPrimitive date={date} disabled={date.getDate() === 15} />
+                        )}
+                    </Calendar.Grid>
+                </Calendar.Root>,
+            );
+
+            day(rendered, '2026년 11월 14일 토요일').focus();
+            await userEvent.keyboard('{ArrowRight}');
+
+            const blocked = day(rendered, '2026년 11월 15일 일요일');
+            expect(blocked).toHaveFocus();
+            expect(blocked).toHaveAttribute('aria-disabled', 'true');
+            expect(blocked).toHaveAttribute('tabindex', '0');
+
+            await userEvent.keyboard('{Enter}');
+            expect(onValueChange).not.toHaveBeenCalled();
+
+            await userEvent.keyboard('{ArrowRight}');
+            expect(day(rendered, '2026년 11월 16일 월요일')).toHaveFocus();
+        });
     });
 });

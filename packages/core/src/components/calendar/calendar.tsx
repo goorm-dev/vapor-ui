@@ -445,7 +445,8 @@ export const CalendarDayPrimitive = forwardRef<HTMLButtonElement, CalendarDayPri
         const state = useDayState(date);
         const { outsideMonth } = state;
         const dayDisabled = state.disabled || !!disabledProp;
-        const disabled = outsideMonth || dayDisabled;
+        const disabled = outsideMonth || state.disabled;
+        const focusableDisabled = !!disabledProp && !disabled;
         const dayState: CalendarDayPrimitive.State = { ...state, disabled: dayDisabled };
         const focused = isSameDay(date, focusedDate) && !outsideMonth;
 
@@ -466,8 +467,8 @@ export const CalendarDayPrimitive = forwardRef<HTMLButtonElement, CalendarDayPri
 
         const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
             onClick?.(event);
-            // A custom `render` element (a link, say) ignores the native disabled attribute.
-            if (disabled) return;
+            // `aria-disabled` and a custom `render` element (a link, say) don't block the click natively.
+            if (disabled || focusableDisabled) return;
             select(startOfDay(date), event.nativeEvent);
         };
 
@@ -513,6 +514,7 @@ export const CalendarDayPrimitive = forwardRef<HTMLButtonElement, CalendarDayPri
                 ...dataAttributes(dayState),
                 ...componentProps,
                 disabled,
+                'aria-disabled': focusableDisabled || undefined,
                 onClick: handleClick,
                 onKeyDown: handleKeyDown,
                 onPointerEnter: handlePointerEnter,
